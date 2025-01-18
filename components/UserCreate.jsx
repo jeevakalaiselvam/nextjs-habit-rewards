@@ -10,12 +10,14 @@ import { CARD_BACKGROUND, COLOR_BACKGROUND } from './helpers/colorHelper';
 import { HiExclamationCircle } from 'react-icons/hi';
 import { Button, message } from 'antd';
 import axios from 'axios';
-import { CATEGORY_OPTIONS } from './helpers/constantHelper';
+import { CATEGORY_OPTIONS, MULTI_OPTIONS } from './helpers/constantHelper';
+import { getRewardApiKeyForUser } from './helpers/apiHelper';
 
-export default function JeevaCreate({ setActiveItem, setCreateMode }) {
+export default function UserCreate({ setActiveItem, setCreateMode, user }) {
   const [name, setName] = useState('');
   const [reward, setReward] = useState('');
   const [category, setCategory] = useState(CATEGORY_OPTIONS?.[0]?.id);
+  const [multi, setMulti] = useState(MULTI_OPTIONS?.[0]?.id);
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -34,10 +36,11 @@ export default function JeevaCreate({ setActiveItem, setCreateMode }) {
   const saveHabit = () => {
     setLoading(true);
     axios
-      .post('/api/jeevareward', {
+      .post(`/api/${getRewardApiKeyForUser(user)}`, {
         title: name,
         reward: reward,
         category: category,
+        multi: multi,
       })
       .then((response) => {
         success('Habit added !');
@@ -85,6 +88,18 @@ export default function JeevaCreate({ setActiveItem, setCreateMode }) {
         }}
         options={CATEGORY_OPTIONS}
       />
+      <Select
+        value={multi}
+        style={{
+          width: '100%',
+          height: '50px',
+          marginTop: '1rem',
+        }}
+        onChange={(option) => {
+          setMulti(option);
+        }}
+        options={MULTI_OPTIONS}
+      />
       <Button
         variant="solid"
         color="primary"
@@ -110,6 +125,6 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   font-size: 2rem;
-  min-height: 80vh;
-  max-height: 80vh;
+  min-height: 70vh;
+  max-height: 70vh;
 `;

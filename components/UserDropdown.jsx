@@ -13,23 +13,25 @@ export default function UserDropdown({ selected, setSelected }) {
         value={selected}
         options={[
           {
-            value: 'jeeva',
+            value: 'Jeeva',
             label: 'Jeeva',
           },
           {
-            value: 'aswathy',
+            value: 'Aswathy',
             label: 'Aswathy',
           },
           {
-            value: 'mom',
+            value: 'Mom',
             label: 'Mom',
           },
           {
-            value: 'dad',
+            value: 'Dad',
             label: 'Dad',
           },
         ]}
-        onChange={(e) => setSelected(e)}
+        onChange={(e) => {
+          setSelected(e);
+        }}
       />
     </Container>
   );

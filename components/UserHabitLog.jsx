@@ -6,11 +6,15 @@ import { COLOR_ACCENT } from './helpers/colorHelper';
 import { LoadingOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import LongPress from './LongPress';
+import {
+  getHabitApiKeyForUser,
+  getRewardApiKeyForUser,
+} from './helpers/apiHelper';
 
-export default function JeevaHabitLog({ currentDate }) {
+export default function UserHabitLog({ currentDate, user }) {
   const [messageApi, contextHolder] = message.useMessage();
-  const [habitLogs, setHabitLogs] = useState([]);
   const [habitLogsLoading, setHabitLogsLoading] = useState(false);
+  const [habitLogs, setHabitLogs] = useState([]);
   const [habitsLoading, setHabitsLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [habits, setHabits] = useState([]);
@@ -32,7 +36,7 @@ export default function JeevaHabitLog({ currentDate }) {
   const refreshHabits = () => {
     setHabitsLoading(true);
     axios
-      .get('/api/jeevareward')
+      .get(`/api/${getRewardApiKeyForUser(user)}`)
       .then((response) => {
         setHabits(response?.data);
         refreshHabitLogs();
@@ -49,7 +53,7 @@ export default function JeevaHabitLog({ currentDate }) {
   const refreshHabitLogs = () => {
     setHabitLogsLoading(true);
     axios
-      .get('/api/jeevahabit')
+      .get(`/api/${getHabitApiKeyForUser(user)}`)
       .then((response) => {
         setHabitLogs(response?.data);
         setHabitLogsLoading(false);
@@ -71,7 +75,7 @@ export default function JeevaHabitLog({ currentDate }) {
   const deleteHabit = () => {
     setDeleting(true);
     axios
-      .delete(`/api/jeevahabit/${selectedToDelete}`)
+      .delete(`/api/${getHabitApiKeyForUser(user)}/${selectedToDelete}`)
       .then((response) => {
         success('Habit deleted !');
         setDeleting(false);
@@ -194,5 +198,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
+  min-height: 70vh;
+  max-height: 70vh;
   width: 100%;
 `;

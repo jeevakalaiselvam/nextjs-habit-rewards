@@ -6,8 +6,12 @@ import { COLOR_ACCENT } from './helpers/colorHelper';
 import { LoadingOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import LongPress from './LongPress';
+import {
+  getHabitApiKeyForUser,
+  getRewardApiKeyForUser,
+} from './helpers/apiHelper';
 
-export default function JeevaHabitRewards({ currentDate }) {
+export default function UserHabitRewards({ currentDate, user }) {
   const [messageApi, contextHolder] = message.useMessage();
   const [habitLogs, setHabitLogs] = useState([]);
   const [habitLogsLoading, setHabitLogsLoading] = useState(false);
@@ -33,7 +37,7 @@ export default function JeevaHabitRewards({ currentDate }) {
   const refreshHabits = () => {
     setHabitsLoading(true);
     axios
-      .get('/api/jeevareward')
+      .get(`/api/${getRewardApiKeyForUser(user)}`)
       .then((response) => {
         setHabits(response?.data);
         refreshHabitLogs();
@@ -50,7 +54,7 @@ export default function JeevaHabitRewards({ currentDate }) {
   const refreshHabitLogs = () => {
     setHabitLogsLoading(true);
     axios
-      .get('/api/jeevahabit')
+      .get(`/api/${getHabitApiKeyForUser(user)}`)
       .then((response) => {
         setHabitLogs(response?.data);
         setHabitLogsLoading(false);
@@ -70,7 +74,7 @@ export default function JeevaHabitRewards({ currentDate }) {
   const deleteHabit = () => {
     setDeleting(true);
     axios
-      .delete(`/api/jeevahabit/${selectedToDelete}`)
+      .delete(`/api/${getHabitApiKeyForUser(user)}/${selectedToDelete}`)
       .then((response) => {
         success('Habit deleted !');
         setDeleting(false);

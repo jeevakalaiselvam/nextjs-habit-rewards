@@ -9,12 +9,16 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import LongPress from './LongPress';
 import { COLOR_ACCENT } from './helpers/colorHelper';
-import { CATEGORY_OPTIONS } from './helpers/constantHelper';
+import { CATEGORY_OPTIONS, MULTI_OPTIONS } from './helpers/constantHelper';
 import Counter from './Counter';
 import moment from 'moment/moment';
 import { HiPlusCircle } from 'react-icons/hi';
+import {
+  getHabitApiKeyForUser,
+  getRewardApiKeyForUser,
+} from './helpers/apiHelper';
 
-export default function JeevaHabits({ setActiveItem, currentDate }) {
+export default function UserHabits({ setActiveItem, currentDate, user }) {
   const [habits, setHabits] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(false);
@@ -24,6 +28,7 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
   const [newTitle, setNewTitle] = useState('');
   const [newReward, setNewReward] = useState('');
   const [newCategory, setNewCategory] = useState('');
+  const [newMulti, setNewMulti] = useState('');
   const [showLogCountModal, setShowCountModal] = useState(false);
   const [selectedHabit, setSelectedHabit] = useState({});
   const [modalSaving, setModalSaving] = useState(false);
@@ -46,7 +51,7 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
   const deleteHabit = () => {
     setDeleteLoading(true);
     axios
-      .delete(`/api/jeevareward/${editModeId}`)
+      .delete(`/api/${getRewardApiKeyForUser(user)}/${editModeId}`)
       .then((response) => {
         success('Habit delete !');
         setDeleteLoading(false);
@@ -62,10 +67,11 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
   const updateHabit = () => {
     setEditLoading(true);
     axios
-      .put(`/api/jeevareward/${editModeId}`, {
+      .put(`/api/${getRewardApiKeyForUser(user)}/${editModeId}`, {
         title: newTitle,
         reward: newReward,
         category: newCategory,
+        multi: newMulti,
       })
       .then((response) => {
         success('Habit updated !');
@@ -83,7 +89,7 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
     setLoading(true);
     setEditModeId('');
     axios
-      .get('/api/jeevareward')
+      .get(`/api/${getRewardApiKeyForUser(user)}`)
       .then((response) => {
         setHabits(response?.data);
         refreshHabitLogs();
@@ -100,7 +106,7 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
   const refreshHabitLogs = () => {
     setHabitLogsLoading(true);
     axios
-      .get('/api/jeevahabit')
+      .get(`/api/${getHabitApiKeyForUser(user)}`)
       .then((response) => {
         setHabitLogs(response?.data);
         setHabitLogsLoading(false);
@@ -120,7 +126,7 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
   const saveHabitLog = ({ _id }) => {
     setModalSaving(true);
     axios
-      .post('/api/jeevahabit', {
+      .post(`/api/${getHabitApiKeyForUser(user)}`, {
         time: currentDate,
         habitId: _id,
         count: newCount,
@@ -189,7 +195,7 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
       )}
       {!loading &&
         habits?.map((habit) => {
-          const { title, _id, reward, category } = habit;
+          const { title, _id, reward, category, multi } = habit;
           const isEditActive = _id === editModeId;
           return (
             <LongPress
@@ -198,6 +204,7 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
                 setNewReward(reward);
                 setNewTitle(title);
                 setNewCategory(category);
+                setNewMulti(multi);
               }}
             >
               <Card
@@ -209,7 +216,12 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
                 }}
               >
                 <RootWrapper>
-                  <Wrapper isPresent={todayAlreadyPresentIds?.includes(_id)}>
+                  <Wrapper
+                    isPresent={
+                      todayAlreadyPresentIds?.includes(_id) &&
+                      habit?.multi !== 'Multi'
+                    }
+                  >
                     {isEditActive && (
                       <EditWrapper>
                         <Input
@@ -238,6 +250,18 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
                           }}
                           onChange={(option) => setNewCategory(option)}
                           options={CATEGORY_OPTIONS}
+                        />
+
+                        <Select
+                          value={newMulti}
+                          style={{
+                            width: '100%',
+                            height: '45px',
+                            marginTop: '1rem',
+                            textAlign: 'left',
+                          }}
+                          onChange={(option) => setNewMulti(option)}
+                          options={MULTI_OPTIONS}
                         />
 
                         <ButtonContainer>
@@ -281,7 +305,10 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
                   </Wrapper>
                   {!isEditActive && (
                     <AddWrapper
-                      isPresent={todayAlreadyPresentIds?.includes(_id)}
+                      isPresent={
+                        todayAlreadyPresentIds?.includes(_id) &&
+                        habit?.multi !== 'Multi'
+                      }
                     >
                       <Add
                         onClick={() => {
@@ -377,8 +404,8 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
-  min-height: 94vh;
-  max-height: 94vh;
+  min-height: 70vh;
+  max-height: 70vh;
   overflow: scroll;
   width: 98%;
 `;

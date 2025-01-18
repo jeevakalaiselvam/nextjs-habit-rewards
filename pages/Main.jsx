@@ -7,7 +7,7 @@ import {
 } from '../components/helpers/colorHelper';
 import UserDropdown from '../components/UserDropdown';
 import { useState } from 'react';
-import Jeeva from '../components/Jeeva';
+import User from '../components/User';
 import { FacebookFilled, SettingOutlined } from '@ant-design/icons';
 import {
   HiPlusCircle,
@@ -16,7 +16,7 @@ import {
 } from 'react-icons/hi';
 
 export default function Atom() {
-  const [selected, setSelected] = useState('jeeva');
+  const [selected, setSelected] = useState('Jeeva');
   const [createMode, setCreateMode] = useState(false);
   return (
     <Container>
@@ -42,8 +42,12 @@ export default function Atom() {
         </SettingsIcon>
       </Header>
       <Content>
-        {selected == 'jeeva' && (
-          <Jeeva createMode={createMode} setCreateMode={setCreateMode} />
+        {selected == 'Jeeva' && (
+          <User
+            createMode={createMode}
+            setCreateMode={setCreateMode}
+            user={selected}
+          />
         )}
       </Content>
     </Container>
@@ -81,8 +85,8 @@ const Content = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
-  min-height: 90vh;
-  max-height: 90vh;
+  min-height: 70vh;
+  max-height: 70vh;
   padding: 1rem;
   background-color: ${COLOR_BACKGROUND};
 `;
@@ -94,7 +98,7 @@ const Container = styled.div`
   justify-content: flex-start;
   min-width: 100vw;
   max-width: 100vw;
-  min-height: 104vh;
-  max-height: 104vh;
+  min-height: 100vh;
+  max-height: 100vh;
   background-color: ${COLOR_BACKGROUND};
 `;

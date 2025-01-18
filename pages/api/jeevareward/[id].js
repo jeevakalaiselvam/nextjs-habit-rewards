@@ -5,10 +5,10 @@ export default async function handler(req, res) {
   const { id } = req.query;
 
   if (req.method === 'PUT') {
-    const { title, reward, category } = req.body;
+    const { title, reward, category, multi } = req.body;
 
     // Validate input
-    if (!title || !reward) {
+    if (!title || !reward || !category || !multi) {
       return res.status(400).json({ error: 'Title and reward are required' });
     }
 
@@ -20,7 +20,7 @@ export default async function handler(req, res) {
         .collection('jeevareward')
         .updateOne(
           { _id: new ObjectId(id) },
-          { $set: { title, reward, category } }
+          { $set: { title, reward, category, multi } }
         );
 
       if (result.matchedCount === 0) {

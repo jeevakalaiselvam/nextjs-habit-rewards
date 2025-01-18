@@ -1,23 +1,26 @@
 import { Button, Calendar, Radio } from 'antd';
 import { useState } from 'react';
 import styled from 'styled-components';
-import JeevaCalendar from './JeevaCalendar';
-import JeevaCreate from './JeevaCreate';
-import JeevaHabits from './JeevaHabits';
-import JeevaHabitLog from './JeevaHabitLog';
+import UserCalendar from './UserCalendar';
+import UserCreate from './UserCreate';
+import UserHabits from './UserHabits';
+import UserHabitLog from './UserHabitLog';
 import {
   HiOutlineArrowNarrowLeft,
   HiOutlineArrowNarrowRight,
 } from 'react-icons/hi';
 import moment from 'moment';
-import JeevaHabitRewards from './JeevaHabitRewards';
+import UserHabitRewards from './UserHabitRewards';
 import { COLOR_BACKGROUND } from './helpers/colorHelper';
+import UserTrend from './UserTrend';
 
-export default function Jeeva({ createMode, setCreateMode }) {
+export default function User({ createMode, setCreateMode, user }) {
   const [activeItem, setActiveItem] = useState('habitlog');
   const [currentDate, setCurrentDate] = useState(
     moment(new Date()).format('YYYY-MM-DD')
   );
+
+  const formattedDate = currentDate.split('-').reverse().join('-');
 
   return (
     <Container>
@@ -33,7 +36,7 @@ export default function Jeeva({ createMode, setCreateMode }) {
             <HiOutlineArrowNarrowLeft />
           </Button>
         </Left>
-        <Middle>{currentDate}</Middle>
+        <Middle>{formattedDate}</Middle>
         <Right
           onClick={() => {
             let newDate = new Date(currentDate);
@@ -76,38 +79,51 @@ export default function Jeeva({ createMode, setCreateMode }) {
               Habits
             </Radio.Button>
             <Radio.Button
-              value="payout"
+              value="history"
               style={{ width: '25%', textAlign: 'center' }}
             >
-              Payout
+              History
             </Radio.Button>
           </Radio.Group>
         </OptionContainer>
       )}
       <SelectedContainer>
         {createMode && (
-          <JeevaCreate
+          <UserCreate
             setActiveItem={setActiveItem}
             setCreateMode={setCreateMode}
+            user={user}
           />
         )}
-        {activeItem == 'calendar' && !createMode && <JeevaCalendar />}
+        {activeItem == 'calendar' && !createMode && (
+          <UserCalendar user={user} />
+        )}
         {activeItem == 'habits' && !createMode && (
-          <JeevaHabits
+          <UserHabits
             setActiveItem={setActiveItem}
             currentDate={currentDate}
+            user={user}
           />
         )}
         {activeItem == 'habitlog' && !createMode && (
-          <JeevaHabitLog
+          <UserHabitLog
             setActiveItem={setActiveItem}
             currentDate={currentDate}
+            user={user}
           />
         )}
         {activeItem == 'rewards' && !createMode && (
-          <JeevaHabitRewards
+          <UserHabitRewards
             setActiveItem={setActiveItem}
             currentDate={currentDate}
+            user={user}
+          />
+        )}
+        {activeItem == 'history' && !createMode && (
+          <UserTrend
+            setActiveItem={setActiveItem}
+            currentDate={currentDate}
+            user={user}
           />
         )}
       </SelectedContainer>
@@ -167,7 +183,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
-  min-height: 90vh;
-  max-height: 90vh;
+  min-height: 70vh;
+  max-height: 70vh;
   background-color: ${COLOR_BACKGROUND};
 `;

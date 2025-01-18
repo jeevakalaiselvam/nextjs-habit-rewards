@@ -12,3 +12,8 @@ export const CATEGORY_OPTIONS = [
   { id: 'Food', value: 'Food' },
   { id: 'Base', value: 'Base' },
 ];
+
+export const MULTI_OPTIONS = [
+  { id: 'Single', value: 'Single' },
+  { id: 'Multi', value: 'Multi' },
+];

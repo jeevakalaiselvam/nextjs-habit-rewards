@@ -33,7 +33,7 @@ body {
 }
 
 body {
-  height: 104vh;
+  height: 100%;
 }
 
 /* Disable zoom effect for Ant Design Input */

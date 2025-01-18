@@ -1,7 +1,7 @@
 import { Calendar } from 'antd';
 import styled from 'styled-components';
 
-export default function JeevaCalendar() {
+export default function UserCalendar() {
   return (
     <Container>
       <Calendar onPanelChange={() => {}} fullscreen={false} />
