@@ -277,7 +277,7 @@ const TotalRs = styled.div`
   color: ${COLOR_ACCENT};
   padding: 4rem 1rem 1rem 1rem;
   flex-direction: column;
-  font-size: 5rem;
+  font-size: 4rem;
 `;
 
 const Name = styled.div`
