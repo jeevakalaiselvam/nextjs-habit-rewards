@@ -220,15 +220,15 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
                   style={{
                     width: '100%',
                     marginTop: '.5rem',
+                    opacity:
+                      todayAlreadyPresentIds?.includes(_id) &&
+                      habit?.multi !== 'Multi'
+                        ? 0.2
+                        : 1,
                   }}
                 >
                   <RootWrapper>
-                    <Wrapper
-                      isPresent={
-                        todayAlreadyPresentIds?.includes(_id) &&
-                        habit?.multi !== 'Multi'
-                      }
-                    >
+                    <Wrapper>
                       {isEditActive && (
                         <EditWrapper>
                           <Input
@@ -311,12 +311,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
                       {!isEditActive && <Reward>{reward} Rs</Reward>}
                     </Wrapper>
                     {!isEditActive && (
-                      <AddWrapper
-                        isPresent={
-                          todayAlreadyPresentIds?.includes(_id) &&
-                          habit?.multi !== 'Multi'
-                        }
-                      >
+                      <AddWrapper>
                         <Add
                           onClick={() => {
                             setSelectedHabit(habit);
