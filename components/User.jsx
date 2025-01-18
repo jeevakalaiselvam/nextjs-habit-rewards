@@ -78,12 +78,22 @@ export default function User({ createMode, setCreateMode, user }) {
         <Middle>
           <Top isToday={isToday}>{formattedDate}</Top>
           <Bottom>
-            {daysText}{' '}
-            {isPayoutDoneForUserToday ? (
-              <HiShieldCheck style={{ color: COLOR_SUCCESS }} />
-            ) : (
-              ''
-            )}
+            <span style={{ opacity: 0.5 }}>{daysText}</span>
+            <span
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              {isPayoutDoneForUserToday ? (
+                <HiShieldCheck
+                  style={{ color: COLOR_SUCCESS, marginLeft: '.25rem' }}
+                />
+              ) : (
+                ''
+              )}
+            </span>
           </Bottom>
         </Middle>
         <Right
@@ -209,7 +219,6 @@ const Bottom = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 0.8rem;
-  opacity: 0.5;
 `;
 
 const Right = styled.div`
