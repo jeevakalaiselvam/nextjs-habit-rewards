@@ -61,15 +61,13 @@ export default function UserCreate({ setActiveItem, setCreateMode, user }) {
     <Container>
       {contextHolder}
       <Input
-        addonAfter={<HiExclamationCircle />}
-        placeholder="Enter Habit"
+        placeholder="Enter Habit..."
         value={name}
         onChange={(e) => setName(e.target.value)}
         style={{ width: '100%', marginTop: '1rem' }}
       />
       <Input
-        addonAfter={<HiExclamationCircle />}
-        placeholder="Enter Reward"
+        placeholder="Enter Reward..."
         value={reward}
         type="tel"
         pattern="[0-9]*"
