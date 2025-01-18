@@ -67,11 +67,6 @@ export default function JeevaHabitRewards({ currentDate }) {
     refreshHabitLogs();
   }, [currentDate]);
 
-  const todayIdentifier = moment(new Date(currentDate)).format('YYYY-MM-DD');
-  const monthIdentifier = moment(new Date(currentDate))
-    .format('YYYY-MM-DD')
-    ?.split('-')?.[1];
-
   const deleteHabit = () => {
     setDeleting(true);
     axios
@@ -89,6 +84,11 @@ export default function JeevaHabitRewards({ currentDate }) {
         refreshHabitLogs();
       });
   };
+
+  const todayIdentifier = moment(new Date(currentDate)).format('YYYY-MM-DD');
+  const monthIdentifier = moment(new Date(currentDate))
+    .format('YYYY-MM-DD')
+    ?.split('-')?.[1];
 
   const allHabits = habitLogs;
   const allHabitsRewards = habitLogs?.reduce((acc, innerHabit) => {

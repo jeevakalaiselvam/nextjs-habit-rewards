@@ -12,7 +12,7 @@ import { Button, message } from 'antd';
 import axios from 'axios';
 import { CATEGORY_OPTIONS } from './helpers/constantHelper';
 
-export default function JeevaCreate({ setActiveItem }) {
+export default function JeevaCreate({ setActiveItem, setCreateMode }) {
   const [name, setName] = useState('');
   const [reward, setReward] = useState('');
   const [category, setCategory] = useState(CATEGORY_OPTIONS?.[0]?.id);
@@ -43,11 +43,13 @@ export default function JeevaCreate({ setActiveItem }) {
         success('Habit added !');
         setLoading(false);
         setActiveItem('habits');
+        setCreateMode(false);
       })
       .catch((error) => {
         error('Unable to add Habit !');
         setLoading(false);
         setActiveItem('habits');
+        setCreateMode(false);
       });
     setLoading(false);
   };
@@ -70,7 +72,6 @@ export default function JeevaCreate({ setActiveItem }) {
         onChange={(e) => setReward(e.target.value)}
         style={{ width: '100%', marginTop: '1rem' }}
       />
-
       <Select
         value={category}
         style={{
@@ -79,8 +80,7 @@ export default function JeevaCreate({ setActiveItem }) {
           marginTop: '1rem',
         }}
         onChange={(option) => {
-          console.log(option);
-          setCategory(option?.id);
+          setCategory(option);
         }}
         options={CATEGORY_OPTIONS}
       />
@@ -105,8 +105,10 @@ export default function JeevaCreate({ setActiveItem }) {
 const Container = styled.div`
   display: flex;
   align-items: center;
-  width: 98%;
+  width: 100%;
   flex-direction: column;
   justify-content: flex-start;
   font-size: 2rem;
+  min-height: 80vh;
+  max-height: 80vh;
 `;

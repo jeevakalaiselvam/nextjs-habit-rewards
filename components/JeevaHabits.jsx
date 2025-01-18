@@ -28,6 +28,8 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
   const [selectedHabit, setSelectedHabit] = useState({});
   const [modalSaving, setModalSaving] = useState(false);
   const [newCount, setNewCount] = useState(1);
+  const [habitLogsLoading, setHabitLogsLoading] = useState(false);
+  const [habitLogs, setHabitLogs] = useState([]);
 
   const info = (message) => {
     messageApi.info('Hello, Ant Design!');
@@ -77,10 +79,6 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
       });
   };
 
-  useEffect(() => {
-    refreshHabits();
-  }, []);
-
   const refreshHabits = () => {
     setLoading(true);
     setEditModeId('');
@@ -88,14 +86,36 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
       .get('/api/jeevareward')
       .then((response) => {
         setHabits(response?.data);
-        setLoading(false);
+        refreshHabitLogs();
         success('Success');
+        setLoading(false);
       })
       .catch((err) => {
         error('Error');
         setLoading(false);
+        refreshHabitLogs();
       });
   };
+
+  const refreshHabitLogs = () => {
+    setHabitLogsLoading(true);
+    axios
+      .get('/api/jeevahabit')
+      .then((response) => {
+        setHabitLogs(response?.data);
+        setHabitLogsLoading(false);
+        success('Success');
+      })
+      .catch((err) => {
+        error('Error');
+        setHabitLogsLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    refreshHabits();
+    refreshHabitLogs();
+  }, [currentDate]);
 
   const saveHabitLog = ({ _id }) => {
     setModalSaving(true);
@@ -120,6 +140,18 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
       });
     setModalSaving(false);
   };
+
+  const todayIdentifier = moment(new Date(currentDate)).format('YYYY-MM-DD');
+  const todayHabits = habitLogs?.filter((habitLog) => {
+    const habit = habits?.find((h) => h?._id == habitLog?.habitId);
+    const dateFromTime = habitLog?.time;
+    const isHabitPartOfToday = dateFromTime == todayIdentifier;
+    return isHabitPartOfToday;
+  });
+
+  const todayAlreadyPresentIds = todayHabits?.map((habit) => habit?.habitId);
+
+  console.log(todayAlreadyPresentIds);
 
   return (
     <Container>
@@ -177,7 +209,7 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
                 }}
               >
                 <RootWrapper>
-                  <Wrapper onPress>
+                  <Wrapper isPresent={todayAlreadyPresentIds?.includes(_id)}>
                     {isEditActive && (
                       <EditWrapper>
                         <Input
@@ -248,7 +280,9 @@ export default function JeevaHabits({ setActiveItem, currentDate }) {
                     {!isEditActive && <Reward>{reward} Rs</Reward>}
                   </Wrapper>
                   {!isEditActive && (
-                    <AddWrapper>
+                    <AddWrapper
+                      isPresent={todayAlreadyPresentIds?.includes(_id)}
+                    >
                       <Add
                         onClick={() => {
                           setSelectedHabit(habit);
@@ -290,6 +324,7 @@ const AddWrapper = styled.div`
   align-items: center;
   justify-content: center;
   width: 50px;
+  opacity: ${(props) => (props.isPresent ? '0.3' : 1)};
 `;
 
 const Wrapper = styled.div`
@@ -297,6 +332,7 @@ const Wrapper = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  opacity: ${(props) => (props.isPresent ? '0.3' : 1)};
 `;
 
 const RootWrapper = styled.div`

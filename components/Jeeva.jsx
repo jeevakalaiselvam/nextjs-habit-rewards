@@ -85,7 +85,12 @@ export default function Jeeva({ createMode, setCreateMode }) {
         </OptionContainer>
       )}
       <SelectedContainer>
-        {createMode && <JeevaCreate setActiveItem={setActiveItem} />}
+        {createMode && (
+          <JeevaCreate
+            setActiveItem={setActiveItem}
+            setCreateMode={setCreateMode}
+          />
+        )}
         {activeItem == 'calendar' && !createMode && <JeevaCalendar />}
         {activeItem == 'habits' && !createMode && (
           <JeevaHabits
