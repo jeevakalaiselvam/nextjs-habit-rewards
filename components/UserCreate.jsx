@@ -36,7 +36,7 @@ export default function UserCreate({ setActiveItem, setCreateMode, user }) {
   const saveHabit = () => {
     setLoading(true);
     axios
-      .post(`/api/${getRewardApiKeyForUser(user)}`, {
+      .post(`/api/${getRewardApiKeyForUser(user)}?user=${user}`, {
         title: name,
         reward: reward,
         category: category,
@@ -62,7 +62,7 @@ export default function UserCreate({ setActiveItem, setCreateMode, user }) {
       {contextHolder}
       <Input
         addonAfter={<HiExclamationCircle />}
-        placeholder="Enter Habits"
+        placeholder="Enter Habit"
         value={name}
         onChange={(e) => setName(e.target.value)}
         style={{ width: '100%', marginTop: '1rem' }}

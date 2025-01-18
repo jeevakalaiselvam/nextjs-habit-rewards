@@ -51,7 +51,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   const deleteHabit = () => {
     setDeleteLoading(true);
     axios
-      .delete(`/api/${getRewardApiKeyForUser(user)}/${editModeId}`)
+      .delete(`/api/${getRewardApiKeyForUser(user)}/${editModeId}?user=${user}`)
       .then((response) => {
         success('Habit delete !');
         setDeleteLoading(false);
@@ -67,7 +67,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   const updateHabit = () => {
     setEditLoading(true);
     axios
-      .put(`/api/${getRewardApiKeyForUser(user)}/${editModeId}`, {
+      .put(`/api/${getRewardApiKeyForUser(user)}/${editModeId}?user=${user}`, {
         title: newTitle,
         reward: newReward,
         category: newCategory,
@@ -89,7 +89,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
     setLoading(true);
     setEditModeId('');
     axios
-      .get(`/api/${getRewardApiKeyForUser(user)}`)
+      .get(`/api/${getRewardApiKeyForUser(user)}?user=${user}`)
       .then((response) => {
         setHabits(response?.data);
         refreshHabitLogs();
@@ -106,7 +106,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   const refreshHabitLogs = () => {
     setHabitLogsLoading(true);
     axios
-      .get(`/api/${getHabitApiKeyForUser(user)}`)
+      .get(`/api/${getHabitApiKeyForUser(user)}?user=${user}`)
       .then((response) => {
         setHabitLogs(response?.data);
         setHabitLogsLoading(false);
@@ -121,12 +121,12 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   useEffect(() => {
     refreshHabits();
     refreshHabitLogs();
-  }, [currentDate]);
+  }, [currentDate, user]);
 
   const saveHabitLog = ({ _id }) => {
     setModalSaving(true);
     axios
-      .post(`/api/${getHabitApiKeyForUser(user)}`, {
+      .post(`/api/${getHabitApiKeyForUser(user)}?user=${user}`, {
         time: currentDate,
         habitId: _id,
         count: newCount,

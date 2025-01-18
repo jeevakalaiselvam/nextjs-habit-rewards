@@ -1,8 +1,9 @@
+import { getMongoHabitsForUser } from '../../../components/helpers/apiHelper';
 import clientPromise from '../../../lib/db';
 import { ObjectId } from 'mongodb';
 
 export default async function handler(req, res) {
-  const { id } = req.query;
+  const { id, user } = req.query;
 
   if (req.method === 'PUT') {
     const { time, habitId, count } = req.body;
@@ -17,7 +18,7 @@ export default async function handler(req, res) {
       const db = client.db('habittracker');
 
       const result = await db
-        .collection('jeevahabit')
+        .collection(getMongoHabitsForUser(user))
         .updateOne(
           { _id: new ObjectId(id) },
           { $set: { time, habitId, count } }
@@ -37,7 +38,7 @@ export default async function handler(req, res) {
       const db = client.db('habittracker');
 
       const result = await db
-        .collection('jeevahabit')
+        .collection(getMongoHabitsForUser(user))
         .deleteOne({ _id: new ObjectId(id) });
 
       if (result.deletedCount === 1) {

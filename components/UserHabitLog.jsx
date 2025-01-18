@@ -36,7 +36,7 @@ export default function UserHabitLog({ currentDate, user }) {
   const refreshHabits = () => {
     setHabitsLoading(true);
     axios
-      .get(`/api/${getRewardApiKeyForUser(user)}`)
+      .get(`/api/${getRewardApiKeyForUser(user)}?user=${user}`)
       .then((response) => {
         setHabits(response?.data);
         refreshHabitLogs();
@@ -53,7 +53,7 @@ export default function UserHabitLog({ currentDate, user }) {
   const refreshHabitLogs = () => {
     setHabitLogsLoading(true);
     axios
-      .get(`/api/${getHabitApiKeyForUser(user)}`)
+      .get(`/api/${getHabitApiKeyForUser(user)}?user=${user}`)
       .then((response) => {
         setHabitLogs(response?.data);
         setHabitLogsLoading(false);
@@ -75,7 +75,9 @@ export default function UserHabitLog({ currentDate, user }) {
   const deleteHabit = () => {
     setDeleting(true);
     axios
-      .delete(`/api/${getHabitApiKeyForUser(user)}/${selectedToDelete}`)
+      .delete(
+        `/api/${getHabitApiKeyForUser(user)}/${selectedToDelete}?user=${user}`
+      )
       .then((response) => {
         success('Habit deleted !');
         setDeleting(false);

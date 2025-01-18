@@ -42,13 +42,13 @@ export default function Atom() {
         </SettingsIcon>
       </Header>
       <Content>
-        {selected == 'Jeeva' && (
+        {
           <User
             createMode={createMode}
             setCreateMode={setCreateMode}
             user={selected}
           />
-        )}
+        }
       </Content>
     </Container>
   );

@@ -1,19 +1,24 @@
+import { getMongoHabitsForUser } from '../../../components/helpers/apiHelper';
 import clientPromise from '../../../lib/db';
 
 export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    const { title, reward, category, multi } = req.body;
+  const { user } = req.query;
 
-    if (!title || !reward || !category || !multi) {
-      return res.status(400).json({ error: 'Title and reward are required' });
+  if (req.method === 'POST') {
+    const { habitId, count, time } = req.body;
+
+    if (!habitId || !count || !time || !user) {
+      return res
+        .status(400)
+        .json({ error: 'Count, Habit and Time are required' });
     }
 
     try {
       const client = await clientPromise;
       const db = client.db('habittracker');
       const result = await db
-        .collection('jeevareward')
-        .insertOne({ title, reward, category, multi });
+        .collection(getMongoHabitsForUser(user))
+        .insertOne({ habitId, count, time });
 
       res.status(201).json({ message: 'Habit added successfully' });
     } catch (error) {
@@ -24,7 +29,10 @@ export default async function handler(req, res) {
     try {
       const client = await clientPromise;
       const db = client.db('habittracker');
-      const habits = await db.collection('jeevareward').find({}).toArray();
+      const habits = await db
+        .collection(getMongoHabitsForUser(user))
+        .find({})
+        .toArray();
       res.status(200).json(habits);
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch habits' });
