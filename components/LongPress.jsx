@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-const LongPress = ({ onLongPress, onClick, delay = 500, children }) => {
+const LongPress = ({ onLongPress, onClick, delay = 2000, children }) => {
   const [longPressActive, setLongPressActive] = useState(false);
   const timeoutRef = useRef(null);
 

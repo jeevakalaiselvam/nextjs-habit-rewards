@@ -338,22 +338,31 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
           })}
       </FilterContainer>
 
-      {!loading && (
-        <Select
-          value={selectedFilter}
-          style={{
-            width: '100%',
-            height: '45px',
-            marginTop: '1rem',
-            textAlign: 'left',
-          }}
-          onChange={(option) => setSelectedFitler(option)}
-          options={[{ id: 'All', value: 'All' }, ...CATEGORY_OPTIONS]}
-        />
-      )}
+      <SelectContainer>
+        {!loading && (
+          <Select
+            value={selectedFilter}
+            style={{
+              width: '100%',
+              height: '45px',
+              marginTop: '1rem',
+              textAlign: 'left',
+            }}
+            onChange={(option) => setSelectedFitler(option)}
+            options={[{ id: 'All', value: 'All' }, ...CATEGORY_OPTIONS]}
+          />
+        )}
+      </SelectContainer>
     </Container>
   );
 }
+
+const SelectContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
 
 const FilterContainer = styled.div`
   display: flex;
@@ -361,6 +370,7 @@ const FilterContainer = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
+  overflow: scroll;
   min-height: 62vh;
   max-height: 62vh;
 `;
