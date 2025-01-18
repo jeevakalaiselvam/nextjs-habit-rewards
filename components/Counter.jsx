@@ -8,8 +8,11 @@ export default function Counter({ old, habit, newCount, setNewCount }) {
       <CountContainer>
         <Minus
           onClick={() => {
-            if (counter != 0) {
-              setNewCount((old) => old - 1);
+            if (habit?.multi == 'Single') {
+            } else {
+              if (newCount != 1) {
+                setNewCount((old) => old - 1);
+              }
             }
           }}
         >
@@ -18,7 +21,10 @@ export default function Counter({ old, habit, newCount, setNewCount }) {
         <Count>{newCount}</Count>
         <Plus
           onClick={() => {
-            setNewCount((old) => old + 1);
+            if (habit?.multi == 'Single') {
+            } else {
+              setNewCount((old) => old + 1);
+            }
           }}
         >
           +
