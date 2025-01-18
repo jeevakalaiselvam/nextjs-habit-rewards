@@ -16,6 +16,7 @@ export default function JeevaHabitRewards({ currentDate }) {
   const [habits, setHabits] = useState([]);
   const [selectedToDelete, setSelectedToDelete] = useState('');
   const [deleteMode, setDeleteMode] = useState(false);
+  const [showDaily, setShowDaily] = useState(false);
 
   const info = (message) => {
     messageApi.info('Hello, Ant Design!');
@@ -67,6 +68,9 @@ export default function JeevaHabitRewards({ currentDate }) {
   }, [currentDate]);
 
   const todayIdentifier = moment(new Date(currentDate)).format('YYYY-MM-DD');
+  const monthIdentifier = moment(new Date(currentDate))
+    .format('YYYY-MM-DD')
+    ?.split('-')?.[1];
 
   const deleteHabit = () => {
     setDeleting(true);
@@ -88,6 +92,17 @@ export default function JeevaHabitRewards({ currentDate }) {
 
   const allHabits = habitLogs;
   const allHabitsRewards = habitLogs?.reduce((acc, innerHabit) => {
+    const habit = habits?.find((h) => h?._id == innerHabit?.habitId);
+    return acc + innerHabit?.count * habit?.reward;
+  }, 0);
+
+  const monthlyHabits = habitLogs?.filter((habitLog) => {
+    const habit = habits?.find((h) => h?._id == habitLog?.habitId);
+    const dateFromTime = habitLog?.time?.split('-')?.[1];
+    const isHabitPartOfMonth = dateFromTime == monthIdentifier;
+    return isHabitPartOfMonth;
+  });
+  const monthlyHabitRewards = monthlyHabits?.reduce((acc, innerHabit) => {
     const habit = habits?.find((h) => h?._id == innerHabit?.habitId);
     return acc + innerHabit?.count * habit?.reward;
   }, 0);
@@ -121,7 +136,18 @@ export default function JeevaHabitRewards({ currentDate }) {
       )}
       {!habitLogsLoading && !habitsLoading && (
         <TotalRs>
-          <Amount>{todayHabitRewards} Rs</Amount>
+          {showDaily && (
+            <Amount onClick={() => setShowDaily((old) => !old)}>
+              <Info>Today Reward</Info>
+              <Data>{todayHabitRewards} Rs</Data>
+            </Amount>
+          )}
+          {!showDaily && (
+            <Amount onClick={() => setShowDaily((old) => !old)}>
+              <Info>Monthly Reward</Info>
+              <Data>{monthlyHabitRewards} Rs</Data>
+            </Amount>
+          )}
           <Payout>
             <Button
               variant="solid"
@@ -142,10 +168,29 @@ export default function JeevaHabitRewards({ currentDate }) {
   );
 }
 
+const Info = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  opacity: 0.25;
+  padding: 0rem 1rem 1rem 1rem;
+  font-size: 2rem;
+`;
+
+const Data = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 2rem;
+  justify-content: center;
+  width: 100%;
+`;
+
 const Amount = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
+  flex-direction: column;
   flex: 1;
   min-height: 40vh;
   max-height: 40vh;
@@ -206,7 +251,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
-  min-height: 94vh;
-  max-height: 94vh;
+  min-height: 70vh;
+  max-height: 70vh;
   overflow: scroll;
 `;
