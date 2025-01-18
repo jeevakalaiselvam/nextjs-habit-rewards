@@ -2,7 +2,7 @@ import clientPromise from '../../../lib/db';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { title, reward } = req.body;
+    const { title, reward, category } = req.body;
 
     if (!title || !reward) {
       return res.status(400).json({ error: 'Title and reward are required' });
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       const db = client.db('habittracker');
       const result = await db
         .collection('jeevareward')
-        .insertOne({ title, reward });
+        .insertOne({ title, reward, category });
 
       res.status(201).json({ message: 'Habit added successfully' });
     } catch (error) {

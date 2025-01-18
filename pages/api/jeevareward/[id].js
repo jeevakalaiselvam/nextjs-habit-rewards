@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   const { id } = req.query;
 
   if (req.method === 'PUT') {
-    const { title, reward } = req.body;
+    const { title, reward, category } = req.body;
 
     // Validate input
     if (!title || !reward) {
@@ -18,7 +18,10 @@ export default async function handler(req, res) {
 
       const result = await db
         .collection('jeevareward')
-        .updateOne({ _id: new ObjectId(id) }, { $set: { title, reward } });
+        .updateOne(
+          { _id: new ObjectId(id) },
+          { $set: { title, reward, category } }
+        );
 
       if (result.matchedCount === 0) {
         return res.status(404).json({ error: 'Habit not found' });

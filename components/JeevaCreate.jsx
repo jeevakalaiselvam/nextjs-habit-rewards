@@ -3,17 +3,19 @@ import {
   SettingOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Input, Space } from 'antd';
+import { Input, Select, Space } from 'antd';
 import { useState } from 'react';
 import styled from 'styled-components';
-import { CARD_BACKGROUND } from './helpers/colorHelper';
+import { CARD_BACKGROUND, COLOR_BACKGROUND } from './helpers/colorHelper';
 import { HiExclamationCircle } from 'react-icons/hi';
 import { Button, message } from 'antd';
 import axios from 'axios';
+import { CATEGORY_OPTIONS } from './helpers/constantHelper';
 
 export default function JeevaCreate({ setActiveItem }) {
   const [name, setName] = useState('');
   const [reward, setReward] = useState('');
+  const [category, setCategory] = useState(CATEGORY_OPTIONS?.[0]?.id);
   const [loading, setLoading] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -32,7 +34,11 @@ export default function JeevaCreate({ setActiveItem }) {
   const saveHabit = () => {
     setLoading(true);
     axios
-      .post('/api/jeevareward', { title: name, reward: reward })
+      .post('/api/jeevareward', {
+        title: name,
+        reward: reward,
+        category: category,
+      })
       .then((response) => {
         success('Habit added !');
         setLoading(false);
@@ -64,8 +70,23 @@ export default function JeevaCreate({ setActiveItem }) {
         onChange={(e) => setReward(e.target.value)}
         style={{ width: '100%', marginTop: '1rem' }}
       />
+
+      <Select
+        value={category}
+        style={{
+          width: '100%',
+          height: '45px',
+          marginTop: '1rem',
+        }}
+        onChange={(option) => {
+          console.log(option);
+          setCategory(option?.id);
+        }}
+        options={CATEGORY_OPTIONS}
+      />
       <Button
-        type="primary"
+        variant="solid"
+        color="primary"
         style={{
           width: '100%',
           marginTop: '1rem',

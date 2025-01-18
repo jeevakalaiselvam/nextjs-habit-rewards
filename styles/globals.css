@@ -50,7 +50,7 @@ body {
   border: none; /* Remove the border */
   box-shadow: none; /* Remove the box shadow */
   font-size: 1rem;
-  height: 40px;
+  height: 45px;
 }
 
 .ant-input:focus,
