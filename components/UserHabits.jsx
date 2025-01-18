@@ -136,14 +136,12 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
         success('Habit added !');
         setModalSaving(false);
         setShowCountModal(false);
-        setActiveItem('habitlog');
       })
       .catch((err) => {
         console.log(err);
         error('Unable to add Habit !');
         setModalSaving(false);
         setShowCountModal(false);
-        setActiveItem('habitlog');
       });
     setModalSaving(false);
   };
