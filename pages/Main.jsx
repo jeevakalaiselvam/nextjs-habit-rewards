@@ -32,7 +32,7 @@ export default function Atom() {
             />
           )}
           {!createMode && (
-            <HiQuestionMarkCircle
+            <HiPlusCircle
               style={{ opacity: 0.75 }}
               onClick={() => {
                 setCreateMode((old) => !old);
