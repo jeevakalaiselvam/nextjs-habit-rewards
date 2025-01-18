@@ -11,8 +11,9 @@ import {
 } from 'react-icons/hi';
 import moment from 'moment';
 import UserHabitRewards from './UserHabitRewards';
-import { COLOR_BACKGROUND } from './helpers/colorHelper';
+import { COLOR_ACCENT, COLOR_BACKGROUND } from './helpers/colorHelper';
 import UserTrend from './UserTrend';
+import { getRelativeDate } from './helpers/constantHelper';
 
 export default function User({ createMode, setCreateMode, user }) {
   const [activeItem, setActiveItem] = useState('habitlog');
@@ -21,6 +22,9 @@ export default function User({ createMode, setCreateMode, user }) {
   );
 
   const formattedDate = currentDate.split('-').reverse().join('-');
+
+  const daysText = getRelativeDate(formattedDate);
+  const isToday = daysText == 'Today';
 
   return (
     <Container>
@@ -40,7 +44,10 @@ export default function User({ createMode, setCreateMode, user }) {
             <HiOutlineArrowNarrowLeft />
           </Button>
         </Left>
-        <Middle>{formattedDate}</Middle>
+        <Middle>
+          <Top isToday={isToday}>{formattedDate}</Top>
+          <Bottom>{daysText}</Bottom>
+        </Middle>
         <Right
           onClick={() => {
             let newDate = new Date(currentDate);
@@ -145,7 +152,23 @@ const Middle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   flex: 1;
+`;
+
+const Top = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${(props) => (props.isToday ? COLOR_ACCENT : '')};
+`;
+
+const Bottom = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  opacity: 0.5;
 `;
 
 const Right = styled.div`

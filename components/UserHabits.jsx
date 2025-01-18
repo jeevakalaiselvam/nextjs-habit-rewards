@@ -361,8 +361,8 @@ const FilterContainer = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  min-height: 60vh;
-  max-height: 60vh;
+  min-height: 62vh;
+  max-height: 62vh;
 `;
 
 const ButtonContainer = styled.div`
