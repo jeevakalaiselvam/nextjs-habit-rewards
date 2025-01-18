@@ -24,7 +24,7 @@ export default function UserHabitRewards({
   const [habits, setHabits] = useState([]);
   const [selectedToDelete, setSelectedToDelete] = useState('');
   const [deleteMode, setDeleteMode] = useState(false);
-  const [showDaily, setShowDaily] = useState(false);
+  const [showDaily, setShowDaily] = useState(true);
   const [showSettleModal, setShowSettleModal] = useState(false);
   const [settlingReward, setSettlingReward] = useState(false);
 
