@@ -1,0 +1,91 @@
+import {
+  SearchOutlined,
+  SettingOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { Input, Space } from 'antd';
+import { useState } from 'react';
+import styled from 'styled-components';
+import { CARD_BACKGROUND } from './helpers/colorHelper';
+import { HiExclamationCircle } from 'react-icons/hi';
+import { Button, message } from 'antd';
+import axios from 'axios';
+
+export default function JeevaCreate({ setActiveItem }) {
+  const [name, setName] = useState('');
+  const [reward, setReward] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const info = (message) => {
+    messageApi.info('Hello, Ant Design!');
+  };
+
+  const success = (message) => {
+    messageApi.success(message);
+  };
+
+  const error = (message) => {
+    messageApi.error(message);
+  };
+
+  const saveHabit = () => {
+    setLoading(true);
+    axios
+      .post('/api/jeevareward', { title: name, reward: reward })
+      .then((response) => {
+        success('Habit added !');
+        setLoading(false);
+        setActiveItem('habits');
+      })
+      .catch((error) => {
+        error('Unable to add Habit !');
+        setLoading(false);
+        setActiveItem('habits');
+      });
+    setLoading(false);
+  };
+
+  return (
+    <Container>
+      {contextHolder}
+      <Input
+        addonAfter={<HiExclamationCircle />}
+        placeholder="Enter Habits"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        style={{ width: '100%', marginTop: '1rem' }}
+      />
+      <Input
+        addonAfter={<HiExclamationCircle />}
+        placeholder="Enter Reward"
+        type="number"
+        value={reward}
+        onChange={(e) => setReward(e.target.value)}
+        style={{ width: '100%', marginTop: '1rem' }}
+      />
+      <Button
+        type="primary"
+        style={{
+          width: '100%',
+          marginTop: '1rem',
+          padding: '1.25rem 1rem',
+        }}
+        onClick={() => {
+          saveHabit();
+        }}
+      >
+        Save Habit
+      </Button>
+    </Container>
+  );
+}
+
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+  width: 98%;
+  flex-direction: column;
+  justify-content: flex-start;
+  font-size: 2rem;
+`;

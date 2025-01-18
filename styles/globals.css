@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Nunito', sans-serif;
+  background-color: #f4f4f9;
+  user-select: none; /* Prevents selection */
+  -webkit-user-select: none; /* For WebKit browsers like Chrome, Safari */
+  -moz-user-select: none; /* For Firefox */
+  -ms-user-select: none; /* For Internet Explorer/Edge (older versions) */
+}
+
+a {
+  text-decoration: none;
+}
+
+*,
+input,
+select,
+option {
+  box-sizing: border-box;
+  font-family: 'Nunito', sans-serif !important;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  overscroll-behavior: none; /* Prevent overscroll behavior */
+}
+
+body {
+  height: 100%; /* Ensure it matches viewport height */
+}
+
+/* Disable zoom effect for Ant Design Input */
+.ant-input {
+  transition: none; /* Remove the zoom transition */
+}
+
+.ant-input:focus {
+  box-shadow: none; /* Remove focus shadow */
+  border-color: inherit; /* Keep the default border color */
+}
+
+/* Remove border for Ant Design Input on hover and focus */
+.ant-input {
+  border: none; /* Remove the border */
+  box-shadow: none; /* Remove the box shadow */
+  font-size: 1rem;
+  height: 40px;
+}
+
+.ant-input:focus,
+.ant-input:hover {
+  border: none !important; /* Remove border when focused or hovered */
+  box-shadow: none !important; /* Remove box shadow */
+}
