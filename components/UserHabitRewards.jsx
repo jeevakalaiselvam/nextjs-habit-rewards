@@ -185,7 +185,7 @@ export default function UserHabitRewards({
         <TotalRs>
           {showDaily && (
             <Amount onClick={() => setShowDaily((old) => !old)}>
-              <Info>Today Reward</Info>
+              <Info>Daily Reward</Info>
               <Data>{todayHabitRewards} Rs</Data>
             </Amount>
           )}
