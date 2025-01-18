@@ -27,12 +27,12 @@ html,
 body {
   margin: 0;
   padding: 0;
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  overscroll-behavior: none; /* Prevent overscroll behavior */
+  overflow-x: hidden;
+  overscroll-behavior: none;
 }
 
 body {
-  height: 100%; /* Ensure it matches viewport height */
+  height: 104vh;
 }
 
 /* Disable zoom effect for Ant Design Input */

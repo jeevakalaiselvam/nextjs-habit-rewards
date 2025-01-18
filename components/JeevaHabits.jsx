@@ -341,8 +341,8 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
-  min-height: 80vh;
-  max-height: 80vh;
+  min-height: 94vh;
+  max-height: 94vh;
   overflow: scroll;
   width: 98%;
 `;

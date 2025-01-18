@@ -81,9 +81,10 @@ const Content = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
-  max-height: 92vh;
+  min-height: 90vh;
+  max-height: 90vh;
   padding: 1rem;
-  min-height: 92vh;
+  background-color: ${COLOR_BACKGROUND};
 `;
 
 const Container = styled.div`
@@ -93,7 +94,7 @@ const Container = styled.div`
   justify-content: flex-start;
   min-width: 100vw;
   max-width: 100vw;
-  min-height: 100vh;
-  max-height: 100vh;
-  overflow: hidden;
+  min-height: 104vh;
+  max-height: 104vh;
+  background-color: ${COLOR_BACKGROUND};
 `;

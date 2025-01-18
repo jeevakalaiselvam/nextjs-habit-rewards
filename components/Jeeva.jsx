@@ -10,6 +10,8 @@ import {
   HiOutlineArrowNarrowRight,
 } from 'react-icons/hi';
 import moment from 'moment';
+import JeevaHabitRewards from './JeevaHabitRewards';
+import { COLOR_BACKGROUND } from './helpers/colorHelper';
 
 export default function Jeeva({ createMode, setCreateMode }) {
   const [activeItem, setActiveItem] = useState('habitlog');
@@ -74,10 +76,10 @@ export default function Jeeva({ createMode, setCreateMode }) {
               Habits
             </Radio.Button>
             <Radio.Button
-              value="calendar"
+              value="payout"
               style={{ width: '25%', textAlign: 'center' }}
             >
-              Calendar
+              Payout
             </Radio.Button>
           </Radio.Group>
         </OptionContainer>
@@ -93,6 +95,12 @@ export default function Jeeva({ createMode, setCreateMode }) {
         )}
         {activeItem == 'habitlog' && !createMode && (
           <JeevaHabitLog
+            setActiveItem={setActiveItem}
+            currentDate={currentDate}
+          />
+        )}
+        {activeItem == 'rewards' && !createMode && (
+          <JeevaHabitRewards
             setActiveItem={setActiveItem}
             currentDate={currentDate}
           />
@@ -154,6 +162,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
-  max-height: 92vh;
-  min-height: 92vh;
+  min-height: 90vh;
+  max-height: 90vh;
+  background-color: ${COLOR_BACKGROUND};
 `;
