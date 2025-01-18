@@ -202,5 +202,6 @@ const Container = styled.div`
   justify-content: flex-start;
   min-height: 70vh;
   max-height: 70vh;
+  overflow: scroll;
   width: 103%;
 `;

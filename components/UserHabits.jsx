@@ -120,9 +120,11 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   };
 
   useEffect(() => {
-    refreshHabits();
-    refreshHabitLogs();
-  }, [currentDate, user]);
+    if (!showLogCountModal) {
+      refreshHabits();
+      refreshHabitLogs();
+    }
+  }, [currentDate, user, showLogCountModal]);
 
   const saveHabitLog = ({ _id }) => {
     setModalSaving(true);
