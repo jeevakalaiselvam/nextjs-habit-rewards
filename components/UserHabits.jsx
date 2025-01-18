@@ -441,5 +441,5 @@ const Container = styled.div`
   min-height: 70vh;
   max-height: 70vh;
   overflow: scroll;
-  width: 98%;
+  width: 103%;
 `;

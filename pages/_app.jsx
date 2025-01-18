@@ -40,7 +40,9 @@ function MyApp({ Component, pageProps }) {
               colorBgBase: COLOR_BACKGROUND,
               colorBgContainer: CARD_BACKGROUND,
             },
-            Input: {},
+            Button: {
+              primaryShadow: 'none',
+            },
           },
         }}
       >

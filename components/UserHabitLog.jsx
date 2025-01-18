@@ -202,5 +202,5 @@ const Container = styled.div`
   justify-content: flex-start;
   min-height: 70vh;
   max-height: 70vh;
-  width: 100%;
+  width: 103%;
 `;

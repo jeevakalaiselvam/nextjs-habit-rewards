@@ -256,7 +256,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
-  width: 100%;
+  width: 103%;
   min-height: 70vh;
   max-height: 70vh;
   overflow: scroll;

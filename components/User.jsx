@@ -32,7 +32,11 @@ export default function User({ createMode, setCreateMode, user }) {
             setCurrentDate(moment(new Date(newDate)).format('YYYY-MM-DD'));
           }}
         >
-          <Button color="primary" variant="solid">
+          <Button
+            color="primary"
+            variant="solid"
+            style={{ border: 'none', outline: 'none' }}
+          >
             <HiOutlineArrowNarrowLeft />
           </Button>
         </Left>
