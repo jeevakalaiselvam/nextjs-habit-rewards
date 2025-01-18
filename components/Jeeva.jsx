@@ -13,7 +13,9 @@ import moment from 'moment';
 
 export default function Jeeva() {
   const [activeItem, setActiveItem] = useState('habitlog');
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate, setCurrentDate] = useState(
+    moment(new Date()).format('YYYY-MM-DD')
+  );
 
   return (
     <Container>
@@ -22,19 +24,19 @@ export default function Jeeva() {
           onClick={() => {
             let newDate = new Date(currentDate);
             newDate.setDate(newDate.getDate() - 1);
-            setCurrentDate(newDate);
+            setCurrentDate(moment(new Date(newDate)).format('YYYY-MM-DD'));
           }}
         >
           <Button color="primary" variant="solid">
             <HiOutlineArrowNarrowLeft />
           </Button>
         </Left>
-        <Middle>{moment(currentDate).format('YYYY-MM-DD')}</Middle>
+        <Middle>{currentDate}</Middle>
         <Right
           onClick={() => {
             let newDate = new Date(currentDate);
             newDate.setDate(newDate.getDate() + 1);
-            setCurrentDate(newDate);
+            setCurrentDate(moment(new Date(newDate)).format('YYYY-MM-DD'));
           }}
         >
           <Button color="primary" variant="solid">
@@ -62,10 +64,16 @@ export default function Jeeva() {
           <JeevaCreate setActiveItem={setActiveItem} />
         )}
         {activeItem == 'habits' && (
-          <JeevaHabits setActiveItem={setActiveItem} />
+          <JeevaHabits
+            setActiveItem={setActiveItem}
+            currentDate={currentDate}
+          />
         )}
         {activeItem == 'habitlog' && (
-          <JeevaHabitLog setActiveItem={setActiveItem} />
+          <JeevaHabitLog
+            setActiveItem={setActiveItem}
+            currentDate={currentDate}
+          />
         )}
       </SelectedContainer>
     </Container>
@@ -95,9 +103,9 @@ const DateLeftRight = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  width: 110%;
   color: #fefefe;
-  padding: 1rem;
+  padding: 0.25rem 1rem 1rem 1rem;
 `;
 
 const OptionContainer = styled.div`

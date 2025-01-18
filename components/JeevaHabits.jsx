@@ -14,7 +14,7 @@ import Counter from './Counter';
 import moment from 'moment/moment';
 import { HiPlusCircle } from 'react-icons/hi';
 
-export default function JeevaHabits({ setActiveItem }) {
+export default function JeevaHabits({ setActiveItem, currentDate }) {
   const [habits, setHabits] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(false);
@@ -27,7 +27,7 @@ export default function JeevaHabits({ setActiveItem }) {
   const [showLogCountModal, setShowCountModal] = useState(false);
   const [selectedHabit, setSelectedHabit] = useState({});
   const [modalSaving, setModalSaving] = useState(false);
-  const [newCount, setNewCount] = useState(0);
+  const [newCount, setNewCount] = useState(1);
 
   const info = (message) => {
     messageApi.info('Hello, Ant Design!');
@@ -101,7 +101,7 @@ export default function JeevaHabits({ setActiveItem }) {
     setModalSaving(true);
     axios
       .post('/api/jeevahabit', {
-        time: moment().utc(),
+        time: currentDate,
         habitId: _id,
         count: newCount,
       })

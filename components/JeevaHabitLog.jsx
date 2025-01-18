@@ -7,7 +7,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import LongPress from './LongPress';
 
-export default function JeevaHabitLog() {
+export default function JeevaHabitLog({ currentDate }) {
   const [messageApi, contextHolder] = message.useMessage();
   const [habitLogs, setHabitLogs] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -63,9 +63,7 @@ export default function JeevaHabitLog() {
     refreshHabitLogs();
   }, []);
 
-  const todayIdentifier = moment(moment().utc().toISOString()).format(
-    'YYYY-MM-DD'
-  );
+  const todayIdentifier = moment(new Date(currentDate)).format('YYYY-MM-DD');
 
   const deleteHabit = () => {
     setDeleting(true);
@@ -103,9 +101,7 @@ export default function JeevaHabitLog() {
       {habitLogs
         ?.filter((habitLog) => {
           const habit = habits?.find((h) => h?._id == habitLog?.habitId);
-          const dateFromTime = moment(habitLog?.time)
-            .utc()
-            .format('YYYY-MM-DD');
+          const dateFromTime = habitLog?.time;
           const isHabitPartOfToday = dateFromTime == todayIdentifier;
           return isHabitPartOfToday;
         })

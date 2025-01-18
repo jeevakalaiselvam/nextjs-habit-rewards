@@ -20,7 +20,7 @@ export default function JeevaCreate({ setActiveItem }) {
   const [messageApi, contextHolder] = message.useMessage();
 
   const info = (message) => {
-    messageApi.info('Hello, Ant Design!');
+    messageApi.info(message);
   };
 
   const success = (message) => {
