@@ -45,6 +45,8 @@ function MyApp({ Component, pageProps }) {
             },
             Button: {
               primaryShadow: 'none',
+              defaultShadow: ' none',
+              dangerShadow: 'none',
             },
           },
         }}

@@ -1,5 +1,5 @@
 import { Button, Calendar, Radio } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import UserCalendar from './UserCalendar';
 import UserCreate from './UserCreate';
@@ -8,14 +8,21 @@ import UserHabitLog from './UserHabitLog';
 import {
   HiOutlineArrowNarrowLeft,
   HiOutlineArrowNarrowRight,
+  HiShieldCheck,
 } from 'react-icons/hi';
 import moment from 'moment';
 import UserHabitRewards from './UserHabitRewards';
-import { COLOR_ACCENT, COLOR_BACKGROUND } from './helpers/colorHelper';
+import {
+  COLOR_ACCENT,
+  COLOR_BACKGROUND,
+  COLOR_SUCCESS,
+} from './helpers/colorHelper';
 import UserTrend from './UserTrend';
 import { getRelativeDate } from './helpers/constantHelper';
+import axios from 'axios';
 
 export default function User({ createMode, setCreateMode, user }) {
+  const [payouts, setPayouts] = useState([]);
   const [activeItem, setActiveItem] = useState('habitlog');
   const [currentDate, setCurrentDate] = useState(
     moment(new Date()).format('YYYY-MM-DD')
@@ -26,6 +33,28 @@ export default function User({ createMode, setCreateMode, user }) {
   const daysText = getRelativeDate(formattedDate);
   const isToday = daysText == 'Today';
 
+  useEffect(() => {
+    refreshPayoutStatus();
+  }, [currentDate]);
+
+  let allPayoutsDatesForUser = payouts
+    ?.filter((payout) => payout?.user == user)
+    ?.map((payout) => payout?.time);
+
+  let isPayoutDoneForUserToday = allPayoutsDatesForUser?.includes(currentDate);
+
+  const refreshPayoutStatus = () => {
+    axios
+      .get('/api/payout')
+      .then((response) => {
+        let payouts = response?.data;
+        setPayouts(payouts);
+      })
+      .catch((err) => {
+        setPayouts([]);
+      });
+  };
+
   return (
     <Container>
       <DateLeftRight>
@@ -33,7 +62,9 @@ export default function User({ createMode, setCreateMode, user }) {
           onClick={() => {
             let newDate = new Date(currentDate);
             newDate.setDate(newDate.getDate() - 1);
-            setCurrentDate(moment(new Date(newDate)).format('YYYY-MM-DD'));
+            setCurrentDate((old) =>
+              moment(new Date(newDate)).format('YYYY-MM-DD')
+            );
           }}
         >
           <Button
@@ -46,13 +77,22 @@ export default function User({ createMode, setCreateMode, user }) {
         </Left>
         <Middle>
           <Top isToday={isToday}>{formattedDate}</Top>
-          <Bottom>{daysText}</Bottom>
+          <Bottom>
+            {daysText}{' '}
+            {isPayoutDoneForUserToday ? (
+              <HiShieldCheck style={{ color: COLOR_SUCCESS }} />
+            ) : (
+              ''
+            )}
+          </Bottom>
         </Middle>
         <Right
           onClick={() => {
             let newDate = new Date(currentDate);
             newDate.setDate(newDate.getDate() + 1);
-            setCurrentDate(moment(new Date(newDate)).format('YYYY-MM-DD'));
+            setCurrentDate((old) =>
+              moment(new Date(newDate)).format('YYYY-MM-DD')
+            );
           }}
         >
           <Button color="primary" variant="solid">
@@ -128,6 +168,7 @@ export default function User({ createMode, setCreateMode, user }) {
             setActiveItem={setActiveItem}
             currentDate={currentDate}
             user={user}
+            refreshPayoutStatus={refreshPayoutStatus}
           />
         )}
         {activeItem == 'history' && !createMode && (

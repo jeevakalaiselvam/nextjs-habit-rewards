@@ -1,8 +1,8 @@
-import { Button, Card, message, Spin } from 'antd';
+import { Button, Card, message, Modal, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { COLOR_ACCENT } from './helpers/colorHelper';
+import { COLOR_ACCENT, COLOR_SUCCESS } from './helpers/colorHelper';
 import { LoadingOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import LongPress from './LongPress';
@@ -11,7 +11,11 @@ import {
   getRewardApiKeyForUser,
 } from './helpers/apiHelper';
 
-export default function UserHabitRewards({ currentDate, user }) {
+export default function UserHabitRewards({
+  currentDate,
+  user,
+  refreshPayoutStatus,
+}) {
   const [messageApi, contextHolder] = message.useMessage();
   const [habitLogs, setHabitLogs] = useState([]);
   const [habitLogsLoading, setHabitLogsLoading] = useState(false);
@@ -21,6 +25,8 @@ export default function UserHabitRewards({ currentDate, user }) {
   const [selectedToDelete, setSelectedToDelete] = useState('');
   const [deleteMode, setDeleteMode] = useState(false);
   const [showDaily, setShowDaily] = useState(false);
+  const [showSettleModal, setShowSettleModal] = useState(false);
+  const [settlingReward, setSettlingReward] = useState(false);
 
   const info = (message) => {
     messageApi.info('Hello, Ant Design!');
@@ -125,8 +131,43 @@ export default function UserHabitRewards({ currentDate, user }) {
     return acc + innerHabit?.count * habit?.reward;
   }, 0);
 
+  const settleRewardForUser = () => {
+    setSettlingReward(true);
+    axios
+      .post('/api/payout', {
+        user,
+        amount: todayHabitRewards,
+        time: moment(new Date(currentDate)).utc().format('YYYY-MM-DD'),
+      })
+      .then((response) => {
+        setSettlingReward(false);
+        setShowSettleModal(false);
+        refreshPayoutStatus();
+      })
+      .catch((err) => {
+        setSettlingReward(false);
+        setShowSettleModal(false);
+        refreshPayoutStatus();
+      });
+  };
+
   return (
     <Container>
+      {
+        <Modal
+          title="Settle Amount"
+          open={showSettleModal}
+          okText={settlingReward ? 'Settling...' : 'Settle'}
+          onOk={() => {
+            settleRewardForUser();
+          }}
+          onCancel={() => {
+            setShowSettleModal(false);
+          }}
+        >
+          <Data style={{ fontSize: '5rem' }}>{todayHabitRewards} Rs</Data>
+        </Modal>
+      }
       {(habitLogsLoading || habitsLoading) && (
         <Spin
           indicator={
@@ -158,7 +199,12 @@ export default function UserHabitRewards({ currentDate, user }) {
             <Button
               variant="solid"
               color="primary"
-              style={{ width: '100%', fontSize: '1.5rem', padding: '2rem' }}
+              style={{
+                width: '100%',
+                fontSize: '1.5rem',
+                padding: '2rem',
+                marginRight: '1rem',
+              }}
               onClick={() => {
                 if (window) {
                   window.location.href = 'gpay://';
@@ -167,6 +213,18 @@ export default function UserHabitRewards({ currentDate, user }) {
             >
               PAYOUT
             </Button>
+            {showDaily && (
+              <Button
+                variant="solid"
+                color={'danger'}
+                style={{ width: '100%', fontSize: '1.5rem', padding: '2rem' }}
+                onClick={() => {
+                  setShowSettleModal(true);
+                }}
+              >
+                SETTLE
+              </Button>
+            )}
           </Payout>
         </TotalRs>
       )}

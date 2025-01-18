@@ -3,3 +3,4 @@ export const COLOR_BACKGROUND_HEADER = '#121723';
 
 export const CARD_BACKGROUND = '#121723';
 export const COLOR_ACCENT = '#1890ff';
+export const COLOR_SUCCESS = '#15C2C2';
