@@ -253,7 +253,7 @@ const Data = styled.div`
 const Amount = styled.div`
   display: flex;
   align-items: flex-start;
-  justify-content: center;
+  justify-content: flex-start;
   flex-direction: column;
   flex: 1;
   min-height: 40vh;
