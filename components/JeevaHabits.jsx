@@ -1,13 +1,20 @@
-import { LoadingOutlined } from '@ant-design/icons';
-import { Button, Card, Input, message, Select, Spin } from 'antd';
+import {
+  CheckCircleFilled,
+  FacebookFilled,
+  LoadingOutlined,
+} from '@ant-design/icons';
+import { Button, Card, Input, message, Modal, Select, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import LongPress from './LongPress';
 import { COLOR_ACCENT } from './helpers/colorHelper';
 import { CATEGORY_OPTIONS } from './helpers/constantHelper';
+import Counter from './Counter';
+import moment from 'moment/moment';
+import { HiPlusCircle } from 'react-icons/hi';
 
-export default function JeevaHabits() {
+export default function JeevaHabits({ setActiveItem }) {
   const [habits, setHabits] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(false);
@@ -17,6 +24,10 @@ export default function JeevaHabits() {
   const [newTitle, setNewTitle] = useState('');
   const [newReward, setNewReward] = useState('');
   const [newCategory, setNewCategory] = useState('');
+  const [showLogCountModal, setShowCountModal] = useState(false);
+  const [selectedHabit, setSelectedHabit] = useState({});
+  const [modalSaving, setModalSaving] = useState(false);
+  const [newCount, setNewCount] = useState(0);
 
   const info = (message) => {
     messageApi.info('Hello, Ant Design!');
@@ -86,6 +97,30 @@ export default function JeevaHabits() {
       });
   };
 
+  const saveHabitLog = ({ _id }) => {
+    setModalSaving(true);
+    axios
+      .post('/api/jeevahabit', {
+        time: moment().utc(),
+        habitId: _id,
+        count: newCount,
+      })
+      .then((response) => {
+        success('Habit added !');
+        setModalSaving(false);
+        setShowCountModal(false);
+        setActiveItem('habitlog');
+      })
+      .catch((err) => {
+        console.log(err);
+        error('Unable to add Habit !');
+        setModalSaving(false);
+        setShowCountModal(false);
+        setActiveItem('habitlog');
+      });
+    setModalSaving(false);
+  };
+
   return (
     <Container>
       {loading && (
@@ -101,6 +136,25 @@ export default function JeevaHabits() {
           }
         />
       )}
+      {showLogCountModal && (
+        <Modal
+          title="Log Habit"
+          open={showLogCountModal}
+          okText={modalSaving ? 'Saving...' : 'Save'}
+          onOk={() => {
+            saveHabitLog(selectedHabit);
+          }}
+          onCancel={() => {
+            setShowCountModal(false);
+          }}
+        >
+          <Counter
+            habit={selectedHabit}
+            newCount={newCount}
+            setNewCount={setNewCount}
+          />
+        </Modal>
+      )}
       {!loading &&
         habits?.map((habit) => {
           const { title, _id, reward, category } = habit;
@@ -115,82 +169,99 @@ export default function JeevaHabits() {
               }}
             >
               <Card
+                onClick={() => {}}
                 size="small"
                 style={{
                   width: '100%',
                   marginTop: '1rem',
                 }}
               >
-                <Wrapper onPress>
-                  {isEditActive && (
-                    <EditWrapper>
-                      <Input
-                        placeholder={title}
-                        type="text"
-                        value={newTitle}
-                        onChange={(e) => setNewTitle(e.target.value)}
-                        style={{ width: '100%', marginTop: '1rem' }}
-                      />
+                <RootWrapper>
+                  <Wrapper onPress>
+                    {isEditActive && (
+                      <EditWrapper>
+                        <Input
+                          placeholder={title}
+                          type="text"
+                          value={newTitle}
+                          onChange={(e) => setNewTitle(e.target.value)}
+                          style={{ width: '100%', marginTop: '1rem' }}
+                        />
 
-                      <Input
-                        type="number"
-                        value={newReward}
-                        placeholder={reward}
-                        onChange={(e) => setNewReward(e.target.value)}
-                        style={{ width: '100%', marginTop: '1rem' }}
-                      />
+                        <Input
+                          type="number"
+                          value={newReward}
+                          placeholder={reward}
+                          onChange={(e) => setNewReward(e.target.value)}
+                          style={{ width: '100%', marginTop: '1rem' }}
+                        />
 
-                      <Select
-                        value={newCategory}
-                        style={{
-                          width: '100%',
-                          height: '45px',
-                          marginTop: '1rem',
-                          textAlign: 'left',
+                        <Select
+                          value={newCategory}
+                          style={{
+                            width: '100%',
+                            height: '45px',
+                            marginTop: '1rem',
+                            textAlign: 'left',
+                          }}
+                          onChange={(option) => setNewCategory(option)}
+                          options={CATEGORY_OPTIONS}
+                        />
+
+                        <ButtonContainer>
+                          <Button
+                            color="primary"
+                            variant="solid"
+                            loading={deleteLoading}
+                            style={{
+                              width: '30%',
+                              marginTop: '1rem',
+                              padding: '1.25rem 1rem',
+                              marginRight: '1rem',
+                            }}
+                            onClick={() => {
+                              deleteHabit();
+                            }}
+                          >
+                            {deleteLoading ? 'Deleting...' : 'Delete'}
+                          </Button>
+                          <Button
+                            color="primary"
+                            variant="solid"
+                            loading={editLoading}
+                            style={{
+                              width: '70%',
+                              marginTop: '1rem',
+                              padding: '1.25rem 1rem',
+                            }}
+                            onClick={() => {
+                              updateHabit();
+                            }}
+                          >
+                            {editLoading ? 'Saving...' : 'Save'}
+                          </Button>
+                        </ButtonContainer>
+                      </EditWrapper>
+                    )}
+                    {!isEditActive && <Name>{title}</Name>}
+                    {!isEditActive && <Category>{category}</Category>}
+                    {!isEditActive && <Reward>{reward} Rs</Reward>}
+                  </Wrapper>
+                  {!isEditActive && (
+                    <AddWrapper>
+                      <Add
+                        onClick={() => {
+                          setSelectedHabit(habit);
+                          setShowCountModal(true);
                         }}
-                        onChange={(option) => setNewCategory(option)}
-                        options={CATEGORY_OPTIONS}
-                      />
-
-                      <ButtonContainer>
-                        <Button
-                          color="primary"
-                          variant="solid"
-                          loading={deleteLoading}
-                          style={{
-                            width: '30%',
-                            marginTop: '1rem',
-                            padding: '1.25rem 1rem',
-                            marginRight: '1rem',
-                          }}
-                          onClick={() => {
-                            deleteHabit();
-                          }}
-                        >
-                          {deleteLoading ? 'Deleting...' : 'Delete'}
-                        </Button>
-                        <Button
-                          color="primary"
-                          variant="solid"
-                          loading={editLoading}
-                          style={{
-                            width: '70%',
-                            marginTop: '1rem',
-                            padding: '1.25rem 1rem',
-                          }}
-                          onClick={() => {
-                            updateHabit();
-                          }}
-                        >
-                          {editLoading ? 'Saving...' : 'Save'}
-                        </Button>
-                      </ButtonContainer>
-                    </EditWrapper>
+                      >
+                        <HiPlusCircle
+                          style={{ color: COLOR_ACCENT, fontSize: '1.25rem' }}
+                        />
+                      </Add>
+                    </AddWrapper>
                   )}
-                  {!isEditActive && <Name>{title}</Name>}
-                  {!isEditActive && <Category>{category}</Category>}
-                  {!isEditActive && <Reward>{reward} Rs</Reward>}
-                </Wrapper>
+                </RootWrapper>
               </Card>
             </LongPress>
           );
@@ -214,11 +285,32 @@ const EditWrapper = styled.div`
   flex-direction: column;
 `;
 
+const AddWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+`;
+
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
+`;
+
+const RootWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
+const Add = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 50px;
 `;
 
 const Name = styled.div`

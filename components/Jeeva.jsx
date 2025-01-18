@@ -1,15 +1,47 @@
-import { Calendar, Radio } from 'antd';
+import { Button, Calendar, Radio } from 'antd';
 import { useState } from 'react';
 import styled from 'styled-components';
 import JeevaCalendar from './JeevaCalendar';
 import JeevaCreate from './JeevaCreate';
 import JeevaHabits from './JeevaHabits';
+import JeevaHabitLog from './JeevaHabitLog';
+import {
+  HiOutlineArrowNarrowLeft,
+  HiOutlineArrowNarrowRight,
+} from 'react-icons/hi';
+import moment from 'moment';
 
 export default function Jeeva() {
-  const [activeItem, setActiveItem] = useState('calendar');
+  const [activeItem, setActiveItem] = useState('habitlog');
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   return (
     <Container>
+      <DateLeftRight>
+        <Left
+          onClick={() => {
+            let newDate = new Date(currentDate);
+            newDate.setDate(newDate.getDate() - 1);
+            setCurrentDate(newDate);
+          }}
+        >
+          <Button color="primary" variant="solid">
+            <HiOutlineArrowNarrowLeft />
+          </Button>
+        </Left>
+        <Middle>{moment(currentDate).format('YYYY-MM-DD')}</Middle>
+        <Right
+          onClick={() => {
+            let newDate = new Date(currentDate);
+            newDate.setDate(newDate.getDate() + 1);
+            setCurrentDate(newDate);
+          }}
+        >
+          <Button color="primary" variant="solid">
+            <HiOutlineArrowNarrowRight />
+          </Button>
+        </Right>
+      </DateLeftRight>
       <OptionContainer>
         <Radio.Group
           size="large"
@@ -29,11 +61,44 @@ export default function Jeeva() {
         {activeItem == 'createhabit' && (
           <JeevaCreate setActiveItem={setActiveItem} />
         )}
-        {activeItem == 'habits' && <JeevaHabits />}
+        {activeItem == 'habits' && (
+          <JeevaHabits setActiveItem={setActiveItem} />
+        )}
+        {activeItem == 'habitlog' && (
+          <JeevaHabitLog setActiveItem={setActiveItem} />
+        )}
       </SelectedContainer>
     </Container>
   );
 }
+
+const Left = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Middle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+`;
+
+const Right = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const DateLeftRight = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  color: #fefefe;
+  padding: 1rem;
+`;
 
 const OptionContainer = styled.div`
   width: 100%;
