@@ -35,6 +35,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   const [newCount, setNewCount] = useState(1);
   const [habitLogsLoading, setHabitLogsLoading] = useState(false);
   const [habitLogs, setHabitLogs] = useState([]);
+  const [selectedFilter, setSelectedFitler] = useState('All');
 
   const info = (message) => {
     messageApi.info('Hello, Ant Design!');
@@ -157,7 +158,13 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
 
   const todayAlreadyPresentIds = todayHabits?.map((habit) => habit?.habitId);
 
-  console.log(todayAlreadyPresentIds);
+  const filteredHabits = habits?.filter((habit) => {
+    if (selectedFilter == 'All') {
+      return true;
+    } else {
+      return habit?.category == selectedFilter;
+    }
+  });
 
   return (
     <Container>
@@ -193,143 +200,170 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
           />
         </Modal>
       )}
-      {!loading &&
-        habits?.map((habit) => {
-          const { title, _id, reward, category, multi } = habit;
-          const isEditActive = _id === editModeId;
-          return (
-            <LongPress
-              onLongPress={() => {
-                setEditModeId(_id);
-                setNewReward(reward);
-                setNewTitle(title);
-                setNewCategory(category);
-                setNewMulti(multi);
-              }}
-            >
-              <Card
-                onClick={() => {}}
-                size="small"
-                style={{
-                  width: '100%',
-                  marginTop: '1rem',
+
+      <FilterContainer>
+        {!loading &&
+          filteredHabits?.map((habit) => {
+            const { title, _id, reward, category, multi } = habit;
+            const isEditActive = _id === editModeId;
+            return (
+              <LongPress
+                onLongPress={() => {
+                  setEditModeId(_id);
+                  setNewReward(reward);
+                  setNewTitle(title);
+                  setNewCategory(category);
+                  setNewMulti(multi);
                 }}
               >
-                <RootWrapper>
-                  <Wrapper
-                    isPresent={
-                      todayAlreadyPresentIds?.includes(_id) &&
-                      habit?.multi !== 'Multi'
-                    }
-                  >
-                    {isEditActive && (
-                      <EditWrapper>
-                        <Input
-                          placeholder={title}
-                          type="text"
-                          value={newTitle}
-                          onChange={(e) => setNewTitle(e.target.value)}
-                          style={{ width: '100%', marginTop: '1rem' }}
-                        />
-
-                        <Input
-                          type="number"
-                          value={newReward}
-                          placeholder={reward}
-                          onChange={(e) => setNewReward(e.target.value)}
-                          style={{ width: '100%', marginTop: '1rem' }}
-                        />
-
-                        <Select
-                          value={newCategory}
-                          style={{
-                            width: '100%',
-                            height: '45px',
-                            marginTop: '1rem',
-                            textAlign: 'left',
-                          }}
-                          onChange={(option) => setNewCategory(option)}
-                          options={CATEGORY_OPTIONS}
-                        />
-
-                        <Select
-                          value={newMulti}
-                          style={{
-                            width: '100%',
-                            height: '45px',
-                            marginTop: '1rem',
-                            textAlign: 'left',
-                          }}
-                          onChange={(option) => setNewMulti(option)}
-                          options={MULTI_OPTIONS}
-                        />
-
-                        <ButtonContainer>
-                          <Button
-                            color="primary"
-                            variant="solid"
-                            loading={deleteLoading}
-                            style={{
-                              width: '30%',
-                              marginTop: '1rem',
-                              padding: '1.25rem 1rem',
-                              marginRight: '1rem',
-                            }}
-                            onClick={() => {
-                              deleteHabit();
-                            }}
-                          >
-                            {deleteLoading ? 'Deleting...' : 'Delete'}
-                          </Button>
-                          <Button
-                            color="primary"
-                            variant="solid"
-                            loading={editLoading}
-                            style={{
-                              width: '70%',
-                              marginTop: '1rem',
-                              padding: '1.25rem 1rem',
-                            }}
-                            onClick={() => {
-                              updateHabit();
-                            }}
-                          >
-                            {editLoading ? 'Saving...' : 'Save'}
-                          </Button>
-                        </ButtonContainer>
-                      </EditWrapper>
-                    )}
-                    {!isEditActive && <Name>{title}</Name>}
-                    {!isEditActive && <Category>{category}</Category>}
-                    {!isEditActive && <Reward>{reward} Rs</Reward>}
-                  </Wrapper>
-                  {!isEditActive && (
-                    <AddWrapper
+                <Card
+                  onClick={() => {}}
+                  size="small"
+                  style={{
+                    width: '100%',
+                    marginTop: '.5rem',
+                  }}
+                >
+                  <RootWrapper>
+                    <Wrapper
                       isPresent={
                         todayAlreadyPresentIds?.includes(_id) &&
                         habit?.multi !== 'Multi'
                       }
                     >
-                      <Add
-                        onClick={() => {
-                          setSelectedHabit(habit);
-                          setShowCountModal(true);
-                        }}
+                      {isEditActive && (
+                        <EditWrapper>
+                          <Input
+                            placeholder={title}
+                            type="text"
+                            value={newTitle}
+                            onChange={(e) => setNewTitle(e.target.value)}
+                            style={{ width: '100%', marginTop: '1rem' }}
+                          />
+
+                          <Input
+                            type="number"
+                            value={newReward}
+                            placeholder={reward}
+                            onChange={(e) => setNewReward(e.target.value)}
+                            style={{ width: '100%', marginTop: '1rem' }}
+                          />
+
+                          <Select
+                            value={newCategory}
+                            style={{
+                              width: '100%',
+                              height: '45px',
+                              marginTop: '1rem',
+                              textAlign: 'left',
+                            }}
+                            onChange={(option) => setNewCategory(option)}
+                            options={CATEGORY_OPTIONS}
+                          />
+
+                          <Select
+                            value={newMulti}
+                            style={{
+                              width: '100%',
+                              height: '45px',
+                              marginTop: '1rem',
+                              textAlign: 'left',
+                            }}
+                            onChange={(option) => setNewMulti(option)}
+                            options={MULTI_OPTIONS}
+                          />
+
+                          <ButtonContainer>
+                            <Button
+                              color="primary"
+                              variant="solid"
+                              loading={deleteLoading}
+                              style={{
+                                width: '30%',
+                                marginTop: '1rem',
+                                padding: '1.25rem 1rem',
+                                marginRight: '1rem',
+                              }}
+                              onClick={() => {
+                                deleteHabit();
+                              }}
+                            >
+                              {deleteLoading ? 'Deleting...' : 'Delete'}
+                            </Button>
+                            <Button
+                              color="primary"
+                              variant="solid"
+                              loading={editLoading}
+                              style={{
+                                width: '70%',
+                                marginTop: '1rem',
+                                padding: '1.25rem 1rem',
+                              }}
+                              onClick={() => {
+                                updateHabit();
+                              }}
+                            >
+                              {editLoading ? 'Saving...' : 'Save'}
+                            </Button>
+                          </ButtonContainer>
+                        </EditWrapper>
+                      )}
+                      {!isEditActive && <Name>{title}</Name>}
+                      {!isEditActive && <Category>{category}</Category>}
+                      {!isEditActive && <Reward>{reward} Rs</Reward>}
+                    </Wrapper>
+                    {!isEditActive && (
+                      <AddWrapper
+                        isPresent={
+                          todayAlreadyPresentIds?.includes(_id) &&
+                          habit?.multi !== 'Multi'
+                        }
                       >
-                        <HiPlusCircle
-                          style={{ color: COLOR_ACCENT, fontSize: '1.25rem' }}
-                        />
-                      </Add>
-                    </AddWrapper>
-                  )}
-                </RootWrapper>
-              </Card>
-            </LongPress>
-          );
-        })}
+                        <Add
+                          onClick={() => {
+                            setSelectedHabit(habit);
+                            setShowCountModal(true);
+                          }}
+                        >
+                          <HiPlusCircle
+                            style={{ color: COLOR_ACCENT, fontSize: '1.25rem' }}
+                          />
+                        </Add>
+                      </AddWrapper>
+                    )}
+                  </RootWrapper>
+                </Card>
+              </LongPress>
+            );
+          })}
+      </FilterContainer>
+
+      {!loading && (
+        <Select
+          value={selectedFilter}
+          style={{
+            width: '100%',
+            height: '45px',
+            marginTop: '1rem',
+            textAlign: 'left',
+          }}
+          onChange={(option) => setSelectedFitler(option)}
+          options={[{ id: 'All', value: 'All' }, ...CATEGORY_OPTIONS]}
+        />
+      )}
     </Container>
   );
 }
+
+const FilterContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: 100%;
+  min-height: 60vh;
+  max-height: 60vh;
+`;
 
 const ButtonContainer = styled.div`
   display: flex;

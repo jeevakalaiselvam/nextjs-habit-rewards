@@ -54,6 +54,14 @@ body {
   height: 45px;
 }
 
+.ant-select-focused .ant-select-selector,
+.ant-select-selector:focus,
+.ant-select-selector:active,
+.ant-select-open .ant-select-selector {
+  border-color: #fefe0000 !important;
+  box-shadow: none !important;
+}
+
 .ant-input:focus,
 .ant-input:hover {
   border: none !important; /* Remove border when focused or hovered */
