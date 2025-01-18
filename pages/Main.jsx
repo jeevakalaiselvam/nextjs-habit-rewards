@@ -9,22 +9,43 @@ import UserDropdown from '../components/UserDropdown';
 import { useState } from 'react';
 import Jeeva from '../components/Jeeva';
 import { FacebookFilled, SettingOutlined } from '@ant-design/icons';
+import {
+  HiPlusCircle,
+  HiQuestionMarkCircle,
+  HiViewBoards,
+} from 'react-icons/hi';
 
 export default function Atom() {
   const [selected, setSelected] = useState('jeeva');
+  const [createMode, setCreateMode] = useState(false);
   return (
     <Container>
       <Header>
         <UserDropdown selected={selected} setSelected={setSelected} />
         <SettingsIcon>
-          <SettingOutlined
-            onClick={() => {
-              setSettingsMode(true);
-            }}
-          />
+          {createMode && (
+            <HiViewBoards
+              style={{ opacity: 0.75 }}
+              onClick={() => {
+                setCreateMode((old) => !old);
+              }}
+            />
+          )}
+          {!createMode && (
+            <HiQuestionMarkCircle
+              style={{ opacity: 0.75 }}
+              onClick={() => {
+                setCreateMode((old) => !old);
+              }}
+            />
+          )}
         </SettingsIcon>
       </Header>
-      <Content>{selected == 'jeeva' && <Jeeva />}</Content>
+      <Content>
+        {selected == 'jeeva' && (
+          <Jeeva createMode={createMode} setCreateMode={setCreateMode} />
+        )}
+      </Content>
     </Container>
   );
 }

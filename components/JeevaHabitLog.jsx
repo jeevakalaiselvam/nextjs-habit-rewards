@@ -10,7 +10,8 @@ import LongPress from './LongPress';
 export default function JeevaHabitLog({ currentDate }) {
   const [messageApi, contextHolder] = message.useMessage();
   const [habitLogs, setHabitLogs] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [habitLogsLoading, setHabitLogsLoading] = useState(false);
+  const [habitsLoading, setHabitsLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [habits, setHabits] = useState([]);
   const [selectedToDelete, setSelectedToDelete] = useState('');
@@ -29,39 +30,41 @@ export default function JeevaHabitLog({ currentDate }) {
   };
 
   const refreshHabits = () => {
-    setLoading(true);
+    setHabitsLoading(true);
     axios
       .get('/api/jeevareward')
       .then((response) => {
         setHabits(response?.data);
         refreshHabitLogs();
         success('Success');
+        setHabitsLoading(false);
       })
       .catch((err) => {
         error('Error');
+        setHabitsLoading(false);
         refreshHabitLogs();
       });
   };
 
   const refreshHabitLogs = () => {
-    setLoading(true);
+    setHabitLogsLoading(true);
     axios
       .get('/api/jeevahabit')
       .then((response) => {
         setHabitLogs(response?.data);
-        setLoading(false);
+        setHabitLogsLoading(false);
         success('Success');
       })
       .catch((err) => {
         error('Error');
-        setLoading(false);
+        setHabitLogsLoading(false);
       });
   };
 
   useEffect(() => {
     refreshHabits();
     refreshHabitLogs();
-  }, []);
+  }, [currentDate]);
 
   const todayIdentifier = moment(new Date(currentDate)).format('YYYY-MM-DD');
 
@@ -85,7 +88,7 @@ export default function JeevaHabitLog({ currentDate }) {
 
   return (
     <Container>
-      {loading && (
+      {(habitLogsLoading || habitsLoading) && (
         <Spin
           indicator={
             <LoadingOutlined
@@ -98,52 +101,54 @@ export default function JeevaHabitLog({ currentDate }) {
           }
         />
       )}
-      {habitLogs
-        ?.filter((habitLog) => {
-          const habit = habits?.find((h) => h?._id == habitLog?.habitId);
-          const dateFromTime = habitLog?.time;
-          const isHabitPartOfToday = dateFromTime == todayIdentifier;
-          return isHabitPartOfToday;
-        })
-        ?.map((habitLog) => {
-          const habit = habits?.find((h) => h?._id == habitLog?.habitId);
+      {!habitLogsLoading &&
+        !habitsLoading &&
+        habitLogs
+          ?.filter((habitLog) => {
+            const habit = habits?.find((h) => h?._id == habitLog?.habitId);
+            const dateFromTime = habitLog?.time;
+            const isHabitPartOfToday = dateFromTime == todayIdentifier;
+            return isHabitPartOfToday;
+          })
+          ?.map((habitLog) => {
+            const habit = habits?.find((h) => h?._id == habitLog?.habitId);
 
-          return (
-            <LongPress
-              onLongPress={() => {
-                setSelectedToDelete(habitLog?._id);
-                setDeleteMode(true);
-              }}
-            >
-              <Card
-                style={{
-                  width: '100%',
-                  marginTop: '1rem',
+            return (
+              <LongPress
+                onLongPress={() => {
+                  setSelectedToDelete(habitLog?._id);
+                  setDeleteMode(true);
                 }}
               >
-                <Wrapper>
-                  {!deleteMode && <Name>{habit?.title}</Name>}
-                  {!deleteMode && <Category>{habit?.category}</Category>}
-                  {!deleteMode && (
-                    <Reward>{habitLog?.count * habit?.reward} Rs</Reward>
-                  )}
-                  {deleteMode && <Name>{habit?.title}</Name>}
-                  {deleteMode && (
-                    <Delete
-                      onClick={() => {
-                        deleteHabit();
-                      }}
-                    >
-                      <Button color="danger" variant="solid">
-                        Delete
-                      </Button>
-                    </Delete>
-                  )}
-                </Wrapper>
-              </Card>
-            </LongPress>
-          );
-        })}
+                <Card
+                  style={{
+                    width: '100%',
+                    marginTop: '1rem',
+                  }}
+                >
+                  <Wrapper>
+                    {!deleteMode && <Name>{habit?.title}</Name>}
+                    {!deleteMode && <Category>{habit?.category}</Category>}
+                    {!deleteMode && (
+                      <Reward>{habitLog?.count * habit?.reward} Rs</Reward>
+                    )}
+                    {deleteMode && <Name>{habit?.title}</Name>}
+                    {deleteMode && (
+                      <Delete
+                        onClick={() => {
+                          deleteHabit();
+                        }}
+                      >
+                        <Button color="danger" variant="solid">
+                          Delete
+                        </Button>
+                      </Delete>
+                    )}
+                  </Wrapper>
+                </Card>
+              </LongPress>
+            );
+          })}
     </Container>
   );
 }

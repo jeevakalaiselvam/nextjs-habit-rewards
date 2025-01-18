@@ -11,7 +11,7 @@ import {
 } from 'react-icons/hi';
 import moment from 'moment';
 
-export default function Jeeva() {
+export default function Jeeva({ createMode, setCreateMode }) {
   const [activeItem, setActiveItem] = useState('habitlog');
   const [currentDate, setCurrentDate] = useState(
     moment(new Date()).format('YYYY-MM-DD')
@@ -44,32 +44,54 @@ export default function Jeeva() {
           </Button>
         </Right>
       </DateLeftRight>
-      <OptionContainer>
-        <Radio.Group
-          size="large"
-          value={activeItem}
-          onChange={(e) => {
-            setActiveItem(e.target.value);
-          }}
-        >
-          <Radio.Button value="calendar">Calendar</Radio.Button>
-          <Radio.Button value="habitlog">Habit Log</Radio.Button>
-          <Radio.Button value="habits">Habits</Radio.Button>
-          <Radio.Button value="createhabit">Create</Radio.Button>
-        </Radio.Group>
-      </OptionContainer>
+      {!createMode && (
+        <OptionContainer>
+          <Radio.Group
+            size="large"
+            value={activeItem}
+            style={{ width: '102%' }}
+            onChange={(e) => {
+              setActiveItem(e.target.value);
+              setCreateMode(false);
+            }}
+          >
+            <Radio.Button
+              value="rewards"
+              style={{ width: '25%', textAlign: 'center' }}
+            >
+              Rewards
+            </Radio.Button>
+            <Radio.Button
+              value="habitlog"
+              style={{ width: '25%', textAlign: 'center' }}
+            >
+              Daily
+            </Radio.Button>
+            <Radio.Button
+              value="habits"
+              style={{ width: '25%', textAlign: 'center' }}
+            >
+              Habits
+            </Radio.Button>
+            <Radio.Button
+              value="calendar"
+              style={{ width: '25%', textAlign: 'center' }}
+            >
+              Calendar
+            </Radio.Button>
+          </Radio.Group>
+        </OptionContainer>
+      )}
       <SelectedContainer>
-        {activeItem == 'calendar' && <JeevaCalendar />}
-        {activeItem == 'createhabit' && (
-          <JeevaCreate setActiveItem={setActiveItem} />
-        )}
-        {activeItem == 'habits' && (
+        {createMode && <JeevaCreate setActiveItem={setActiveItem} />}
+        {activeItem == 'calendar' && !createMode && <JeevaCalendar />}
+        {activeItem == 'habits' && !createMode && (
           <JeevaHabits
             setActiveItem={setActiveItem}
             currentDate={currentDate}
           />
         )}
-        {activeItem == 'habitlog' && (
+        {activeItem == 'habitlog' && !createMode && (
           <JeevaHabitLog
             setActiveItem={setActiveItem}
             currentDate={currentDate}

@@ -75,7 +75,7 @@ export default function JeevaCreate({ setActiveItem }) {
         value={category}
         style={{
           width: '100%',
-          height: '45px',
+          height: '50px',
           marginTop: '1rem',
         }}
         onChange={(option) => {
