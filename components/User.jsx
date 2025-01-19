@@ -23,7 +23,7 @@ import axios from 'axios';
 
 export default function User({ createMode, setCreateMode, user }) {
   const [payouts, setPayouts] = useState([]);
-  const [activeItem, setActiveItem] = useState('history');
+  const [activeItem, setActiveItem] = useState('habits');
   const [currentDate, setCurrentDate] = useState(
     moment(new Date()).format('YYYY-MM-DD')
   );
@@ -31,7 +31,7 @@ export default function User({ createMode, setCreateMode, user }) {
   const formattedDate = currentDate.split('-').reverse().join('-');
 
   const daysText = getRelativeDate(formattedDate);
-  const isToday = daysText == 'Today';
+  const istoday = daysText == 'Today';
 
   useEffect(() => {
     refreshPayoutStatus();
@@ -76,7 +76,7 @@ export default function User({ createMode, setCreateMode, user }) {
           </Button>
         </Left>
         <Middle>
-          <Top isToday={isToday}>{formattedDate}</Top>
+          <Top>{formattedDate}</Top>
           <Bottom>
             <span style={{ opacity: 0.5 }}>{daysText}</span>
             <span
@@ -166,6 +166,7 @@ export default function User({ createMode, setCreateMode, user }) {
             user={user}
           />
         )}
+
         {activeItem == 'habitlog' && !createMode && (
           <UserHabitLog
             setActiveItem={setActiveItem}
@@ -211,7 +212,6 @@ const Top = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${(props) => (props.isToday ? COLOR_ACCENT : '')};
 `;
 
 const Bottom = styled.div`

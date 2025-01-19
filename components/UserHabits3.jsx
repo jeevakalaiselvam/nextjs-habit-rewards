@@ -3,7 +3,16 @@ import {
   FacebookFilled,
   LoadingOutlined,
 } from '@ant-design/icons';
-import { Button, Card, Input, message, Modal, Select, Spin } from 'antd';
+import {
+  Button,
+  Card,
+  Collapse,
+  Input,
+  message,
+  Modal,
+  Select,
+  Spin,
+} from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -186,11 +195,172 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   });
 
   const filteredHabits = habits?.filter((habit) => {
-    if (selectedFilter == 'All') {
-      return true;
-    } else {
-      return habit?.category == selectedFilter;
-    }
+    return habit?.category == selectedFilter;
+  });
+
+  const collapseItems = CATEGORY_OPTIONS?.filter((category) => {
+    const { id, value } = category;
+    const habitsForCategory = habits?.filter((habit) => {
+      return habit?.category == id;
+    });
+    return habitsForCategory?.length > 0;
+  })?.map((category) => {
+    const { id, value } = category;
+    const habitsForCategory = habits?.filter((habit) => {
+      return habit?.category == id;
+    });
+
+    return {
+      key: id,
+      label: (
+        <CollapseTitle>
+          <CollapseName>{value}</CollapseName>
+          <CollapseIcon>
+            <FacebookFilled />
+          </CollapseIcon>
+        </CollapseTitle>
+      ),
+      children: habitsForCategory?.map((habit) => {
+        const { title, _id, reward, category, multi } = habit;
+        const isEditActive = _id === editModeId;
+        const countToday = habitLoggedCountToday?.[_id];
+        console.log({
+          habitLoggedCountToday,
+          _id,
+          countToday,
+          todayHabits,
+        });
+        return (
+          <LongPress
+            onLongPress={() => {
+              setEditModeId(_id);
+              setNewReward(reward);
+              setNewTitle(title);
+              setNewCategory(category);
+              setNewMulti(multi);
+            }}
+          >
+            <Card
+              onClick={() => {}}
+              size="small"
+              style={{
+                width: '100%',
+                marginTop: '.5rem',
+                opacity:
+                  todayAlreadyPresentIds?.includes(_id) &&
+                  (habit?.multi !== 'Multi' || true)
+                    ? 0.5
+                    : 1,
+              }}
+            >
+              <RootWrapper>
+                <Wrapper>
+                  {isEditActive && (
+                    <EditWrapper>
+                      <Input
+                        placeholder={title}
+                        type="text"
+                        value={newTitle}
+                        onChange={(e) => setNewTitle(e.target.value)}
+                        style={{ width: '100%', marginTop: '1rem' }}
+                      />
+
+                      <Input
+                        type="number"
+                        value={newReward}
+                        placeholder={reward}
+                        onChange={(e) => setNewReward(e.target.value)}
+                        style={{ width: '100%', marginTop: '1rem' }}
+                      />
+
+                      <Select
+                        value={newCategory}
+                        style={{
+                          width: '100%',
+                          height: '45px',
+                          marginTop: '1rem',
+                          textAlign: 'left',
+                        }}
+                        onChange={(option) => setNewCategory(option)}
+                        options={CATEGORY_OPTIONS}
+                      />
+
+                      <Select
+                        value={newMulti}
+                        style={{
+                          width: '100%',
+                          height: '45px',
+                          marginTop: '1rem',
+                          textAlign: 'left',
+                        }}
+                        onChange={(option) => setNewMulti(option)}
+                        options={MULTI_OPTIONS}
+                      />
+
+                      <ButtonContainer>
+                        <Button
+                          color="primary"
+                          variant="solid"
+                          loading={deleteLoading}
+                          style={{
+                            width: '30%',
+                            marginTop: '1rem',
+                            padding: '1.25rem 1rem',
+                            marginRight: '1rem',
+                          }}
+                          onClick={() => {
+                            deleteHabit();
+                          }}
+                        >
+                          {deleteLoading ? 'Deleting...' : 'Delete'}
+                        </Button>
+                        <Button
+                          color="primary"
+                          variant="solid"
+                          loading={editLoading}
+                          style={{
+                            width: '70%',
+                            marginTop: '1rem',
+                            padding: '1.25rem 1rem',
+                          }}
+                          onClick={() => {
+                            updateHabit();
+                          }}
+                        >
+                          {editLoading ? 'Saving...' : 'Save'}
+                        </Button>
+                      </ButtonContainer>
+                    </EditWrapper>
+                  )}
+                  {!isEditActive && <Count>{countToday}</Count>}
+                  {!isEditActive && <Name>{title}</Name>}
+                  {!isEditActive && (
+                    <CategoryReward>
+                      <Category>{category}</Category>
+                      <Reward>{reward} Rs</Reward>
+                    </CategoryReward>
+                  )}
+                </Wrapper>
+                {!isEditActive && (
+                  <AddWrapper>
+                    <Add
+                      onClick={() => {
+                        setSelectedHabit(habit);
+                        setShowCountModal(true);
+                      }}
+                    >
+                      <HiPlusCircle
+                        style={{ color: COLOR_ACCENT, fontSize: '1.25rem' }}
+                      />
+                    </Add>
+                  </AddWrapper>
+                )}
+              </RootWrapper>
+            </Card>
+          </LongPress>
+        );
+      }),
+    };
   });
 
   return (
@@ -227,13 +397,24 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
           />
         </Modal>
       )}
-
       <FilterContainer>
+        <Collapse
+          style={{ width: '100%' }}
+          items={collapseItems}
+          onChange={() => {}}
+        />
         {!loading &&
+          false &&
           filteredHabits?.map((habit) => {
             const { title, _id, reward, category, multi } = habit;
             const isEditActive = _id === editModeId;
             const countToday = habitLoggedCountToday?.[_id];
+            console.log({
+              habitLoggedCountToday,
+              _id,
+              countToday,
+              todayHabits,
+            });
             return (
               <LongPress
                 onLongPress={() => {
@@ -365,66 +546,46 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
             );
           })}
       </FilterContainer>
-
-      <SelectContainer>
-        {!loading && (
-          <Select
-            value={selectedFilter}
-            style={{
-              width: '100%',
-              height: '45px',
-              marginTop: '1rem',
-              textAlign: 'left',
-            }}
-            onChange={(option) => setSelectedFitler(option)}
-          >
-            {CATEGORY_OPTIONS?.filter((category) => {
-              const { id, value } = category;
-              const habitsForCategory = habits?.filter((habit) => {
-                return habit?.category == id;
-              });
-              return habitsForCategory?.length > 0;
-            })?.map((category) => {
-              const { id, value } = category;
-              const habitsForCategory = habits?.filter((habit) => {
-                return habit?.category == id;
-              });
-              return (
-                <Option value={value}>
-                  <OptionContainer>
-                    <OptionName>{value}</OptionName>
-                    <OptionCount> {habitsForCategory?.length}</OptionCount>
-                  </OptionContainer>
-                </Option>
-              );
-            })}
-          </Select>
-        )}
-      </SelectContainer>
+      {false && (
+        <SelectContainer>
+          {!loading && (
+            <Select
+              value={selectedFilter}
+              style={{
+                width: '100%',
+                height: '45px',
+                marginTop: '1rem',
+                textAlign: 'left',
+              }}
+              onChange={(option) => setSelectedFitler(option)}
+              options={[...CATEGORY_OPTIONS]}
+            />
+          )}
+        </SelectContainer>
+      )}
+      JEEVA
     </Container>
   );
 }
 
-const OptionCount = styled.div`
+const CollapseTitle = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   width: 100%;
-  padding: 0rem 1rem;
 `;
 
-const OptionName = styled.div`
+const CollapseName = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  padding: 0rem 1rem;
 `;
 
-const OptionContainer = styled.div`
+const CollapseIcon = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   width: 100%;
 `;
 
@@ -442,8 +603,8 @@ const FilterContainer = styled.div`
   flex-direction: column;
   width: 100%;
   overflow: scroll;
-  min-height: 62vh;
-  max-height: 62vh;
+  min-height: 70vh;
+  max-height: 70vh;
 `;
 
 const ButtonContainer = styled.div`

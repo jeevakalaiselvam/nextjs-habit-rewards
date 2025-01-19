@@ -169,7 +169,6 @@ export default function UserTrend({ setActiveItem, currentDate, user }) {
                 <DateWrapper>
                   {getDatesForCurrentMonth()?.map((date) => {
                     const isPresent = allHabitDates?.includes(date);
-                    console.log({ allHabitDates, date });
                     return (
                       <DateBox>
                         <InnerBox isPresent={isPresent}>
@@ -200,7 +199,7 @@ const InnerBox = styled.div`
   width: 5vw;
   margin: 4px;
   height: 5vw;
-  color: ${(props) => (props.isPresent ? '#465e77' : '#575757')};
+  color: ${(props) => (props.isPresent ? '#ededed' : '#575757')};
   background-color: ${(props) => (props.isPresent ? COLOR_ACCENT : '#333')};
 `;
 
