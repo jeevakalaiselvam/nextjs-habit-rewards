@@ -4,14 +4,14 @@ import styled from 'styled-components';
 import UserCalendar from './UserCalendar';
 import UserCreate from './UserCreate';
 import UserHabits from './UserHabits';
-import UserHabitLog from './UserHabitLog';
+import UserHabitLog from './UserDaily';
 import {
   HiOutlineArrowNarrowLeft,
   HiOutlineArrowNarrowRight,
   HiShieldCheck,
 } from 'react-icons/hi';
 import moment from 'moment';
-import UserHabitRewards from './UserHabitRewards';
+import UserHabitRewards from './UserRewards';
 import {
   COLOR_ACCENT,
   COLOR_BACKGROUND,

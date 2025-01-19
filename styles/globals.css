@@ -67,3 +67,7 @@ body {
   border: none !important; /* Remove border when focused or hovered */
   box-shadow: none !important; /* Remove box shadow */
 }
+
+.ant-card-body {
+  padding: 16px !important;
+}
