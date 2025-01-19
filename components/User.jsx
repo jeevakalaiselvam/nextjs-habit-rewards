@@ -251,7 +251,6 @@ const SelectedContainer = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
-  width: 100%;
 `;
 
 const Container = styled.div`

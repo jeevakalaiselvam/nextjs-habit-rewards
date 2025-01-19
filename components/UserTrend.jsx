@@ -139,6 +139,8 @@ export default function UserTrend({ setActiveItem, currentDate, user }) {
     return monthNames[now.getMonth()]; // getMonth() returns 0-indexed month
   };
 
+  const allHabitDates = habitLogs?.map((habit) => habit?.time);
+
   return (
     <Container>
       {(habitLogsLoading || habitLoading) && (
@@ -166,9 +168,13 @@ export default function UserTrend({ setActiveItem, currentDate, user }) {
                 </Title>
                 <DateWrapper>
                   {getDatesForCurrentMonth()?.map((date) => {
+                    const isPresent = allHabitDates?.includes(date);
+                    console.log({ allHabitDates, date });
                     return (
                       <DateBox>
-                        <InnerBox></InnerBox>
+                        <InnerBox isPresent={isPresent}>
+                          {date?.split('-')?.[2]}
+                        </InnerBox>
                       </DateBox>
                     );
                   })}
@@ -191,10 +197,11 @@ const InnerBox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3vw;
-  margin: 2px;
-  height: 3vw;
-  background-color: ${(props) => COLOR_ACCENT};
+  width: 5vw;
+  margin: 4px;
+  height: 5vw;
+  color: ${(props) => (props.isPresent ? '#465e77' : '#575757')};
+  background-color: ${(props) => (props.isPresent ? COLOR_ACCENT : '#333')};
 `;
 
 const DateWrapper = styled.div`
@@ -229,5 +236,6 @@ const Container = styled.div`
   justify-content: flex-start;
   min-height: 70vh;
   max-height: 70vh;
+  overflow: scroll;
   width: 100%;
 `;
