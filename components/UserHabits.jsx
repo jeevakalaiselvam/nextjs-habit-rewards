@@ -40,7 +40,9 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   const [newCount, setNewCount] = useState(1);
   const [habitLogsLoading, setHabitLogsLoading] = useState(false);
   const [habitLogs, setHabitLogs] = useState([]);
-  const [selectedFilter, setSelectedFitler] = useState('All');
+  const [selectedFilter, setSelectedFitler] = useState(
+    CATEGORY_OPTIONS?.[0]?.id
+  );
 
   const info = (message) => {
     messageApi.info('Hello, Ant Design!');
@@ -381,7 +383,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
               textAlign: 'left',
             }}
             onChange={(option) => setSelectedFitler(option)}
-            options={[{ id: 'All', value: 'All' }, ...CATEGORY_OPTIONS]}
+            options={[...CATEGORY_OPTIONS]}
           />
         )}
       </SelectContainer>
