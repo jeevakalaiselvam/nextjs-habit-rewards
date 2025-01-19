@@ -179,12 +179,22 @@ export default function UserTrend({ setActiveItem, currentDate, user }) {
       {!habitLogsLoading &&
         !habitLoading &&
         habits?.map((habit) => {
+          const countForMonth = getDatesForCurrentMonth()?.reduce(
+            (acc, date) => {
+              const isPresent =
+                allHabitCategoryDates?.[habit?._id]?.includes(date);
+              return acc + (isPresent ? 1 : 0);
+            },
+            0
+          );
           return (
             <Card style={{ width: '100%', marginTop: '.5rem' }}>
               <StreakContainer>
                 <Title>
                   <span>{habit?.title}</span>
-                  <span style={{ opacity: 0.5 }}>{getCurrentMonthName()}</span>
+                  <span style={{ opacity: 1, color: COLOR_ACCENT }}>
+                    {countForMonth * habit?.reward} Rs
+                  </span>
                 </Title>
                 <DateWrapper>
                   {getDatesForCurrentMonth()?.map((date) => {
@@ -199,6 +209,9 @@ export default function UserTrend({ setActiveItem, currentDate, user }) {
                     );
                   })}
                 </DateWrapper>
+                <DateLower>
+                  <span style={{ opacity: 0.5 }}>{getCurrentMonthName()}</span>
+                </DateLower>
               </StreakContainer>
             </Card>
           );
@@ -229,8 +242,17 @@ const DateWrapper = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-wrap: wrap;
-  padding: 1rem 0rem;
+  padding: 1rem 0rem 0.25rem 0rem;
   width: 100%;
+`;
+
+const DateLower = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  opacity: 0.75;
+  padding: 0;
 `;
 
 const Title = styled.div`
