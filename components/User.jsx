@@ -23,7 +23,7 @@ import axios from 'axios';
 
 export default function User({ createMode, setCreateMode, user }) {
   const [payouts, setPayouts] = useState([]);
-  const [activeItem, setActiveItem] = useState('rewards');
+  const [activeItem, setActiveItem] = useState('history');
   const [currentDate, setCurrentDate] = useState(
     moment(new Date()).format('YYYY-MM-DD')
   );
@@ -143,7 +143,7 @@ export default function User({ createMode, setCreateMode, user }) {
               value="history"
               style={{ width: '25%', textAlign: 'center' }}
             >
-              History
+              Streaks
             </Radio.Button>
           </Radio.Group>
         </OptionContainer>
