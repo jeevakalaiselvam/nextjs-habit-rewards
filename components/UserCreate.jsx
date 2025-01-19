@@ -34,27 +34,36 @@ export default function UserCreate({ setActiveItem, setCreateMode, user }) {
   };
 
   const saveHabit = () => {
-    setLoading(true);
-    axios
-      .post(`/api/${getRewardApiKeyForUser(user)}?user=${user}`, {
-        title: name,
-        reward: reward,
-        category: category,
-        multi: multi,
-      })
-      .then((response) => {
-        success('Habit added !');
-        setLoading(false);
-        setActiveItem('habits');
-        setCreateMode(false);
-      })
-      .catch((error) => {
-        error('Unable to add Habit !');
-        setLoading(false);
-        setActiveItem('habits');
-        setCreateMode(false);
-      });
-    setLoading(false);
+    if (
+      name?.length > 0 &&
+      reward?.length > 0 &&
+      category?.length > 0 &&
+      multi?.length > 0
+    ) {
+      setLoading(true);
+      axios
+        .post(`/api/${getRewardApiKeyForUser(user)}?user=${user}`, {
+          title: name,
+          reward: reward,
+          category: category,
+          multi: multi,
+        })
+        .then((response) => {
+          success('Habit added !');
+          setLoading(false);
+          setActiveItem('habits');
+          setCreateMode(false);
+        })
+        .catch((error) => {
+          error('Unable to add Habit !');
+          setLoading(false);
+          setActiveItem('habits');
+          setCreateMode(false);
+        });
+      setLoading(false);
+    } else {
+      info('Details missing !');
+    }
   };
 
   return (

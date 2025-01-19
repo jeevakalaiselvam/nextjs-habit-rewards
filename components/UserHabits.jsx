@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import LongPress from './LongPress';
-import { COLOR_ACCENT } from './helpers/colorHelper';
+import { COLOR_ACCENT, COLOR_SUCCESS } from './helpers/colorHelper';
 import { CATEGORY_OPTIONS, MULTI_OPTIONS } from './helpers/constantHelper';
 import Counter from './Counter';
 import moment from 'moment/moment';
@@ -66,24 +66,36 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   };
 
   const updateHabit = () => {
-    setEditLoading(true);
-    axios
-      .put(`/api/${getRewardApiKeyForUser(user)}/${editModeId}?user=${user}`, {
-        title: newTitle,
-        reward: newReward,
-        category: newCategory,
-        multi: newMulti,
-      })
-      .then((response) => {
-        success('Habit updated !');
-        setEditLoading(false);
-        refreshHabits();
-      })
-      .catch((err) => {
-        error('Unable to add Habit !');
-        setEditLoading(false);
-        refreshHabits();
-      });
+    if (
+      newTitle?.length > 0 &&
+      newReward?.length > 0 &&
+      newCategory?.length > 0 &&
+      newMulti?.length > 0
+    ) {
+      setEditLoading(true);
+      axios
+        .put(
+          `/api/${getRewardApiKeyForUser(user)}/${editModeId}?user=${user}`,
+          {
+            title: newTitle,
+            reward: newReward,
+            category: newCategory,
+            multi: newMulti,
+          }
+        )
+        .then((response) => {
+          success('Habit updated !');
+          setEditLoading(false);
+          refreshHabits();
+        })
+        .catch((err) => {
+          error('Unable to add Habit !');
+          setEditLoading(false);
+          refreshHabits();
+        });
+    } else {
+      info('Details missing !');
+    }
   };
 
   const refreshHabits = () => {
@@ -156,7 +168,15 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
     return isHabitPartOfToday;
   });
 
-  const todayAlreadyPresentIds = todayHabits?.map((habit) => habit?.habitId);
+  const habitLoggedCountToday = {};
+  const todayAlreadyPresentIds = todayHabits?.map((habit) => {
+    if (!habitLoggedCountToday?.[habit?.habitId]) {
+      habitLoggedCountToday[habit?.habitId] = 1;
+    } else {
+      habitLoggedCountToday[habit?.habitId] += 1;
+    }
+    return habit?.habitId;
+  });
 
   const filteredHabits = habits?.filter((habit) => {
     if (selectedFilter == 'All') {
@@ -206,6 +226,13 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
           filteredHabits?.map((habit) => {
             const { title, _id, reward, category, multi } = habit;
             const isEditActive = _id === editModeId;
+            const countToday = habitLoggedCountToday?.[_id];
+            console.log({
+              habitLoggedCountToday,
+              _id,
+              countToday,
+              todayHabits,
+            });
             return (
               <LongPress
                 onLongPress={() => {
@@ -225,7 +252,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
                     opacity:
                       todayAlreadyPresentIds?.includes(_id) &&
                       (habit?.multi !== 'Multi' || true)
-                        ? 0.2
+                        ? 0.5
                         : 1,
                   }}
                 >
@@ -311,6 +338,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
                       {!isEditActive && <Name>{title}</Name>}
                       {!isEditActive && <Category>{category}</Category>}
                       {!isEditActive && <Reward>{reward} Rs</Reward>}
+                      {!isEditActive && <Count>{countToday}</Count>}
                     </Wrapper>
                     {!isEditActive && (
                       <AddWrapper>
@@ -436,6 +464,13 @@ const Reward = styled.div`
   justify-content: flex-end;
   color: ${COLOR_ACCENT};
   width: 50px;
+`;
+
+const Count = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: ${COLOR_SUCCESS};
 `;
 
 const Container = styled.div`
