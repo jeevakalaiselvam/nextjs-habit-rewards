@@ -8,7 +8,12 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import LongPress from './LongPress';
-import { COLOR_ACCENT, COLOR_SUCCESS } from './helpers/colorHelper';
+import {
+  CARD_BACKGROUND,
+  COLOR_ACCENT,
+  COLOR_BACKGROUND,
+  COLOR_SUCCESS,
+} from './helpers/colorHelper';
 import { CATEGORY_OPTIONS, MULTI_OPTIONS } from './helpers/constantHelper';
 import Counter from './Counter';
 import moment from 'moment/moment';
@@ -335,10 +340,14 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
                           </ButtonContainer>
                         </EditWrapper>
                       )}
+                      {!isEditActive && <Count>{countToday ?? 0}</Count>}
                       {!isEditActive && <Name>{title}</Name>}
-                      {!isEditActive && <Category>{category}</Category>}
-                      {!isEditActive && <Reward>{reward} Rs</Reward>}
-                      {!isEditActive && <Count>{countToday}</Count>}
+                      {!isEditActive && (
+                        <CategoryReward>
+                          <Category>{category}</Category>
+                          <Reward>{reward} Rs</Reward>
+                        </CategoryReward>
+                      )}
                     </Wrapper>
                     {!isEditActive && (
                       <AddWrapper>
@@ -446,7 +455,7 @@ const Add = styled.div`
 const Name = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   flex: 1;
 `;
 
@@ -458,10 +467,18 @@ const Category = styled.div`
   opacity: 0.25;
 `;
 
+const CategoryReward = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100px;
+`;
+
 const Reward = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   color: ${COLOR_ACCENT};
   width: 50px;
 `;
@@ -469,8 +486,11 @@ const Reward = styled.div`
 const Count = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   color: ${COLOR_SUCCESS};
+  width: 20px;
+  background-color: ${COLOR_BACKGROUND};
+  border-radius: 4px;
 `;
 
 const Container = styled.div`
