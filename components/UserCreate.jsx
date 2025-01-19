@@ -34,8 +34,9 @@ export default function UserCreate({ setActiveItem, setCreateMode, user }) {
   };
 
   const saveHabit = () => {
+    info('Details missing !');
     if (
-      name?.length > 0 &&
+      title?.length > 0 &&
       reward?.length > 0 &&
       category?.length > 0 &&
       multi?.length > 0
@@ -107,23 +108,48 @@ export default function UserCreate({ setActiveItem, setCreateMode, user }) {
         }}
         options={MULTI_OPTIONS}
       />
-      <Button
-        variant="solid"
-        color="primary"
-        style={{
-          width: '100%',
-          marginTop: '1rem',
-          padding: '1.25rem 1rem',
-        }}
-        onClick={() => {
-          saveHabit();
-        }}
-      >
-        Save Habit
-      </Button>
+      <ButtonContainer>
+        <Button
+          variant="solid"
+          color="primary"
+          style={{
+            width: '100%',
+            marginTop: '1rem',
+            padding: '1.25rem 1rem',
+            marginRight: '.25rem',
+          }}
+          onClick={() => {
+            setCreateMode(false);
+          }}
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="solid"
+          color="primary"
+          style={{
+            width: '100%',
+            marginTop: '1rem',
+            padding: '1.25rem 1rem',
+            marginLeft: '.25rem',
+          }}
+          onClick={() => {
+            saveHabit();
+          }}
+        >
+          Save Habit
+        </Button>
+      </ButtonContainer>
     </Container>
   );
 }
+
+const ButtonContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
 
 const Container = styled.div`
   display: flex;

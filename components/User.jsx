@@ -23,7 +23,7 @@ import axios from 'axios';
 
 export default function User({ createMode, setCreateMode, user }) {
   const [payouts, setPayouts] = useState([]);
-  const [activeItem, setActiveItem] = useState('habitlog');
+  const [activeItem, setActiveItem] = useState('habits');
   const [currentDate, setCurrentDate] = useState(
     moment(new Date()).format('YYYY-MM-DD')
   );
