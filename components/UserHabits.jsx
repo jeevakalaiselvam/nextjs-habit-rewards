@@ -340,7 +340,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
                           </ButtonContainer>
                         </EditWrapper>
                       )}
-                      {!isEditActive && <Count>{countToday ?? 0}</Count>}
+                      {!isEditActive && <Count>{countToday}</Count>}
                       {!isEditActive && <Name>{title}</Name>}
                       {!isEditActive && (
                         <CategoryReward>
@@ -456,6 +456,7 @@ const Name = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0rem 8px 0rem 8px;
   flex: 1;
 `;
 
