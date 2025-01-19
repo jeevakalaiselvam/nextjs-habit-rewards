@@ -139,7 +139,23 @@ export default function UserTrend({ setActiveItem, currentDate, user }) {
     return monthNames[now.getMonth()]; // getMonth() returns 0-indexed month
   };
 
-  const allHabitDates = habitLogs?.map((habit) => habit?.time);
+  const habitNames = {};
+  habits?.forEach((habit) => {
+    if (!habitNames?.[habit?._id]) {
+      habitNames[habit?._id] = habit?.title;
+    }
+  });
+
+  const allHabitCategoryDates = {};
+  habitLogs?.forEach((habit) => {
+    if (!allHabitCategoryDates?.[habit?.habitId]) {
+      allHabitCategoryDates[habit?.habitId] = [habit?.time];
+    } else {
+      allHabitCategoryDates[habit?.habitId]?.push(habit?.time);
+    }
+  });
+
+  console.log({ habitNames, allHabitCategoryDates });
 
   return (
     <Container>
@@ -168,7 +184,8 @@ export default function UserTrend({ setActiveItem, currentDate, user }) {
                 </Title>
                 <DateWrapper>
                   {getDatesForCurrentMonth()?.map((date) => {
-                    const isPresent = allHabitDates?.includes(date);
+                    const isPresent =
+                      allHabitCategoryDates?.[habit?._id]?.includes(date);
                     return (
                       <DateBox>
                         <InnerBox isPresent={isPresent}>
