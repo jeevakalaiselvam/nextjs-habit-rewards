@@ -224,7 +224,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
                     marginTop: '.5rem',
                     opacity:
                       todayAlreadyPresentIds?.includes(_id) &&
-                      habit?.multi !== 'Multi'
+                      (habit?.multi !== 'Multi' || true)
                         ? 0.2
                         : 1,
                   }}
