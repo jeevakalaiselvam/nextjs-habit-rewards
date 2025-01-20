@@ -234,7 +234,7 @@ const InnerBox = styled.div`
   margin: 4px;
   height: 5vw;
   color: ${(props) => (props.isPresent ? '#ededed' : '#575757')};
-  background-color: ${(props) => (props.isPresent ? COLOR_STREAK : '#333')};
+  background-color: ${(props) => (props.isPresent ? COLOR_ACCENT : '#333')};
 `;
 
 const DateWrapper = styled.div`
