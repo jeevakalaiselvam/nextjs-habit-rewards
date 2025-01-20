@@ -451,8 +451,8 @@ const FilterContainer = styled.div`
   flex-direction: column;
   width: 100%;
   overflow: scroll;
-  min-height: 57vh;
-  max-height: 57vh;
+  min-height: 58vh;
+  max-height: 58vh;
 `;
 
 const ButtonContainer = styled.div`

@@ -34,9 +34,8 @@ export default function UserCreate({ setActiveItem, setCreateMode, user }) {
   };
 
   const saveHabit = () => {
-    info('Details missing !');
     if (
-      title?.length > 0 &&
+      name?.length > 0 &&
       reward?.length > 0 &&
       category?.length > 0 &&
       multi?.length > 0
