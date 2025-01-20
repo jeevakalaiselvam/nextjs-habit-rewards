@@ -193,6 +193,17 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
     }
   });
 
+  useEffect(() => {
+    let categoryForUsers = CATEGORY_OPTIONS?.filter((category) => {
+      const { id, value } = category;
+      const habitsForCategory = habits?.filter((habit) => {
+        return habit?.category == id;
+      });
+      return habitsForCategory?.length > 0;
+    });
+    setSelectedFitler(categoryForUsers?.[0]?.id);
+  }, [user, habits]);
+
   return (
     <Container>
       {loading && (
