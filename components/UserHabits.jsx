@@ -227,7 +227,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
           />
         </Modal>
       )}
-
+      <CategoryName>{selectedFilter}</CategoryName>
       <FilterContainer>
         {!loading &&
           filteredHabits?.map((habit) => {
@@ -340,7 +340,6 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
                       {!isEditActive && <Name>{title}</Name>}
                       {!isEditActive && (
                         <CategoryReward>
-                          <Category>{category}</Category>
                           <Reward>{reward} Rs</Reward>
                         </CategoryReward>
                       )}
@@ -405,6 +404,16 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   );
 }
 
+const CategoryName = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 0.5rem 0.25rem 0.25rem 0.5rem;
+  color: #fefefe;
+  opacity: 0.5;
+`;
+
 const OptionCount = styled.div`
   display: flex;
   align-items: center;
@@ -442,8 +451,8 @@ const FilterContainer = styled.div`
   flex-direction: column;
   width: 100%;
   overflow: scroll;
-  min-height: 62vh;
-  max-height: 62vh;
+  min-height: 57vh;
+  max-height: 57vh;
 `;
 
 const ButtonContainer = styled.div`
