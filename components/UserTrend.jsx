@@ -260,7 +260,7 @@ const Title = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  opacity: 0.75;
+  opacity: 1;
 `;
 
 const StreakContainer = styled.div`
