@@ -11,7 +11,7 @@ import {
   getRewardApiKeyForUser,
 } from './helpers/apiHelper';
 
-export default function UserHabitLog({ currentDate, user, pin }) {
+export default function UserHabitLog({ currentDate, user }) {
   const [messageApi, contextHolder] = message.useMessage();
   const [habitLogsLoading, setHabitLogsLoading] = useState(false);
   const [habitLogs, setHabitLogs] = useState([]);
@@ -68,7 +68,7 @@ export default function UserHabitLog({ currentDate, user, pin }) {
   useEffect(() => {
     refreshHabits();
     refreshHabitLogs();
-  }, [currentDate, user, pin]);
+  }, [currentDate, user]);
 
   const todayIdentifier = moment(new Date(currentDate)).format('YYYY-MM-DD');
 

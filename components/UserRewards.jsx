@@ -15,7 +15,6 @@ export default function UserHabitRewards({
   currentDate,
   user,
   refreshPayoutStatus,
-  pin,
 }) {
   const [messageApi, contextHolder] = message.useMessage();
   const [habitLogs, setHabitLogs] = useState([]);
@@ -76,7 +75,7 @@ export default function UserHabitRewards({
   useEffect(() => {
     refreshHabits();
     refreshHabitLogs();
-  }, [currentDate, user, pin]);
+  }, [currentDate, user]);
 
   const deleteHabit = () => {
     setDeleting(true);

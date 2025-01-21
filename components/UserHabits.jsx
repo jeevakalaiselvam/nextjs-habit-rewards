@@ -23,7 +23,7 @@ import {
   getRewardApiKeyForUser,
 } from './helpers/apiHelper';
 
-export default function UserHabits({ setActiveItem, currentDate, user, pin }) {
+export default function UserHabits({ setActiveItem, currentDate, user }) {
   const [habits, setHabits] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(false);
@@ -106,6 +106,7 @@ export default function UserHabits({ setActiveItem, currentDate, user, pin }) {
   };
 
   const refreshHabits = () => {
+    console.log('USER - refreshHabits', user);
     setLoading(true);
     setEditModeId('');
     axios
@@ -139,11 +140,12 @@ export default function UserHabits({ setActiveItem, currentDate, user, pin }) {
   };
 
   useEffect(() => {
-    if (!showLogCountModal) {
+    console.log('USER', user);
+    if (user && !showLogCountModal) {
       refreshHabits();
       refreshHabitLogs();
     }
-  }, [currentDate, user, showLogCountModal, pin]);
+  }, [user, currentDate, showLogCountModal]);
 
   const saveHabitLog = ({ _id }) => {
     setModalSaving(true);
@@ -198,7 +200,7 @@ export default function UserHabits({ setActiveItem, currentDate, user, pin }) {
       return habitsForCategory?.length > 0;
     });
     setSelectedFitler(categoryForUsers?.[0]?.id);
-  }, [user, pin]);
+  }, [user, habits]);
 
   return (
     <Container>
@@ -236,7 +238,6 @@ export default function UserHabits({ setActiveItem, currentDate, user, pin }) {
       )}
       <CategoryName>{selectedFilter}</CategoryName>
       <FilterContainer>
-        {!habits?.length > 0 && <NoData>No Habits</NoData>}
         {!loading &&
           filteredHabits?.length > 0 &&
           filteredHabits?.map((habit) => {

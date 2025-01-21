@@ -20,12 +20,46 @@ import { Input, message } from 'antd';
 
 export default function Atom() {
   const [selected, setSelected] = useState('');
+  const [userOptions, setUserOptions] = useState([]);
   const [createMode, setCreateMode] = useState(false);
   const [pin, setPin] = useState('');
   const [messageApi, contextHolder] = message.useMessage();
   const innerRef = useRef();
 
   const allValidPints = ['4104', '3333', '0000'];
+
+  const jeevaOptions = [
+    {
+      value: 'Jeeva',
+      label: 'Jeeva',
+    },
+    {
+      value: 'Aswathy',
+      label: 'Aswathy',
+    },
+    {
+      value: 'Mom',
+      label: 'Mom',
+    },
+    {
+      value: 'Dad',
+      label: 'Dad',
+    },
+  ];
+
+  const vikramOptions = [
+    {
+      value: 'Vikram',
+      label: 'Vikram',
+    },
+  ];
+
+  const guestOptions = [
+    {
+      value: 'Guest',
+      label: 'Guest',
+    },
+  ];
 
   const info = (message) => {
     messageApi.info(message);
@@ -46,6 +80,17 @@ export default function Atom() {
   useEffect(() => {
     if (pin?.length == 4 && !allValidPints?.includes(pin)) {
       error('Not a valid pin !');
+    } else {
+      if (pin == '4104') {
+        setUserOptions(jeevaOptions);
+        setSelected(jeevaOptions?.[0]?.value);
+      } else if (pin == '3333') {
+        setUserOptions(vikramOptions);
+        setSelected(vikramOptions?.[0]?.value);
+      } else if (pin == '0000') {
+        setUserOptions(guestOptions);
+        setSelected(guestOptions?.[0]?.value);
+      }
     }
   }, [pin]);
 
@@ -61,6 +106,8 @@ export default function Atom() {
             selected={selected}
             setSelected={setSelected}
             pin={pin}
+            userOptions={userOptions}
+            setUserOptions={setUserOptions}
           />
           <SettingsIcon>
             {createMode && (
@@ -95,7 +142,6 @@ export default function Atom() {
               createMode={createMode}
               setCreateMode={setCreateMode}
               user={selected}
-              pin={pin}
             />
           }
         </Content>
