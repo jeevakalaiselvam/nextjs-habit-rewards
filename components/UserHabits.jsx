@@ -198,7 +198,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
 
   useEffect(() => {
     if (window) {
-      let oldUser = localStorage.get('USER_SELECTED');
+      let oldUser = localStorage.getItem('USER_SELECTED');
       if (user != oldUser) {
         let categoryForUsers = CATEGORY_OPTIONS?.filter((category) => {
           const { id, value } = category;
