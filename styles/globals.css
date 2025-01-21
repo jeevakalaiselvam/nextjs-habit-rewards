@@ -71,3 +71,7 @@ body {
 .ant-card-body {
   padding: 16px !important;
 }
+
+.ant-otp-input {
+  width: 40px;
+}

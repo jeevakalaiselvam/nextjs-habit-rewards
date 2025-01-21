@@ -180,7 +180,7 @@ const PinContainer = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   min-width: 100vw;
   max-width: 100vw;
   min-height: 100vh;
