@@ -112,7 +112,18 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
     axios
       .get(`/api/${getRewardApiKeyForUser(user)}?user=${user}`)
       .then((response) => {
-        setHabits(response?.data);
+        let newHabits = response?.data;
+        setHabits(newHabits);
+
+        let categoryForUsers = CATEGORY_OPTIONS?.filter((category) => {
+          const { id, value } = category;
+          const habitsForCategory = newHabits?.filter((habit) => {
+            return habit?.category == id;
+          });
+          return habitsForCategory?.length > 0;
+        });
+        setSelectedFitler(categoryForUsers?.[0]?.id);
+
         refreshHabitLogs();
         success('Success');
         setLoading(false);
