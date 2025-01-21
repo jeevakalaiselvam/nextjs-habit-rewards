@@ -6,7 +6,7 @@ import {
   COLOR_BACKGROUND_HEADER,
 } from '../components/helpers/colorHelper';
 import UserDropdown from '../components/UserDropdown';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import User from '../components/User';
 import { FacebookFilled, SettingOutlined } from '@ant-design/icons';
 import {
@@ -23,6 +23,7 @@ export default function Atom() {
   const [createMode, setCreateMode] = useState(false);
   const [pin, setPin] = useState('');
   const [messageApi, contextHolder] = message.useMessage();
+  const innerRef = useRef();
 
   const allValidPints = ['4104', '3333', '0000'];
 
@@ -47,6 +48,10 @@ export default function Atom() {
       error('Not a valid pin !');
     }
   }, [pin]);
+
+  useEffect(() => {
+    innerRef.current.focus();
+  }, [innerRef]);
 
   if (pin?.length > 0 && allValidPints?.includes(pin)) {
     return (
@@ -103,6 +108,7 @@ export default function Atom() {
         <PINInner>
           <PINText>PIN</PINText>
           <Input.OTP
+            ref={innerRef}
             length={4}
             mask="🔒"
             inputMode="numeric"
