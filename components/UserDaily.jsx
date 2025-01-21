@@ -68,7 +68,7 @@ export default function UserHabitLog({ currentDate, user }) {
   useEffect(() => {
     refreshHabits();
     refreshHabitLogs();
-  }, [currentDate]);
+  }, [currentDate, user]);
 
   const todayIdentifier = moment(new Date(currentDate)).format('YYYY-MM-DD');
 
