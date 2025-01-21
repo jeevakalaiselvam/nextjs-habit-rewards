@@ -109,6 +109,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
     console.log('JEEVALOG - refreshHabits', user);
     setLoading(true);
     setEditModeId('');
+    setHabitLogsLoading(true);
     axios
       .get(`/api/${getRewardApiKeyForUser(user)}?user=${user}`)
       .then((response) => {
@@ -127,7 +128,6 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   };
 
   const refreshHabitLogs = () => {
-    setHabitLogsLoading(true);
     axios
       .get(`/api/${getHabitApiKeyForUser(user)}?user=${user}`)
       .then((response) => {
