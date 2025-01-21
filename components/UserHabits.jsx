@@ -198,7 +198,7 @@ export default function UserHabits({ setActiveItem, currentDate, user, pin }) {
       return habitsForCategory?.length > 0;
     });
     setSelectedFitler(categoryForUsers?.[0]?.id);
-  }, [user, pin, habits]);
+  }, [user, pin]);
 
   return (
     <Container>
