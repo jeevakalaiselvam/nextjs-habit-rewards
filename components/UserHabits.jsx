@@ -106,7 +106,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   };
 
   const refreshHabits = () => {
-    console.log('USER - refreshHabits', user);
+    console.log('JEEVALOG - refreshHabits', user);
     setLoading(true);
     setEditModeId('');
     axios
@@ -142,11 +142,8 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   };
 
   useEffect(() => {
-    console.log('USER', user);
-    if (user && !showLogCountModal) {
-      refreshHabits();
-      refreshHabitLogs();
-    }
+    refreshHabits();
+    refreshHabitLogs();
   }, [user, currentDate, showLogCountModal]);
 
   const saveHabitLog = ({ _id }) => {
@@ -194,14 +191,14 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   });
 
   useEffect(() => {
-    let categoryForUsers = CATEGORY_OPTIONS?.filter((category) => {
-      const { id, value } = category;
-      const habitsForCategory = habits?.filter((habit) => {
-        return habit?.category == id;
-      });
-      return habitsForCategory?.length > 0;
-    });
-    setSelectedFitler(categoryForUsers?.[0]?.id);
+    // let categoryForUsers = CATEGORY_OPTIONS?.filter((category) => {
+    //   const { id, value } = category;
+    //   const habitsForCategory = habits?.filter((habit) => {
+    //     return habit?.category == id;
+    //   });
+    //   return habitsForCategory?.length > 0;
+    // });
+    // setSelectedFitler(categoryForUsers?.[0]?.id);
   }, [user, habits]);
 
   return (
@@ -241,6 +238,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
       <CategoryName>{selectedFilter}</CategoryName>
       <FilterContainer>
         {!loading &&
+          !habitLogsLoading &&
           filteredHabits?.length > 0 &&
           filteredHabits?.map((habit) => {
             const { title, _id, reward, category, multi } = habit;
