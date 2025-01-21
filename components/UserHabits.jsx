@@ -202,7 +202,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
       return habitsForCategory?.length > 0;
     });
     setSelectedFitler(categoryForUsers?.[0]?.id);
-  }, [user, habits]);
+  }, [user]);
 
   return (
     <Container>
