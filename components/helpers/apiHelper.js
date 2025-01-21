@@ -13,6 +13,14 @@ export const getRewardApiKeyForUser = (user) => {
   if (user == 'Dad') {
     return 'rewards';
   }
+
+  if (user == 'Vikram') {
+    return 'rewards';
+  }
+
+  if (user == 'Guest') {
+    return 'rewards';
+  }
 };
 
 export const getHabitApiKeyForUser = (user) => {
@@ -28,6 +36,13 @@ export const getHabitApiKeyForUser = (user) => {
     return 'habits';
   }
   if (user == 'Dad') {
+    return 'habits';
+  }
+  if (user == 'Guest') {
+    return 'habits';
+  }
+
+  if (user == 'Vikram') {
     return 'habits';
   }
 };
@@ -47,6 +62,14 @@ export const getMongoRewardForUser = (user) => {
   if (user == 'Dad') {
     return 'dadreward';
   }
+
+  if (user == 'Vikram') {
+    return 'vikramreward';
+  }
+
+  if (user == 'Guest') {
+    return 'guestreward';
+  }
 };
 
 export const getMongoHabitsForUser = (user) => {
@@ -63,5 +86,13 @@ export const getMongoHabitsForUser = (user) => {
   }
   if (user == 'Dad') {
     return 'dadhabit';
+  }
+
+  if (user == 'Vikram') {
+    return 'vikramhabit';
+  }
+
+  if (user == 'Guest') {
+    return 'guesthabit';
   }
 };

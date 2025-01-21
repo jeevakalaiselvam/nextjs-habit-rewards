@@ -6,7 +6,7 @@ import {
   COLOR_BACKGROUND_HEADER,
 } from '../components/helpers/colorHelper';
 import UserDropdown from '../components/UserDropdown';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import User from '../components/User';
 import { FacebookFilled, SettingOutlined } from '@ant-design/icons';
 import {
@@ -14,45 +14,102 @@ import {
   HiQuestionMarkCircle,
   HiViewBoards,
 } from 'react-icons/hi';
+import Title from 'antd/es/skeleton/Title';
+import { Input, message } from 'antd';
 
 export default function Atom() {
   const [selected, setSelected] = useState('Jeeva');
   const [createMode, setCreateMode] = useState(false);
-  return (
-    <Container>
-      <Header>
-        <UserDropdown selected={selected} setSelected={setSelected} />
-        <SettingsIcon>
-          {createMode && (
-            <HiViewBoards
-              style={{ opacity: 0.75 }}
-              onClick={() => {
-                setCreateMode((old) => !old);
-              }}
-            />
-          )}
-          {!createMode && (
-            <HiPlusCircle
-              style={{ opacity: 0.75 }}
-              onClick={() => {
-                setCreateMode((old) => !old);
-              }}
-            />
-          )}
-        </SettingsIcon>
-      </Header>
-      <Content>
-        {
-          <User
-            createMode={createMode}
-            setCreateMode={setCreateMode}
-            user={selected}
+  const [pin, setPin] = useState('');
+  const [messageApi, contextHolder] = message.useMessage();
+
+  const allValidPints = ['4104', '3333', '0000'];
+
+  const info = (message) => {
+    messageApi.info(message);
+  };
+
+  const success = (message) => {
+    messageApi.success(message);
+  };
+
+  const error = (message) => {
+    messageApi.error(message);
+  };
+
+  useEffect(() => {
+    setPin('');
+  }, []);
+
+  useEffect(() => {
+    if (pin?.length == 4 && !allValidPints?.includes(pin)) {
+      error('Not a valid pin !');
+    }
+  }, [pin]);
+
+  if (pin?.length > 0 && allValidPints?.includes(pin)) {
+    return (
+      <Container>
+        <Header>
+          <UserDropdown
+            selected={selected}
+            setSelected={setSelected}
+            pin={pin}
           />
-        }
-      </Content>
-    </Container>
-  );
+          <SettingsIcon>
+            {createMode && (
+              <HiViewBoards
+                style={{ opacity: 0.75 }}
+                onClick={() => {
+                  setCreateMode((old) => !old);
+                }}
+              />
+            )}
+            {!createMode && (
+              <HiPlusCircle
+                style={{ opacity: 0.75 }}
+                onClick={() => {
+                  setCreateMode((old) => !old);
+                }}
+              />
+            )}
+          </SettingsIcon>
+        </Header>
+        <Content>
+          {
+            <User
+              createMode={createMode}
+              setCreateMode={setCreateMode}
+              user={selected}
+            />
+          }
+        </Content>
+      </Container>
+    );
+  } else {
+    return (
+      <PinContainer>
+        {contextHolder}
+        <PINText>PIN</PINText>
+        <Input.OTP
+          length={4}
+          mask="🔒"
+          onInput={(e) => {
+            setPin(e?.join(''));
+          }}
+        />
+      </PinContainer>
+    );
+  }
 }
+
+const PINText = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  font-size: 1.5rem;
+`;
 
 const SettingsIcon = styled.div`
   display: flex;
@@ -101,4 +158,17 @@ const Container = styled.div`
   min-height: 100vh;
   max-height: 100vh;
   background-color: ${COLOR_BACKGROUND};
+`;
+
+const PinContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 100vw;
+  max-width: 100vw;
+  min-height: 100vh;
+  max-height: 100vh;
+  background-color: ${COLOR_BACKGROUND};
+  color: #fefefe;
 `;
