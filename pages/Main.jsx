@@ -90,24 +90,34 @@ export default function Atom() {
     return (
       <PinContainer>
         {contextHolder}
-        <PINText>PIN</PINText>
-        <Input.OTP
-          length={4}
-          mask="🔒"
-          onInput={(e) => {
-            setPin(e?.join(''));
-          }}
-          style={{
-            '--input-width': '100px', // Increase input width
-            '--input-height': '50px', // Optional: Adjust height proportionally
-            '--input-border-radius': '8px', // Optional: Add rounded corners
-            '--input-spacing': '10px', // Space between inputs
-          }}
-        />
+        <PINInner>
+          <PINText>PIN</PINText>
+          <Input.OTP
+            length={4}
+            mask="🔒"
+            onInput={(e) => {
+              setPin(e?.join(''));
+            }}
+            style={{
+              '--input-width': '100px', // Increase input width
+              '--input-height': '50px', // Optional: Adjust height proportionally
+              '--input-border-radius': '8px', // Optional: Add rounded corners
+              '--input-spacing': '10px', // Space between inputs
+            }}
+          />
+        </PINInner>
       </PinContainer>
     );
   }
 }
+const PINInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-direction: column;
+  transform: translateY(-5rem);
+`;
 
 const PINText = styled.div`
   display: flex;
@@ -173,8 +183,8 @@ const PinContainer = styled.div`
   justify-content: flex-start;
   min-width: 100vw;
   max-width: 100vw;
-  min-height: 60vh;
-  max-height: 60vh;
+  min-height: 100vh;
+  max-height: 100vh;
   background-color: ${COLOR_BACKGROUND};
   color: #fefefe;
 `;
