@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { COLOR_BACKGROUND } from './helpers/colorHelper';
 import { Radio, Select } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function UserDropdown({ selected, setSelected, pin }) {
   const jeevaOptions = [
@@ -37,15 +37,18 @@ export default function UserDropdown({ selected, setSelected, pin }) {
     },
   ];
 
-  let userOptions = guestOptions;
+  const [userOptions, setUserOptions] = useState(guestOptions);
 
-  if (pin == '4104') {
-    userOptions = jeevaOptions;
-  } else if (pin == '3333') {
-    userOptions = vikramOptions;
-  } else if (pin == '0000') {
-    userOptions = guestOptions;
-  }
+  useEffect(() => {
+    if (pin == '4104') {
+      setUserOptions(jeevaOptions);
+      setSelected(jeevaOptions?.[0]?.value);
+    } else if (pin == '3333') {
+      setSelected(vikramOptions?.[0]?.value);
+    } else if (pin == '0000') {
+      setSelected(guestOptions?.[0]?.value);
+    }
+  }, [pin]);
 
   return (
     <Container>
