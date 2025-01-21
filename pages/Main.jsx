@@ -97,6 +97,12 @@ export default function Atom() {
           onInput={(e) => {
             setPin(e?.join(''));
           }}
+          style={{
+            '--input-width': '100px', // Increase input width
+            '--input-height': '50px', // Optional: Adjust height proportionally
+            '--input-border-radius': '8px', // Optional: Add rounded corners
+            '--input-spacing': '10px', // Space between inputs
+          }}
         />
       </PinContainer>
     );
@@ -164,11 +170,11 @@ const PinContainer = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   min-width: 100vw;
   max-width: 100vw;
-  min-height: 100vh;
-  max-height: 100vh;
+  min-height: 60vh;
+  max-height: 60vh;
   background-color: ${COLOR_BACKGROUND};
   color: #fefefe;
 `;
