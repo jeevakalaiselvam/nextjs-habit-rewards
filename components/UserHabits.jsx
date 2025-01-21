@@ -144,9 +144,6 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   useEffect(() => {
     console.log('USER', user);
     if (user && !showLogCountModal) {
-      if (window) {
-        localStorage.setItem('USER_SELECTED', user);
-      }
       refreshHabits();
       refreshHabitLogs();
     }
@@ -197,19 +194,14 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   });
 
   useEffect(() => {
-    if (window) {
-      let oldUser = localStorage.getItem('USER_SELECTED');
-      if (user != oldUser) {
-        let categoryForUsers = CATEGORY_OPTIONS?.filter((category) => {
-          const { id, value } = category;
-          const habitsForCategory = habits?.filter((habit) => {
-            return habit?.category == id;
-          });
-          return habitsForCategory?.length > 0;
-        });
-        setSelectedFitler(categoryForUsers?.[0]?.id);
-      }
-    }
+    let categoryForUsers = CATEGORY_OPTIONS?.filter((category) => {
+      const { id, value } = category;
+      const habitsForCategory = habits?.filter((habit) => {
+        return habit?.category == id;
+      });
+      return habitsForCategory?.length > 0;
+    });
+    setSelectedFitler(categoryForUsers?.[0]?.id);
   }, [user, habits]);
 
   return (
