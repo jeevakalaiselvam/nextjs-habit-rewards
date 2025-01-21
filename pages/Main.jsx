@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import User from '../components/User';
 import { FacebookFilled, SettingOutlined } from '@ant-design/icons';
 import {
+  HiLogout,
   HiPlusCircle,
   HiQuestionMarkCircle,
   HiViewBoards,
@@ -18,7 +19,7 @@ import Title from 'antd/es/skeleton/Title';
 import { Input, message } from 'antd';
 
 export default function Atom() {
-  const [selected, setSelected] = useState('Jeeva');
+  const [selected, setSelected] = useState('');
   const [createMode, setCreateMode] = useState(false);
   const [pin, setPin] = useState('');
   const [messageApi, contextHolder] = message.useMessage();
@@ -67,9 +68,17 @@ export default function Atom() {
             )}
             {!createMode && (
               <HiPlusCircle
-                style={{ opacity: 0.75 }}
+                style={{ opacity: 0.75, marginRight: '1rem' }}
                 onClick={() => {
                   setCreateMode((old) => !old);
+                }}
+              />
+            )}
+            {!createMode && (
+              <HiLogout
+                style={{ opacity: 0.75 }}
+                onClick={() => {
+                  setPin('');
                 }}
               />
             )}
@@ -81,6 +90,7 @@ export default function Atom() {
               createMode={createMode}
               setCreateMode={setCreateMode}
               user={selected}
+              pin={pin}
             />
           }
         </Content>

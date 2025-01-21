@@ -23,7 +23,7 @@ import {
   getRewardApiKeyForUser,
 } from './helpers/apiHelper';
 
-export default function UserHabits({ setActiveItem, currentDate, user }) {
+export default function UserHabits({ setActiveItem, currentDate, user, pin }) {
   const [habits, setHabits] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(false);
@@ -143,7 +143,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
       refreshHabits();
       refreshHabitLogs();
     }
-  }, [currentDate, user, showLogCountModal]);
+  }, [currentDate, user, showLogCountModal, pin]);
 
   const saveHabitLog = ({ _id }) => {
     setModalSaving(true);
@@ -186,11 +186,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   });
 
   const filteredHabits = habits?.filter((habit) => {
-    if (selectedFilter == 'All') {
-      return true;
-    } else {
-      return habit?.category == selectedFilter;
-    }
+    return habit?.category == selectedFilter;
   });
 
   useEffect(() => {
@@ -202,7 +198,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
       return habitsForCategory?.length > 0;
     });
     setSelectedFitler(categoryForUsers?.[0]?.id);
-  }, [user]);
+  }, [user, pin, habits]);
 
   return (
     <Container>
@@ -240,7 +236,9 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
       )}
       <CategoryName>{selectedFilter}</CategoryName>
       <FilterContainer>
+        {!habits?.length > 0 && <NoData>No Habits</NoData>}
         {!loading &&
+          filteredHabits?.length > 0 &&
           filteredHabits?.map((habit) => {
             const { title, _id, reward, category, multi } = habit;
             const isEditActive = _id === editModeId;
@@ -376,44 +374,54 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
           })}
       </FilterContainer>
 
-      <SelectContainer>
-        {!loading && (
-          <Select
-            value={selectedFilter}
-            style={{
-              width: '100%',
-              height: '45px',
-              marginTop: '1rem',
-              textAlign: 'left',
-            }}
-            onChange={(option) => setSelectedFitler(option)}
-          >
-            {CATEGORY_OPTIONS?.filter((category) => {
-              const { id, value } = category;
-              const habitsForCategory = habits?.filter((habit) => {
-                return habit?.category == id;
-              });
-              return habitsForCategory?.length > 0;
-            })?.map((category) => {
-              const { id, value } = category;
-              const habitsForCategory = habits?.filter((habit) => {
-                return habit?.category == id;
-              });
-              return (
-                <Option value={value}>
-                  <OptionContainer>
-                    <OptionName>{value}</OptionName>
-                    <OptionCount> {habitsForCategory?.length}</OptionCount>
-                  </OptionContainer>
-                </Option>
-              );
-            })}
-          </Select>
-        )}
-      </SelectContainer>
+      {filteredHabits?.length > 0 && (
+        <SelectContainer>
+          {!loading && (
+            <Select
+              value={selectedFilter}
+              style={{
+                width: '100%',
+                height: '45px',
+                marginTop: '1rem',
+                textAlign: 'left',
+              }}
+              onChange={(option) => setSelectedFitler(option)}
+            >
+              {CATEGORY_OPTIONS?.filter((category) => {
+                const { id, value } = category;
+                const habitsForCategory = habits?.filter((habit) => {
+                  return habit?.category == id;
+                });
+                return habitsForCategory?.length > 0;
+              })?.map((category) => {
+                const { id, value } = category;
+                const habitsForCategory = habits?.filter((habit) => {
+                  return habit?.category == id;
+                });
+                return (
+                  <Option value={value}>
+                    <OptionContainer>
+                      <OptionName>{value}</OptionName>
+                      <OptionCount> {habitsForCategory?.length}</OptionCount>
+                    </OptionContainer>
+                  </Option>
+                );
+              })}
+            </Select>
+          )}
+        </SelectContainer>
+      )}
     </Container>
   );
 }
+
+const NoData = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #fefefe;
+`;
 
 const CategoryName = styled.div`
   display: flex;

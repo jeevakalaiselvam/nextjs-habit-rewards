@@ -44,8 +44,10 @@ export default function UserDropdown({ selected, setSelected, pin }) {
       setUserOptions(jeevaOptions);
       setSelected(jeevaOptions?.[0]?.value);
     } else if (pin == '3333') {
+      setUserOptions(vikramOptions);
       setSelected(vikramOptions?.[0]?.value);
     } else if (pin == '0000') {
+      setUserOptions(guestOptions);
       setSelected(guestOptions?.[0]?.value);
     }
   }, [pin]);

@@ -11,7 +11,7 @@ import {
   getRewardApiKeyForUser,
 } from './helpers/apiHelper';
 
-export default function UserHabitLog({ currentDate, user }) {
+export default function UserHabitLog({ currentDate, user, pin }) {
   const [messageApi, contextHolder] = message.useMessage();
   const [habitLogsLoading, setHabitLogsLoading] = useState(false);
   const [habitLogs, setHabitLogs] = useState([]);
@@ -68,7 +68,7 @@ export default function UserHabitLog({ currentDate, user }) {
   useEffect(() => {
     refreshHabits();
     refreshHabitLogs();
-  }, [currentDate, user]);
+  }, [currentDate, user, pin]);
 
   const todayIdentifier = moment(new Date(currentDate)).format('YYYY-MM-DD');
 
@@ -107,6 +107,7 @@ export default function UserHabitLog({ currentDate, user }) {
           }
         />
       )}
+      {!habitLogs?.length > 0 && <NoData>No Habit Logs</NoData>}
       {!habitLogsLoading &&
         !habitsLoading &&
         habitLogs
@@ -158,6 +159,14 @@ export default function UserHabitLog({ currentDate, user }) {
     </Container>
   );
 }
+
+const NoData = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #fefefe;
+`;
 
 const Wrapper = styled.div`
   display: flex;

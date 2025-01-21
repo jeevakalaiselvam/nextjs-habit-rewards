@@ -21,7 +21,7 @@ import UserTrend from './UserTrend';
 import { getRelativeDate } from './helpers/constantHelper';
 import axios from 'axios';
 
-export default function User({ createMode, setCreateMode, user }) {
+export default function User({ createMode, setCreateMode, user, pin }) {
   const [payouts, setPayouts] = useState([]);
   const [activeItem, setActiveItem] = useState('habits');
   const [currentDate, setCurrentDate] = useState(
@@ -164,6 +164,7 @@ export default function User({ createMode, setCreateMode, user }) {
             setActiveItem={setActiveItem}
             currentDate={currentDate}
             user={user}
+            pin={pin}
           />
         )}
 
@@ -172,6 +173,7 @@ export default function User({ createMode, setCreateMode, user }) {
             setActiveItem={setActiveItem}
             currentDate={currentDate}
             user={user}
+            pin={pin}
           />
         )}
         {activeItem == 'rewards' && !createMode && (
@@ -180,6 +182,7 @@ export default function User({ createMode, setCreateMode, user }) {
             currentDate={currentDate}
             user={user}
             refreshPayoutStatus={refreshPayoutStatus}
+            pin={pin}
           />
         )}
         {activeItem == 'history' && !createMode && (
@@ -187,6 +190,7 @@ export default function User({ createMode, setCreateMode, user }) {
             setActiveItem={setActiveItem}
             currentDate={currentDate}
             user={user}
+            pin={pin}
           />
         )}
       </SelectedContainer>
