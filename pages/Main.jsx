@@ -95,6 +95,7 @@ export default function Atom() {
           <Input.OTP
             length={4}
             mask="🔒"
+            type="number"
             onInput={(e) => {
               setPin(e?.join(''));
             }}
