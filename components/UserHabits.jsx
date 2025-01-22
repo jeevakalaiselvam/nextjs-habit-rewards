@@ -198,8 +198,13 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
       });
       return habitsForCategory?.length > 0;
     });
-    setSelectedFitler(categoryForUsers?.[0]?.id);
-  }, [user]);
+
+    const allCatOptions = categoryForUsers?.map((item) => item?.value);
+
+    if (!allCatOptions?.includes(selectedFilter)) {
+      setSelectedFitler(categoryForUsers?.[0]?.id);
+    }
+  }, [user, habits]);
 
   return (
     <Container>
