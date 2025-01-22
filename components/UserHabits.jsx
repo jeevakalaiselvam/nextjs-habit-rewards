@@ -208,7 +208,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
 
   return (
     <Container>
-      {loading && (
+      {(loading || habitLogsLoading)(
         <Spin
           indicator={
             <LoadingOutlined
