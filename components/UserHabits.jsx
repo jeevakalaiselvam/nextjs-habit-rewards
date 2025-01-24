@@ -106,7 +106,6 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   };
 
   const refreshHabits = () => {
-    console.log('JEEVALOG - refreshHabits', user);
     setLoading(true);
     setEditModeId('');
     setHabitLogsLoading(true);
@@ -128,6 +127,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   };
 
   const refreshHabitLogs = () => {
+    setHabitLogsLoading(true);
     axios
       .get(`/api/${getHabitApiKeyForUser(user)}?user=${user}`)
       .then((response) => {
@@ -186,9 +186,13 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
     return habit?.habitId;
   });
 
-  const filteredHabits = habits?.filter((habit) => {
+  let filteredHabits = habits?.filter((habit) => {
     return habit?.category == selectedFilter;
   });
+
+  filteredHabits = filteredHabits.sort((habit1, habit2) =>
+    habit1?.title?.toLowerCase().localeCompare(habit2?.title?.toLowerCase())
+  );
 
   useEffect(() => {
     let categoryForUsers = CATEGORY_OPTIONS?.filter((category) => {
