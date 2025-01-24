@@ -2,7 +2,7 @@ import { Button, Card, message, Modal, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { COLOR_ACCENT, COLOR_SUCCESS } from './helpers/colorHelper';
+import { COLOR_SUCCESS } from './helpers/colorHelper';
 import { LoadingOutlined } from '@ant-design/icons';
 import moment from 'moment';
 import LongPress from './LongPress';
@@ -274,7 +274,7 @@ const TotalRs = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  color: ${COLOR_ACCENT};
+  color: ${COLOR_SUCCESS};
   padding: 4rem 1rem 1rem 1rem;
   flex-direction: column;
   font-size: 4rem;
@@ -305,7 +305,7 @@ const Reward = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  color: ${COLOR_ACCENT};
+  color: ${COLOR_SUCCESS};
   width: 50px;
 `;
 

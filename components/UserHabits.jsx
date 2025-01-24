@@ -22,6 +22,7 @@ import {
   getHabitApiKeyForUser,
   getRewardApiKeyForUser,
 } from './helpers/apiHelper';
+import RewardCount from './RewardCount';
 
 export default function UserHabits({ setActiveItem, currentDate, user }) {
   const [habits, setHabits] = useState([]);
@@ -55,6 +56,22 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   const error = (message) => {
     messageApi.error(message);
   };
+
+  useEffect(() => {
+    let categoryForUsers = CATEGORY_OPTIONS?.filter((category) => {
+      const { id, value } = category;
+      const habitsForCategory = habits?.filter((habit) => {
+        return habit?.category == id;
+      });
+      return habitsForCategory?.length > 0;
+    });
+
+    const allCatOptions = categoryForUsers?.map((item) => item?.value);
+
+    if (!allCatOptions?.includes(selectedFilter)) {
+      setSelectedFitler(categoryForUsers?.[0]?.id);
+    }
+  }, [user, habits]);
 
   const deleteHabit = () => {
     setDeleteLoading(true);
@@ -194,21 +211,10 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
     habit1?.title?.toLowerCase().localeCompare(habit2?.title?.toLowerCase())
   );
 
-  useEffect(() => {
-    let categoryForUsers = CATEGORY_OPTIONS?.filter((category) => {
-      const { id, value } = category;
-      const habitsForCategory = habits?.filter((habit) => {
-        return habit?.category == id;
-      });
-      return habitsForCategory?.length > 0;
-    });
-
-    const allCatOptions = categoryForUsers?.map((item) => item?.value);
-
-    if (!allCatOptions?.includes(selectedFilter)) {
-      setSelectedFitler(categoryForUsers?.[0]?.id);
-    }
-  }, [user, habits]);
+  const todayHabitRewards = todayHabits?.reduce((acc, innerHabit) => {
+    const habit = habits?.find((h) => h?._id == innerHabit?.habitId);
+    return acc + innerHabit?.count * habit?.reward;
+  }, 0);
 
   return (
     <Container>
@@ -237,14 +243,21 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
             setShowCountModal(false);
           }}
         >
-          <Counter
-            habit={selectedHabit}
-            newCount={newCount}
-            setNewCount={setNewCount}
-          />
+          <CounterContainer>
+            <Counter
+              habit={selectedHabit}
+              newCount={newCount}
+              setNewCount={setNewCount}
+            />
+          </CounterContainer>
         </Modal>
       )}
-      <CategoryName>{selectedFilter}</CategoryName>
+      <CategoryName>
+        <CatNameContainer>{selectedFilter}</CatNameContainer>
+        <RewardContainer>
+          <RewardCount reward={todayHabitRewards} />
+        </RewardContainer>
+      </CategoryName>
       <FilterContainer>
         {!loading &&
           !habitLogsLoading &&
@@ -425,12 +438,29 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   );
 }
 
-const NoData = styled.div`
+const CounterContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   padding: 2rem;
   color: #fefefe;
+`;
+
+const CatNameContainer = styled.div`
+  color: #fefefe;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  opacity: 0.5;
+`;
+
+const RewardContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0rem 1rem 0.25rem 1rem;
 `;
 
 const CategoryName = styled.div`
@@ -440,7 +470,7 @@ const CategoryName = styled.div`
   width: 100%;
   padding: 0.5rem 0.25rem 0.25rem 0.5rem;
   color: #fefefe;
-  opacity: 0.5;
+  position: relative;
 `;
 
 const OptionCount = styled.div`
@@ -480,8 +510,8 @@ const FilterContainer = styled.div`
   flex-direction: column;
   width: 100%;
   overflow: scroll;
-  min-height: 58vh;
-  max-height: 58vh;
+  min-height: 50vh;
+  max-height: 50vh;
 `;
 
 const ButtonContainer = styled.div`
@@ -578,6 +608,6 @@ const Container = styled.div`
   justify-content: flex-start;
   min-height: 70vh;
   max-height: 70vh;
-  overflow: scroll;
+  overflow: hidden;
   width: 102%;
 `;
