@@ -252,9 +252,11 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
           </CounterContainer>
         </Modal>
       )}
+      {!loading && !habitLogsLoading && (
+        <CatNameContainer>{selectedFilter}</CatNameContainer>
+      )}
       {!isNaN(todayHabitRewards) && todayHabitRewards && false && (
         <CategoryName>
-          <CatNameContainer>{selectedFilter}</CatNameContainer>
           <RewardContainer>
             <RewardCount reward={todayHabitRewards} />
           </RewardContainer>
@@ -451,11 +453,12 @@ const CounterContainer = styled.div`
 
 const CatNameContainer = styled.div`
   color: #fefefe;
-  position: absolute;
-  bottom: 0;
-  right: 0;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: flex-start;
   opacity: 0.5;
-  padding: 0rem 0rem 0.25rem 0rem;
+  padding: 0.5rem 0rem 0.25rem 0rem;
 `;
 
 const RewardContainer = styled.div`
