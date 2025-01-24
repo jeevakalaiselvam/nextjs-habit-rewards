@@ -252,7 +252,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
           </CounterContainer>
         </Modal>
       )}
-      {!isNaN(todayHabitRewards) && todayHabitRewards && (
+      {!isNaN(todayHabitRewards) && todayHabitRewards && false && (
         <CategoryName>
           <CatNameContainer>{selectedFilter}</CatNameContainer>
           <RewardContainer>
