@@ -252,12 +252,14 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
           </CounterContainer>
         </Modal>
       )}
-      <CategoryName>
-        <CatNameContainer>{selectedFilter}</CatNameContainer>
-        <RewardContainer>
-          <RewardCount reward={todayHabitRewards} />
-        </RewardContainer>
-      </CategoryName>
+      {!isNaN(todayHabitRewards) && todayHabitRewards && (
+        <CategoryName>
+          <CatNameContainer>{selectedFilter}</CatNameContainer>
+          <RewardContainer>
+            <RewardCount reward={todayHabitRewards} />
+          </RewardContainer>
+        </CategoryName>
+      )}
       <FilterContainer>
         {!loading &&
           !habitLogsLoading &&
