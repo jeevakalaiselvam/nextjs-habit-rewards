@@ -455,14 +455,15 @@ const CatNameContainer = styled.div`
   bottom: 0;
   right: 0;
   opacity: 0.5;
+  padding: 0rem 0rem 0.25rem 0rem;
 `;
 
 const RewardContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
-  padding: 0rem 1rem 0.25rem 1rem;
+  padding: 0.25rem 1rem 0.25rem 1rem;
 `;
 
 const CategoryName = styled.div`
@@ -512,8 +513,8 @@ const FilterContainer = styled.div`
   flex-direction: column;
   width: 100%;
   overflow: scroll;
-  min-height: 60vh;
-  max-height: 60vh;
+  min-height: 57vh;
+  max-height: 57vh;
 `;
 
 const ButtonContainer = styled.div`
@@ -608,8 +609,8 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
-  min-height: 80vh;
-  max-height: 80vh;
+  min-height: 78vh;
+  max-height: 78vh;
   overflow: hidden;
   width: 102%;
 `;
