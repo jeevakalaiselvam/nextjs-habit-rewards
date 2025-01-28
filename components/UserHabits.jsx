@@ -306,7 +306,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
                           />
 
                           <Input
-                            type="text"
+                            type="number"
                             value={newReward}
                             placeholder={reward}
                             onChange={(e) => setNewReward(e.target.value)}

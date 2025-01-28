@@ -78,7 +78,7 @@ export default function UserCreate({ setActiveItem, setCreateMode, user }) {
       <Input
         placeholder="Enter Reward..."
         value={reward}
-        type="tel"
+        type="number"
         pattern="[0-9]*"
         onChange={(e) => setReward(e.target.value)}
         style={{ width: '100%', marginTop: '1rem' }}
