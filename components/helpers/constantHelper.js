@@ -11,6 +11,7 @@ export const CATEGORY_OPTIONS = [
   { id: 'House', value: 'House' },
   { id: 'Food', value: 'Food' },
   { id: 'Base', value: 'Base' },
+  { id: 'Others', value: 'Others' },
 ];
 
 export const MULTI_OPTIONS = [
