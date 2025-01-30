@@ -15,7 +15,7 @@ export default async function handler(req, res) {
       const db = client.db('habittracker');
       const result = await db
         .collection(getMongoRewardForUser(user))
-        .insertOne({ title, reward, category, multi });
+        .insertOne({ title, reward, category, multi, type: 'NEW1' });
 
       res.status(201).json({ message: 'Habit added successfully' });
     } catch (error) {

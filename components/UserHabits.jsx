@@ -204,7 +204,8 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
   });
 
   let filteredHabits = habits?.filter((habit) => {
-    return habit?.category == selectedFilter;
+    console.log(habit);
+    return habit?.category == selectedFilter && habit?.type == 'NEW1';
   });
 
   filteredHabits = filteredHabits.sort((habit1, habit2) =>
@@ -401,7 +402,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
           })}
       </FilterContainer>
 
-      {filteredHabits?.length > 0 && (
+      {(filteredHabits?.length > 0 || true) && (
         <SelectContainer>
           {!loading && (
             <Select
@@ -419,11 +420,11 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
                 const habitsForCategory = habits?.filter((habit) => {
                   return habit?.category == id;
                 });
-                return habitsForCategory?.length > 0;
+                return true;
               })?.map((category) => {
                 const { id, value } = category;
                 const habitsForCategory = habits?.filter((habit) => {
-                  return habit?.category == id;
+                  return habit?.category == id && habit?.type == 'NEW1';
                 });
                 return (
                   <Option value={value}>

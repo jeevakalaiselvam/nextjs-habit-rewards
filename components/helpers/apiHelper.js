@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export const getRewardApiKeyForUser = (user) => {
   if (user == 'Jeeva') {
     return 'rewards';
