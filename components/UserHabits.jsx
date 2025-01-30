@@ -420,7 +420,7 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
                 const habitsForCategory = habits?.filter((habit) => {
                   return habit?.category == id;
                 });
-                return true;
+                return habitsForCategory?.length > 0;
               })?.map((category) => {
                 const { id, value } = category;
                 const habitsForCategory = habits?.filter((habit) => {
