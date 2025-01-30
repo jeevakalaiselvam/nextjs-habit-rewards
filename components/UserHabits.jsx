@@ -594,7 +594,7 @@ const Reward = styled.div`
   align-items: center;
   justify-content: center;
   color: ${COLOR_ACCENT};
-  width: 50px;
+  width: 75px;
 `;
 
 const Count = styled.div`
