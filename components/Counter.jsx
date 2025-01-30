@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import { COLOR_ACCENT } from './helpers/colorHelper';
 
 export default function Counter({ old, habit, newCount, setNewCount }) {
+  useEffect(() => {
+    setNewCount(1);
+  }, []);
+
   return (
     <Container>
       <CountContainer>
