@@ -24,7 +24,12 @@ import {
 } from './helpers/apiHelper';
 import RewardCount from './RewardCount';
 
-export default function UserHabits({ setActiveItem, currentDate, user }) {
+export default function UserHabits({
+  setActiveItem,
+  currentDate,
+  user,
+  setTodayAmount,
+}) {
   const [habits, setHabits] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(false);
@@ -216,6 +221,14 @@ export default function UserHabits({ setActiveItem, currentDate, user }) {
     const habit = habits?.find((h) => h?._id == innerHabit?.habitId);
     return acc + innerHabit?.count * habit?.reward;
   }, 0);
+
+  useEffect(() => {
+    const todayHabitRewards = todayHabits?.reduce((acc, innerHabit) => {
+      const habit = habits?.find((h) => h?._id == innerHabit?.habitId);
+      return acc + innerHabit?.count * habit?.reward;
+    }, 0);
+    setTodayAmount(todayHabitRewards);
+  }, [todayHabits]);
 
   return (
     <Container>

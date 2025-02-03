@@ -4,6 +4,7 @@ import {
   COLOR_ACCENT,
   COLOR_BACKGROUND,
   COLOR_BACKGROUND_HEADER,
+  COLOR_SUCCESS,
 } from '../components/helpers/colorHelper';
 import UserDropdown from '../components/UserDropdown';
 import { useEffect, useRef, useState } from 'react';
@@ -22,6 +23,7 @@ export default function Atom() {
   const [selected, setSelected] = useState('');
   const [userOptions, setUserOptions] = useState([]);
   const [createMode, setCreateMode] = useState(false);
+  const [todayAmount, setTodayAmount] = useState('');
   const [pin, setPin] = useState('');
   const [messageApi, contextHolder] = message.useMessage();
   const innerRef = useRef();
@@ -96,7 +98,7 @@ export default function Atom() {
   }, [pin]);
 
   useEffect(() => {
-    innerRef.current.focus();
+    innerRef?.current?.focus();
   }, [innerRef]);
 
   if (pin?.length > 0 && allValidPints?.includes(pin)) {
@@ -111,6 +113,7 @@ export default function Atom() {
             setUserOptions={setUserOptions}
           />
           <SettingsIcon>
+            {isNaN(todayAmount) && <TodayAmount>Rs {todayAmount}</TodayAmount>}
             {createMode && (
               <HiViewBoards
                 style={{ opacity: 0.75 }}
@@ -144,6 +147,7 @@ export default function Atom() {
               createMode={createMode}
               setCreateMode={setCreateMode}
               user={selected}
+              setTodayAmount={setTodayAmount}
             />
           }
         </Content>
@@ -175,6 +179,15 @@ export default function Atom() {
     );
   }
 }
+
+const TodayAmount = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100px;
+  justify-content: center;
+  color: ${COLOR_SUCCESS};
+`;
+
 const PINInner = styled.div`
   display: flex;
   align-items: center;

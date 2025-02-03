@@ -11,7 +11,7 @@ import {
   getRewardApiKeyForUser,
 } from './helpers/apiHelper';
 
-export default function UserHabitLog({ currentDate, user }) {
+export default function UserHabitLog({ currentDate, user, setTodayAmount }) {
   const [messageApi, contextHolder] = message.useMessage();
   const [habitLogsLoading, setHabitLogsLoading] = useState(false);
   const [habitLogs, setHabitLogs] = useState([]);
@@ -91,6 +91,14 @@ export default function UserHabitLog({ currentDate, user }) {
         refreshHabitLogs();
       });
   };
+
+  useEffect(() => {
+    const todayHabitRewards = todayHabits?.reduce((acc, innerHabit) => {
+      const habit = habits?.find((h) => h?._id == innerHabit?.habitId);
+      return acc + innerHabit?.count * habit?.reward;
+    }, 0);
+    setTodayAmount(todayHabitRewards);
+  }, [todayHabits]);
 
   return (
     <Container>
