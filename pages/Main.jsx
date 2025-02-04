@@ -183,7 +183,9 @@ export default function Atom() {
 const TodayAmount = styled.div`
   display: flex;
   align-items: center;
-  width: 100px;
+  width: 70px;
+  transform: translateY(1px);
+  padding: 0 0.5rem 0 0;
   font-size: 1rem;
   justify-content: center;
   color: ${COLOR_SUCCESS};
