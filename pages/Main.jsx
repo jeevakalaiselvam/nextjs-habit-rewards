@@ -184,6 +184,7 @@ const TodayAmount = styled.div`
   display: flex;
   align-items: center;
   width: 100px;
+  font-size: 1rem;
   justify-content: center;
   color: ${COLOR_SUCCESS};
 `;
