@@ -113,7 +113,7 @@ export default function Atom() {
             setUserOptions={setUserOptions}
           />
           <SettingsIcon>
-            {isNaN(todayAmount) && <TodayAmount>Rs {todayAmount}</TodayAmount>}
+            {<TodayAmount>Rs {todayAmount ?? 0}</TodayAmount>}
             {createMode && (
               <HiViewBoards
                 style={{ opacity: 0.75 }}

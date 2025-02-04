@@ -92,11 +92,19 @@ export default function UserHabitLog({ currentDate, user, setTodayAmount }) {
       });
   };
 
+  const todayHabits = habitLogs?.filter((habitLog) => {
+    const habit = habits?.find((h) => h?._id == habitLog?.habitId);
+    const dateFromTime = habitLog?.time;
+    const isHabitPartOfToday = dateFromTime == todayIdentifier;
+    return isHabitPartOfToday;
+  });
+
   useEffect(() => {
     const todayHabitRewards = todayHabits?.reduce((acc, innerHabit) => {
       const habit = habits?.find((h) => h?._id == innerHabit?.habitId);
       return acc + innerHabit?.count * habit?.reward;
     }, 0);
+
     setTodayAmount(todayHabitRewards);
   }, [todayHabits]);
 
