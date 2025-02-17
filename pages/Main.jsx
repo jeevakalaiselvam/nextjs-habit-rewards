@@ -39,14 +39,14 @@ export default function Atom() {
       value: 'Aswathy',
       label: 'Aswathy',
     },
-    {
-      value: 'Mom',
-      label: 'Mom',
-    },
-    {
-      value: 'Dad',
-      label: 'Dad',
-    },
+    // {
+    //   value: 'Mom',
+    //   label: 'Mom',
+    // },
+    // {
+    //   value: 'Dad',
+    //   label: 'Dad',
+    // },
   ];
 
   const vikramOptions = [
