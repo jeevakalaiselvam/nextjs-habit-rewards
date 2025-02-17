@@ -3,7 +3,16 @@ import {
   FacebookFilled,
   LoadingOutlined,
 } from '@ant-design/icons';
-import { Button, Card, Input, message, Modal, Select, Spin } from 'antd';
+import {
+  Button,
+  Card,
+  Checkbox,
+  Input,
+  message,
+  Modal,
+  Select,
+  Spin,
+} from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -45,6 +54,7 @@ export default function UserHabits({
   const [modalSaving, setModalSaving] = useState(false);
   const [newCount, setNewCount] = useState(1);
   const [habitLogsLoading, setHabitLogsLoading] = useState(false);
+  const [showAll, setShowAll] = useState(false);
   const [habitLogs, setHabitLogs] = useState([]);
   const [selectedFilter, setSelectedFitler] = useState(
     CATEGORY_OPTIONS?.[0]?.id
@@ -210,7 +220,9 @@ export default function UserHabits({
 
   let filteredHabits = habits?.filter((habit) => {
     console.log(habit);
-    return habit?.category == selectedFilter && habit?.type == 'NEW1';
+    return (
+      (habit?.category == selectedFilter && habit?.type == 'NEW1') || showAll
+    );
   });
 
   filteredHabits = filteredHabits.sort((habit1, habit2) =>
@@ -267,15 +279,22 @@ export default function UserHabits({
         </Modal>
       )}
       {!loading && !habitLogsLoading && (
-        <CatNameContainer>{selectedFilter}</CatNameContainer>
-      )}
-      {!isNaN(todayHabitRewards) && todayHabitRewards && false && (
-        <CategoryName>
+        <CatNameContainer>
+          {showAll ? 'All Habits' : selectedFilter}
           <RewardContainer>
-            <RewardCount reward={todayHabitRewards} />
+            <Checkbox
+              checked={showAll}
+              onChange={() => {
+                setShowAll((old) => !old);
+              }}
+              title="Show All"
+            >
+              Show All{' '}
+            </Checkbox>
           </RewardContainer>
-        </CategoryName>
+        </CatNameContainer>
       )}
+
       <FilterContainer>
         {!loading &&
           !habitLogsLoading &&
@@ -470,7 +489,7 @@ const CatNameContainer = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  justify-content: flex-start;
+  justify-content: space-between;
   opacity: 0.5;
   padding: 0.5rem 0rem 0.25rem 0rem;
 `;
@@ -478,8 +497,8 @@ const CatNameContainer = styled.div`
 const RewardContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  width: 100%;
+  justify-content: flex-end;
+  flex: 1;
   padding: 0.25rem 1rem 0.25rem 1rem;
 `;
 
@@ -488,6 +507,7 @@ const CategoryName = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100%;
+  flex: 1;
   padding: 0.5rem 0.25rem 0.25rem 0.5rem;
   color: #fefefe;
   position: relative;
