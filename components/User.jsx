@@ -35,7 +35,9 @@ export default function User({
 
   const formattedDate = currentDate.split('-').reverse().join('-');
 
-  const daysText = getRelativeDate(formattedDate);
+  const daysText =
+    getRelativeDate(formattedDate) +
+    ` - ${new Date(currentDate).toLocaleString('en-US', { weekday: 'long' })}`;
   const istoday = daysText == 'Today';
 
   useEffect(() => {
@@ -83,7 +85,9 @@ export default function User({
         <Middle>
           <Top>{formattedDate}</Top>
           <Bottom>
-            <span style={{ opacity: 0.5 }}>{daysText}</span>
+            <span style={{ opacity: 0.5, padding: '.5rem 0rem .2rem 0rem' }}>
+              {daysText}
+            </span>
             <span
               style={{
                 display: 'flex',
