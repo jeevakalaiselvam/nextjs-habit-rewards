@@ -49,6 +49,30 @@ export const getHabitApiKeyForUser = (user) => {
   }
 };
 
+export const getHabitApiKeyForUserBulk = (user) => {
+  if (user == 'Jeeva') {
+    return 'habits/bulk';
+  }
+
+  if (user == 'Aswathy') {
+    return 'habits/bulk';
+  }
+
+  if (user == 'Mom') {
+    return 'habits/bulk';
+  }
+  if (user == 'Dad') {
+    return 'habits/bulk';
+  }
+  if (user == 'Guest') {
+    return 'habits/bulk';
+  }
+
+  if (user == 'Vikram') {
+    return 'habits/bulk';
+  }
+};
+
 export const getMongoRewardForUser = (user) => {
   if (user == 'Jeeva') {
     return 'jeevareward';

@@ -3,5 +3,6 @@ export const COLOR_BACKGROUND_HEADER = '#121723';
 
 export const CARD_BACKGROUND = '#121723';
 export const COLOR_ACCENT = '#1890ff';
+export const COLOR_ACCENT_DARK = 'rgb(6, 42, 75)';
 export const COLOR_SUCCESS = '#15C2C2';
 export const COLOR_STREAK = '#15C2C2';

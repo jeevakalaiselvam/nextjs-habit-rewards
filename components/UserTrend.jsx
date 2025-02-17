@@ -159,8 +159,6 @@ export default function UserTrend({ setActiveItem, currentDate, user }) {
     }
   });
 
-  console.log({ habitNames, allHabitCategoryDates });
-
   return (
     <Container>
       {(habitLogsLoading || habitLoading) && (

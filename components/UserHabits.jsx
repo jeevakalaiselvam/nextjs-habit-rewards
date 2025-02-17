@@ -20,6 +20,7 @@ import LongPress from './LongPress';
 import {
   CARD_BACKGROUND,
   COLOR_ACCENT,
+  COLOR_ACCENT_DARK,
   COLOR_BACKGROUND,
   COLOR_SUCCESS,
 } from './helpers/colorHelper';
@@ -29,6 +30,7 @@ import moment from 'moment/moment';
 import { HiPlusCircle } from 'react-icons/hi';
 import {
   getHabitApiKeyForUser,
+  getHabitApiKeyForUserBulk,
   getRewardApiKeyForUser,
 } from './helpers/apiHelper';
 import RewardCount from './RewardCount';
@@ -42,6 +44,7 @@ export default function UserHabits({
   const [habits, setHabits] = useState([]);
   const [messageApi, contextHolder] = message.useMessage();
   const [loading, setLoading] = useState(false);
+  const [habitButtonLoading, setHabitButtonLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [editLoading, setEditLoading] = useState(false);
   const [editModeId, setEditModeId] = useState('');
@@ -56,6 +59,7 @@ export default function UserHabits({
   const [habitLogsLoading, setHabitLogsLoading] = useState(false);
   const [showAll, setShowAll] = useState(false);
   const [habitLogs, setHabitLogs] = useState([]);
+  const [draftHabits, setDraftHabits] = useState([]);
   const [selectedFilter, setSelectedFitler] = useState(
     CATEGORY_OPTIONS?.[0]?.id
   );
@@ -174,6 +178,8 @@ export default function UserHabits({
   };
 
   useEffect(() => {
+    setHabitButtonLoading(false);
+    setDraftHabits([]);
     refreshHabits();
     refreshHabitLogs();
   }, [user, currentDate, showLogCountModal]);
@@ -200,6 +206,45 @@ export default function UserHabits({
     setModalSaving(false);
   };
 
+  const saveHabitLogToDraft = ({ _id }) => {
+    setDraftHabits((old) => [
+      ...old,
+      {
+        time: currentDate,
+        habitId: _id,
+        count: newCount,
+      },
+    ]);
+    console.log(draftHabits, _id);
+  };
+
+  const saveAllHabitsInBulk = () => {
+    setHabitButtonLoading(true);
+    axios
+      .post(`/api/${getHabitApiKeyForUserBulk(user)}?user=${user}`, {
+        habits: draftHabits,
+      })
+      .then((response) => {
+        success('Habits added !');
+        setModalSaving(false);
+        setHabitButtonLoading(false);
+        setShowCountModal(false);
+        refreshHabits();
+        refreshHabitLogs();
+      })
+      .catch((err) => {
+        console.log(err);
+        error('Unable to add Habits !');
+        setModalSaving(false);
+        setShowCountModal(false);
+        setHabitButtonLoading(false);
+        setDraftHabits([]);
+        refreshHabits();
+        refreshHabitLogs();
+      });
+    setModalSaving(false);
+  };
+
   const todayIdentifier = moment(new Date(currentDate)).format('YYYY-MM-DD');
   const todayHabits = habitLogs?.filter((habitLog) => {
     const habit = habits?.find((h) => h?._id == habitLog?.habitId);
@@ -209,6 +254,7 @@ export default function UserHabits({
   });
 
   const habitLoggedCountToday = {};
+  const habitDraftCount = {};
   const todayAlreadyPresentIds = todayHabits?.map((habit) => {
     if (!habitLoggedCountToday?.[habit?.habitId]) {
       habitLoggedCountToday[habit?.habitId] = 1;
@@ -218,8 +264,16 @@ export default function UserHabits({
     return habit?.habitId;
   });
 
+  const currentAddedDrafts = draftHabits?.map((habit) => {
+    if (!habitDraftCount?.[habit?.habitId]) {
+      habitDraftCount[habit?.habitId] = 1;
+    } else {
+      habitDraftCount[habit?.habitId] += 1;
+    }
+    return habit?.habitId;
+  });
+
   let filteredHabits = habits?.filter((habit) => {
-    console.log(habit);
     return (
       (habit?.category == selectedFilter && habit?.type == 'NEW1') || showAll
     );
@@ -239,8 +293,15 @@ export default function UserHabits({
       const habit = habits?.find((h) => h?._id == innerHabit?.habitId);
       return acc + innerHabit?.count * habit?.reward;
     }, 0);
-    setTodayAmount(todayHabitRewards);
-  }, [todayHabits]);
+
+    const draftHabitRewards = draftHabits?.reduce((acc, innerHabit) => {
+      const habit = habits?.find((h) => h?._id == innerHabit?.habitId);
+      return acc + innerHabit?.count * habit?.reward;
+    }, 0);
+
+    let total = todayHabitRewards + draftHabitRewards;
+    setTodayAmount(total);
+  }, [todayHabits, draftHabits]);
 
   return (
     <Container>
@@ -303,6 +364,7 @@ export default function UserHabits({
             const { title, _id, reward, category, multi } = habit;
             const isEditActive = _id === editModeId;
             const countToday = habitLoggedCountToday?.[_id];
+            const draftCount = habitDraftCount?.[_id];
             return (
               <LongPress
                 onLongPress={() => {
@@ -413,12 +475,18 @@ export default function UserHabits({
                         </CategoryReward>
                       )}
                     </Wrapper>
+                    {<DraftCount>{showAll ? draftCount : ''}</DraftCount>}
                     {!isEditActive && (
                       <AddWrapper>
                         <Add
                           onClick={() => {
-                            setSelectedHabit(habit);
-                            setShowCountModal(true);
+                            if (!showAll) {
+                              setSelectedHabit(habit);
+                              setShowCountModal(true);
+                            } else {
+                              console.log(_id);
+                              saveHabitLogToDraft(habit);
+                            }
                           }}
                         >
                           <HiPlusCircle
@@ -434,7 +502,7 @@ export default function UserHabits({
           })}
       </FilterContainer>
 
-      {(filteredHabits?.length > 0 || true) && (
+      {(filteredHabits?.length > 0 || true) && !showAll && (
         <SelectContainer>
           {!loading && (
             <Select
@@ -471,9 +539,34 @@ export default function UserHabits({
           )}
         </SelectContainer>
       )}
+      {filteredHabits?.length > 0 && showAll && (
+        <SelectContainer>
+          <Button
+            loading={habitButtonLoading}
+            type="primary"
+            color="primary"
+            style={{ width: '100%' }}
+            onClick={() => {
+              saveAllHabitsInBulk();
+            }}
+          >
+            SAVE HABITS
+          </Button>
+        </SelectContainer>
+      )}
     </Container>
   );
 }
+
+const DraftCount = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: ${COLOR_ACCENT_DARK};
+  min-width: 20px;
+  background-color: ${COLOR_ACCENT};
+`;
 
 const CounterContainer = styled.div`
   display: flex;
@@ -550,8 +643,8 @@ const FilterContainer = styled.div`
   flex-direction: column;
   width: 100%;
   overflow: scroll;
-  min-height: 57vh;
-  max-height: 57vh;
+  min-height: 60vh;
+  max-height: 60vh;
 `;
 
 const ButtonContainer = styled.div`
