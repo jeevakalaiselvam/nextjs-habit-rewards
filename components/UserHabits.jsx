@@ -275,7 +275,7 @@ export default function UserHabits({
 
   let filteredHabits = habits?.filter((habit) => {
     return (
-      (habit?.category == selectedFilter && habit?.type == 'NEW1') || showAll
+      habit?.category == selectedFilter || (showAll && habit?.type == 'NEW1')
     );
   });
 
