@@ -27,7 +27,7 @@ import {
 import { CATEGORY_OPTIONS, MULTI_OPTIONS } from './helpers/constantHelper';
 import Counter from './Counter';
 import moment from 'moment/moment';
-import { HiPlusCircle } from 'react-icons/hi';
+import { HiMinusCircle, HiPlusCircle } from 'react-icons/hi';
 import {
   getHabitApiKeyForUser,
   getHabitApiKeyForUserBulk,
@@ -206,6 +206,24 @@ export default function UserHabits({
     setModalSaving(false);
   };
 
+  const removeHabitFromDraft = ({ _id }) => {
+    let isFound = false;
+    setDraftHabits((old) =>
+      old?.filter((iHabit) => {
+        if (iHabit?.habitId === _id) {
+          if (!isFound) {
+            isFound = true;
+            return false;
+          } else {
+            return true;
+          }
+        } else {
+          return true;
+        }
+      })
+    );
+  };
+
   const saveHabitLogToDraft = ({ _id }) => {
     setDraftHabits((old) => [
       ...old,
@@ -215,7 +233,6 @@ export default function UserHabits({
         count: newCount,
       },
     ]);
-    console.log(draftHabits, _id);
   };
 
   const saveAllHabitsInBulk = () => {
@@ -282,6 +299,12 @@ export default function UserHabits({
   filteredHabits = filteredHabits.sort((habit1, habit2) =>
     habit1?.title?.toLowerCase().localeCompare(habit2?.title?.toLowerCase())
   );
+
+  if (showAll) {
+    filteredHabits = filteredHabits?.sort((h1, h2) =>
+      h2.category?.localeCompare(h1.category)
+    );
+  }
 
   const todayHabitRewards = todayHabits?.reduce((acc, innerHabit) => {
     const habit = habits?.find((h) => h?._id == innerHabit?.habitId);
@@ -475,6 +498,24 @@ export default function UserHabits({
                         </CategoryReward>
                       )}
                     </Wrapper>
+                    {!isEditActive && showAll && (
+                      <AddWrapper>
+                        <Add
+                          onClick={() => {
+                            if (!showAll) {
+                              setSelectedHabit(habit);
+                              setShowCountModal(true);
+                            } else {
+                              removeHabitFromDraft(habit);
+                            }
+                          }}
+                        >
+                          <HiMinusCircle
+                            style={{ color: COLOR_ACCENT, fontSize: '1.25rem' }}
+                          />
+                        </Add>
+                      </AddWrapper>
+                    )}
                     {<DraftCount>{showAll ? draftCount : ''}</DraftCount>}
                     {!isEditActive && (
                       <AddWrapper>
@@ -484,7 +525,6 @@ export default function UserHabits({
                               setSelectedHabit(habit);
                               setShowCountModal(true);
                             } else {
-                              console.log(_id);
                               saveHabitLogToDraft(habit);
                             }
                           }}
@@ -666,7 +706,6 @@ const AddWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50px;
   opacity: ${(props) => (props.isPresent ? '0.3' : 1)};
 `;
 
@@ -688,8 +727,8 @@ const RootWrapper = styled.div`
 const Add = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  width: 50px;
+  justify-content: center;
+  width: 30px;
 `;
 
 const Name = styled.div`
