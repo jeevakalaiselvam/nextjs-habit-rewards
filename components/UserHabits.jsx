@@ -301,7 +301,7 @@ export default function UserHabits({
 
     let total = todayHabitRewards + draftHabitRewards;
     setTodayAmount(total);
-  }, [todayHabits, draftHabits]);
+  }, [todayHabits, draftHabits, habits, currentDate]);
 
   return (
     <Container>

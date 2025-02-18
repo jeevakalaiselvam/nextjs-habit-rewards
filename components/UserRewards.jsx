@@ -15,6 +15,7 @@ export default function UserHabitRewards({
   currentDate,
   user,
   refreshPayoutStatus,
+  setTodayAmount,
 }) {
   const [messageApi, contextHolder] = message.useMessage();
   const [habitLogs, setHabitLogs] = useState([]);
@@ -150,6 +151,15 @@ export default function UserHabitRewards({
         refreshPayoutStatus();
       });
   };
+
+  useEffect(() => {
+    const todayHabitRewards = todayHabits?.reduce((acc, innerHabit) => {
+      const habit = habits?.find((h) => h?._id == innerHabit?.habitId);
+      return acc + innerHabit?.count * habit?.reward;
+    }, 0);
+
+    setTodayAmount(todayHabitRewards);
+  }, [todayHabits, habits, currentDate]);
 
   return (
     <Container>

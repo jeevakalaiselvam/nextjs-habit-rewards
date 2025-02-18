@@ -191,6 +191,7 @@ export default function User({
             currentDate={currentDate}
             user={user}
             refreshPayoutStatus={refreshPayoutStatus}
+            setTodayAmount={setTodayAmount}
           />
         )}
         {activeItem == 'history' && !createMode && (

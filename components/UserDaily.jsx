@@ -106,7 +106,7 @@ export default function UserHabitLog({ currentDate, user, setTodayAmount }) {
     }, 0);
 
     setTodayAmount(todayHabitRewards);
-  }, [todayHabits]);
+  }, [todayHabits, habits, currentDate]);
 
   return (
     <Container>
