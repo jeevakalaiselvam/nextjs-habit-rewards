@@ -15,7 +15,9 @@ import {
 
 export default function Money() {
   const [allPackages, setAllPackages] = useState([]);
-  const [totalEarned, setTotalEarned] = useState(0);
+  const [values, setValues] = useState({ totalEarned: 0, pocketMoney: 0 });
+  const [selectedTier1, setSelectedTier1] = useState("total");
+  const [selectedTier2, setSelectedTier2] = useState(0);
 
   const refreshPackages = () => {
     axios
@@ -31,31 +33,165 @@ export default function Money() {
     refreshPackages();
   }, []);
 
-  const totalMoney = calculateEarnings(allPackages);
-
   useEffect(() => {
     const interval = setInterval(() => {
-      setTotalEarned(calculateEarnings(allPackages));
-    }, 1000); // update every second
+      setValues(calculateEarnings(allPackages));
+    }, 1000);
 
     return () => clearInterval(interval); // cleanup on unmount
   }, [allPackages]);
 
+  const {
+    totalEarned,
+    pocketMoneytotalEarned,
+    remainingtotalEarned,
+    TperSecond,
+    TperMinute,
+    TperHour,
+    TperDay,
+    TperMonth,
+    TperYear,
+    PMperSecond,
+    PMperMinute,
+    PMperHour,
+    PMperDay,
+    PMperMonth,
+    PMperYear,
+    seconds,
+    minutes,
+    hours,
+    days,
+    months,
+  } = values;
+
+  let totalAmount = 0;
+
+  if (selectedTier1 == "total") {
+    if (selectedTier2 == "seconds") {
+      totalAmount = seconds * TperSecond;
+    }
+    if (selectedTier2 == "minutes") {
+      totalAmount = minutes * TperSecond;
+    }
+    if (selectedTier2 == "hours") {
+      totalAmount = hours * TperSecond;
+    }
+    if (selectedTier2 == "days") {
+      totalAmount = days * TperSecond;
+    }
+  }
+
+  if (selectedTier1 == "pocketmoney") {
+    if (selectedTier2 == "seconds") {
+      totalAmount = seconds * PMperSecond;
+    }
+    if (selectedTier2 == "minutes") {
+      totalAmount = minutes * PMperSecond;
+    }
+    if (selectedTier2 == "hours") {
+      totalAmount = hours * PMperSecond;
+    }
+    if (selectedTier2 == "days") {
+      totalAmount = days * PMperSecond;
+    }
+  }
+
+  console.log(totalAmount, seconds, PMperSecond);
+
   return (
     <Container>
       <AmountInfo>
+        <Options>
+          <Option
+            selected={selectedTier1 == "total"}
+            onClick={() => setSelectedTier1("total")}
+          >
+            Total
+            {selectedTier1 == "total" && <SelectedDot></SelectedDot>}
+          </Option>
+          <Option
+            selected={selectedTier1 == "pocketmoney"}
+            onClick={() => setSelectedTier1("pocketmoney")}
+          >
+            Pocket Money
+            {selectedTier1 == "pocketmoney" && <SelectedDot></SelectedDot>}
+          </Option>
+        </Options>
         <SubTitle>Balance</SubTitle>
         <MainTitle>
-          <span style={{ fontSize: "3rem", transform: "translateY(3px)" }}>
+          <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
             <FaIndianRupeeSign />
           </span>
-          {totalEarned?.toFixed(2)}
+          {totalAmount?.toFixed(2)}
         </MainTitle>
       </AmountInfo>
-      <DisplayAmounts></DisplayAmounts>
+      <DisplayAmounts>
+        <DisplayHeader>
+          <Options>
+            <Option
+              selected={selectedTier2 == "seconds"}
+              onClick={() => setSelectedTier2("seconds")}
+            >
+              Seconds
+              {selectedTier2 == "seconds" && <SelectedDot></SelectedDot>}
+            </Option>
+            <Option
+              selected={selectedTier2 == "minutes"}
+              onClick={() => setSelectedTier2("minutes")}
+            >
+              Minutes
+              {selectedTier2 == "minutes" && <SelectedDot></SelectedDot>}
+            </Option>
+            <Option
+              selected={selectedTier2 == "hours"}
+              onClick={() => setSelectedTier2("hours")}
+            >
+              Hours
+              {selectedTier2 == "hours" && <SelectedDot></SelectedDot>}
+            </Option>
+            <Option
+              selected={selectedTier2 == "days"}
+              onClick={() => setSelectedTier2("days")}
+            >
+              Days
+              {selectedTier2 == "days" && <SelectedDot></SelectedDot>}
+            </Option>
+          </Options>
+        </DisplayHeader>
+      </DisplayAmounts>
     </Container>
   );
 }
+
+const SelectedDot = styled.div`
+  display: flex;
+  align-items: center;
+  width: 5px;
+  height: 5px;
+  border-radius: 8px;
+  background-color: #53b5d9;
+  position: absolute;
+  bottom: -1rem;
+  left: 50%;
+  justify-content: center;
+`;
+
+const Options = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem;
+`;
+
+const Option = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  color: ${(props) => (props?.selected ? "#53B5D9" : "#959595")};
+  position: relative;
+`;
 
 const SubTitle = styled.div`
   display: flex;
@@ -72,27 +208,36 @@ const MainTitle = styled.div`
   justify-content: center;
   font-size: 3rem;
   color: #61ce9c;
+  margin-bottom: 2rem;
 `;
 
 const AmountInfo = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  min-height: 30vh;
+  min-height: 10vh;
   min-width: 100%;
   flex-direction: column;
   transform: translateX(-2px);
+`;
+
+const DisplayHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
 `;
 
 const DisplayAmounts = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  z-index: 2;
   width: 110%;
   background-color: #1f2125;
   border-radius: 2rem 2rem 0 0;
   flex-direction: column;
-  min-height: 60vh;
+  min-height: 50vh;
 `;
 
 const Container = styled.div`

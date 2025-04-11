@@ -1,37 +1,75 @@
 export const calculateEarnings = (salaryTimeline) => {
-  const sorted = salaryTimeline
-    .map((item) => {
-      const rawDateParts = item.date.split("-"); // assuming format is "dd-mm-yyyy"
-      const year = parseInt(rawDateParts[2], 10);
-      const month = parseInt(rawDateParts[1], 10) - 1; // JS months are 0-based
+  if (salaryTimeline?.length > 0) {
+    let firstEntry = salaryTimeline?.[0];
+    let yearlySalary = firstEntry?.amountYearly;
+    const [day, month, year] = firstEntry.date.split("-").map(Number);
+    const letStartDate = new Date(year, month - 1, 1);
 
-      return {
-        amountYearly: item.amountYearly,
-        date: new Date(year, month, 1), // force to first of the month
-      };
-    })
-    .sort((a, b) => a.date - b.date);
+    const now = new Date();
 
-  const now = new Date();
-  let totalEarned = 0;
+    const msDiff = now - letStartDate;
+    const seconds = Math.floor(msDiff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+    const months = Math.floor(days / 30.44); // approx months
 
-  for (let i = 0; i < sorted.length; i++) {
-    const current = sorted[i];
-    const next = sorted[i + 1];
+    let totalSalary = Number(yearlySalary);
+    let pocketSalary = 365000;
 
-    const startDate = current.date;
-    const endDate = next
-      ? new Date(next.date.getFullYear(), next.date.getMonth(), 1)
-      : new Date(startDate.getFullYear() + 1, 0, 1); // Jan 1 next year fallback
+    const TperSecond = totalSalary / (365 * 24 * 60 * 60);
+    const TperMinute = totalSalary / (365 * 24 * 60);
+    const TperHour = totalSalary / (365 * 24);
+    const TperDay = totalSalary / 365;
+    const TperMonth = totalSalary / 12;
+    const TperYear = totalSalary;
 
-    if (now < startDate) break;
+    const PMperSecond = pocketSalary / (365 * 24 * 60 * 60);
+    const PMperMinute = pocketSalary / (365 * 24 * 60);
+    const PMperHour = pocketSalary / (365 * 24);
+    const PMperDay = pocketSalary / 365;
+    const PMperMonth = pocketSalary / 12;
+    const PMperYear = pocketSalary;
 
-    const effectiveEnd = now < endDate ? now : endDate;
-    const secondsInRange = (effectiveEnd - startDate) / 1000;
-    const earningsPerSecond = current.amountYearly / (365.25 * 24 * 60 * 60);
-
-    totalEarned += secondsInRange * earningsPerSecond;
+    console.log({
+      TperSecond,
+      TperMinute,
+      TperHour,
+      TperDay,
+      TperMonth,
+      TperYear,
+      PMperSecond,
+      PMperMinute,
+      PMperHour,
+      PMperDay,
+      PMperMonth,
+      PMperYear,
+      seconds,
+      minutes,
+      hours,
+      days,
+      months,
+    });
+    return {
+      TperSecond,
+      TperMinute,
+      TperHour,
+      TperDay,
+      TperMonth,
+      TperYear,
+      PMperSecond,
+      PMperMinute,
+      PMperHour,
+      PMperDay,
+      PMperMonth,
+      PMperYear,
+      seconds,
+      minutes,
+      hours,
+      days,
+      months,
+    };
+  } else {
+    return {};
   }
-
-  return totalEarned;
 };
