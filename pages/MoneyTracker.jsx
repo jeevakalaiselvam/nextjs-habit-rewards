@@ -16,7 +16,7 @@ import Money from "../components/moneytracker/Money";
 import Values from "../components/moneytracker/Values";
 
 export default function MoneyTracker() {
-  const [activeTab, setActiveTab] = useState(2);
+  const [activeTab, setActiveTab] = useState(0);
 
   return (
     <Container>
@@ -90,7 +90,6 @@ const Content = styled.div`
   justify-content: flex-start;
   padding: 1rem;
   flex-direction: column;
-  background-color: #141414;
   flex: 1;
 `;
 
