@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
 
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
   background-color: #f4f4f9;
   user-select: none; /* Prevents selection */
   -webkit-user-select: none; /* For WebKit browsers like Chrome, Safari */
@@ -20,7 +20,7 @@ input,
 select,
 option {
   box-sizing: border-box;
-  font-family: 'Nunito', sans-serif !important;
+  font-family: "Nunito", sans-serif !important;
 }
 
 html,
@@ -74,4 +74,14 @@ body {
 
 .ant-otp-input {
   width: 40px;
+}
+
+.glow-icon {
+  color: #52b8da;
+  filter: drop-shadow(0 0 10px #52b8da) drop-shadow(0 0 10px #52b8da);
+}
+
+.glow-icon-none {
+  color: #717f8d;
+  filter: drop-shadow(0 0 10px #52b8da00) drop-shadow(0 0 10px #52b8da00);
 }
