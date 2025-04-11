@@ -17,7 +17,7 @@ export default function Money() {
   const [allPackages, setAllPackages] = useState([]);
   const [values, setValues] = useState({ totalEarned: 0, pocketMoney: 0 });
   const [selectedTier1, setSelectedTier1] = useState("total");
-  const [selectedTier2, setSelectedTier2] = useState(0);
+  const [selectedTier2, setSelectedTier2] = useState("minutes");
 
   const refreshPackages = () => {
     axios
@@ -65,38 +65,58 @@ export default function Money() {
   } = values;
 
   let totalAmount = 0;
+  let tickerAmount = 0;
+  let displayItems = [];
 
   if (selectedTier1 == "total") {
     if (selectedTier2 == "seconds") {
       totalAmount = seconds * TperSecond;
+      tickerAmount = TperSecond;
     }
     if (selectedTier2 == "minutes") {
-      totalAmount = minutes * TperMinute;
+      totalAmount = seconds * TperSecond;
+      tickerAmount = TperMinute;
     }
     if (selectedTier2 == "hours") {
-      totalAmount = hours * TperHour;
+      totalAmount = seconds * TperSecond;
+      tickerAmount = TperHour;
     }
     if (selectedTier2 == "days") {
-      totalAmount = days * TperDay;
+      totalAmount = seconds * TperSecond;
+      tickerAmount = TperDay;
     }
   }
 
   if (selectedTier1 == "pocketmoney") {
     if (selectedTier2 == "seconds") {
       totalAmount = seconds * PMperSecond;
+      tickerAmount = PMperSecond;
     }
     if (selectedTier2 == "minutes") {
-      totalAmount = minutes * PMperMinute;
+      totalAmount = seconds * PMperSecond;
+      tickerAmount = PMperMinute;
     }
     if (selectedTier2 == "hours") {
-      totalAmount = hours * PMperHour;
+      totalAmount = seconds * PMperSecond;
+      tickerAmount = PMperHour;
     }
     if (selectedTier2 == "days") {
-      totalAmount = days * PMperDay;
+      totalAmount = seconds * PMperSecond;
+      tickerAmount = PMperDay;
+      displayItems = new Array(days)
+        ?.fill(1)
+        ?.map((_, index) => {
+          return 1 + index;
+        })
+        ?.map((countToMove) => {
+          let firstEntry = allPackages?.[0];
+          const [day, month, year] = firstEntry.date.split("-").map(Number);
+          const letStartDate = new Date(year, month - 1, 1 + (countToMove - 1));
+          return letStartDate;
+        })
+        ?.reverse();
     }
   }
-
-  console.log(totalAmount, seconds, PMperSecond);
 
   return (
     <Container>
@@ -124,17 +144,21 @@ export default function Money() {
           </span>
           {totalAmount?.toFixed(2)}
         </MainTitle>
+        <Ticker>
+          <span
+            style={{
+              fontSize: ".9rem",
+              transform: "translateY(2px)",
+            }}
+          >
+            <FaIndianRupeeSign />
+          </span>
+          {tickerAmount?.toFixed(2)}
+        </Ticker>
       </AmountInfo>
       <DisplayAmounts>
         <DisplayHeader>
           <Options>
-            <Option
-              selected={selectedTier2 == "seconds"}
-              onClick={() => setSelectedTier2("seconds")}
-            >
-              Seconds
-              {selectedTier2 == "seconds" && <SelectedDot></SelectedDot>}
-            </Option>
             <Option
               selected={selectedTier2 == "minutes"}
               onClick={() => setSelectedTier2("minutes")}
@@ -158,10 +182,140 @@ export default function Money() {
             </Option>
           </Options>
         </DisplayHeader>
+        <AllItems>
+          {displayItems?.map((item, index) => {
+            return (
+              <SingleDisplayItem>
+                <SingleDisplayItemLeft>
+                  {<TopLine hide={index == 0}></TopLine>}
+                  <CenterCircle></CenterCircle>
+                  {
+                    <BottomLine
+                      hide={index == displayItems?.length}
+                    ></BottomLine>
+                  }
+                </SingleDisplayItemLeft>
+                <SingleDisplayItemRight>
+                  <DateInner>{getDateInFormatDMY(item)}</DateInner>
+                  <MoneyInner>
+                    <span
+                      style={{
+                        fontSize: ".9rem",
+                        transform: "translateY(2px)",
+                      }}
+                    >
+                      <FaIndianRupeeSign />
+                    </span>
+                    {tickerAmount}
+                  </MoneyInner>
+                </SingleDisplayItemRight>
+              </SingleDisplayItem>
+            );
+          })}
+        </AllItems>
       </DisplayAmounts>
     </Container>
   );
 }
+
+const TopLine = styled.div`
+  display: flex;
+  align-items: center;
+  width: 1px;
+  height: 20px;
+  background-color: #fefefe;
+  justify-content: center;
+  opacity: ${(props) => (props?.hide ? "0" : "1")};
+`;
+
+const CenterCircle = styled.div`
+  display: flex;
+  align-items: center;
+  width: 10px;
+  height: 10px;
+  border-radius: 1rem;
+  background-color: #fefefe;
+  justify-content: center;
+`;
+
+const BottomLine = styled.div`
+  display: flex;
+  align-items: center;
+  width: 1px;
+  height: 20px;
+  background-color: #fefefe;
+  justify-content: center;
+`;
+
+const DateInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+`;
+
+const MoneyInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #04b488;
+  flex: 1;
+`;
+
+const SingleDisplayItemLeft = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  flex-direction: column;
+`;
+
+const SingleDisplayItemRight = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  background-color: #2c2e33;
+  border-radius: 4px;
+  padding: 0.5rem;
+`;
+
+const SingleDisplayItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-right: 1rem;
+`;
+
+const AllItems = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 90%;
+  max-height: 40vh;
+  padding: 1rem 0;
+  overflow: scroll;
+`;
+
+const Ticker = styled.div`
+  display: flex;
+  align-items: center;
+  color: #04b488;
+  justify-content: center;
+  transform: translateY(-0.5rem);
+  @keyframes blink-smooth {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+  margin: 1rem;
+`;
 
 const SelectedDot = styled.div`
   display: flex;
@@ -207,8 +361,7 @@ const MainTitle = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 3rem;
-  color: #61ce9c;
-  margin-bottom: 2rem;
+  color: #04b488;
 `;
 
 const AmountInfo = styled.div`
@@ -237,7 +390,7 @@ const DisplayAmounts = styled.div`
   background-color: #1f2125;
   border-radius: 2rem 2rem 0 0;
   flex-direction: column;
-  min-height: 50vh;
+  min-height: 48vh;
 `;
 
 const Container = styled.div`

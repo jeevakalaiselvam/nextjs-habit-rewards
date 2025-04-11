@@ -6,8 +6,8 @@ export const getCurrentDayIdentifier = () => {
   return formatted;
 };
 
-export const getDateInFormatDMY = () => {
-  const date = new Date();
+export const getDateInFormatDMY = (arg) => {
+  const date = new Date(arg);
 
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based
