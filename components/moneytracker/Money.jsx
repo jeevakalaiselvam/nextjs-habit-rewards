@@ -71,13 +71,13 @@ export default function Money() {
       totalAmount = seconds * TperSecond;
     }
     if (selectedTier2 == "minutes") {
-      totalAmount = minutes * TperSecond;
+      totalAmount = minutes * TperMinute;
     }
     if (selectedTier2 == "hours") {
-      totalAmount = hours * TperSecond;
+      totalAmount = hours * TperHour;
     }
     if (selectedTier2 == "days") {
-      totalAmount = days * TperSecond;
+      totalAmount = days * TperDay;
     }
   }
 
@@ -86,13 +86,13 @@ export default function Money() {
       totalAmount = seconds * PMperSecond;
     }
     if (selectedTier2 == "minutes") {
-      totalAmount = minutes * PMperSecond;
+      totalAmount = minutes * PMperMinute;
     }
     if (selectedTier2 == "hours") {
-      totalAmount = hours * PMperSecond;
+      totalAmount = hours * PMperHour;
     }
     if (selectedTier2 == "days") {
-      totalAmount = days * PMperSecond;
+      totalAmount = days * PMperDay;
     }
   }
 
