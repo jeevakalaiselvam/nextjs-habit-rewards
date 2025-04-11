@@ -4,21 +4,27 @@ import {
   HiChartBar,
   HiChartPie,
   HiCurrencyRupee,
+  HiFolderAdd,
+  HiPlus,
   HiPresentationChartLine,
+  HiShieldCheck,
   HiUserCircle,
   HiViewBoards,
 } from "react-icons/hi";
 import { useState } from "react";
+import Money from "../components/moneytracker/Money";
+import Values from "../components/moneytracker/Values";
 
 export default function MoneyTracker() {
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(2);
 
   return (
     <Container>
       <Header>
         <Welcome />
       </Header>
-      <Content>CONTENT</Content>
+      <Content>{activeTab == 0 && <Money />}</Content>
+      <Content>{activeTab == 2 && <Values />}</Content>
       <Bottom>
         <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
           <HiViewBoards />
@@ -26,8 +32,13 @@ export default function MoneyTracker() {
         <Icon onClick={() => setActiveTab(1)} data-active={activeTab == 1}>
           <HiPresentationChartLine />
         </Icon>
+        <Icon>
+          <Inner>
+            <HiPlus />
+          </Inner>
+        </Icon>
         <Icon onClick={() => setActiveTab(2)} data-active={activeTab == 2}>
-          <HiChartPie />
+          <HiShieldCheck />
         </Icon>
         <Icon onClick={() => setActiveTab(3)} data-active={activeTab == 3}>
           <HiUserCircle />
@@ -36,6 +47,20 @@ export default function MoneyTracker() {
     </Container>
   );
 }
+
+const Inner = styled.div`
+  display: flex;
+  width: 100%;
+  width: 60px;
+  height: 60px;
+  align-items: center;
+  justify-content: center;
+  background-color: #4872ea;
+  border-radius: 32px;
+  color: #fefefe;
+  transform: translateY(-2rem);
+  filter: drop-shadow(0 0 10px #395ec3) drop-shadow(0 0 10px #395ec3);
+`;
 
 const Icon = styled.div`
   display: flex;
@@ -53,6 +78,7 @@ const Header = styled.div`
   align-items: center;
   justify-content: center;
   height: 70px;
+  padding-top: 2rem;
   flex-direction: column;
   background-color: #141414;
 `;
