@@ -222,13 +222,6 @@ export default function Money() {
           <DisplayHeader>
             <Options>
               <Option
-                selected={selectedTier2 == "minutes"}
-                onClick={() => setSelectedTier2("minutes")}
-              >
-                1 Minute
-                {selectedTier2 == "minutes" && <SelectedDot></SelectedDot>}
-              </Option>
-              <Option
                 selected={selectedTier2 == "hours"}
                 onClick={() => setSelectedTier2("hours")}
               >

@@ -20,7 +20,7 @@ import { IoIosCloseCircle } from "react-icons/io";
 
 export default function MoneyTracker() {
   const [activeTab, setActiveTab] = useState(0);
-  const [showEntry, setShowEntry] = useState(false);
+  const [showEntry, setShowEntry] = useState(true);
 
   return (
     <Container>

@@ -85,3 +85,11 @@ body {
   color: #717f8d;
   filter: drop-shadow(0 0 10px #52b8da00) drop-shadow(0 0 10px #52b8da00);
 }
+
+.full-width-dropdown .ant-dropdown-menu {
+  min-width: 100% !important;
+}
+
+.full-width-dropdown .ant-dropdown-menu-item {
+  width: 100%;
+}
