@@ -167,7 +167,7 @@ export default function Money() {
           >
             <FaIndianRupeeSign />
           </span>
-          {tickerAmount?.toFixed(2)}
+          {tickerAmountToday?.toFixed(2)}
         </Ticker>
       </AmountInfo>
       <DisplayAmounts>
@@ -341,6 +341,7 @@ const Ticker = styled.div`
   color: #04b488;
   justify-content: center;
   transform: translateY(-0.5rem);
+  animation: blink-smooth 1s infinite linear;
   @keyframes blink-smooth {
     0%,
     100% {
@@ -436,7 +437,7 @@ const DisplayAmounts = styled.div`
   border-radius: 2rem 2rem 0 0;
   flex-direction: column;
   min-height: 48vh;
-  transform: translateY(3rem);
+  transform: translateY(6rem);
 `;
 
 const Container = styled.div`
