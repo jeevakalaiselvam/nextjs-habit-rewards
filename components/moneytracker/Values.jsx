@@ -274,7 +274,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  min-height: 73vh;
+  min-height: 65vh;
   flex-direction: column;
-  max-height: 73vh;
+  max-height: 65vh;
 `;

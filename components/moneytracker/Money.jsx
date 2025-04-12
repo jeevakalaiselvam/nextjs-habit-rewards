@@ -123,6 +123,20 @@ export default function Money() {
       tickerAmountToday = valuesToday?.TperDay;
       perMessage = " / day";
       subText = "Total ";
+
+      displayItems = new Array(days)
+        ?.fill(1)
+        ?.map((_, index) => {
+          return 1 + index;
+        })
+        ?.map((countToMove) => {
+          let firstEntry = allPackages?.[0];
+          const dateOldFormat = getDateInFormatDMY(new Date(firstEntry?.date));
+          const [day, month, year] = dateOldFormat.split("-").map(Number);
+          const letStartDate = new Date(year, month - 1, 1 + (countToMove - 1));
+          return letStartDate;
+        })
+        ?.reverse();
     }
     if (selectedTier2 == "months") {
       totalAmount = seconds * TperSecond;
@@ -215,7 +229,8 @@ export default function Money() {
             >
               <FaIndianRupeeSign />
             </span>
-            {tickerAmountToday?.toFixed(2) + perMessage}
+            {(tickerAmountToday ? tickerAmountToday?.toFixed(2) : "0") +
+              perMessage}
           </Ticker>
         </AmountInfo>
         <DisplayAmounts>
@@ -255,47 +270,52 @@ export default function Money() {
                 </span>
                 {totalAmountToday ? totalAmountToday?.toFixed(2) : 0}
               </MainTitle>
-              <Ticker>
-                <span
-                  style={{
-                    fontSize: ".9rem",
-                    transform: "translateY(2px)",
-                  }}
-                >
-                  <FaIndianRupeeSign />
-                </span>
-                {tickerAmountToday?.toFixed(2) + perMessage}
-              </Ticker>
+              {false && (
+                <Ticker>
+                  <span
+                    style={{
+                      fontSize: ".9rem",
+                      transform: "translateY(2px)",
+                    }}
+                  >
+                    <FaIndianRupeeSign />
+                  </span>
+                  {(tickerAmountToday ? tickerAmountToday?.toFixed(2) : "0") +
+                    perMessage}
+                </Ticker>
+              )}
             </AmountInfo>
-            {displayItems?.map((item, index) => {
-              return (
-                <SingleDisplayItem>
-                  <SingleDisplayItemLeft>
-                    {<TopLine hide={index == 0}></TopLine>}
-                    <CenterCircle></CenterCircle>
-                    {
-                      <BottomLine
-                        hide={index == displayItems?.length}
-                      ></BottomLine>
-                    }
-                  </SingleDisplayItemLeft>
-                  <SingleDisplayItemRight>
-                    <DateInner>{getDateInFormatDMY(item)}</DateInner>
-                    <MoneyInner>
-                      <span
-                        style={{
-                          fontSize: ".9rem",
-                          transform: "translateY(2px)",
-                        }}
-                      >
-                        <FaIndianRupeeSign />
-                      </span>
-                      {tickerAmount}
-                    </MoneyInner>
-                  </SingleDisplayItemRight>
-                </SingleDisplayItem>
-              );
-            })}
+            <LineItems>
+              {displayItems?.map((item, index) => {
+                return (
+                  <SingleDisplayItem>
+                    <SingleDisplayItemLeft>
+                      {<TopLine hide={index == 0}></TopLine>}
+                      <CenterCircle></CenterCircle>
+                      {
+                        <BottomLine
+                          hide={index == displayItems?.length}
+                        ></BottomLine>
+                      }
+                    </SingleDisplayItemLeft>
+                    <SingleDisplayItemRight>
+                      <DateInner>{getDateInFormatDMY(item)}</DateInner>
+                      <MoneyInner>
+                        <span
+                          style={{
+                            fontSize: ".9rem",
+                            transform: "translateY(2px)",
+                          }}
+                        >
+                          <FaIndianRupeeSign />
+                        </span>
+                        {tickerAmount?.toFixed(0)}
+                      </MoneyInner>
+                    </SingleDisplayItemRight>
+                  </SingleDisplayItem>
+                );
+              })}
+            </LineItems>
           </AllItems>
         </DisplayAmounts>
       </Container>
@@ -308,6 +328,23 @@ export default function Money() {
     );
   }
 }
+
+const LineItems = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 30vh;
+  max-height: 30vh;
+  overflow: scroll;
+  flex-direction: column;
+  width: 100%;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+`;
 
 const TopLine = styled.div`
   display: flex;
@@ -322,11 +359,11 @@ const TopLine = styled.div`
 const CenterCircle = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   width: 10px;
   height: 10px;
   border-radius: 1rem;
   background-color: #fefefe;
-  justify-content: center;
 `;
 
 const BottomLine = styled.div`
@@ -385,9 +422,7 @@ const AllItems = styled.div`
   justify-content: center;
   flex-direction: column;
   width: 90%;
-  max-height: 40vh;
   padding: 1rem 0;
-  overflow: scroll;
 `;
 
 const Ticker = styled.div`

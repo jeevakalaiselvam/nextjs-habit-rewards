@@ -115,3 +115,20 @@ export const calculateEarningsToday = (salaryTimeline) => {
     return {};
   }
 };
+
+export const formatIndianNumber = (num) => {
+  const number = num.toString().split(".");
+  let integerPart = number[0];
+  const decimalPart = number[1] ? "." + number[1] : "";
+
+  // First split last 3 digits
+  const lastThree = integerPart.slice(-3);
+  const otherDigits = integerPart.slice(0, -3);
+
+  const formatted =
+    otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ",") +
+    (otherDigits ? "," : "") +
+    lastThree;
+
+  return formatted + decimalPart;
+};

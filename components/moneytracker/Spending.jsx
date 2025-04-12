@@ -3,6 +3,9 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { PieChart, Pie, Cell } from "recharts";
 import { capitalizeFirstLetter } from "../helpers/stringHelper";
+import { formatIndianNumber } from "../helpers/moneyHelper";
+import { FaRupeeSign } from "react-icons/fa";
+import { FaIndianRupeeSign } from "react-icons/fa6";
 
 export default function Spending() {
   const [allSpendings, setAllSpendings] = useState([]);
@@ -35,15 +38,15 @@ export default function Spending() {
   });
 
   const CATEGORY_COLORS = {
-    food: "#FF7043",
-    movies: "#7E57C2",
-    clothing: "#42A5F5",
-    gadget: "#26A69A",
-    games: "#EC407A",
+    food: "#FDAC46",
+    movies: "#FE6662",
+    clothing: "#3BD987",
+    gadget: "#5474FD",
+    games: "#8854FC",
   };
 
   const totalSpending = thisMonthSpendings?.reduce(
-    (acc, spend) => acc + spend?.amount,
+    (acc, spend) => acc + Number(spend?.amount),
     0
   );
 
@@ -56,16 +59,24 @@ export default function Spending() {
 
   return (
     <Container>
-      {true && JSON.stringify(data)}
       <Top>
         <LeftTop>
-          <PieChart width={250} height={250}>
+          <Total>
+            <TTop>Spent</TTop>
+            <TBottom>
+              <span style={{ fontSize: ".75rem" }}>
+                <FaIndianRupeeSign />
+              </span>
+              {formatIndianNumber(totalSpending)}
+            </TBottom>
+          </Total>
+          <PieChart width={200} height={200}>
             <Pie
               data={data}
               cx="50%"
               cy="50%"
-              innerRadius={50}
-              outerRadius={60}
+              innerRadius={60}
+              outerRadius={70}
               fill="#8884d8"
               paddingAngle={0}
               stroke={"none"}
@@ -90,9 +101,9 @@ export default function Spending() {
               100;
             return (
               <CatItem>
-                <CatIcon></CatIcon>
+                <CatIcon color={CATEGORY_COLORS[category]}></CatIcon>
                 <CatName>{capitalizeFirstLetter(category)}</CatName>
-                <CatPercent>{percentage} %</CatPercent>
+                <CatPercent>{percentage.toFixed(1)} %</CatPercent>
               </CatItem>
             );
           })}
@@ -106,29 +117,62 @@ export default function Spending() {
   );
 }
 
+const TTop = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #606060;
+  margin-bottom: 0.5rem;
+`;
+
+const TBottom = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Total = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 50%;
+  flex-direction: column;
+  transform: translate(-50%, -50%);
+  top: 50%;
+`;
+
 const CatIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 1rem;
+  border: ${(props) => `4px solid ${props.color}`};
 `;
 
 const CatName = styled.div`
   display: flex;
   padding: 0rem 1rem;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  flex: 1;
 `;
 
 const CatPercent = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex: 1;
 `;
 
 const CatItem = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  margin-bottom: 1rem;
 `;
 
 const LeftTop = styled.div`
@@ -136,13 +180,15 @@ const LeftTop = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
+  position: relative;
 `;
 
 const RightTop = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
+  flex-direction: column;
+  flex: 2;
 `;
 
 const AllSpending = styled.div`
@@ -162,9 +208,9 @@ const BTitle = styled.div`
 const Top = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
-  flex: 1;
+  transform: translateY(-3rem);
 `;
 
 const Bottom = styled.div`
@@ -172,7 +218,7 @@ const Bottom = styled.div`
   align-items: center;
   flex-direction: column;
   width: 100%;
-  flex: 2;
+  flex: 1;
 `;
 
 const Container = styled.div`
@@ -180,6 +226,6 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   width: 100%;
-  min-height: 60vh;
-  max-height: 60vh;
+  min-height: 65vh;
+  max-height: 65vh;
 `;
