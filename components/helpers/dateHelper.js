@@ -7,7 +7,12 @@ export const getCurrentDayIdentifier = () => {
 };
 
 export const getDateInFormatDMY = (arg) => {
-  const date = new Date(arg);
+  let date;
+  if (arg) {
+    date = new Date(arg);
+  } else {
+    date = new Date();
+  }
 
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0"); // Months are 0-based

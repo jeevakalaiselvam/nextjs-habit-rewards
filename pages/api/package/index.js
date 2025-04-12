@@ -16,7 +16,8 @@ export default async function handler(req, res) {
     try {
       const client = await clientPromise;
       const db = client.db("habittracker");
-      const result = await db
+      await db.collection(getMongoCollectionForPackage()).deleteMany({});
+      await db
         .collection(getMongoCollectionForPackage())
         .insertOne({ amountYearly, date });
 

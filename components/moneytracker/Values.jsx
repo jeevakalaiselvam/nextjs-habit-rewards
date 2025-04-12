@@ -39,6 +39,8 @@ export default function Values() {
     refreshPackages();
   }, []);
 
+  console.log({ allPackages });
+
   return (
     <Container>
       <AddAmount>

@@ -10,12 +10,17 @@ import {
 } from "../helpers/dateHelper";
 import {
   calculateEarnings,
+  calculateEarningsToday,
   calculateMoneyForPackages,
 } from "../helpers/moneyHelper";
 
 export default function Money() {
   const [allPackages, setAllPackages] = useState([]);
   const [values, setValues] = useState({ totalEarned: 0, pocketMoney: 0 });
+  const [valuesToday, setValuesToday] = useState({
+    totalEarned: 0,
+    pocketMoney: 0,
+  });
   const [selectedTier1, setSelectedTier1] = useState("total");
   const [selectedTier2, setSelectedTier2] = useState("minutes");
 
@@ -36,6 +41,7 @@ export default function Money() {
   useEffect(() => {
     const interval = setInterval(() => {
       setValues(calculateEarnings(allPackages));
+      setValuesToday(calculateEarningsToday(allPackages));
     }, 1000);
 
     return () => clearInterval(interval); // cleanup on unmount
@@ -65,25 +71,37 @@ export default function Money() {
   } = values;
 
   let totalAmount = 0;
+  let totalAmountToday = 0;
   let tickerAmount = 0;
+  let tickerAmountToday = 0;
   let displayItems = [];
+
+  console.log({ values, valuesToday });
 
   if (selectedTier1 == "total") {
     if (selectedTier2 == "seconds") {
       totalAmount = seconds * TperSecond;
       tickerAmount = TperSecond;
+      totalAmountToday = valuesToday?.seconds * valuesToday?.TperSecond;
+      tickerAmountToday = valuesToday?.TperSecond;
     }
     if (selectedTier2 == "minutes") {
       totalAmount = seconds * TperSecond;
       tickerAmount = TperMinute;
+      totalAmountToday = valuesToday?.seconds * valuesToday?.TperSecond;
+      tickerAmountToday = valuesToday?.TperMinute;
     }
     if (selectedTier2 == "hours") {
       totalAmount = seconds * TperSecond;
       tickerAmount = TperHour;
+      totalAmountToday = valuesToday?.seconds * valuesToday?.TperSecond;
+      tickerAmountToday = valuesToday?.TperHour;
     }
     if (selectedTier2 == "days") {
       totalAmount = seconds * TperSecond;
       tickerAmount = TperDay;
+      totalAmountToday = valuesToday?.seconds * valuesToday?.TperSecond;
+      tickerAmountToday = valuesToday?.TperDay;
     }
   }
 
@@ -91,30 +109,26 @@ export default function Money() {
     if (selectedTier2 == "seconds") {
       totalAmount = seconds * PMperSecond;
       tickerAmount = PMperSecond;
+      totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
+      tickerAmountToday = valuesToday?.PMperSecond;
     }
     if (selectedTier2 == "minutes") {
       totalAmount = seconds * PMperSecond;
       tickerAmount = PMperMinute;
+      totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
+      tickerAmountToday = valuesToday?.PMperMinute;
     }
     if (selectedTier2 == "hours") {
       totalAmount = seconds * PMperSecond;
       tickerAmount = PMperHour;
+      totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
+      tickerAmountToday = valuesToday?.PMperHour;
     }
     if (selectedTier2 == "days") {
       totalAmount = seconds * PMperSecond;
       tickerAmount = PMperDay;
-      displayItems = new Array(days)
-        ?.fill(1)
-        ?.map((_, index) => {
-          return 1 + index;
-        })
-        ?.map((countToMove) => {
-          let firstEntry = allPackages?.[0];
-          const [day, month, year] = firstEntry.date.split("-").map(Number);
-          const letStartDate = new Date(year, month - 1, 1 + (countToMove - 1));
-          return letStartDate;
-        })
-        ?.reverse();
+      totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
+      tickerAmountToday = valuesToday?.PMperDay;
     }
   }
 
@@ -163,26 +177,48 @@ export default function Money() {
               selected={selectedTier2 == "minutes"}
               onClick={() => setSelectedTier2("minutes")}
             >
-              Minutes
+              1 Minute
               {selectedTier2 == "minutes" && <SelectedDot></SelectedDot>}
             </Option>
             <Option
               selected={selectedTier2 == "hours"}
               onClick={() => setSelectedTier2("hours")}
             >
-              Hours
+              1 Hour
               {selectedTier2 == "hours" && <SelectedDot></SelectedDot>}
             </Option>
             <Option
               selected={selectedTier2 == "days"}
               onClick={() => setSelectedTier2("days")}
             >
-              Days
+              1 Day
               {selectedTier2 == "days" && <SelectedDot></SelectedDot>}
             </Option>
           </Options>
         </DisplayHeader>
         <AllItems>
+          <SubTitleInner>Today</SubTitleInner>
+          <AmountInfo>
+            <MainTitle>
+              <span
+                style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}
+              >
+                <FaIndianRupeeSign />
+              </span>
+              {totalAmountToday?.toFixed(2)}
+            </MainTitle>
+            <Ticker>
+              <span
+                style={{
+                  fontSize: ".9rem",
+                  transform: "translateY(2px)",
+                }}
+              >
+                <FaIndianRupeeSign />
+              </span>
+              {tickerAmountToday?.toFixed(2)}
+            </Ticker>
+          </AmountInfo>
           {displayItems?.map((item, index) => {
             return (
               <SingleDisplayItem>
@@ -356,6 +392,15 @@ const SubTitle = styled.div`
   padding: 1rem;
 `;
 
+const SubTitleInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4f4f4f;
+  transform: translateX(6px);
+  padding: 1rem;
+`;
+
 const MainTitle = styled.div`
   display: flex;
   align-items: center;
@@ -391,6 +436,7 @@ const DisplayAmounts = styled.div`
   border-radius: 2rem 2rem 0 0;
   flex-direction: column;
   min-height: 48vh;
+  transform: translateY(3rem);
 `;
 
 const Container = styled.div`
