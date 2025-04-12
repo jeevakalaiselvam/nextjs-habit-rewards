@@ -13,8 +13,11 @@ import {
   calculateEarningsToday,
   calculateMoneyForPackages,
 } from "../helpers/moneyHelper";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
 
 export default function Money() {
+  const [loading, setLoading] = useState(false);
   const [allPackages, setAllPackages] = useState([]);
   const [values, setValues] = useState({ totalEarned: 0, pocketMoney: 0 });
   const [valuesToday, setValuesToday] = useState({
@@ -25,11 +28,13 @@ export default function Money() {
   const [selectedTier2, setSelectedTier2] = useState("minutes");
 
   const refreshPackages = () => {
+    setLoading(true);
     axios
       .get("/api/package")
       .then((response) => {
         const data = response?.data;
         setAllPackages(data);
+        setLoading(false);
       })
       .catch((error) => {});
   };
@@ -75,33 +80,59 @@ export default function Money() {
   let tickerAmount = 0;
   let tickerAmountToday = 0;
   let displayItems = [];
-
-  console.log({ values, valuesToday });
+  let perMessage = "";
+  let subText = "";
 
   if (selectedTier1 == "total") {
     if (selectedTier2 == "seconds") {
       totalAmount = seconds * TperSecond;
       tickerAmount = TperSecond;
-      totalAmountToday = valuesToday?.seconds * valuesToday?.TperSecond;
+      totalAmountToday =
+        valuesToday?.seconds * valuesToday?.TperSecond -
+        valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperSecond;
+      perMessage = " / second";
+      subText = "Total ";
     }
     if (selectedTier2 == "minutes") {
       totalAmount = seconds * TperSecond;
       tickerAmount = TperMinute;
-      totalAmountToday = valuesToday?.seconds * valuesToday?.TperSecond;
+      totalAmountToday =
+        valuesToday?.seconds * valuesToday?.TperSecond -
+        valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperMinute;
+      perMessage = " / minute";
+      subText = "Total ";
     }
     if (selectedTier2 == "hours") {
       totalAmount = seconds * TperSecond;
       tickerAmount = TperHour;
-      totalAmountToday = valuesToday?.seconds * valuesToday?.TperSecond;
+      totalAmountToday =
+        valuesToday?.seconds * valuesToday?.TperSecond -
+        valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperHour;
+      perMessage = " / hour";
+      subText = "Total ";
     }
     if (selectedTier2 == "days") {
       totalAmount = seconds * TperSecond;
       tickerAmount = TperDay;
-      totalAmountToday = valuesToday?.seconds * valuesToday?.TperSecond;
+      totalAmountToday =
+        valuesToday?.seconds * valuesToday?.TperSecond -
+        valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperDay;
+      perMessage = " / day";
+      subText = "Total ";
+    }
+    if (selectedTier2 == "months") {
+      totalAmount = seconds * TperSecond;
+      tickerAmount = TperMonth;
+      totalAmountToday =
+        valuesToday?.seconds * valuesToday?.TperSecond -
+        valuesToday.seconds * valuesToday?.PMperSecond;
+      tickerAmountToday = valuesToday?.TperMonth;
+      perMessage = " / month";
+      subText = "Total ";
     }
   }
 
@@ -111,147 +142,178 @@ export default function Money() {
       tickerAmount = PMperSecond;
       totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.PMperSecond;
+      perMessage = " / second";
+      subText = "Pocket Money ";
     }
     if (selectedTier2 == "minutes") {
       totalAmount = seconds * PMperSecond;
       tickerAmount = PMperMinute;
       totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.PMperMinute;
+      perMessage = " / minute";
+      subText = "Pocket Money ";
     }
     if (selectedTier2 == "hours") {
       totalAmount = seconds * PMperSecond;
       tickerAmount = PMperHour;
       totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.PMperHour;
+      perMessage = " / hour";
+      subText = "Pocket Money ";
     }
     if (selectedTier2 == "days") {
       totalAmount = seconds * PMperSecond;
       tickerAmount = PMperDay;
       totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.PMperDay;
+      perMessage = " / day";
+      subText = "Pocket Money ";
+    }
+    if (selectedTier2 == "months") {
+      totalAmount = seconds * PMperSecond;
+      tickerAmount = PMperMonth;
+      totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
+      tickerAmountToday = valuesToday?.PMperMonth;
+      perMessage = " / month";
+      subText = "Pocket Money ";
     }
   }
 
-  return (
-    <Container>
-      <AmountInfo>
-        <Options>
-          <Option
-            selected={selectedTier1 == "total"}
-            onClick={() => setSelectedTier1("total")}
-          >
-            Total
-            {selectedTier1 == "total" && <SelectedDot></SelectedDot>}
-          </Option>
-          <Option
-            selected={selectedTier1 == "pocketmoney"}
-            onClick={() => setSelectedTier1("pocketmoney")}
-          >
-            Pocket Money
-            {selectedTier1 == "pocketmoney" && <SelectedDot></SelectedDot>}
-          </Option>
-        </Options>
-        <SubTitle>Balance</SubTitle>
-        <MainTitle>
-          <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
-            <FaIndianRupeeSign />
-          </span>
-          {totalAmount?.toFixed(2)}
-        </MainTitle>
-        <Ticker>
-          <span
-            style={{
-              fontSize: ".9rem",
-              transform: "translateY(2px)",
-            }}
-          >
-            <FaIndianRupeeSign />
-          </span>
-          {tickerAmountToday?.toFixed(2)}
-        </Ticker>
-      </AmountInfo>
-      <DisplayAmounts>
-        <DisplayHeader>
+  if (!loading) {
+    return (
+      <Container>
+        <AmountInfo>
           <Options>
             <Option
-              selected={selectedTier2 == "minutes"}
-              onClick={() => setSelectedTier2("minutes")}
+              selected={selectedTier1 == "total"}
+              onClick={() => setSelectedTier1("total")}
             >
-              1 Minute
-              {selectedTier2 == "minutes" && <SelectedDot></SelectedDot>}
+              Total
+              {selectedTier1 == "total" && <SelectedDot></SelectedDot>}
             </Option>
             <Option
-              selected={selectedTier2 == "hours"}
-              onClick={() => setSelectedTier2("hours")}
+              selected={selectedTier1 == "pocketmoney"}
+              onClick={() => setSelectedTier1("pocketmoney")}
             >
-              1 Hour
-              {selectedTier2 == "hours" && <SelectedDot></SelectedDot>}
-            </Option>
-            <Option
-              selected={selectedTier2 == "days"}
-              onClick={() => setSelectedTier2("days")}
-            >
-              1 Day
-              {selectedTier2 == "days" && <SelectedDot></SelectedDot>}
+              Pocket Money
+              {selectedTier1 == "pocketmoney" && <SelectedDot></SelectedDot>}
             </Option>
           </Options>
-        </DisplayHeader>
-        <AllItems>
-          <SubTitleInner>Today</SubTitleInner>
-          <AmountInfo>
-            <MainTitle>
-              <span
-                style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}
+          <SubTitle>{subText} All Time</SubTitle>
+          <MainTitle>
+            <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
+              <FaIndianRupeeSign />
+            </span>
+            {totalAmount ? totalAmount?.toFixed(2) : 0}
+          </MainTitle>
+          <Ticker>
+            <span
+              style={{
+                fontSize: ".9rem",
+                transform: "translateY(2px)",
+              }}
+            >
+              <FaIndianRupeeSign />
+            </span>
+            {tickerAmountToday?.toFixed(2) + perMessage}
+          </Ticker>
+        </AmountInfo>
+        <DisplayAmounts>
+          <DisplayHeader>
+            <Options>
+              <Option
+                selected={selectedTier2 == "minutes"}
+                onClick={() => setSelectedTier2("minutes")}
               >
-                <FaIndianRupeeSign />
-              </span>
-              {totalAmountToday?.toFixed(2)}
-            </MainTitle>
-            <Ticker>
-              <span
-                style={{
-                  fontSize: ".9rem",
-                  transform: "translateY(2px)",
-                }}
+                1 Minute
+                {selectedTier2 == "minutes" && <SelectedDot></SelectedDot>}
+              </Option>
+              <Option
+                selected={selectedTier2 == "hours"}
+                onClick={() => setSelectedTier2("hours")}
               >
-                <FaIndianRupeeSign />
-              </span>
-              {tickerAmountToday?.toFixed(2)}
-            </Ticker>
-          </AmountInfo>
-          {displayItems?.map((item, index) => {
-            return (
-              <SingleDisplayItem>
-                <SingleDisplayItemLeft>
-                  {<TopLine hide={index == 0}></TopLine>}
-                  <CenterCircle></CenterCircle>
-                  {
-                    <BottomLine
-                      hide={index == displayItems?.length}
-                    ></BottomLine>
-                  }
-                </SingleDisplayItemLeft>
-                <SingleDisplayItemRight>
-                  <DateInner>{getDateInFormatDMY(item)}</DateInner>
-                  <MoneyInner>
-                    <span
-                      style={{
-                        fontSize: ".9rem",
-                        transform: "translateY(2px)",
-                      }}
-                    >
-                      <FaIndianRupeeSign />
-                    </span>
-                    {tickerAmount}
-                  </MoneyInner>
-                </SingleDisplayItemRight>
-              </SingleDisplayItem>
-            );
-          })}
-        </AllItems>
-      </DisplayAmounts>
-    </Container>
-  );
+                1 Hour
+                {selectedTier2 == "hours" && <SelectedDot></SelectedDot>}
+              </Option>
+              <Option
+                selected={selectedTier2 == "days"}
+                onClick={() => setSelectedTier2("days")}
+              >
+                1 Day
+                {selectedTier2 == "days" && <SelectedDot></SelectedDot>}
+              </Option>{" "}
+              <Option
+                selected={selectedTier2 == "months"}
+                onClick={() => setSelectedTier2("months")}
+              >
+                1 Month
+                {selectedTier2 == "months" && <SelectedDot></SelectedDot>}
+              </Option>
+            </Options>
+          </DisplayHeader>
+          <AllItems>
+            <SubTitleInner>{subText} Today</SubTitleInner>
+            <AmountInfo>
+              <MainTitle>
+                <span
+                  style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}
+                >
+                  <FaIndianRupeeSign />
+                </span>
+                {totalAmountToday ? totalAmountToday?.toFixed(2) : 0}
+              </MainTitle>
+              <Ticker>
+                <span
+                  style={{
+                    fontSize: ".9rem",
+                    transform: "translateY(2px)",
+                  }}
+                >
+                  <FaIndianRupeeSign />
+                </span>
+                {tickerAmountToday?.toFixed(2) + perMessage}
+              </Ticker>
+            </AmountInfo>
+            {displayItems?.map((item, index) => {
+              return (
+                <SingleDisplayItem>
+                  <SingleDisplayItemLeft>
+                    {<TopLine hide={index == 0}></TopLine>}
+                    <CenterCircle></CenterCircle>
+                    {
+                      <BottomLine
+                        hide={index == displayItems?.length}
+                      ></BottomLine>
+                    }
+                  </SingleDisplayItemLeft>
+                  <SingleDisplayItemRight>
+                    <DateInner>{getDateInFormatDMY(item)}</DateInner>
+                    <MoneyInner>
+                      <span
+                        style={{
+                          fontSize: ".9rem",
+                          transform: "translateY(2px)",
+                        }}
+                      >
+                        <FaIndianRupeeSign />
+                      </span>
+                      {tickerAmount}
+                    </MoneyInner>
+                  </SingleDisplayItemRight>
+                </SingleDisplayItem>
+              );
+            })}
+          </AllItems>
+        </DisplayAmounts>
+      </Container>
+    );
+  } else {
+    return (
+      <Container>
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+      </Container>
+    );
+  }
 }
 
 const TopLine = styled.div`
@@ -338,7 +400,7 @@ const AllItems = styled.div`
 const Ticker = styled.div`
   display: flex;
   align-items: center;
-  color: #04b488;
+  color: #929498;
   justify-content: center;
   transform: translateY(-0.5rem);
   animation: blink-smooth 1s infinite linear;
@@ -391,6 +453,7 @@ const SubTitle = styled.div`
   color: #4f4f4f;
   transform: translateX(6px);
   padding: 1rem;
+  font-size: 1.5rem;
 `;
 
 const SubTitleInner = styled.div`
@@ -400,6 +463,7 @@ const SubTitleInner = styled.div`
   color: #4f4f4f;
   transform: translateX(6px);
   padding: 1rem;
+  font-size: 1.5rem;
 `;
 
 const MainTitle = styled.div`
@@ -437,7 +501,7 @@ const DisplayAmounts = styled.div`
   border-radius: 2rem 2rem 0 0;
   flex-direction: column;
   min-height: 48vh;
-  transform: translateY(6rem);
+  transform: translateY(3rem);
 `;
 
 const Container = styled.div`
