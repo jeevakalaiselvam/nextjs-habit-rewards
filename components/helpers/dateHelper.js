@@ -24,7 +24,7 @@ export const getDateInFormatDMY = (arg) => {
 };
 
 export const getFormattedDateWords = (dateArg) => {
-  const dateString = dateArg; // dd-mm-yyyy
+  const dateString = getDateInFormatDMY(new Date(dateArg)); // dd-mm-yyyy
 
   const [day, month, year] = dateString.split("-");
   const date = new Date(`${year}-${month}-${day}`); // yy

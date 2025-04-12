@@ -92,7 +92,7 @@ export default function Money() {
         valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperSecond;
       perMessage = " / second";
-      subText = "Total ";
+      subText = "Salary ";
     }
     if (selectedTier2 == "minutes") {
       totalAmount = seconds * TperSecond;
@@ -102,7 +102,7 @@ export default function Money() {
         valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperMinute;
       perMessage = " / minute";
-      subText = "Total ";
+      subText = "Salary ";
     }
     if (selectedTier2 == "hours") {
       totalAmount = seconds * TperSecond;
@@ -112,7 +112,7 @@ export default function Money() {
         valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperHour;
       perMessage = " / hour";
-      subText = "Total ";
+      subText = "Salary ";
     }
     if (selectedTier2 == "days") {
       totalAmount = seconds * TperSecond;
@@ -122,7 +122,7 @@ export default function Money() {
         valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperDay;
       perMessage = " / day";
-      subText = "Total ";
+      subText = "Salary ";
     }
     if (selectedTier2 == "months") {
       totalAmount = seconds * TperSecond;
@@ -132,7 +132,7 @@ export default function Money() {
         valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperMonth;
       perMessage = " / month";
-      subText = "Total ";
+      subText = "Salary ";
     }
   }
 
@@ -143,7 +143,7 @@ export default function Money() {
       totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.PMperSecond;
       perMessage = " / second";
-      subText = "Pocket Money ";
+      subText = "Personal ";
     }
     if (selectedTier2 == "minutes") {
       totalAmount = seconds * PMperSecond;
@@ -151,7 +151,7 @@ export default function Money() {
       totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.PMperMinute;
       perMessage = " / minute";
-      subText = "Pocket Money ";
+      subText = "Personal ";
     }
     if (selectedTier2 == "hours") {
       totalAmount = seconds * PMperSecond;
@@ -159,7 +159,7 @@ export default function Money() {
       totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.PMperHour;
       perMessage = " / hour";
-      subText = "Pocket Money ";
+      subText = "Personal ";
     }
     if (selectedTier2 == "days") {
       totalAmount = seconds * PMperSecond;
@@ -167,7 +167,7 @@ export default function Money() {
       totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.PMperDay;
       perMessage = " / day";
-      subText = "Pocket Money ";
+      subText = "Personal ";
     }
     if (selectedTier2 == "months") {
       totalAmount = seconds * PMperSecond;
@@ -175,7 +175,7 @@ export default function Money() {
       totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.PMperMonth;
       perMessage = " / month";
-      subText = "Pocket Money ";
+      subText = "Personal ";
     }
   }
 
@@ -199,7 +199,7 @@ export default function Money() {
               {selectedTier1 == "pocketmoney" && <SelectedDot></SelectedDot>}
             </Option>
           </Options>
-          <SubTitle>{subText} All Time</SubTitle>
+          <SubTitle>{subText} Month</SubTitle>
           <MainTitle>
             <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
               <FaIndianRupeeSign />

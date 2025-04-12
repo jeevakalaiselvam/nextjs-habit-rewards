@@ -1,8 +1,11 @@
+import { getDateInFormatDMY } from "./dateHelper";
+
 export const calculateEarnings = (salaryTimeline) => {
   if (salaryTimeline?.length > 0) {
     let firstEntry = salaryTimeline?.[0];
     let yearlySalary = firstEntry?.amountYearly;
-    const [day, month, year] = firstEntry.date.split("-").map(Number);
+    const date = getDateInFormatDMY(new Date(firstEntry?.date));
+    const [day, month, year] = date.split("-").map(Number);
     const letStartDate = new Date(year, month - 1, 1);
 
     const now = new Date();
@@ -31,25 +34,6 @@ export const calculateEarnings = (salaryTimeline) => {
     const PMperMonth = pocketSalary / 12;
     const PMperYear = pocketSalary;
 
-    console.log({
-      TperSecond,
-      TperMinute,
-      TperHour,
-      TperDay,
-      TperMonth,
-      TperYear,
-      PMperSecond,
-      PMperMinute,
-      PMperHour,
-      PMperDay,
-      PMperMonth,
-      PMperYear,
-      seconds,
-      minutes,
-      hours,
-      days,
-      months,
-    });
     return {
       TperSecond,
       TperMinute,

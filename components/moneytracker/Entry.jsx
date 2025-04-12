@@ -7,11 +7,13 @@ import { FaIndianRupeeSign } from "react-icons/fa6";
 import { IoFastFood } from "react-icons/io5";
 import styled from "styled-components";
 import { capitalizeFirstLetter } from "../helpers/stringHelper";
+import { RiDeviceFill } from "react-icons/ri";
+import { TbDeviceDesktopFilled } from "react-icons/tb";
 
 export default function Entry() {
   const [selectedEntry, setSelectedEntry] = useState("expense");
   const [values, setValues] = useState({
-    amount: "",
+    amount: 0,
     recurring: false,
     date: new Date(),
   });
@@ -49,6 +51,12 @@ export default function Entry() {
       icon: <FaShoppingCart />,
       extra: "⌘F",
     },
+    {
+      key: "gadget",
+      label: "Gadget",
+      icon: <TbDeviceDesktopFilled />,
+      extra: "⌘F",
+    },
   ];
 
   const saveAmount = () => {};
@@ -64,69 +72,72 @@ export default function Entry() {
 
   return (
     <Container>
-      {JSON.stringify(values)}
       <Options>
         <Option
           selected={selectedEntry == "expense"}
-          onClick={() => setSelectedEntry("expense")}
+          onClick={() => {
+            setValues((old) => ({ ...old, recurring: false }));
+            setSelectedEntry("expense");
+          }}
         >
           Single Expense
           {selectedEntry == "expense" && <SelectedDot></SelectedDot>}
         </Option>
         <Option
           selected={selectedEntry == "recurring"}
-          onClick={() => setSelectedEntry("recurring")}
+          onClick={() => {
+            setValues((old) => ({ ...old, recurring: true }));
+            setSelectedEntry("recurring");
+          }}
         >
           Recurring Expense
           {selectedEntry == "recurring" && <SelectedDot></SelectedDot>}
         </Option>
       </Options>
       <EntryForm>
-        {selectedEntry == "expense" && (
-          <FormContainer>
-            <AddAmount>
-              <Title>Expense</Title>
-              <AmountInput>
-                <Rupees>
-                  <FaIndianRupeeSign />
-                </Rupees>
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  value={values?.amount}
-                  onChange={(e) => {
-                    setValues((old) => ({
-                      ...old,
-                      amount: String(e.target.value),
-                    }));
-                  }}
-                />
-              </AmountInput>
-              <Title>Expense</Title>
-              <AmountInputDropdown>
-                <Dropdown
-                  trigger={["click"]}
-                  overlayStyle={{ minWidth: "80%" }}
-                  menu={menu}
-                  overlayClassName="full-width-dropdown"
-                  on
-                >
-                  <Space>
-                    <span style={{ fontSize: "1rem", color: "#ACAEB2" }}>
-                      {values?.type
-                        ? capitalizeFirstLetter(values?.type)
-                        : "Select Category"}
-                    </span>
-                    <Caret>
-                      <FaCaretDown />
-                    </Caret>
-                  </Space>
-                </Dropdown>
-              </AmountInputDropdown>
-              <SaveButton onClick={() => saveAmount()}>Save</SaveButton>
-            </AddAmount>
-          </FormContainer>
-        )}
+        <FormContainer>
+          <AddAmount>
+            <Title>Expense</Title>
+            <AmountInput>
+              <Rupees>
+                <FaIndianRupeeSign />
+              </Rupees>
+              <input
+                type="number"
+                inputMode="numeric"
+                value={values?.amount}
+                onChange={(e) => {
+                  setValues((old) => ({
+                    ...old,
+                    amount: String(e.target.value),
+                  }));
+                }}
+              />
+            </AmountInput>
+            <Title>Expense</Title>
+            <AmountInputDropdown>
+              <Dropdown
+                trigger={["click"]}
+                overlayStyle={{ minWidth: "80%" }}
+                menu={menu}
+                overlayClassName="full-width-dropdown"
+                on
+              >
+                <Space>
+                  <span style={{ fontSize: "1rem", color: "#ACAEB2" }}>
+                    {values?.type
+                      ? capitalizeFirstLetter(values?.type)
+                      : "Select Category"}
+                  </span>
+                  <Caret>
+                    <FaCaretDown />
+                  </Caret>
+                </Space>
+              </Dropdown>
+            </AmountInputDropdown>
+            <SaveButton onClick={() => saveAmount()}>Save</SaveButton>
+          </AddAmount>
+        </FormContainer>
       </EntryForm>
     </Container>
   );
