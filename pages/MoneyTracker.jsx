@@ -17,22 +17,24 @@ import Money from "../components/moneytracker/Money";
 import Values from "../components/moneytracker/Values";
 import Entry from "../components/moneytracker/Entry";
 import { IoIosCloseCircle } from "react-icons/io";
+import Spending from "../components/moneytracker/Spending";
 
 export default function MoneyTracker() {
-  const [activeTab, setActiveTab] = useState(0);
-  const [showEntry, setShowEntry] = useState(true);
+  const [activeTab, setActiveTab] = useState(1);
+  const [showEntry, setShowEntry] = useState(false);
 
   return (
     <Container>
       {showEntry && (
         <EntryModal>
-          <Entry />
+          <Entry setShowEntry={setShowEntry} />
         </EntryModal>
       )}
       <Header>
         <Welcome />
       </Header>
       <Content>{activeTab == 0 && <Money showEntry={showEntry} />}</Content>
+      <Content>{activeTab == 1 && <Spending showEntry={showEntry} />}</Content>
       <Content>{activeTab == 2 && <Values showEntry={showEntry} />}</Content>
       <Bottom>
         <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
@@ -70,7 +72,6 @@ const EntryModal = styled.div`
   max-height: 80vh;
   align-items: center;
   justify-content: flex-start;
-  padding: ;
   flex-direction: column;
   border-radius: 2rem;
   position: absolute;

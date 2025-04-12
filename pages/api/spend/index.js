@@ -2,15 +2,13 @@ import { getMongoCollectionForSpending } from "../../../components/helpers/apiHe
 import clientPromise from "../../../lib/db";
 
 export default async function handler(req, res) {
-  const { user } = req.query;
-
   if (req.method === "POST") {
-    const { amount, date, category, type } = req.body;
+    const { amount, date, category, recurring } = req.body;
 
-    if (!amount || !date || !category || !type) {
+    if (!amount || !date || !category || !recurring) {
       return res
         .status(400)
-        .json({ error: "Amount, Date, Category, Type are required" });
+        .json({ error: "Amount, Date, Category, Recurring are required" });
     }
 
     try {
@@ -18,7 +16,7 @@ export default async function handler(req, res) {
       const db = client.db("habittracker");
       await db
         .collection(getMongoCollectionForSpending())
-        .insertOne({ amount, date, category, type });
+        .insertOne({ amount, date, category, recurring });
 
       res.status(201).json({ message: "Spend added successfully" });
     } catch (error) {

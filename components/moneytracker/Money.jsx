@@ -494,7 +494,7 @@ const DisplayAmounts = styled.div`
   border-radius: 2rem 2rem 0 0;
   flex-direction: column;
   min-height: 48vh;
-  transform: translateY(3rem);
+  transform: translateY(6rem);
 `;
 
 const Container = styled.div`
@@ -503,6 +503,6 @@ const Container = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  min-height: 73vh;
-  max-height: 73vh;
+  min-height: 65vh;
+  max-height: 65vh;
 `;

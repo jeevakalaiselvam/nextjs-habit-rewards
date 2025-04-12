@@ -2,20 +2,29 @@ import { DownOutlined, SettingOutlined } from "@ant-design/icons";
 import { Dropdown, message, Space } from "antd";
 import { useState } from "react";
 import { BiSolidMoviePlay } from "react-icons/bi";
-import { FaCaretDown, FaGamepad, FaShoppingCart } from "react-icons/fa";
+import {
+  FaCaretDown,
+  FaGamepad,
+  FaGlobe,
+  FaShoppingCart,
+} from "react-icons/fa";
 import { FaIndianRupeeSign } from "react-icons/fa6";
-import { IoFastFood } from "react-icons/io5";
+import { IoFastFood, IoWallet, IoWalletSharp } from "react-icons/io5";
 import styled from "styled-components";
 import { capitalizeFirstLetter } from "../helpers/stringHelper";
 import { RiDeviceFill } from "react-icons/ri";
 import { TbDeviceDesktopFilled } from "react-icons/tb";
+import axios from "axios";
+import { MdFamilyRestroom } from "react-icons/md";
 
-export default function Entry() {
+export default function Entry({ setShowEntry }) {
   const [selectedEntry, setSelectedEntry] = useState("expense");
   const [values, setValues] = useState({
-    amount: 0,
-    recurring: false,
-    date: new Date(),
+    amount: "0",
+    recurring: "false",
+    date: new Date()?.toString(),
+    category: "games",
+    type: "personal",
   });
 
   const items = [
@@ -59,15 +68,55 @@ export default function Entry() {
     },
   ];
 
-  const saveAmount = () => {};
+  const itemsType = [
+    {
+      key: "11",
+      label: <div style={{ width: "100%" }}>All Types</div>,
+      disabled: true,
+    },
+    {
+      key: "personal",
+      label: "Personal",
+      icon: <IoWallet />,
+      extra: "⌘P",
+    },
+    {
+      key: "family",
+      label: "Family",
+      icon: <FaGlobe />,
+      extra: "⌘F",
+    },
+  ];
+
+  const saveAmount = () => {
+    axios
+      .post("/api/spend", { ...values, date: new Date()?.toString() })
+      .then((response) => {
+        message.info("Expense saved !");
+        setShowEntry(false);
+      })
+      .catch((error) => {
+        alert(JSON.stringify(error));
+        message.error("Error while saving Expense !");
+      });
+  };
 
   const handleMenuClick = (e) => {
-    setValues((old) => ({ ...old, type: e.key }));
+    setValues((old) => ({ ...old, category: String(e.key) }));
+  };
+
+  const handleMenuClickType = (e) => {
+    setValues((old) => ({ ...old, type: String(e.key) }));
   };
 
   const menu = {
     items,
-    onClick: handleMenuClick, // <-- this detects changes
+    onClick: handleMenuClick,
+  };
+
+  const menuType = {
+    items: itemsType,
+    onClick: handleMenuClickType,
   };
 
   return (
@@ -76,7 +125,7 @@ export default function Entry() {
         <Option
           selected={selectedEntry == "expense"}
           onClick={() => {
-            setValues((old) => ({ ...old, recurring: false }));
+            setValues((old) => ({ ...old, recurring: "false" }));
             setSelectedEntry("expense");
           }}
         >
@@ -86,7 +135,7 @@ export default function Entry() {
         <Option
           selected={selectedEntry == "recurring"}
           onClick={() => {
-            setValues((old) => ({ ...old, recurring: true }));
+            setValues((old) => ({ ...old, recurring: "true" }));
             setSelectedEntry("recurring");
           }}
         >
@@ -125,8 +174,8 @@ export default function Entry() {
               >
                 <Space>
                   <span style={{ fontSize: "1rem", color: "#ACAEB2" }}>
-                    {values?.type
-                      ? capitalizeFirstLetter(values?.type)
+                    {values?.category
+                      ? capitalizeFirstLetter(values?.category)
                       : "Select Category"}
                   </span>
                   <Caret>
@@ -135,6 +184,26 @@ export default function Entry() {
                 </Space>
               </Dropdown>
             </AmountInputDropdown>
+            <Title>Type</Title>
+            <AmountInputDropdown2>
+              <Dropdown
+                trigger={["click"]}
+                overlayStyle={{ minWidth: "80%" }}
+                menu={menuType}
+                overlayClassName="full-width-dropdown"
+              >
+                <Space>
+                  <span style={{ fontSize: "1rem", color: "#ACAEB2" }}>
+                    {values?.type
+                      ? capitalizeFirstLetter(values?.type)
+                      : "Select Type"}
+                  </span>
+                  <Caret>
+                    <FaCaretDown />
+                  </Caret>
+                </Space>
+              </Dropdown>
+            </AmountInputDropdown2>
             <SaveButton onClick={() => saveAmount()}>Save</SaveButton>
           </AddAmount>
         </FormContainer>
@@ -196,6 +265,21 @@ const AmountInputDropdown = styled.div`
   background-color: #1f2125;
   padding: 1rem;
   margin-top: 1rem;
+  margin-bottom: 1rem;
+`;
+
+const AmountInputDropdown2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+  width: 100%;
+  font-size: 1.1rem;
+  position: relative;
+  background-color: #1f2125;
+  padding: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 `;
 
 const AmountInput = styled.div`
