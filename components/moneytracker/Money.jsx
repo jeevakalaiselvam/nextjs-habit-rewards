@@ -92,7 +92,7 @@ export default function Money() {
         valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperSecond;
       perMessage = " / second";
-      subText = "Salary ";
+      subText = "Total ";
     }
     if (selectedTier2 == "minutes") {
       totalAmount = seconds * TperSecond;
@@ -102,7 +102,7 @@ export default function Money() {
         valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperMinute;
       perMessage = " / minute";
-      subText = "Salary ";
+      subText = "Total ";
     }
     if (selectedTier2 == "hours") {
       totalAmount = seconds * TperSecond;
@@ -112,7 +112,7 @@ export default function Money() {
         valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperHour;
       perMessage = " / hour";
-      subText = "Salary ";
+      subText = "Total ";
     }
     if (selectedTier2 == "days") {
       totalAmount = seconds * TperSecond;
@@ -122,7 +122,7 @@ export default function Money() {
         valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperDay;
       perMessage = " / day";
-      subText = "Salary ";
+      subText = "Total ";
     }
     if (selectedTier2 == "months") {
       totalAmount = seconds * TperSecond;
@@ -132,7 +132,7 @@ export default function Money() {
         valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperMonth;
       perMessage = " / month";
-      subText = "Salary ";
+      subText = "Total ";
     }
   }
 
@@ -195,7 +195,7 @@ export default function Money() {
               selected={selectedTier1 == "pocketmoney"}
               onClick={() => setSelectedTier1("pocketmoney")}
             >
-              Pocket Money
+              Personal
               {selectedTier1 == "pocketmoney" && <SelectedDot></SelectedDot>}
             </Option>
           </Options>
