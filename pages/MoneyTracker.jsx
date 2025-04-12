@@ -68,12 +68,12 @@ const EntryModal = styled.div`
   display: flex;
   width: 95%;
   z-index: 100;
-  min-height: 80vh;
-  max-height: 80vh;
+  min-height: 61vh;
+  max-height: 61vh;
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  border-radius: 2rem;
+  border-radius: 0.5rem;
   position: absolute;
   top: 5%;
   left: 50%;

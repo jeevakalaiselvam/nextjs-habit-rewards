@@ -64,7 +64,9 @@ export default function Spending() {
           <Total>
             <TTop>Spent</TTop>
             <TBottom>
-              <span style={{ fontSize: ".75rem" }}>
+              <span
+                style={{ fontSize: ".75rem", transform: "translateY(1px)" }}
+              >
                 <FaIndianRupeeSign />
               </span>
               {formatIndianNumber(totalSpending)}
@@ -146,8 +148,8 @@ const CatIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   border-radius: 1rem;
   border: ${(props) => `4px solid ${props.color}`};
 `;
@@ -172,7 +174,7 @@ const CatItem = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 `;
 
 const LeftTop = styled.div`
