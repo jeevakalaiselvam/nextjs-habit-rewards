@@ -3,9 +3,9 @@ import clientPromise from "../../../lib/db";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { amount, date, category, recurring } = req.body;
+    const { amount, date, category, recurring, type } = req.body;
 
-    if (!amount || !date || !category || !recurring) {
+    if (!amount || !date || !category || !recurring || !type) {
       return res
         .status(400)
         .json({ error: "Amount, Date, Category, Recurring are required" });
@@ -16,7 +16,7 @@ export default async function handler(req, res) {
       const db = client.db("habittracker");
       await db
         .collection(getMongoCollectionForSpending())
-        .insertOne({ amount, date, category, recurring });
+        .insertOne({ amount, date, category, recurring, type });
 
       res.status(201).json({ message: "Spend added successfully" });
     } catch (error) {

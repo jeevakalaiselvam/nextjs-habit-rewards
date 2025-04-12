@@ -4,8 +4,11 @@ import { useState } from "react";
 import { BiSolidMoviePlay } from "react-icons/bi";
 import {
   FaCaretDown,
+  FaFemale,
   FaGamepad,
   FaGlobe,
+  FaMale,
+  FaMoneyBillAlt,
   FaShoppingCart,
 } from "react-icons/fa";
 import { FaIndianRupeeSign } from "react-icons/fa6";
@@ -15,19 +18,27 @@ import { capitalizeFirstLetter } from "../helpers/stringHelper";
 import { RiDeviceFill } from "react-icons/ri";
 import { TbDeviceDesktopFilled } from "react-icons/tb";
 import axios from "axios";
-import { MdFamilyRestroom } from "react-icons/md";
+import {
+  MdFamilyRestroom,
+  MdLocalGroceryStore,
+  MdOutlineElectricalServices,
+} from "react-icons/md";
+import { BsFillCreditCard2FrontFill } from "react-icons/bs";
+import { HiMiniHome } from "react-icons/hi2";
+import { ICON_CATEGORY } from "../helpers/iconHelper";
 
 export default function Entry({ setShowEntry }) {
   const [selectedEntry, setSelectedEntry] = useState("expense");
+
   const [values, setValues] = useState({
     amount: "0",
     recurring: "false",
     date: new Date()?.toString(),
-    category: "games",
+    category: "",
     type: "personal",
   });
 
-  const items = [
+  const itemsPersonal = [
     {
       key: "1",
       label: <div style={{ width: "100%" }}>All Categories</div>,
@@ -39,32 +50,85 @@ export default function Entry({ setShowEntry }) {
     {
       key: "games",
       label: "Games",
-      icon: <FaGamepad />,
+      icon: ICON_CATEGORY?.["games"],
       extra: "⌘G",
     },
     {
       key: "movies",
       label: "Movies",
-      icon: <BiSolidMoviePlay />,
+      icon: ICON_CATEGORY?.["movies"],
       extra: "⌘M",
     },
     {
       key: "food",
       label: "Food",
-      icon: <IoFastFood />,
+      icon: ICON_CATEGORY?.["food"],
       extra: "⌘F",
     },
     {
       key: "clothing",
       label: "Clothing",
-      icon: <FaShoppingCart />,
+      icon: ICON_CATEGORY?.["clothing"],
       extra: "⌘F",
     },
     {
       key: "gadget",
       label: "Gadget",
-      icon: <TbDeviceDesktopFilled />,
+      icon: ICON_CATEGORY?.["gadget"],
       extra: "⌘F",
+    },
+  ];
+
+  const itemsFamily = [
+    {
+      key: "1",
+      label: <div style={{ width: "100%" }}>All Categories</div>,
+      disabled: true,
+    },
+    {
+      type: "divider",
+    },
+    {
+      key: "grocery",
+      label: "Grocery",
+      icon: ICON_CATEGORY?.["grocery"],
+      extra: "⌘G",
+    },
+    {
+      key: "mom",
+      label: "Mom",
+      icon: ICON_CATEGORY?.["mom"],
+      extra: "⌘M",
+    },
+    {
+      key: "dad",
+      label: "Dad",
+      icon: ICON_CATEGORY?.["dad"],
+      extra: "⌘D",
+    },
+    {
+      key: "loan",
+      label: "Loan",
+      icon: ICON_CATEGORY?.["loan"],
+      extra: "⌘K",
+    },
+    {
+      key: "credit",
+      label: "Credit",
+      icon: ICON_CATEGORY?.["credit"],
+      extra: "⌘C",
+    },
+    {
+      key: "house",
+      label: "House",
+      icon: ICON_CATEGORY?.["house"],
+      extra: "⌘H",
+    },
+    {
+      key: "electricity",
+      label: "Electricity",
+      icon: ICON_CATEGORY?.["electricity"],
+      extra: "⌘H",
     },
   ];
 
@@ -110,7 +174,7 @@ export default function Entry({ setShowEntry }) {
   };
 
   const menu = {
-    items,
+    items: values?.type == "personal" ? itemsPersonal : itemsFamily,
     onClick: handleMenuClick,
   };
 
@@ -163,6 +227,26 @@ export default function Entry({ setShowEntry }) {
                 }}
               />
             </AmountInput>
+            <Title>Type</Title>
+            <AmountInputDropdown2>
+              <Dropdown
+                trigger={["click"]}
+                overlayStyle={{ minWidth: "80%" }}
+                menu={menuType}
+                overlayClassName="full-width-dropdown"
+              >
+                <Space>
+                  <span style={{ fontSize: "1rem", color: "#ACAEB2" }}>
+                    {values?.type
+                      ? capitalizeFirstLetter(values?.type)
+                      : "Select Type"}
+                  </span>
+                  <Caret>
+                    <FaCaretDown />
+                  </Caret>
+                </Space>
+              </Dropdown>
+            </AmountInputDropdown2>
             <Title>Expense</Title>
             <AmountInputDropdown>
               <Dropdown
@@ -184,26 +268,6 @@ export default function Entry({ setShowEntry }) {
                 </Space>
               </Dropdown>
             </AmountInputDropdown>
-            <Title>Type</Title>
-            <AmountInputDropdown2>
-              <Dropdown
-                trigger={["click"]}
-                overlayStyle={{ minWidth: "80%" }}
-                menu={menuType}
-                overlayClassName="full-width-dropdown"
-              >
-                <Space>
-                  <span style={{ fontSize: "1rem", color: "#ACAEB2" }}>
-                    {values?.type
-                      ? capitalizeFirstLetter(values?.type)
-                      : "Select Type"}
-                  </span>
-                  <Caret>
-                    <FaCaretDown />
-                  </Caret>
-                </Space>
-              </Dropdown>
-            </AmountInputDropdown2>
             <SaveButton onClick={() => saveAmount()}>Save</SaveButton>
           </AddAmount>
         </FormContainer>

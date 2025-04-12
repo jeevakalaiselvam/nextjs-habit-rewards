@@ -24,7 +24,7 @@ export default function Money() {
     totalEarned: 0,
     pocketMoney: 0,
   });
-  const [selectedTier1, setSelectedTier1] = useState("total");
+  const [selectedTier1, setSelectedTier1] = useState("family");
   const [selectedTier2, setSelectedTier2] = useState("minutes");
 
   const refreshPackages = () => {
@@ -83,7 +83,7 @@ export default function Money() {
   let perMessage = "";
   let subText = "";
 
-  if (selectedTier1 == "total") {
+  if (selectedTier1 == "family") {
     if (selectedTier2 == "seconds") {
       totalAmount = seconds * TperSecond;
       tickerAmount = TperSecond;
@@ -92,7 +92,7 @@ export default function Money() {
         valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperSecond;
       perMessage = " / second";
-      subText = "Total ";
+      subText = "Family ";
     }
     if (selectedTier2 == "minutes") {
       totalAmount = seconds * TperSecond;
@@ -102,7 +102,7 @@ export default function Money() {
         valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperMinute;
       perMessage = " / minute";
-      subText = "Total ";
+      subText = "Family ";
     }
     if (selectedTier2 == "hours") {
       totalAmount = seconds * TperSecond;
@@ -112,7 +112,7 @@ export default function Money() {
         valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperHour;
       perMessage = " / hour";
-      subText = "Total ";
+      subText = "Family ";
     }
     if (selectedTier2 == "days") {
       totalAmount = seconds * TperSecond;
@@ -122,7 +122,7 @@ export default function Money() {
         valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperDay;
       perMessage = " / day";
-      subText = "Total ";
+      subText = "Family ";
 
       displayItems = new Array(days)
         ?.fill(1)
@@ -146,11 +146,11 @@ export default function Money() {
         valuesToday.seconds * valuesToday?.PMperSecond;
       tickerAmountToday = valuesToday?.TperMonth;
       perMessage = " / month";
-      subText = "Total ";
+      subText = "Family ";
     }
   }
 
-  if (selectedTier1 == "pocketmoney") {
+  if (selectedTier1 == "personal") {
     if (selectedTier2 == "seconds") {
       totalAmount = seconds * PMperSecond;
       tickerAmount = PMperSecond;
@@ -199,18 +199,18 @@ export default function Money() {
         <AmountInfo>
           <Options>
             <Option
-              selected={selectedTier1 == "total"}
-              onClick={() => setSelectedTier1("total")}
+              selected={selectedTier1 == "family"}
+              onClick={() => setSelectedTier1("family")}
             >
-              Total
-              {selectedTier1 == "total" && <SelectedDot></SelectedDot>}
+              Family
+              {selectedTier1 == "family" && <SelectedDot></SelectedDot>}
             </Option>
             <Option
-              selected={selectedTier1 == "pocketmoney"}
-              onClick={() => setSelectedTier1("pocketmoney")}
+              selected={selectedTier1 == "personal"}
+              onClick={() => setSelectedTier1("personal")}
             >
               Personal
-              {selectedTier1 == "pocketmoney" && <SelectedDot></SelectedDot>}
+              {selectedTier1 == "personal" && <SelectedDot></SelectedDot>}
             </Option>
           </Options>
           <SubTitle>{subText} Month</SubTitle>
@@ -528,8 +528,8 @@ const DisplayAmounts = styled.div`
   background-color: #1f2125;
   border-radius: 2rem 2rem 0 0;
   flex-direction: column;
-  min-height: 48vh;
-  transform: translateY(6rem);
+  min-height: 55vh;
+  transform: translateY(8rem);
 `;
 
 const Container = styled.div`

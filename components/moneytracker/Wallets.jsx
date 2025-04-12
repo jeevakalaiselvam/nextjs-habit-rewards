@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export default function Atom() {
+export default function Wallets() {
   return <Container>TREND</Container>;
 }
 
