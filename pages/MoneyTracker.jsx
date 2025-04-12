@@ -5,6 +5,7 @@ import {
   HiChartPie,
   HiCurrencyRupee,
   HiFolderAdd,
+  HiLockClosed,
   HiPlus,
   HiPresentationChartLine,
   HiShieldCheck,
@@ -14,17 +15,25 @@ import {
 import { useState } from "react";
 import Money from "../components/moneytracker/Money";
 import Values from "../components/moneytracker/Values";
+import Entry from "../components/moneytracker/Entry";
+import { IoIosCloseCircle } from "react-icons/io";
 
 export default function MoneyTracker() {
   const [activeTab, setActiveTab] = useState(0);
+  const [showEntry, setShowEntry] = useState(false);
 
   return (
     <Container>
+      {showEntry && (
+        <EntryModal>
+          <Entry />
+        </EntryModal>
+      )}
       <Header>
         <Welcome />
       </Header>
-      <Content>{activeTab == 0 && <Money />}</Content>
-      <Content>{activeTab == 2 && <Values />}</Content>
+      <Content>{activeTab == 0 && <Money showEntry={showEntry} />}</Content>
+      <Content>{activeTab == 2 && <Values showEntry={showEntry} />}</Content>
       <Bottom>
         <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
           <HiViewBoards />
@@ -33,8 +42,13 @@ export default function MoneyTracker() {
           <HiPresentationChartLine />
         </Icon>
         <Icon>
-          <Inner>
-            <HiPlus />
+          <Inner
+            onClick={() => {
+              setShowEntry((old) => !old);
+            }}
+          >
+            {!showEntry && <HiPlus />}
+            {showEntry && <IoIosCloseCircle />}
           </Inner>
         </Icon>
         <Icon onClick={() => setActiveTab(2)} data-active={activeTab == 2}>
@@ -48,6 +62,24 @@ export default function MoneyTracker() {
   );
 }
 
+const EntryModal = styled.div`
+  display: flex;
+  width: 95%;
+  z-index: 100;
+  min-height: 80vh;
+  max-height: 80vh;
+  align-items: center;
+  justify-content: flex-start;
+  padding: ;
+  flex-direction: column;
+  border-radius: 2rem;
+  position: absolute;
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #1b1b1d;
+`;
+
 const Inner = styled.div`
   display: flex;
   width: 100%;
@@ -60,6 +92,10 @@ const Inner = styled.div`
   color: #fefefe;
   transform: translateY(-2rem);
   filter: drop-shadow(0 0 10px #395ec3) drop-shadow(0 0 10px #395ec3);
+
+  &:active {
+    transform: translate(0px, -1.8rem);
+  }
 `;
 
 const Icon = styled.div`
@@ -114,4 +150,5 @@ const Container = styled.div`
   overflow: scroll;
   width: 100%;
   color: #fefefe;
+  position: relative;
 `;
