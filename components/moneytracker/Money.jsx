@@ -9,6 +9,7 @@ import {
   generateHourlyTimestamps,
   generateMonthlyTimestamps,
   getDateInFormatDMY,
+  getDaysInMonth,
   getFormattedDateWords,
   isInEarlierMonth,
   isSameMonthUTCZGMT,
@@ -16,6 +17,9 @@ import {
 import {
   calculateEarnings,
   calculateEarnings1Today,
+  calculateEarningsCurrentMonth,
+  calculateEarningsEarlierMonths,
+  calculateEarningsToday,
   calculateMoneyForPackages,
   formatIndianNumber,
 } from "../helpers/moneyHelper";
@@ -61,27 +65,32 @@ export default function Money({ selectedDate }) {
           0
         );
 
-        setValues(calculateEarnings(totalCurrentMonthSalary, selectedDate?.$d));
+        const today = new Date(); // actual current date
+
+        const ifSelectedDateIsCurrentMonth =
+          today?.getFullYear() === selectedDate?.$d?.getFullYear() &&
+          today?.getMonth() === selectedDate?.$d?.getMonth();
+
+        if (ifSelectedDateIsCurrentMonth) {
+          setValues(
+            calculateEarningsCurrentMonth(
+              totalCurrentMonthSalary,
+              selectedDate?.$d
+            )
+          );
+        } else {
+          setValues(
+            calculateEarningsEarlierMonths(
+              totalCurrentMonthSalary,
+              selectedDate?.$d
+            )
+          );
+        }
       }
     }, 1000);
 
     return () => clearInterval(interval); // cleanup on unmount
   }, [salaries, selectedDate]);
-
-  const {
-    TperSecond,
-    TperMinute,
-    TperHour,
-    TperDay,
-    PMperSecond,
-    PMperMinute,
-    PMperHour,
-    PMperDay,
-    seconds,
-    minutes,
-    hours,
-    days,
-  } = values;
 
   let totalAmount = 0;
   let totalAmountToday = 0;
@@ -91,77 +100,70 @@ export default function Money({ selectedDate }) {
   let perMessage = "";
   let subText = "";
 
-  const currentMonthSalaries = salaries?.filter((salary) => {
-    return isSameMonthUTCZGMT(salary?.date, selectedDate);
-  });
+  const today = new Date(); // actual current date
 
-  const totalCurrentMonthSalary = currentMonthSalaries?.reduce(
-    (acc, sal) => acc + Number(sal?.salary),
-    0
-  );
+  const ifSelectedDateIsCurrentMonth =
+    today?.getFullYear() === selectedDate?.$d?.getFullYear() &&
+    today?.getMonth() === selectedDate?.$d?.getMonth();
 
-  if (selectedTier1 == "family") {
-    if (selectedTier2 == "minutes") {
-      totalAmount = seconds * TperSecond;
-      tickerAmount = TperMinute;
-      totalAmountToday = values?.seconds * values?.TperSecond;
-      tickerAmountToday = values?.TperMinute;
-      perMessage = " / minute";
-      subText = "Family ";
+  if (ifSelectedDateIsCurrentMonth) {
+    if (selectedTier1 == "family") {
+      if (selectedTier2 == "days") {
+        totalAmount = values?.seconds * values?.TperSecond;
+        tickerAmount = values?.TperDay;
+        totalAmountToday = values?.seconds * values?.TperSecond;
+        tickerAmountToday = values?.TperDay;
+        perMessage = " / day";
+        subText = "Family ";
+
+        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
+        displayItems = generateDailyTimestamps(dateOldFormat);
+      }
     }
 
-    if (selectedTier2 == "hours") {
-      totalAmount = seconds * TperSecond;
-      tickerAmount = TperHour;
-      totalAmountToday = values?.seconds * values?.TperSecond;
-      tickerAmountToday = values?.TperHour;
-      perMessage = " / hour";
-      subText = "Family ";
+    if (selectedTier1 == "personal") {
+      if (selectedTier2 == "days") {
+        totalAmount = values?.seconds * values?.PMperSecond;
+        tickerAmount = values?.PMperDay;
+        totalAmountToday = values?.seconds * values?.PMperSecond;
+        tickerAmountToday = values?.PMperDay;
+        perMessage = " / day";
+        subText = "Personal ";
+
+        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
+        displayItems = generateDailyTimestamps(dateOldFormat);
+      }
+    }
+  } else {
+    console.log("JEEVA");
+    let totalDaysInMonth = getDaysInMonth(selectedDate?.$d);
+    if (selectedTier1 == "family") {
+      if (selectedTier2 == "days") {
+        totalAmount = values?.seconds * values?.TperSecond;
+        tickerAmount = values?.TperDay;
+        totalAmountToday =
+          (values?.seconds * values?.TperSecond) / totalDaysInMonth;
+        tickerAmountToday = values?.TperDay;
+        perMessage = " / day";
+        subText = "Family ";
+
+        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
+        displayItems = generateDailyTimestamps(dateOldFormat);
+      }
     }
 
-    if (selectedTier2 == "days") {
-      totalAmount = seconds * TperSecond;
-      tickerAmount = TperDay;
-      totalAmountToday = values?.seconds * values?.TperSecond;
-      tickerAmountToday = values?.TperDay;
-      perMessage = " / day";
-      subText = "Family ";
+    if (selectedTier1 == "personal") {
+      if (selectedTier2 == "days") {
+        totalAmount = values?.seconds * values?.PMperSecond;
+        tickerAmount = values?.PMperDay;
+        totalAmountToday = values?.seconds * values?.PMperSecond;
+        tickerAmountToday = values?.PMperDay;
+        perMessage = " / day";
+        subText = "Personal ";
 
-      const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
-      displayItems = generateDailyTimestamps(dateOldFormat);
-    }
-  }
-
-  if (selectedTier1 == "personal") {
-    if (selectedTier2 == "minutes") {
-      totalAmount = seconds * PMperSecond;
-      tickerAmount = PMperMinute;
-      totalAmountToday = values?.seconds * values?.PMperSecond;
-      tickerAmountToday = values?.PMperMinute;
-      perMessage = " / minute";
-      subText = "Personal ";
-    }
-
-    if (selectedTier2 == "hours") {
-      totalAmount = seconds * PMperSecond;
-      tickerAmount = PMperHour;
-      totalAmountToday = values?.seconds * values?.PMperSecond;
-      tickerAmountToday = values?.PMperHour;
-      perMessage = " / hour";
-      subText = "Personal ";
-      let firstEntry = salaries?.[0];
-    }
-
-    if (selectedTier2 == "days") {
-      totalAmount = seconds * PMperSecond;
-      tickerAmount = PMperDay;
-      totalAmountToday = values?.seconds * values?.PMperSecond;
-      tickerAmountToday = values?.PMperDay;
-      perMessage = " / day";
-      subText = "Personal ";
-
-      const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
-      displayItems = generateDailyTimestamps(dateOldFormat);
+        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
+        displayItems = generateDailyTimestamps(dateOldFormat);
+      }
     }
   }
 

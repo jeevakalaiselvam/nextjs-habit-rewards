@@ -16,6 +16,12 @@ export const getFirstDateOfCurrentMonth = () => {
   return new Date(now.getFullYear(), now.getMonth(), 1);
 };
 
+export const getEndOfMonth = (date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  return new Date(year, month + 1, 0, 23, 59, 59, 999);
+};
+
 export const getDateInFormatDMY = (arg) => {
   let date;
   if (arg) {
