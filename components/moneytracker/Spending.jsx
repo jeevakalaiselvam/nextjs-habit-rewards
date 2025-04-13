@@ -327,10 +327,9 @@ const CatIcon = styled.div`
 
 const CatName = styled.div`
   display: flex;
-  padding: 0rem 0.5rem;
+  padding: 0rem 0rem 0rem 0.5rem;
   align-items: center;
   justify-content: flex-start;
-  flex: 1;
   font-size: 0.9rem;
 `;
 
@@ -364,7 +363,7 @@ const RightTop = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  flex: 2;
+  flex: 1;
   padding: 0 0.25rem 0 1rem;
 `;
 
@@ -390,7 +389,7 @@ const Top = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 100%;
+  width: 95%;
   padding: 1rem 0;
 `;
 
