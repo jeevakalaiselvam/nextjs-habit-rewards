@@ -25,7 +25,7 @@ import {
 } from "react-icons/md";
 import { BsFillCreditCard2FrontFill } from "react-icons/bs";
 import { HiMiniHome } from "react-icons/hi2";
-import { ICON_CATEGORY } from "../helpers/iconHelper";
+import { ICON_CATEGORY, ICON_COLORS } from "../helpers/iconHelper";
 import dayjs from "dayjs";
 
 export default function Entry({ setShowEntry }) {
@@ -51,31 +51,103 @@ export default function Entry({ setShowEntry }) {
     {
       key: "games",
       label: "Games",
-      icon: ICON_CATEGORY?.["games"],
+      icon: (
+        <span
+          style={{ transform: "translateY(2px)", color: ICON_COLORS["games"] }}
+        >
+          {ICON_CATEGORY?.["games"]}
+        </span>
+      ),
       extra: "⌘G",
     },
     {
       key: "movies",
       label: "Movies",
-      icon: ICON_CATEGORY?.["movies"],
+      icon: (
+        <span
+          style={{ transform: "translateY(2px)", color: ICON_COLORS["movies"] }}
+        >
+          {ICON_CATEGORY?.["movies"]}
+        </span>
+      ),
       extra: "⌘M",
     },
     {
       key: "food",
       label: "Food",
-      icon: ICON_CATEGORY?.["food"],
+      icon: (
+        <span
+          style={{ transform: "translateY(2px)", color: ICON_COLORS["food"] }}
+        >
+          {ICON_CATEGORY?.["food"]}
+        </span>
+      ),
       extra: "⌘F",
     },
     {
       key: "clothing",
       label: "Clothing",
-      icon: ICON_CATEGORY?.["clothing"],
+      icon: (
+        <span
+          style={{
+            transform: "translateY(2px)",
+            color: ICON_COLORS["clothing"],
+          }}
+        >
+          {ICON_CATEGORY?.["clothing"]}
+        </span>
+      ),
       extra: "⌘F",
     },
     {
       key: "gadget",
       label: "Gadget",
-      icon: ICON_CATEGORY?.["gadget"],
+      icon: (
+        <span
+          style={{ transform: "translateY(2px)", color: ICON_COLORS["gadget"] }}
+        >
+          {ICON_CATEGORY?.["gadget"]}
+        </span>
+      ),
+      extra: "⌘F",
+    },
+    {
+      key: "gift",
+      label: "Gift",
+      icon: (
+        <span
+          style={{ transform: "translateY(2px)", color: ICON_COLORS["gift"] }}
+        >
+          {ICON_CATEGORY?.["gift"]}
+        </span>
+      ),
+      extra: "⌘G",
+    },
+    {
+      key: "subscription",
+      label: "Subscription",
+      icon: (
+        <span
+          style={{
+            transform: "translateY(2px)",
+            color: ICON_COLORS["subscription"],
+          }}
+        >
+          {ICON_CATEGORY?.["subscription"]}
+        </span>
+      ),
+      extra: "⌘S",
+    },
+    {
+      key: "fuel",
+      label: "Fuel",
+      icon: (
+        <span
+          style={{ transform: "translateY(2px)", color: ICON_COLORS["fuel"] }}
+        >
+          {ICON_CATEGORY?.["fuel"]}
+        </span>
+      ),
       extra: "⌘F",
     },
   ];
@@ -92,43 +164,91 @@ export default function Entry({ setShowEntry }) {
     {
       key: "grocery",
       label: "Grocery",
-      icon: ICON_CATEGORY?.["grocery"],
+      icon: (
+        <span
+          style={{
+            transform: "translateY(2px)",
+            color: ICON_COLORS["grocery"],
+          }}
+        >
+          {ICON_CATEGORY?.["grocery"]}
+        </span>
+      ),
       extra: "⌘G",
     },
     {
       key: "mom",
       label: "Mom",
-      icon: ICON_CATEGORY?.["mom"],
+      icon: (
+        <span
+          style={{ transform: "translateY(2px)", color: ICON_COLORS["mom"] }}
+        >
+          {ICON_CATEGORY?.["mom"]}
+        </span>
+      ),
       extra: "⌘M",
     },
     {
       key: "dad",
       label: "Dad",
-      icon: ICON_CATEGORY?.["dad"],
+      icon: (
+        <span
+          style={{ transform: "translateY(2px)", color: ICON_COLORS["dad"] }}
+        >
+          {ICON_CATEGORY?.["dad"]}
+        </span>
+      ),
       extra: "⌘D",
     },
     {
       key: "loan",
       label: "Loan",
-      icon: ICON_CATEGORY?.["loan"],
+      icon: (
+        <span
+          style={{ transform: "translateY(2px)", color: ICON_COLORS["loan"] }}
+        >
+          {ICON_CATEGORY?.["loan"]}
+        </span>
+      ),
       extra: "⌘K",
     },
     {
       key: "credit",
       label: "Credit",
-      icon: ICON_CATEGORY?.["credit"],
+      icon: (
+        <span
+          style={{ transform: "translateY(2px)", color: ICON_COLORS["credit"] }}
+        >
+          {ICON_CATEGORY?.["credit"]}
+        </span>
+      ),
       extra: "⌘C",
     },
     {
       key: "house",
       label: "House",
-      icon: ICON_CATEGORY?.["house"],
+      icon: (
+        <span
+          style={{ transform: "translateY(2px)", color: ICON_COLORS["house"] }}
+        >
+          {ICON_CATEGORY?.["house"]}
+        </span>
+      ),
       extra: "⌘H",
     },
     {
       key: "electricity",
       label: "Electricity",
-      icon: ICON_CATEGORY?.["electricity"],
+      icon: (
+        <span
+          style={{
+            transform: "translateY(2px)",
+            color: ICON_COLORS["electricity"],
+          }}
+        >
+          {ICON_CATEGORY?.["electricity"]}
+        </span>
+      ),
       extra: "⌘H",
     },
   ];
@@ -186,69 +306,33 @@ export default function Entry({ setShowEntry }) {
 
   return (
     <Container>
-      <Options>
-        <Option
-          selected={selectedEntry == "expense"}
-          onClick={() => {
-            setValues((old) => ({ ...old, recurring: "false" }));
-            setSelectedEntry("expense");
-          }}
-        >
-          Single Expense
-          {selectedEntry == "expense" && <SelectedDot></SelectedDot>}
-        </Option>
-        <Option
-          selected={selectedEntry == "recurring"}
-          onClick={() => {
-            setValues((old) => ({ ...old, recurring: "true" }));
-            setSelectedEntry("recurring");
-          }}
-        >
-          Recurring Expense
-          {selectedEntry == "recurring" && <SelectedDot></SelectedDot>}
-        </Option>
-      </Options>
+      {
+        <Options>
+          <Option
+            selected={selectedEntry == "expense"}
+            onClick={() => {
+              setValues((old) => ({ ...old, recurring: "false" }));
+              setSelectedEntry("expense");
+            }}
+          >
+            Single Expense
+            {selectedEntry == "expense" && <SelectedDot></SelectedDot>}
+          </Option>
+          <Option
+            selected={selectedEntry == "recurring"}
+            onClick={() => {
+              setValues((old) => ({ ...old, recurring: "true" }));
+              setSelectedEntry("recurring");
+            }}
+          >
+            Recurring Expense
+            {selectedEntry == "recurring" && <SelectedDot></SelectedDot>}
+          </Option>
+        </Options>
+      }
       <EntryForm>
         <FormContainer>
           <AddAmount>
-            <Title>Expense</Title>
-            <AmountInput>
-              <Rupees>
-                <FaIndianRupeeSign />
-              </Rupees>
-              <input
-                type="number"
-                inputMode="numeric"
-                value={values?.amount}
-                onChange={(e) => {
-                  setValues((old) => ({
-                    ...old,
-                    amount: String(e.target.value),
-                  }));
-                }}
-              />
-            </AmountInput>
-
-            <Title>Date</Title>
-            <MonthSelection>
-              <DatePicker
-                style={{
-                  width: "100%",
-                  backgroundColor: "#1f2125",
-                  padding: "0.5rem 1rem",
-                  outline: "none",
-                  border: "none",
-                }}
-                format="DD-MM-YYYY"
-                inputReadOnly
-                value={dayjs(values?.date)}
-                picker="date"
-                onChange={(e) => {
-                  setValues((old) => ({ ...old, date: dayjs(e) }));
-                }}
-                onFocus={(e) => e.preventDefault()}
-              />
-            </MonthSelection>
             <Title>Type</Title>
             <AmountInputDropdown2>
               <Dropdown
@@ -290,6 +374,44 @@ export default function Entry({ setShowEntry }) {
                 </Space>
               </Dropdown>
             </AmountInputDropdown>
+            <Title>Expense</Title>
+            <AmountInput>
+              <Rupees>
+                <FaIndianRupeeSign />
+              </Rupees>
+              <input
+                type="number"
+                inputMode="numeric"
+                value={values?.amount}
+                onChange={(e) => {
+                  setValues((old) => ({
+                    ...old,
+                    amount: String(e.target.value),
+                  }));
+                }}
+              />
+            </AmountInput>
+
+            <Title>Date</Title>
+            <MonthSelection>
+              <DatePicker
+                style={{
+                  width: "100%",
+                  backgroundColor: "#1f2125",
+                  padding: "0.5rem 1rem",
+                  outline: "none",
+                  border: "none",
+                }}
+                format="DD-MM-YYYY"
+                inputReadOnly
+                value={dayjs(values?.date)}
+                picker="date"
+                onChange={(e) => {
+                  setValues((old) => ({ ...old, date: dayjs(e) }));
+                }}
+                onFocus={(e) => e.preventDefault()}
+              />
+            </MonthSelection>
             <SaveButton onClick={() => saveAmount()}>Save</SaveButton>
           </AddAmount>
         </FormContainer>
