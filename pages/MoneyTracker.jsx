@@ -23,9 +23,11 @@ import { IoIosCloseCircle } from "react-icons/io";
 import Spending from "../components/moneytracker/Spending";
 import Wallets from "../components/moneytracker/Wallets";
 import { getFirstDateOfCurrentMonth } from "../components/helpers/dateHelper";
+import { BiSolidWalletAlt } from "react-icons/bi";
+import { FaGoogleWallet } from "react-icons/fa";
 
 export default function MoneyTracker() {
-  const [activeTab, setActiveTab] = useState(2);
+  const [activeTab, setActiveTab] = useState(3);
   const [showEntry, setShowEntry] = useState(false);
   const [date, setDate] = useState(getFirstDateOfCurrentMonth());
 
@@ -44,7 +46,7 @@ export default function MoneyTracker() {
   }
 
   if (activeTab == 3) {
-    title = "Profile";
+    title = "Wallets";
   }
 
   const dateChanged = () => {};
@@ -96,7 +98,7 @@ export default function MoneyTracker() {
           <HiLibrary />
         </Icon>
         <Icon onClick={() => setActiveTab(3)} data-active={activeTab == 3}>
-          <HiUserCircle />
+          <FaGoogleWallet />
         </Icon>
       </Bottom>
     </Container>
