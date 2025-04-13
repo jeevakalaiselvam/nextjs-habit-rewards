@@ -736,9 +736,9 @@ const DisplayAmounts = styled.div`
   background-color: #1f2125;
   border-radius: 2rem 2rem 0 0;
   flex-direction: column;
-  min-height: 55vh;
+  min-height: 38vh;
   position: relative;
-  z-index: 50;
+  z-index: 12;
 `;
 
 const Container = styled.div`

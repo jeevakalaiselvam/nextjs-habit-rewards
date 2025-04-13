@@ -178,7 +178,7 @@ const Bottom = styled.div`
   justify-content: center;
   align-items: center;
   padding-bottom: 1.6rem;
-  z-index: 10;
+  z-index: 100;
 `;
 
 const Container = styled.div`
