@@ -172,7 +172,8 @@ const Edit = styled.div`
   left: 1rem;
   padding: 0.25rem;
   font-weight: bold;
-  background-color: ${(props) => generateDarkTextColorForLightBg(props.color)};
+  background-color: ${(props) =>
+    generateDarkTextColorForLightBg(props.color, 10)};
 
   &:active {
     color: ${(props) => props.color};
