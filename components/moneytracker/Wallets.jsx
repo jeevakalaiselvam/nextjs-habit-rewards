@@ -15,6 +15,7 @@ export default function Wallets() {
   const [loading, setLoading] = useState(false);
   const [wallets, setWallets] = useState([]);
   const [walletIdInEdit, setWalletIdInEdit] = useState("");
+  const [allSpendings, setAllSpendings] = useState([]);
 
   const refreshWallet = () => {
     setLoading(true);
@@ -42,6 +43,25 @@ export default function Wallets() {
     refreshWallet();
   }, []);
 
+  const refreshSpendings = () => {
+    setLoading(true);
+    axios
+      .get("/api/spend")
+      .then((response) => {
+        setAllSpendings(response?.data);
+        setLoading(false);
+      })
+      .catch((error) => {});
+  };
+
+  useEffect(() => {
+    refreshSpendings();
+  }, []);
+
+  const allWalletsSpendings = allSpendings?.filter((spend) => {
+    return spend?.type == "wallet";
+  });
+
   if (loading) {
     <Container>
       <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
@@ -50,11 +70,21 @@ export default function Wallets() {
     return (
       <Container>
         {WALLET_OPTIONS?.map((wallet) => {
-          const walletValueFromWeb = Number(
+          let walletValueFromWeb = Number(
             wallets?.find((walletWeb) => {
               return walletWeb?.id == wallet?.id;
             })?.wallet ?? 0
           );
+
+          let toAddWalletSpendings = allWalletsSpendings?.reduce(
+            (acc, wSpending) =>
+              acc + (wSpending?.category == wallet?.id)
+                ? Number(wSpending?.amount)
+                : 0,
+            0
+          );
+
+          walletValueFromWeb = walletValueFromWeb + toAddWalletSpendings;
 
           console.log({ walletValueFromWeb });
           return (

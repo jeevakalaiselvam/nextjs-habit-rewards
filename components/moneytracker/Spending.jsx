@@ -13,8 +13,8 @@ import { LoadingOutlined } from "@ant-design/icons";
 
 export default function Spending({ showEntry, selectedDate }) {
   const [loading, setLoading] = useState(true);
-  const [allSpendings, setAllSpendings] = useState([]);
   const [selectedTier1, setSelectedTier1] = useState("family");
+  const [allSpendings, setAllSpendings] = useState([]);
 
   const refreshSpendings = () => {
     setLoading(true);

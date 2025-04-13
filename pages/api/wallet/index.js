@@ -3,9 +3,9 @@ import clientPromise from "../../../lib/db";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { wallet, id } = req.body;
+    const { id, wallet } = req.body;
 
-    if (!wallet || !id) {
+    if (!id) {
       return res
         .status(400)
         .json({ error: "Yearly Amount and id are required" });
