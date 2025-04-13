@@ -7,7 +7,7 @@ import { formatIndianNumber } from "../helpers/moneyHelper";
 import { FaRupeeSign } from "react-icons/fa";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { generateSimilarColor } from "../helpers/colorHelper";
-import { ICON_CATEGORY } from "../helpers/iconHelper";
+import { ICON_CATEGORY, ICON_COLORS } from "../helpers/iconHelper";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
@@ -125,10 +125,7 @@ export default function Spending({ showEntry, selectedDate }) {
                 dataKey="value"
               >
                 {data.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={CATEGORY_COLORS[entry?.name]}
-                  />
+                  <Cell key={`cell-${index}`} fill={ICON_COLORS[entry?.name]} />
                 ))}
               </Pie>
             </PieChart>
@@ -143,7 +140,7 @@ export default function Spending({ showEntry, selectedDate }) {
                 100;
               return (
                 <CatItem>
-                  <CatIcon color={CATEGORY_COLORS[category]}></CatIcon>
+                  <CatIcon color={ICON_COLORS[category]}></CatIcon>
                   <CatName>{capitalizeFirstLetter(category)}</CatName>
                   <CatPercent>{percentage.toFixed(0)}%</CatPercent>
                 </CatItem>
@@ -164,7 +161,7 @@ export default function Spending({ showEntry, selectedDate }) {
               }, 0);
               return (
                 <SpendCard>
-                  <Left color={CATEGORY_COLORS[category]}>
+                  <Left color={ICON_COLORS[category]}>
                     {ICON_CATEGORY[category]}
                   </Left>
                   <Middle>

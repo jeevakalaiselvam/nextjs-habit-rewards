@@ -117,10 +117,14 @@ export default function Money({ selectedDate }) {
   if (ifSelectedDateIsCurrentMonth) {
     if (selectedTier1 == "family") {
       if (selectedTier2 == "hours") {
-        totalAmount = values?.seconds * values?.TperSecond;
-        tickerAmount = values?.TperHour;
-        totalAmountToday = values?.totalSecondsInToday * values?.TperSecond;
-        tickerAmountToday = values?.TperHour;
+        totalAmount =
+          values?.seconds * values?.TperSecond -
+          values?.seconds * values?.PMperSecond;
+        tickerAmount = values?.TperHour - values?.PMperHour;
+        totalAmountToday =
+          values?.totalSecondsInToday * values?.TperSecond -
+          values?.totalSecondsInToday * values?.PMperSecond;
+        tickerAmountToday = values?.TperHour - values?.PMperHour;
         perMessage = " / hour";
         subText = "Family ";
 
@@ -132,10 +136,14 @@ export default function Money({ selectedDate }) {
       }
 
       if (selectedTier2 == "days") {
-        totalAmount = values?.seconds * values?.TperSecond;
-        tickerAmount = values?.TperDay;
-        totalAmountToday = values?.totalSecondsInToday * values?.TperSecond;
-        tickerAmountToday = values?.TperDay;
+        totalAmount =
+          values?.seconds * values?.TperSecond -
+          values?.seconds * values?.PMperSecond;
+        tickerAmount = values?.TperDay - values?.PMperDay;
+        totalAmountToday =
+          values?.totalSecondsInToday * values?.TperSecond -
+          values?.totalSecondsInToday * values?.PMperSecond;
+        tickerAmountToday = values?.TperDay - values?.PMperDay;
         perMessage = " / day";
         subText = "Family ";
 
@@ -182,11 +190,13 @@ export default function Money({ selectedDate }) {
     let totalDaysInMonth = getDaysInMonth(selectedDate?.$d);
     if (selectedTier1 == "family") {
       if (selectedTier2 == "hours") {
-        totalAmount = values?.seconds * values?.TperSecond;
-        tickerAmount = values?.TperHour;
+        totalAmount =
+          values?.seconds * values?.TperSecond -
+          values?.seconds * values?.PMperSecond;
+        tickerAmount = values?.TperHour - values?.PMperHour;
         totalAmountToday =
           (values?.seconds * values?.TperSecond) / totalDaysInMonth;
-        tickerAmountToday = values?.TperHour;
+        tickerAmountToday = values?.TperHour - values?.PMperHour;
         perMessage = " / hour";
         subText = "Family ";
 
@@ -198,11 +208,13 @@ export default function Money({ selectedDate }) {
       }
 
       if (selectedTier2 == "days") {
-        totalAmount = values?.seconds * values?.TperSecond;
-        tickerAmount = values?.TperDay;
+        totalAmount =
+          values?.seconds * values?.TperSecond -
+          values?.seconds * values?.PMperSecond;
+        tickerAmount = values?.TperDay - values?.PMperDay;
         totalAmountToday =
           (values?.seconds * values?.TperSecond) / totalDaysInMonth;
-        tickerAmountToday = values?.TperDay;
+        tickerAmountToday = values?.TperDay - values?.PMperDay;
         perMessage = " / day";
         subText = "Family ";
 
@@ -267,9 +279,7 @@ export default function Money({ selectedDate }) {
             <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
               <FaIndianRupeeSign />
             </span>
-            {totalAmountToday
-              ? formatIndianNumber(totalAmountToday?.toFixed(2))
-              : 0}
+            {totalAmount ? formatIndianNumber(totalAmount?.toFixed(2)) : 0}
           </MainTitle>
           <Ticker>
             <span
@@ -312,7 +322,9 @@ export default function Money({ selectedDate }) {
                 >
                   <FaIndianRupeeSign />
                 </span>
-                {totalAmount ? formatIndianNumber(totalAmount?.toFixed(2)) : 0}
+                {totalAmountToday
+                  ? formatIndianNumber(totalAmountToday?.toFixed(2))
+                  : 0}
               </MainTitle>
             </AmountInfo>
             <LineItems>
