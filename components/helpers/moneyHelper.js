@@ -142,6 +142,7 @@ export const calculateEarningsEarlierMonths = (salary, jsDate) => {
     let totalMinutes;
     let totalHours;
     let totalDays;
+    let totalSecondsInToday;
 
     let TperSecond;
     let TperMinute;
@@ -171,6 +172,8 @@ export const calculateEarningsEarlierMonths = (salary, jsDate) => {
     totalHours = totalDaysInMonth * 24;
     totalDays = totalDaysInMonth;
 
+    totalSecondsInToday = 24 * 60 * 60;
+
     TperSecond = totalSalary / totalSeconds;
     TperMinute = totalSalary / totalMinutes;
     TperHour = totalSalary / totalHours;
@@ -180,6 +183,27 @@ export const calculateEarningsEarlierMonths = (salary, jsDate) => {
     PMperMinute = pocketSalary / totalMinutes;
     PMperHour = pocketSalary / totalHours;
     PMperDay = pocketSalary / totalDays;
+
+    console.log({
+      totalDaysInMonth,
+      TperSecond,
+      TperMinute,
+      TperHour,
+      TperDay,
+      PMperSecond,
+      PMperMinute,
+      PMperHour,
+      PMperDay,
+      seconds,
+      minutes,
+      hours,
+      days,
+      totalSeconds,
+      totalMinutes,
+      totalHours,
+      totalDays,
+      totalSecondsInToday,
+    });
 
     return {
       TperSecond,
@@ -198,6 +222,7 @@ export const calculateEarningsEarlierMonths = (salary, jsDate) => {
       totalMinutes,
       totalHours,
       totalDays,
+      totalSecondsInToday,
     };
   }
 };

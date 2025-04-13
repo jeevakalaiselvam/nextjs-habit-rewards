@@ -36,6 +36,7 @@ export default function Money({ selectedDate }) {
   });
   const [selectedTier1, setSelectedTier1] = useState("family");
   const [selectedTier2, setSelectedTier2] = useState("hours");
+  const [allSpendings, setAllSpendings] = useState([]);
 
   const refreshPackages = () => {
     setLoading(true);
@@ -51,6 +52,21 @@ export default function Money({ selectedDate }) {
 
   useEffect(() => {
     refreshPackages();
+  }, []);
+
+  const refreshSpendings = () => {
+    setLoading(true);
+    axios
+      .get("/api/spend")
+      .then((response) => {
+        setAllSpendings(response?.data);
+        setLoading(false);
+      })
+      .catch((error) => {});
+  };
+
+  useEffect(() => {
+    refreshSpendings();
   }, []);
 
   useEffect(() => {
@@ -114,12 +130,44 @@ export default function Money({ selectedDate }) {
     today?.getFullYear() === new Date(selectedDate).getFullYear() &&
     today?.getMonth() === new Date(selectedDate).getMonth();
 
+  const now = new Date(selectedDate);
+
+  const allSpendingFamilyInMonth = allSpendings.filter((s) => {
+    const spendingDate = new Date(s.date);
+    return (
+      spendingDate.getFullYear() === now.getFullYear() &&
+      spendingDate.getMonth() === now.getMonth() &&
+      s?.type == "family"
+    );
+  });
+
+  const allSpendingPersonalInMonth = allSpendings.filter((s) => {
+    const spendingDate = new Date(s.date);
+    return (
+      spendingDate.getFullYear() === now.getFullYear() &&
+      spendingDate.getMonth() === now.getMonth() &&
+      s?.type == "personal"
+    );
+  });
+
+  const allSpendingFamilyInMonthAmount = allSpendingFamilyInMonth?.reduce(
+    (acc, spend) => acc + Number(spend?.amount),
+    0
+  );
+
+  const allSpendingPersonalInMonthAmount = allSpendingPersonalInMonth?.reduce(
+    (acc, spend) => acc + Number(spend?.amount),
+    0
+  );
+
   if (ifSelectedDateIsCurrentMonth) {
+    //CURRENT MONTH SELECTION
     if (selectedTier1 == "family") {
       if (selectedTier2 == "hours") {
         totalAmount =
           values?.seconds * values?.TperSecond -
-          values?.seconds * values?.PMperSecond;
+          values?.seconds * values?.PMperSecond -
+          allSpendingFamilyInMonthAmount;
         tickerAmount = values?.TperHour - values?.PMperHour;
         totalAmountToday =
           values?.totalSecondsInToday * values?.TperSecond -
@@ -138,7 +186,8 @@ export default function Money({ selectedDate }) {
       if (selectedTier2 == "days") {
         totalAmount =
           values?.seconds * values?.TperSecond -
-          values?.seconds * values?.PMperSecond;
+          values?.seconds * values?.PMperSecond -
+          allSpendingFamilyInMonthAmount;
         tickerAmount = values?.TperDay - values?.PMperDay;
         totalAmountToday =
           values?.totalSecondsInToday * values?.TperSecond -
@@ -157,7 +206,9 @@ export default function Money({ selectedDate }) {
 
     if (selectedTier1 == "personal") {
       if (selectedTier2 == "hours") {
-        totalAmount = values?.seconds * values?.PMperSecond;
+        totalAmount =
+          values?.seconds * values?.PMperSecond -
+          allSpendingPersonalInMonthAmount;
         tickerAmount = values?.PMperHour;
         totalAmountToday = values?.totalSecondsInToday * values?.PMperSecond;
         tickerAmountToday = values?.PMperHour;
@@ -172,7 +223,9 @@ export default function Money({ selectedDate }) {
       }
 
       if (selectedTier2 == "days") {
-        totalAmount = values?.seconds * values?.PMperSecond;
+        totalAmount =
+          values?.seconds * values?.PMperSecond -
+          allSpendingPersonalInMonthAmount;
         tickerAmount = values?.PMperDay;
         totalAmountToday = values?.totalSecondsInToday * values?.PMperSecond;
         tickerAmountToday = values?.PMperDay;
@@ -187,15 +240,19 @@ export default function Money({ selectedDate }) {
       }
     }
   } else {
+    //OLD MONTH SELECTION
     let totalDaysInMonth = getDaysInMonth(selectedDate?.$d);
     if (selectedTier1 == "family") {
       if (selectedTier2 == "hours") {
         totalAmount =
-          values?.seconds * values?.TperSecond -
-          values?.seconds * values?.PMperSecond;
+          values?.totalSeconds * values?.TperSecond -
+          values?.totalSeconds * values?.PMperSecond -
+          allSpendingFamilyInMonthAmount;
         tickerAmount = values?.TperHour - values?.PMperHour;
         totalAmountToday =
-          (values?.seconds * values?.TperSecond) / totalDaysInMonth;
+          (values?.totalSeconds * values?.TperSecond -
+            values?.totalSeconds * values?.PMperSecond) /
+          totalDaysInMonth;
         tickerAmountToday = values?.TperHour - values?.PMperHour;
         perMessage = " / hour";
         subText = "Family ";
@@ -209,11 +266,14 @@ export default function Money({ selectedDate }) {
 
       if (selectedTier2 == "days") {
         totalAmount =
-          values?.seconds * values?.TperSecond -
-          values?.seconds * values?.PMperSecond;
+          values?.totalSeconds * values?.TperSecond -
+          values?.totalSeconds * values?.PMperSecond -
+          allSpendingFamilyInMonthAmount;
         tickerAmount = values?.TperDay - values?.PMperDay;
         totalAmountToday =
-          (values?.seconds * values?.TperSecond) / totalDaysInMonth;
+          (values?.totalSeconds * values?.TperSecond -
+            values?.totalSeconds * values?.PMperSecond) /
+          totalDaysInMonth;
         tickerAmountToday = values?.TperDay - values?.PMperDay;
         perMessage = " / day";
         subText = "Family ";
@@ -225,9 +285,11 @@ export default function Money({ selectedDate }) {
 
     if (selectedTier1 == "personal") {
       if (selectedTier2 == "hours") {
-        totalAmount = values?.seconds * values?.PMperSecond;
+        totalAmount =
+          values?.totalSeconds * values?.PMperSecond -
+          allSpendingPersonalInMonthAmount;
         tickerAmount = values?.PMperHour;
-        totalAmountToday = values?.seconds * values?.PMperSecond;
+        totalAmountToday = values?.totalSecondsInToday * values?.PMperSecond;
         tickerAmountToday = values?.PMperHour;
         perMessage = " / hour";
         subText = "Personal ";
@@ -237,7 +299,9 @@ export default function Money({ selectedDate }) {
       }
 
       if (selectedTier2 == "days") {
-        totalAmount = values?.seconds * values?.PMperSecond;
+        totalAmount =
+          values?.totalSeconds * values?.PMperSecond -
+          allSpendingPersonalInMonthAmount;
         tickerAmount = values?.PMperDay;
         totalAmountToday = values?.seconds * values?.PMperSecond;
         tickerAmountToday = values?.PMperDay;
@@ -273,7 +337,7 @@ export default function Money({ selectedDate }) {
             </Option>
           </Options2>
           <SubTitle>
-            {subText} {isInEarlierMonth(selectedDate?.$d) ? "1 Day" : "Today"}
+            {subText} {isInEarlierMonth(selectedDate?.$d) ? "Month" : "Month"}
           </SubTitle>
           <MainTitle>
             <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
@@ -314,7 +378,9 @@ export default function Money({ selectedDate }) {
             </Options>
           </DisplayHeader>
           <AllItems>
-            <SubTitleInner>{subText} Month</SubTitleInner>
+            <SubTitleInner>
+              {subText} {isInEarlierMonth(selectedDate?.$d) ? "1 Day" : "Today"}
+            </SubTitleInner>
             <AmountInfo>
               <MainTitle>
                 <span
