@@ -5,6 +5,7 @@ import { FaIndianRupeeSign } from "react-icons/fa6";
 import { HiChartPie, HiCurrencyRupee } from "react-icons/hi";
 import styled from "styled-components";
 import {
+  generateHourlyTimestamps,
   getDateInFormatDMY,
   getFormattedDateWords,
 } from "../helpers/dateHelper";
@@ -12,6 +13,7 @@ import {
   calculateEarnings,
   calculateEarningsToday,
   calculateMoneyForPackages,
+  formatIndianNumber,
 } from "../helpers/moneyHelper";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
@@ -113,6 +115,10 @@ export default function Money() {
       tickerAmountToday = valuesToday?.TperHour;
       perMessage = " / hour";
       subText = "Family ";
+
+      let firstEntry = allPackages?.[0];
+      const dateOldFormat = getDateInFormatDMY(new Date(firstEntry?.date));
+      displayItems = generateHourlyTimestamps(dateOldFormat);
     }
     if (selectedTier2 == "days") {
       totalAmount = seconds * TperSecond;
@@ -135,8 +141,7 @@ export default function Money() {
           const [day, month, year] = dateOldFormat.split("-").map(Number);
           const letStartDate = new Date(year, month - 1, 1 + (countToMove - 1));
           return letStartDate;
-        })
-        ?.reverse();
+        });
     }
     if (selectedTier2 == "months") {
       totalAmount = seconds * TperSecond;
@@ -218,20 +223,8 @@ export default function Money() {
             <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
               <FaIndianRupeeSign />
             </span>
-            {totalAmount ? totalAmount?.toFixed(2) : 0}
+            {totalAmount ? formatIndianNumber(totalAmount?.toFixed(2)) : 0}
           </MainTitle>
-          <Ticker>
-            <span
-              style={{
-                fontSize: ".9rem",
-                transform: "translateY(2px)",
-              }}
-            >
-              <FaIndianRupeeSign />
-            </span>
-            {(tickerAmountToday ? tickerAmountToday?.toFixed(2) : "0") +
-              perMessage}
-          </Ticker>
         </AmountInfo>
         <DisplayAmounts>
           <DisplayHeader>
@@ -261,6 +254,18 @@ export default function Money() {
           </DisplayHeader>
           <AllItems>
             <SubTitleInner>{subText} Today</SubTitleInner>
+            <Ticker>
+              <span
+                style={{
+                  fontSize: ".9rem",
+                  transform: "translateY(2px)",
+                }}
+              >
+                <FaIndianRupeeSign />
+              </span>
+              {(tickerAmountToday ? tickerAmountToday?.toFixed(2) : "0") +
+                perMessage}
+            </Ticker>
             <AmountInfo>
               <MainTitle>
                 <span
@@ -268,7 +273,9 @@ export default function Money() {
                 >
                   <FaIndianRupeeSign />
                 </span>
-                {totalAmountToday ? totalAmountToday?.toFixed(2) : 0}
+                {totalAmountToday
+                  ? formatIndianNumber(totalAmountToday?.toFixed(2))
+                  : 0}
               </MainTitle>
               {false && (
                 <Ticker>
@@ -299,7 +306,7 @@ export default function Money() {
                       }
                     </SingleDisplayItemLeft>
                     <SingleDisplayItemRight>
-                      <DateInner>{getDateInFormatDMY(item)}</DateInner>
+                      <DateInner>{item}</DateInner>
                       <MoneyInner>
                         <span
                           style={{
@@ -501,6 +508,7 @@ const MainTitle = styled.div`
   justify-content: center;
   font-size: 3rem;
   color: #04b488;
+  margin-bottom: 1.5rem;
 `;
 
 const AmountInfo = styled.div`

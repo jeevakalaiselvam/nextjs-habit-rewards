@@ -34,3 +34,36 @@ export const getFormattedDateWords = (dateArg) => {
 
   return formatted;
 };
+
+export const generateHourlyTimestamps = (dateString) => {
+  const startDateStr = dateString; // dd-mm-yyyy
+  const [day, month, year] = startDateStr.split("-").map(Number);
+  const startDate = new Date(year, month - 1, day, 0, 0, 0);
+  const now = new Date();
+
+  const hoursArray = [];
+  let current = new Date(startDate);
+
+  while (current <= now) {
+    const dateStr = current
+      .toLocaleString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      })
+      .split("/")
+      .join("-");
+
+    let hour = current.getHours();
+    const ampm = hour >= 12 ? "PM" : "AM";
+    hour = hour % 12;
+    hour = hour === 0 ? 12 : hour;
+
+    const hourStr = `${dateStr} ${hour.toString().padStart(2, "0")} ${ampm}`;
+    hoursArray.push(hourStr);
+
+    current.setHours(current.getHours() + 1);
+  }
+
+  return hoursArray;
+};
