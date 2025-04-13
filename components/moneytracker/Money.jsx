@@ -225,6 +225,18 @@ export default function Money() {
             </span>
             {totalAmount ? formatIndianNumber(totalAmount?.toFixed(2)) : 0}
           </MainTitle>
+          <Ticker>
+            <span
+              style={{
+                fontSize: ".9rem",
+                transform: "translateY(2px)",
+              }}
+            >
+              <FaIndianRupeeSign />
+            </span>
+            {(tickerAmountToday ? tickerAmountToday?.toFixed(2) : "0") +
+              perMessage}
+          </Ticker>
         </AmountInfo>
         <DisplayAmounts>
           <DisplayHeader>
@@ -254,18 +266,6 @@ export default function Money() {
           </DisplayHeader>
           <AllItems>
             <SubTitleInner>{subText} Today</SubTitleInner>
-            <Ticker>
-              <span
-                style={{
-                  fontSize: ".9rem",
-                  transform: "translateY(2px)",
-                }}
-              >
-                <FaIndianRupeeSign />
-              </span>
-              {(tickerAmountToday ? tickerAmountToday?.toFixed(2) : "0") +
-                perMessage}
-            </Ticker>
             <AmountInfo>
               <MainTitle>
                 <span
@@ -277,20 +277,6 @@ export default function Money() {
                   ? formatIndianNumber(totalAmountToday?.toFixed(2))
                   : 0}
               </MainTitle>
-              {false && (
-                <Ticker>
-                  <span
-                    style={{
-                      fontSize: ".9rem",
-                      transform: "translateY(2px)",
-                    }}
-                  >
-                    <FaIndianRupeeSign />
-                  </span>
-                  {(tickerAmountToday ? tickerAmountToday?.toFixed(2) : "0") +
-                    perMessage}
-                </Ticker>
-              )}
             </AmountInfo>
             <LineItems>
               {displayItems?.map((item, index) => {
@@ -430,7 +416,7 @@ const AllItems = styled.div`
   justify-content: center;
   flex-direction: column;
   width: 90%;
-  padding: 1rem 0;
+  padding: 0rem 0;
 `;
 
 const Ticker = styled.div`
@@ -438,7 +424,6 @@ const Ticker = styled.div`
   align-items: center;
   color: #929498;
   justify-content: center;
-  transform: translateY(-0.5rem);
   animation: blink-smooth 1s infinite linear;
   @keyframes blink-smooth {
     0%,
@@ -449,7 +434,7 @@ const Ticker = styled.div`
       opacity: 0;
     }
   }
-  margin: 1rem;
+  padding: 0.5rem 0rem 1rem 0rem;
 `;
 
 const SelectedDot = styled.div`
@@ -508,7 +493,6 @@ const MainTitle = styled.div`
   justify-content: center;
   font-size: 3rem;
   color: #04b488;
-  margin-bottom: 1.5rem;
 `;
 
 const AmountInfo = styled.div`
