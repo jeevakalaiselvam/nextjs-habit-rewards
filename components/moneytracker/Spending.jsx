@@ -8,16 +8,21 @@ import { FaRupeeSign } from "react-icons/fa";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { generateSimilarColor } from "../helpers/colorHelper";
 import { ICON_CATEGORY } from "../helpers/iconHelper";
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 export default function Spending({ showEntry }) {
+  const [loading, setLoading] = useState(true);
   const [allSpendings, setAllSpendings] = useState([]);
   const [selectedTier1, setSelectedTier1] = useState("family");
 
   const refreshSpendings = () => {
+    setLoading(true);
     axios
       .get("/api/spend")
       .then((response) => {
         setAllSpendings(response?.data);
+        setLoading(false);
       })
       .catch((error) => {});
   };
@@ -63,119 +68,132 @@ export default function Spending({ showEntry }) {
     };
   });
 
-  return (
-    <Container>
-      <MainTop>
-        <Options>
-          <Option
-            selected={selectedTier1 == "family"}
-            onClick={() => setSelectedTier1("family")}
-          >
-            Family
-            {selectedTier1 == "family" && <SelectedDot></SelectedDot>}
-          </Option>
-          <Option
-            selected={selectedTier1 == "personal"}
-            onClick={() => setSelectedTier1("personal")}
-          >
-            Personal
-            {selectedTier1 == "personal" && <SelectedDot></SelectedDot>}
-          </Option>
-        </Options>
-      </MainTop>
-      <Top>
-        <LeftTop>
-          <Total>
-            <TTop>Spent</TTop>
-            <TBottom>
-              <span style={{ fontSize: "1rem", transform: "translateY(2px)" }}>
-                <FaIndianRupeeSign />
-              </span>
-              <span style={{ fontSize: "1.25rem" }}>
-                {formatIndianNumber(totalSpending)}
-              </span>
-            </TBottom>
-          </Total>
-          <PieChart width={175} height={175}>
-            <Pie
-              data={data}
-              cx="50%"
-              cy="50%"
-              innerRadius={60}
-              outerRadius={70}
-              fill="#8884d8"
-              paddingAngle={0}
-              stroke={"none"}
-              dataKey="value"
+  if (loading) {
+    return (
+      <Container>
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+      </Container>
+    );
+  } else {
+    return (
+      <Container>
+        <MainTop>
+          <Options>
+            <Option
+              selected={selectedTier1 == "family"}
+              onClick={() => setSelectedTier1("family")}
             >
-              {data.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={CATEGORY_COLORS[entry?.name]}
-                />
-              ))}
-            </Pie>
-          </PieChart>
-        </LeftTop>
-        <RightTop>
-          {allCategoriesThisMonth?.map((category) => {
-            const percentage =
-              (allSpendings
-                ?.filter((spend) => spend?.category == category)
-                ?.reduce((acc, spend) => acc + Number(spend?.amount), 0) /
-                totalSpending) *
-              100;
-            return (
-              <CatItem>
-                <CatIcon color={CATEGORY_COLORS[category]}></CatIcon>
-                <CatName>{capitalizeFirstLetter(category)}</CatName>
-                <CatPercent>{percentage.toFixed(0)}%</CatPercent>
-              </CatItem>
-            );
-          })}
-        </RightTop>
-      </Top>
-      <Bottom>
-        <BTitle>Spends by Category</BTitle>
-        <AllSpending>
-          {allCategoriesThisMonth?.map((category) => {
-            let totalAmountInCategory = 0;
-            const timesThisMonth = allSpendings?.reduce((acc, spend) => {
-              if (spend?.category == category) {
-                totalAmountInCategory += Number(spend?.amount);
-              }
-              return acc + (spend?.category == category ? 1 : 0);
-            }, 0);
-            return (
-              <SpendCard>
-                <Left color={CATEGORY_COLORS[category]}>
-                  {ICON_CATEGORY[category]}
-                </Left>
-                <Middle>
-                  <MTop>{capitalizeFirstLetter(category)}</MTop>
-                  <MBottom>
-                    {timesThisMonth > 1
-                      ? `${timesThisMonth} payments`
-                      : `${timesThisMonth} payment`}
-                  </MBottom>
-                </Middle>
-                <Right>
-                  <span
-                    style={{ fontSize: ".8rem", transform: "translateY(1px)" }}
-                  >
-                    <FaIndianRupeeSign />
-                  </span>
-                  <span style={{ fontSize: ".95rem" }}>
-                    {formatIndianNumber(totalAmountInCategory)}
-                  </span>
-                </Right>
-              </SpendCard>
-            );
-          })}
-        </AllSpending>
-      </Bottom>
-    </Container>
-  );
+              Family
+              {selectedTier1 == "family" && <SelectedDot></SelectedDot>}
+            </Option>
+            <Option
+              selected={selectedTier1 == "personal"}
+              onClick={() => setSelectedTier1("personal")}
+            >
+              Personal
+              {selectedTier1 == "personal" && <SelectedDot></SelectedDot>}
+            </Option>
+          </Options>
+        </MainTop>
+        <Top>
+          <LeftTop>
+            <Total>
+              <TTop>Spent</TTop>
+              <TBottom>
+                <span
+                  style={{ fontSize: "1rem", transform: "translateY(2px)" }}
+                >
+                  <FaIndianRupeeSign />
+                </span>
+                <span style={{ fontSize: "1.25rem" }}>
+                  {formatIndianNumber(totalSpending)}
+                </span>
+              </TBottom>
+            </Total>
+            <PieChart width={175} height={175}>
+              <Pie
+                data={data}
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={70}
+                fill="#8884d8"
+                paddingAngle={0}
+                stroke={"none"}
+                dataKey="value"
+              >
+                {data.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={CATEGORY_COLORS[entry?.name]}
+                  />
+                ))}
+              </Pie>
+            </PieChart>
+          </LeftTop>
+          <RightTop>
+            {allCategoriesThisMonth?.map((category) => {
+              const percentage =
+                (allSpendings
+                  ?.filter((spend) => spend?.category == category)
+                  ?.reduce((acc, spend) => acc + Number(spend?.amount), 0) /
+                  totalSpending) *
+                100;
+              return (
+                <CatItem>
+                  <CatIcon color={CATEGORY_COLORS[category]}></CatIcon>
+                  <CatName>{capitalizeFirstLetter(category)}</CatName>
+                  <CatPercent>{percentage.toFixed(0)}%</CatPercent>
+                </CatItem>
+              );
+            })}
+          </RightTop>
+        </Top>
+        <Bottom>
+          <BTitle>Spends by Category</BTitle>
+          <AllSpending>
+            {allCategoriesThisMonth?.map((category) => {
+              let totalAmountInCategory = 0;
+              const timesThisMonth = allSpendings?.reduce((acc, spend) => {
+                if (spend?.category == category) {
+                  totalAmountInCategory += Number(spend?.amount);
+                }
+                return acc + (spend?.category == category ? 1 : 0);
+              }, 0);
+              return (
+                <SpendCard>
+                  <Left color={CATEGORY_COLORS[category]}>
+                    {ICON_CATEGORY[category]}
+                  </Left>
+                  <Middle>
+                    <MTop>{capitalizeFirstLetter(category)}</MTop>
+                    <MBottom>
+                      {timesThisMonth > 1
+                        ? `${timesThisMonth} payments`
+                        : `${timesThisMonth} payment`}
+                    </MBottom>
+                  </Middle>
+                  <Right>
+                    <span
+                      style={{
+                        fontSize: ".8rem",
+                        transform: "translateY(1px)",
+                      }}
+                    >
+                      <FaIndianRupeeSign />
+                    </span>
+                    <span style={{ fontSize: ".95rem" }}>
+                      {formatIndianNumber(totalAmountInCategory)}
+                    </span>
+                  </Right>
+                </SpendCard>
+              );
+            })}
+          </AllSpending>
+        </Bottom>
+      </Container>
+    );
+  }
 }
 
 const MTop = styled.div`

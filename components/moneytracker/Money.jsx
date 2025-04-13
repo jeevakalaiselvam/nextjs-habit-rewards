@@ -19,7 +19,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 
 export default function Money() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [allPackages, setAllPackages] = useState([]);
   const [values, setValues] = useState({ totalEarned: 0, pocketMoney: 0 });
   const [valuesToday, setValuesToday] = useState({

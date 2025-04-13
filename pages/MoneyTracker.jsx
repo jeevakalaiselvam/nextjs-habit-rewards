@@ -5,12 +5,15 @@ import {
   HiChartPie,
   HiCurrencyRupee,
   HiFolderAdd,
+  HiLibrary,
   HiLockClosed,
   HiPlus,
   HiPresentationChartLine,
   HiShieldCheck,
   HiUserCircle,
   HiViewBoards,
+  HiViewGrid,
+  HiViewList,
 } from "react-icons/hi";
 import { useState } from "react";
 import Money from "../components/moneytracker/Money";
@@ -40,10 +43,10 @@ export default function MoneyTracker() {
       <Content>{activeTab == 3 && <Wallets showEntry={showEntry} />}</Content>
       <Bottom>
         <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
-          <HiViewBoards />
+          <HiViewGrid />
         </Icon>
         <Icon onClick={() => setActiveTab(1)} data-active={activeTab == 1}>
-          <HiPresentationChartLine />
+          <HiChartPie />
         </Icon>
         <Icon>
           <Inner
@@ -56,7 +59,7 @@ export default function MoneyTracker() {
           </Inner>
         </Icon>
         <Icon onClick={() => setActiveTab(2)} data-active={activeTab == 2}>
-          <HiShieldCheck />
+          <HiLibrary />
         </Icon>
         <Icon onClick={() => setActiveTab(3)} data-active={activeTab == 3}>
           <HiUserCircle />
