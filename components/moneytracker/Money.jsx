@@ -68,14 +68,22 @@ export default function Money({ selectedDate }) {
         const today = new Date(); // actual current date
 
         const ifSelectedDateIsCurrentMonth =
-          today?.getFullYear() === selectedDate?.$d?.getFullYear() &&
-          today?.getMonth() === selectedDate?.$d?.getMonth();
+          today?.getFullYear() === new Date(selectedDate).getFullYear() &&
+          today?.getMonth() === new Date(selectedDate).getMonth();
+
+        console.log(
+          today?.getFullYear(),
+          new Date(selectedDate).getFullYear(),
+          today?.getMonth(),
+          new Date(selectedDate).getMonth(),
+          ifSelectedDateIsCurrentMonth
+        );
 
         if (ifSelectedDateIsCurrentMonth) {
           setValues(
             calculateEarningsCurrentMonth(
               totalCurrentMonthSalary,
-              selectedDate?.$d
+              new Date(selectedDate)
             )
           );
         } else {
@@ -103,15 +111,15 @@ export default function Money({ selectedDate }) {
   const today = new Date(); // actual current date
 
   const ifSelectedDateIsCurrentMonth =
-    today?.getFullYear() === selectedDate?.$d?.getFullYear() &&
-    today?.getMonth() === selectedDate?.$d?.getMonth();
+    today?.getFullYear() === new Date(selectedDate).getFullYear() &&
+    today?.getMonth() === new Date(selectedDate).getMonth();
 
   if (ifSelectedDateIsCurrentMonth) {
     if (selectedTier1 == "family") {
       if (selectedTier2 == "days") {
         totalAmount = values?.seconds * values?.TperSecond;
         tickerAmount = values?.TperDay;
-        totalAmountToday = values?.seconds * values?.TperSecond;
+        totalAmountToday = values?.totalSecondsInToday * values?.TperSecond;
         tickerAmountToday = values?.TperDay;
         perMessage = " / day";
         subText = "Family ";
@@ -125,7 +133,7 @@ export default function Money({ selectedDate }) {
       if (selectedTier2 == "days") {
         totalAmount = values?.seconds * values?.PMperSecond;
         tickerAmount = values?.PMperDay;
-        totalAmountToday = values?.seconds * values?.PMperSecond;
+        totalAmountToday = values?.totalSecondsInToday * values?.PMperSecond;
         tickerAmountToday = values?.PMperDay;
         perMessage = " / day";
         subText = "Personal ";
@@ -135,7 +143,6 @@ export default function Money({ selectedDate }) {
       }
     }
   } else {
-    console.log("JEEVA");
     let totalDaysInMonth = getDaysInMonth(selectedDate?.$d);
     if (selectedTier1 == "family") {
       if (selectedTier2 == "days") {

@@ -3,6 +3,7 @@ import {
   getDaysInMonth,
   getEndOfMonth,
   getLastDateOfMonth,
+  getSecondsElapsedToday,
   getTotalDaysInMonth,
 } from "./dateHelper";
 
@@ -43,6 +44,7 @@ export const calculateEarningsCurrentMonth = (salary, jsDate) => {
     let totalMinutes;
     let totalHours;
     let totalDays;
+    let totalSecondsInToday;
 
     let TperSecond;
     let TperMinute;
@@ -71,6 +73,8 @@ export const calculateEarningsCurrentMonth = (salary, jsDate) => {
     totalHours = totalDaysInMonth * 24;
     totalDays = totalDaysInMonth;
 
+    totalSecondsInToday = getSecondsElapsedToday(today);
+
     TperSecond = totalSalary / totalSeconds;
     TperMinute = totalSalary / totalMinutes;
     TperHour = totalSalary / totalHours;
@@ -98,6 +102,7 @@ export const calculateEarningsCurrentMonth = (salary, jsDate) => {
       totalMinutes,
       totalHours,
       totalDays,
+      totalSecondsInToday,
     };
   }
 };

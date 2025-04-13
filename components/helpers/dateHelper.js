@@ -22,6 +22,14 @@ export const getEndOfMonth = (date) => {
   return new Date(year, month + 1, 0, 23, 59, 59, 999);
 };
 
+export const getSecondsElapsedToday = (date) => {
+  const startOfDay = new Date(date);
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const diffMs = date.getTime() - startOfDay.getTime();
+  return Math.floor(diffMs / 1000);
+};
+
 export const getDateInFormatDMY = (arg) => {
   let date;
   if (arg) {
