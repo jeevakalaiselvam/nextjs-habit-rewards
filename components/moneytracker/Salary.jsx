@@ -2,7 +2,12 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaRupeeSign } from "react-icons/fa";
 import { FaIndianRupeeSign } from "react-icons/fa6";
-import { HiChartPie, HiCurrencyRupee } from "react-icons/hi";
+import {
+  HiChartPie,
+  HiCurrencyRupee,
+  HiOutlineDotsVertical,
+  HiX,
+} from "react-icons/hi";
 import styled from "styled-components";
 import dayjs from "dayjs";
 import {
@@ -14,11 +19,13 @@ import {
 } from "../helpers/dateHelper";
 import { DatePicker } from "antd";
 import { formatIndianNumber } from "../helpers/moneyHelper";
+import { HiLockClosed } from "react-icons/hi2";
 
 export default function Salary() {
   const [salary, setNewSalary] = useState(null);
   const [date, setDate] = useState(null);
   const [salaries, setAllSalaries] = useState([]);
+  const [optionOpenId, setOptionOpenId] = useState("");
 
   const savePackage = () => {
     axios
@@ -110,6 +117,29 @@ export default function Salary() {
                       <FaIndianRupeeSign />
                     </span>
                   </Money>
+                  <OptionsContainer>
+                    <OptionTrigger
+                      onClick={() => {
+                        if (optionOpenId == singleSalary?._id) {
+                          setOptionOpenId("");
+                        } else {
+                          setOptionOpenId(singleSalary?._id);
+                        }
+                      }}
+                    >
+                      {optionOpenId == singleSalary?._id ? (
+                        <HiX />
+                      ) : (
+                        <HiOutlineDotsVertical />
+                      )}
+                    </OptionTrigger>
+                    {optionOpenId == singleSalary?._id && (
+                      <OptionInner>
+                        <OptionItem>Edit</OptionItem>
+                        <OptionItem>Delete</OptionItem>
+                      </OptionInner>
+                    )}
+                  </OptionsContainer>
                 </SinglePackage>
               );
             })}
@@ -118,6 +148,56 @@ export default function Salary() {
     </Container>
   );
 }
+
+const OptionItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #1f2026;
+  margin: 0.5rem 0.5rem 0rem 0.5rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+  width: 100%;
+
+  &:active {
+    background-color: #2a7af1;
+  }
+`;
+
+const OptionInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  flex-direction: column;
+  left: 0;
+  transform: translateX(-105%);
+  z-index: 10;
+  width: 200px;
+  padding: 0rem 0.5rem 0.5rem 0.5rem;
+  background-color: #000000;
+`;
+
+const OptionTrigger = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8f9094;
+
+  &:active {
+    color: #2a7af1;
+  }
+`;
+
+const OptionsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  margin-left: 1rem;
+  font-size: 1.25rem;
+  position: relative;
+`;
 
 const MonthSelection = styled.div`
   display: flex;
@@ -175,7 +255,10 @@ const SinglePackage = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 2rem;
+  padding: 1rem 1rem;
+  background-color: #1f2125;
+  border-radius: 8px;
+  margin: 0.5rem 0rem;
   width: 100%;
 `;
 
@@ -187,6 +270,7 @@ const SalaryContainer = styled.div`
   width: 100%;
   max-height: 30vh;
   overflow: scroll;
+  padding: 0rem 1rem;
 `;
 
 const TitleNaming = styled.div`
@@ -229,7 +313,6 @@ const DisplayAmounts = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  background-color: #1f2125;
   border-radius: 2rem 2rem 0 0;
   flex-direction: column;
   min-height: 40vh;

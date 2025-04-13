@@ -24,7 +24,7 @@ import Spending from "../components/moneytracker/Spending";
 import Wallets from "../components/moneytracker/Wallets";
 
 export default function MoneyTracker() {
-  const [activeTab, setActiveTab] = useState(1);
+  const [activeTab, setActiveTab] = useState(2);
   const [showEntry, setShowEntry] = useState(false);
 
   return (
