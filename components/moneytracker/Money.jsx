@@ -341,7 +341,8 @@ export default function Money({ selectedDate }) {
             </Option>
           </Options2>
           <SubTitle>
-            {subText} {isInEarlierMonth(selectedDate?.$d) ? "Month" : "Month"}
+            {subText}{" "}
+            {isInEarlierMonth(selectedDate?.$d) ? "Balance" : "Balance"}
           </SubTitle>
           <MainTitle>
             <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>

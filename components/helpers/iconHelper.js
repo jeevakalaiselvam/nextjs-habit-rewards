@@ -2,6 +2,7 @@ import { AiFillFund, AiFillGolden } from "react-icons/ai";
 import { BiSolidMoviePlay } from "react-icons/bi";
 import { BsFillCreditCard2FrontFill, BsFillFuelPumpFill } from "react-icons/bs";
 import {
+  FaCar,
   FaFemale,
   FaGamepad,
   FaGlobe,
@@ -34,6 +35,7 @@ export const ICON_CATEGORY = {
   credit: <BsFillCreditCard2FrontFill />,
   house: <HiMiniHome />,
   electricity: <MdOutlineElectricalServices />,
+  car: <FaCar />,
 };
 
 export const ICON_COLORS = {
@@ -52,6 +54,7 @@ export const ICON_COLORS = {
   credit: "#F9B846", // golden yellow
   house: "#72C079", // moss green
   electricity: "#FF8D5B", // soft tangerine
+  electricity: "#f75c5c", // soft tangerine
 };
 
 export const WALLET_OPTIONS = [

@@ -242,6 +242,18 @@ export default function Entry({ setShowEntry }) {
       extra: "⌘H",
     },
     {
+      key: "car",
+      label: "car",
+      icon: (
+        <span
+          style={{ transform: "translateY(2px)", color: ICON_COLORS["car"] }}
+        >
+          {ICON_CATEGORY?.["car"]}
+        </span>
+      ),
+      extra: "⌘H",
+    },
+    {
       key: "electricity",
       label: "Electricity",
       icon: (
@@ -286,7 +298,7 @@ export default function Entry({ setShowEntry }) {
 
   const itemsWallet = [
     {
-      key: "11",
+      key: "111",
       label: <div style={{ width: "100%" }}>All Wallets</div>,
       disabled: true,
     },
@@ -294,8 +306,17 @@ export default function Entry({ setShowEntry }) {
       return {
         key: wallet?.id,
         label: wallet?.name,
-        icon: wallet?.icon,
-        extra: `⌘${wallet?.name?.slice(0, 1)?.toUpperCase}`,
+        icon: (
+          <span
+            style={{
+              transform: "translateY(2px)",
+              color: wallet?.color,
+            }}
+          >
+            {wallet?.icon}
+          </span>
+        ),
+        extra: `⌘${wallet?.name?.slice(0, 1)?.toUpperCase()}`,
       };
     }),
   ];
@@ -321,8 +342,22 @@ export default function Entry({ setShowEntry }) {
     setValues((old) => ({ ...old, type: String(e.key) }));
   };
 
+  let itemsToTarget = itemsPersonal;
+
+  if (values?.type == "personal") {
+    itemsToTarget = itemsPersonal;
+  }
+
+  if (values?.type == "family") {
+    itemsToTarget = itemsFamily;
+  }
+
+  if (values?.type == "wallet") {
+    itemsToTarget = itemsWallet;
+  }
+
   const menu = {
-    items: values?.type == "personal" ? itemsPersonal : itemsFamily,
+    items: itemsToTarget,
     onClick: handleMenuClick,
   };
 
