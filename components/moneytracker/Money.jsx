@@ -10,6 +10,8 @@ import {
   generateMonthlyTimestamps,
   getDateInFormatDMY,
   getFormattedDateWords,
+  isInEarlierMonth,
+  isSameMonthUTCZGMT,
 } from "../helpers/dateHelper";
 import {
   calculateEarnings,
@@ -20,9 +22,9 @@ import {
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 
-export default function Money() {
+export default function Money({ selectedDate }) {
   const [loading, setLoading] = useState(true);
-  const [allPackages, setAllPackages] = useState([]);
+  const [salaries, setAllSalaries] = useState([]);
   const [values, setValues] = useState({ totalEarned: 0, pocketMoney: 0 });
   const [valuesToday, setValuesToday] = useState({
     totalEarned: 0,
@@ -37,7 +39,7 @@ export default function Money() {
       .get("/api/salary")
       .then((response) => {
         const data = response?.data;
-        setAllPackages(data);
+        setAllSalaries(data);
         setLoading(false);
       })
       .catch((error) => {});
@@ -49,34 +51,41 @@ export default function Money() {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setValues(calculateEarnings(allPackages));
-      setValuesToday(calculateEarningsToday(allPackages));
+      if (selectedDate) {
+        const currentMonthSalaries = salaries?.filter((salary) => {
+          return isSameMonthUTCZGMT(salary?.date, selectedDate);
+        });
+
+        const totalCurrentMonthSalary = currentMonthSalaries?.reduce(
+          (acc, sal) => acc + Number(sal?.salary),
+          0
+        );
+
+        console.log({ currentMonthSalaries });
+
+        setValues(calculateEarnings(totalCurrentMonthSalary, selectedDate));
+        setValuesToday(
+          calculateEarningsToday(totalCurrentMonthSalary, selectedDate)
+        );
+      }
     }, 1000);
 
     return () => clearInterval(interval); // cleanup on unmount
-  }, [allPackages]);
+  }, [salaries, selectedDate]);
 
   const {
-    totalEarned,
-    pocketMoneytotalEarned,
-    remainingtotalEarned,
     TperSecond,
     TperMinute,
     TperHour,
     TperDay,
-    TperMonth,
-    TperYear,
     PMperSecond,
     PMperMinute,
     PMperHour,
     PMperDay,
-    PMperMonth,
-    PMperYear,
     seconds,
     minutes,
     hours,
     days,
-    months,
   } = values;
 
   let totalAmount = 0;
@@ -87,17 +96,16 @@ export default function Money() {
   let perMessage = "";
   let subText = "";
 
+  const currentMonthSalaries = salaries?.filter((salary) => {
+    return isSameMonthUTCZGMT(salary?.date, selectedDate);
+  });
+
+  const totalCurrentMonthSalary = currentMonthSalaries?.reduce(
+    (acc, sal) => acc + Number(sal?.salary),
+    0
+  );
+
   if (selectedTier1 == "family") {
-    if (selectedTier2 == "seconds") {
-      totalAmount = seconds * TperSecond;
-      tickerAmount = TperSecond;
-      totalAmountToday =
-        valuesToday?.seconds * valuesToday?.TperSecond -
-        valuesToday.seconds * valuesToday?.PMperSecond;
-      tickerAmountToday = valuesToday?.TperSecond;
-      perMessage = " / second";
-      subText = "Family ";
-    }
     if (selectedTier2 == "minutes") {
       totalAmount = seconds * TperSecond;
       tickerAmount = TperMinute;
@@ -108,6 +116,7 @@ export default function Money() {
       perMessage = " / minute";
       subText = "Family ";
     }
+
     if (selectedTier2 == "hours") {
       totalAmount = seconds * TperSecond;
       tickerAmount = TperHour;
@@ -117,11 +126,8 @@ export default function Money() {
       tickerAmountToday = valuesToday?.TperHour;
       perMessage = " / hour";
       subText = "Family ";
-
-      let firstEntry = allPackages?.[0];
-      const dateOldFormat = getDateInFormatDMY(new Date(firstEntry?.date));
-      displayItems = generateHourlyTimestamps(dateOldFormat);
     }
+
     if (selectedTier2 == "days") {
       totalAmount = seconds * TperSecond;
       tickerAmount = TperDay;
@@ -132,35 +138,12 @@ export default function Money() {
       perMessage = " / day";
       subText = "Family ";
 
-      let firstEntry = allPackages?.[0];
-      const dateOldFormat = getDateInFormatDMY(new Date(firstEntry?.date));
+      const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
       displayItems = generateDailyTimestamps(dateOldFormat);
-    }
-    if (selectedTier2 == "months") {
-      totalAmount = seconds * TperSecond;
-      tickerAmount = TperMonth;
-      totalAmountToday =
-        valuesToday?.seconds * valuesToday?.TperSecond -
-        valuesToday.seconds * valuesToday?.PMperSecond;
-      tickerAmountToday = valuesToday?.TperMonth;
-      perMessage = " / month";
-      subText = "Family ";
-
-      let firstEntry = allPackages?.[0];
-      const dateOldFormat = getDateInFormatDMY(new Date(firstEntry?.date));
-      displayItems = generateMonthlyTimestamps(dateOldFormat);
     }
   }
 
   if (selectedTier1 == "personal") {
-    if (selectedTier2 == "seconds") {
-      totalAmount = seconds * PMperSecond;
-      tickerAmount = PMperSecond;
-      totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
-      tickerAmountToday = valuesToday?.PMperSecond;
-      perMessage = " / second";
-      subText = "Personal ";
-    }
     if (selectedTier2 == "minutes") {
       totalAmount = seconds * PMperSecond;
       tickerAmount = PMperMinute;
@@ -169,6 +152,7 @@ export default function Money() {
       perMessage = " / minute";
       subText = "Personal ";
     }
+
     if (selectedTier2 == "hours") {
       totalAmount = seconds * PMperSecond;
       tickerAmount = PMperHour;
@@ -176,10 +160,9 @@ export default function Money() {
       tickerAmountToday = valuesToday?.PMperHour;
       perMessage = " / hour";
       subText = "Personal ";
-      let firstEntry = allPackages?.[0];
-      const dateOldFormat = getDateInFormatDMY(new Date(firstEntry?.date));
-      displayItems = generateHourlyTimestamps(dateOldFormat);
+      let firstEntry = salaries?.[0];
     }
+
     if (selectedTier2 == "days") {
       totalAmount = seconds * PMperSecond;
       tickerAmount = PMperDay;
@@ -188,20 +171,8 @@ export default function Money() {
       perMessage = " / day";
       subText = "Personal ";
 
-      let firstEntry = allPackages?.[0];
-      const dateOldFormat = getDateInFormatDMY(new Date(firstEntry?.date));
+      const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
       displayItems = generateDailyTimestamps(dateOldFormat);
-    }
-    if (selectedTier2 == "months") {
-      totalAmount = seconds * PMperSecond;
-      tickerAmount = PMperMonth;
-      totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
-      tickerAmountToday = valuesToday?.PMperMonth;
-      perMessage = " / month";
-      subText = "Personal ";
-      let firstEntry = allPackages?.[0];
-      const dateOldFormat = getDateInFormatDMY(new Date(firstEntry?.date));
-      displayItems = generateMonthlyTimestamps(dateOldFormat);
     }
   }
 
@@ -227,7 +198,9 @@ export default function Money() {
               {selectedTier1 == "personal" && <SelectedDot></SelectedDot>}
             </Option>
           </Options2>
-          <SubTitle>{subText} Today</SubTitle>
+          <SubTitle>
+            {subText} {isInEarlierMonth(selectedDate?.$d) ? "1 Day" : "Today"}
+          </SubTitle>
           <MainTitle>
             <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
               <FaIndianRupeeSign />
@@ -252,6 +225,14 @@ export default function Money() {
         <DisplayAmounts>
           <DisplayHeader>
             <Options>
+              {" "}
+              <Option
+                selected={selectedTier2 == "minutes"}
+                onClick={() => setSelectedTier2("minutes")}
+              >
+                1 Minute
+                {selectedTier2 == "minutes" && <SelectedDot></SelectedDot>}
+              </Option>
               <Option
                 selected={selectedTier2 == "hours"}
                 onClick={() => setSelectedTier2("hours")}
@@ -265,13 +246,6 @@ export default function Money() {
               >
                 1 Day
                 {selectedTier2 == "days" && <SelectedDot></SelectedDot>}
-              </Option>{" "}
-              <Option
-                selected={selectedTier2 == "months"}
-                onClick={() => setSelectedTier2("months")}
-              >
-                1 Month
-                {selectedTier2 == "months" && <SelectedDot></SelectedDot>}
               </Option>
             </Options>
           </DisplayHeader>

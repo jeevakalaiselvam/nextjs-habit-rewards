@@ -22,10 +22,32 @@ import Entry from "../components/moneytracker/Entry";
 import { IoIosCloseCircle } from "react-icons/io";
 import Spending from "../components/moneytracker/Spending";
 import Wallets from "../components/moneytracker/Wallets";
+import { getFirstDateOfCurrentMonth } from "../components/helpers/dateHelper";
 
 export default function MoneyTracker() {
   const [activeTab, setActiveTab] = useState(2);
   const [showEntry, setShowEntry] = useState(false);
+  const [date, setDate] = useState(getFirstDateOfCurrentMonth());
+
+  let title = "";
+
+  if (activeTab == 0) {
+    title = "Income";
+  }
+
+  if (activeTab == 1) {
+    title = "Expense";
+  }
+
+  if (activeTab == 2) {
+    title = "Salaries";
+  }
+
+  if (activeTab == 3) {
+    title = "Profile";
+  }
+
+  const dateChanged = () => {};
 
   return (
     <Container>
@@ -35,12 +57,24 @@ export default function MoneyTracker() {
         </EntryModal>
       )}
       <Header>
-        <Welcome />
+        <Welcome title={title} setDate={setDate} date={date} />
       </Header>
-      <Content>{activeTab == 0 && <Money showEntry={showEntry} />}</Content>
-      <Content>{activeTab == 1 && <Spending showEntry={showEntry} />}</Content>
-      <Content>{activeTab == 2 && <Salary showEntry={showEntry} />}</Content>
-      <Content>{activeTab == 3 && <Wallets showEntry={showEntry} />}</Content>
+      <Content>
+        {activeTab == 0 && <Money showEntry={showEntry} selectedDate={date} />}
+      </Content>
+      <Content>
+        {activeTab == 1 && (
+          <Spending showEntry={showEntry} selectedDate={date} />
+        )}
+      </Content>
+      <Content>
+        {activeTab == 2 && <Salary showEntry={showEntry} selectedDate={date} />}
+      </Content>
+      <Content>
+        {activeTab == 3 && (
+          <Wallets showEntry={showEntry} selectedDate={date} />
+        )}
+      </Content>
       <Bottom>
         <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
           <HiViewGrid />
@@ -73,8 +107,8 @@ const EntryModal = styled.div`
   display: flex;
   width: 95%;
   z-index: 100;
-  min-height: 61vh;
-  max-height: 61vh;
+  min-height: 70vh;
+  max-height: 70vh;
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;

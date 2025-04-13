@@ -1,13 +1,33 @@
 import styled from "styled-components";
-import { getCurrentDayIdentifier } from "../helpers/dateHelper";
+import {
+  getCurrentDayIdentifier,
+  getFirstDateOfCurrentMonth,
+} from "../helpers/dateHelper";
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
 
-export default function Welcome() {
-  let date = getCurrentDayIdentifier();
+export default function Welcome({ title, date, setDate }) {
+  const monthFormat = "YYYY/MM";
 
   return (
     <Container>
-      <Name>Hello Jeeva!</Name>
-      <Date>{date}</Date>
+      <Name>{title}</Name>
+      <DatePicker
+        style={{
+          width: "35%",
+          backgroundColor: "#1f2125",
+          outline: "none",
+          border: "none",
+        }}
+        defaultValue={dayjs(date)}
+        format="MMMM, YYYY"
+        value={dayjs(date)}
+        picker="month"
+        onChange={(e) => {
+          setDate(dayjs(e));
+        }}
+      />
     </Container>
   );
 }

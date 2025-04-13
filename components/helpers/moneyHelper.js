@@ -1,119 +1,176 @@
-import { getDateInFormatDMY } from "./dateHelper";
+import { getDateInFormatDMY, getDaysInMonth } from "./dateHelper";
 
-export const calculateEarnings = (salaryTimeline) => {
-  if (salaryTimeline?.length > 0) {
-    let firstEntry = salaryTimeline?.[0];
-    let yearlySalary = firstEntry?.salary;
-    const date = getDateInFormatDMY(new Date(firstEntry?.date));
-    const [day, month, year] = date.split("-").map(Number);
+export const calculateEarnings = (salary, jsDate) => {
+  if (salary == 0) {
+    return {
+      TperSecond: 0,
+      TperMinute: 0,
+      TperHour: 0,
+      TperDay: 0,
+      PMperSecond: 0,
+      PMperMinute: 0,
+      PMperHour: 0,
+      PMperDay: 0,
+      seconds: 0,
+      minutes: 0,
+      hours: 0,
+      days: 0,
+    };
+  } else {
+    const selectedDate = jsDate?.$d;
+    let monthSalary = salary;
+    const date = getDateInFormatDMY(new Date(selectedDate));
+    const [day, month, year] = date?.split("-").map(Number);
     const letStartDate = new Date(year, month - 1, 1);
 
-    const now = new Date();
+    const today = new Date(); // actual current date
+
+    let now;
+
+    const isSameMonthAndYear =
+      letStartDate.getFullYear() === today.getFullYear() &&
+      letStartDate.getMonth() === today.getMonth();
+
+    if (isSameMonthAndYear) {
+      now = today;
+    } else {
+      now = new Date(year, month, 0); // day 0 of next month = last day of given month
+    }
 
     const msDiff = now - letStartDate;
     const seconds = Math.floor(msDiff / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
-    const months = Math.floor(days / 30.44); // approx months
 
-    let totalSalary = Number(yearlySalary);
-    let pocketSalary = 365000;
+    let totalSalary = Number(monthSalary);
+    let pocketSalary = getDaysInMonth(selectedDate) * 1000;
 
-    const TperSecond = totalSalary / (365 * 24 * 60 * 60);
-    const TperMinute = totalSalary / (365 * 24 * 60);
-    const TperHour = totalSalary / (365 * 24);
-    const TperDay = totalSalary / 365;
-    const TperMonth = totalSalary / 12;
-    const TperYear = totalSalary;
+    console.log("DIFFERENCE TOTAL", {
+      letStartDate,
+      now,
+      salary,
+      pocketSalary,
+      msDiff,
+      seconds,
+      minutes,
+      hours,
+      days,
+    });
 
-    const PMperSecond = pocketSalary / (365 * 24 * 60 * 60);
-    const PMperMinute = pocketSalary / (365 * 24 * 60);
-    const PMperHour = pocketSalary / (365 * 24);
-    const PMperDay = pocketSalary / 365;
-    const PMperMonth = pocketSalary / 12;
-    const PMperYear = pocketSalary;
+    const TperSecond = totalSalary / seconds;
+    const TperMinute = totalSalary / minutes;
+    const TperHour = totalSalary / hours;
+    const TperDay = totalSalary / days;
+
+    const PMperSecond = pocketSalary / seconds;
+    const PMperMinute = pocketSalary / minutes;
+    const PMperHour = pocketSalary / hours;
+    const PMperDay = pocketSalary / days;
 
     return {
       TperSecond,
       TperMinute,
       TperHour,
       TperDay,
-      TperMonth,
-      TperYear,
       PMperSecond,
       PMperMinute,
       PMperHour,
       PMperDay,
-      PMperMonth,
-      PMperYear,
       seconds,
       minutes,
       hours,
       days,
-      months,
     };
-  } else {
-    return {};
   }
 };
 
-export const calculateEarningsToday = (salaryTimeline) => {
-  if (salaryTimeline?.length > 0) {
-    let firstEntry = salaryTimeline?.[0];
-    let yearlySalary = firstEntry?.salary;
-    const [day, month, year] = firstEntry.date.split("-").map(Number);
+export const calculateEarningsToday = (salary, jsDate) => {
+  if (salary == 0) {
+    return {
+      TperSecond: 0,
+      TperMinute: 0,
+      TperHour: 0,
+      TperDay: 0,
+      PMperSecond: 0,
+      PMperMinute: 0,
+      PMperHour: 0,
+      PMperDay: 0,
+      seconds: 0,
+      minutes: 0,
+      hours: 0,
+      days: 0,
+    };
+  } else {
+    const selectedDate = jsDate?.$d;
+    let monthSalary = salary;
+    const date = getDateInFormatDMY(new Date(selectedDate));
+    const [day, month, year] = date?.split("-").map(Number);
     const letStartDate = new Date(new Date().setHours(0, 0, 0, 0));
 
-    const now = new Date();
+    const today = new Date(); // actual current date
+
+    let now;
+
+    const isSameMonthAndYear =
+      letStartDate.getFullYear() === today.getFullYear() &&
+      letStartDate.getMonth() === today.getMonth();
+
+    if (isSameMonthAndYear) {
+      now = today;
+    } else {
+      now = new Date(selectedDate);
+      now.setDate(now.getDate() + 1); // day 0 of next month = last day of given month
+    }
 
     const msDiff = now - letStartDate;
-    console.timeLog({ msDiff });
     const seconds = Math.floor(msDiff / 1000);
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
-    const months = Math.floor(days / 30.44); // approx months
 
-    let totalSalary = Number(yearlySalary);
-    let pocketSalary = 365000;
+    let totalSalary = Number(monthSalary);
+    let pocketSalary = getDaysInMonth(selectedDate) * 1000;
 
-    const TperSecond = totalSalary / (365 * 24 * 60 * 60);
-    const TperMinute = totalSalary / (365 * 24 * 60);
-    const TperHour = totalSalary / (365 * 24);
-    const TperDay = totalSalary / 365;
-    const TperMonth = totalSalary / 12;
-    const TperYear = totalSalary;
+    const TperSecond = totalSalary / seconds;
+    const TperMinute = totalSalary / minutes;
+    const TperHour = totalSalary / hours;
+    const TperDay = totalSalary / days;
 
-    const PMperSecond = pocketSalary / (365 * 24 * 60 * 60);
-    const PMperMinute = pocketSalary / (365 * 24 * 60);
-    const PMperHour = pocketSalary / (365 * 24);
-    const PMperDay = pocketSalary / 365;
-    const PMperMonth = pocketSalary / 12;
-    const PMperYear = pocketSalary;
+    const PMperSecond = pocketSalary / seconds;
+    const PMperMinute = pocketSalary / minutes;
+    const PMperHour = pocketSalary / hours;
+    const PMperDay = pocketSalary / days;
 
     return {
       TperSecond,
       TperMinute,
       TperHour,
       TperDay,
-      TperMonth,
-      TperYear,
       PMperSecond,
       PMperMinute,
       PMperHour,
       PMperDay,
-      PMperMonth,
-      PMperYear,
       seconds,
       minutes,
       hours,
       days,
-      months,
     };
-  } else {
-    return {};
   }
+};
+
+export const isInEarlierMonth = (dateToCheck) => {
+  const today = new Date();
+  const checkYear = dateToCheck.getFullYear();
+  const checkMonth = dateToCheck.getMonth();
+
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth();
+
+  return (
+    checkYear < currentYear ||
+    (checkYear === currentYear && checkMonth < currentMonth)
+  );
 };
 
 export const formatIndianNumber = (num) => {

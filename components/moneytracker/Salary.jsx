@@ -4,11 +4,18 @@ import { FaIndianRupeeSign } from "react-icons/fa6";
 import { HiChartPie, HiOutlineDotsVertical, HiX } from "react-icons/hi";
 import styled from "styled-components";
 import dayjs from "dayjs";
-import { getFormattedDateWords, utcToLocal } from "../helpers/dateHelper";
+import {
+  formatDateToMonthYear,
+  getFirstDateOfCurrentMonth,
+  getFirstDateOfMonth,
+  getFormattedDateWords,
+  isSameMonthUTCZGMT,
+  utcToLocal,
+} from "../helpers/dateHelper";
 import { DatePicker } from "antd";
 import { formatIndianNumber } from "../helpers/moneyHelper";
 
-export default function Salary() {
+export default function Salary({ selectedDate }) {
   const [salary, setNewSalary] = useState(null);
   const [editId, setEditId] = useState("");
   const [date, setDate] = useState(null);
@@ -30,7 +37,7 @@ export default function Salary() {
   const refreshSalary = () => {
     setOptionOpenId("");
     setNewSalary("");
-    setDate(new Date());
+    setDate(getFirstDateOfCurrentMonth());
     axios
       .get("/api/salary")
       .then((response) => {
@@ -71,7 +78,9 @@ export default function Salary() {
     refreshSalary();
   }, []);
 
-  const dateFormat = "DD/MM/YYYY";
+  const currentMonthSalaries = salaries?.filter((salary) => {
+    return isSameMonthUTCZGMT(salary?.date, selectedDate);
+  });
 
   return (
     <Container>
@@ -93,9 +102,10 @@ export default function Salary() {
         <MonthSelection>
           <DatePicker
             style={{ width: "97%", backgroundColor: "#1f2125" }}
-            format={dateFormat}
+            format="MMMM, YYYY"
             inputReadOnly
             value={dayjs(date)}
+            picker="month"
             onChange={(e) => {
               setDate(dayjs(e));
             }}
@@ -117,11 +127,11 @@ export default function Salary() {
       <DisplayAmounts>
         <Topbar></Topbar>
         <TitleNaming>
-          <IconName>Recent Changes</IconName>
+          <IconName>Month Salary</IconName>
           <IconSettings></IconSettings>
         </TitleNaming>
         <SalaryContainer>
-          {salaries
+          {currentMonthSalaries
             ?.sort((a, b) => new Date(b) - new Date(a))
             ?.map((singleSalary) => {
               return (
@@ -130,9 +140,9 @@ export default function Salary() {
                     <HiChartPie />
                   </Image>
                   <DetailsRow>
-                    <Details1>Month Salary</Details1>
+                    <Details1>Verizon</Details1>
                     <Details2>
-                      {getFormattedDateWords(utcToLocal(singleSalary?.date))}
+                      {formatDateToMonthYear(utcToLocal(singleSalary?.date))}
                     </Details2>
                   </DetailsRow>
                   <Money>

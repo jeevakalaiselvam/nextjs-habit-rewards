@@ -11,6 +11,11 @@ export const getFirstDateOfMonth = (dateStr) => {
   return `01-${month}-${year}`;
 };
 
+export const getFirstDateOfCurrentMonth = () => {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), 1);
+};
+
 export const getDateInFormatDMY = (arg) => {
   let date;
   if (arg) {
@@ -40,6 +45,13 @@ export const getFormattedDateWords = (dateArg) => {
   return formatted;
 };
 
+export const formatDateToMonthYear = (date) => {
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+  });
+};
+
 // Helper to parse date
 const getStartDate = (dateString) => {
   const [day, month, year] = dateString.split("-").map(Number);
@@ -67,14 +79,17 @@ export const generateMonthlyTimestamps = (dateString) => {
 
 export const generateDailyTimestamps = (dateString) => {
   const startDate = new Date(getStartDate(getFirstDateOfMonth(dateString)));
-  const now = new Date();
   const daysArray = [];
+
+  const year = startDate.getFullYear();
+  const month = startDate.getMonth();
+
+  const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
 
   let current = new Date(startDate);
 
-  while (current <= now) {
+  while (current.getMonth() === month) {
     const dateStr = current.toLocaleDateString("en-GB").split("/").join("-");
-
     daysArray.push(dateStr);
     current.setDate(current.getDate() + 1);
   }
@@ -125,5 +140,35 @@ export const getDDMMYYFromUTC = (utcString) => {
 
 export const utcToLocal = (utcString) => {
   const localDate = new Date(utcString);
-  return localDate.toLocaleString(); // or .toLocaleDateString() if you want only the date
+  return localDate; // or .toLocaleDateString() if you want only the date
+};
+
+export const isSameMonthUTCZGMT = (date1, date2) => {
+  const d1 = new Date(date1);
+  const d2 = new Date(date2);
+  return (
+    d1?.getFullYear() === d2?.getFullYear() && d1?.getMonth() === d2?.getMonth()
+  );
+};
+
+export const getDaysInMonth = (date) => {
+  if (date) {
+    const year = date?.getFullYear();
+    const month = date?.getMonth();
+    return new Date(year, month + 1, 0).getDate();
+  } else {
+    return new Date().getDate();
+  }
+};
+
+export const isInEarlierMonth = (dateToCheck, referenceDate = new Date()) => {
+  const checkYear = dateToCheck?.getFullYear();
+  const checkMonth = dateToCheck?.getMonth();
+
+  const refYear = referenceDate?.getFullYear();
+  const refMonth = referenceDate?.getMonth();
+
+  return (
+    checkYear < refYear || (checkYear === refYear && checkMonth < refMonth)
+  );
 };

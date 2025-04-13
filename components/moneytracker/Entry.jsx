@@ -1,5 +1,5 @@
 import { DownOutlined, SettingOutlined } from "@ant-design/icons";
-import { Dropdown, message, Space } from "antd";
+import { DatePicker, Dropdown, message, Space } from "antd";
 import { useState } from "react";
 import { BiSolidMoviePlay } from "react-icons/bi";
 import {
@@ -26,6 +26,7 @@ import {
 import { BsFillCreditCard2FrontFill } from "react-icons/bs";
 import { HiMiniHome } from "react-icons/hi2";
 import { ICON_CATEGORY } from "../helpers/iconHelper";
+import dayjs from "dayjs";
 
 export default function Entry({ setShowEntry }) {
   const [selectedEntry, setSelectedEntry] = useState("expense");
@@ -154,7 +155,7 @@ export default function Entry({ setShowEntry }) {
 
   const saveAmount = () => {
     axios
-      .post("/api/spend", { ...values, date: new Date()?.toString() })
+      .post("/api/spend", { ...values })
       .then((response) => {
         message.info("Expense saved !");
         setShowEntry(false);
@@ -227,6 +228,27 @@ export default function Entry({ setShowEntry }) {
                 }}
               />
             </AmountInput>
+
+            <Title>Date</Title>
+            <MonthSelection>
+              <DatePicker
+                style={{
+                  width: "100%",
+                  backgroundColor: "#1f2125",
+                  padding: "0.5rem 1rem",
+                  outline: "none",
+                  border: "none",
+                }}
+                format="DD-MM-YYYY"
+                inputReadOnly
+                value={dayjs(values?.date)}
+                picker="date"
+                onChange={(e) => {
+                  setValues((old) => ({ ...old, date: dayjs(e) }));
+                }}
+                onFocus={(e) => e.preventDefault()}
+              />
+            </MonthSelection>
             <Title>Type</Title>
             <AmountInputDropdown2>
               <Dropdown
@@ -275,6 +297,15 @@ export default function Entry({ setShowEntry }) {
     </Container>
   );
 }
+
+const MonthSelection = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 1rem 0rem 0rem 0rem;
+`;
 
 const Caret = styled.div`
   display: flex;
@@ -327,7 +358,7 @@ const AmountInputDropdown = styled.div`
   font-size: 1.1rem;
   position: relative;
   background-color: #1f2125;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
 `;
@@ -341,7 +372,7 @@ const AmountInputDropdown2 = styled.div`
   font-size: 1.1rem;
   position: relative;
   background-color: #1f2125;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
 `;

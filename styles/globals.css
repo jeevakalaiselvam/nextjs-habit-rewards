@@ -93,3 +93,9 @@ body {
 .full-width-dropdown .ant-dropdown-menu-item {
   width: 100%;
 }
+
+.ant-picker:focus,
+.ant-picker-focused {
+  box-shadow: none !important;
+  outline: none !important;
+}

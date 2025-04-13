@@ -11,7 +11,7 @@ import { ICON_CATEGORY } from "../helpers/iconHelper";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
-export default function Spending({ showEntry }) {
+export default function Spending({ showEntry, selectedDate }) {
   const [loading, setLoading] = useState(true);
   const [allSpendings, setAllSpendings] = useState([]);
   const [selectedTier1, setSelectedTier1] = useState("family");
@@ -31,7 +31,9 @@ export default function Spending({ showEntry }) {
     refreshSpendings();
   }, [showEntry]);
 
-  const now = new Date();
+  const now = new Date(selectedDate);
+
+  console.log({ selectedDate });
 
   const thisMonthSpendings = allSpendings.filter((s) => {
     const spendingDate = new Date(s.date);
