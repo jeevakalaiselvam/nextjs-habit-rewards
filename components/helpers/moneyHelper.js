@@ -3,7 +3,7 @@ import { getDateInFormatDMY } from "./dateHelper";
 export const calculateEarnings = (salaryTimeline) => {
   if (salaryTimeline?.length > 0) {
     let firstEntry = salaryTimeline?.[0];
-    let yearlySalary = firstEntry?.amountYearly;
+    let yearlySalary = firstEntry?.salary;
     const date = getDateInFormatDMY(new Date(firstEntry?.date));
     const [day, month, year] = date.split("-").map(Number);
     const letStartDate = new Date(year, month - 1, 1);
@@ -61,7 +61,7 @@ export const calculateEarnings = (salaryTimeline) => {
 export const calculateEarningsToday = (salaryTimeline) => {
   if (salaryTimeline?.length > 0) {
     let firstEntry = salaryTimeline?.[0];
-    let yearlySalary = firstEntry?.amountYearly;
+    let yearlySalary = firstEntry?.salary;
     const [day, month, year] = firstEntry.date.split("-").map(Number);
     const letStartDate = new Date(new Date().setHours(0, 0, 0, 0));
 
@@ -117,16 +117,16 @@ export const calculateEarningsToday = (salaryTimeline) => {
 };
 
 export const formatIndianNumber = (num) => {
-  const number = num.toString().split(".");
-  let integerPart = number[0];
-  const decimalPart = number[1] ? "." + number[1] : "";
+  const number = num?.toString().split(".");
+  let integerPart = number?.[0];
+  const decimalPart = number?.[1] ? "." + number?.[1] : "";
 
   // First split last 3 digits
-  const lastThree = integerPart.slice(-3);
-  const otherDigits = integerPart.slice(0, -3);
+  const lastThree = integerPart?.slice(-3);
+  const otherDigits = integerPart?.slice(0, -3);
 
   const formatted =
-    otherDigits.replace(/\B(?=(\d{2})+(?!\d))/g, ",") +
+    otherDigits?.replace(/\B(?=(\d{2})+(?!\d))/g, ",") +
     (otherDigits ? "," : "") +
     lastThree;
 

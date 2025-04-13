@@ -1,45 +1,36 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { FaRupeeSign } from "react-icons/fa";
 import { FaIndianRupeeSign } from "react-icons/fa6";
-import {
-  HiChartPie,
-  HiCurrencyRupee,
-  HiOutlineDotsVertical,
-  HiX,
-} from "react-icons/hi";
+import { HiChartPie, HiOutlineDotsVertical, HiX } from "react-icons/hi";
 import styled from "styled-components";
 import dayjs from "dayjs";
-import {
-  getDateInFormatDMY,
-  getDDMMYYFromUTC,
-  getFirstDateOfMonth,
-  getFormattedDateWords,
-  utcToLocal,
-} from "../helpers/dateHelper";
+import { getFormattedDateWords, utcToLocal } from "../helpers/dateHelper";
 import { DatePicker } from "antd";
 import { formatIndianNumber } from "../helpers/moneyHelper";
-import { HiLockClosed } from "react-icons/hi2";
 
 export default function Salary() {
   const [salary, setNewSalary] = useState(null);
+  const [editId, setEditId] = useState("");
   const [date, setDate] = useState(null);
   const [salaries, setAllSalaries] = useState([]);
   const [optionOpenId, setOptionOpenId] = useState("");
 
-  const savePackage = () => {
+  const saveSalary = () => {
     axios
       .post("/api/salary", {
-        amountYearly: salary,
+        salary: salary,
         date: date,
       })
       .then((response) => {
-        refreshPackages();
+        refreshSalary();
       })
       .catch((error) => {});
   };
 
-  const refreshPackages = () => {
+  const refreshSalary = () => {
+    setOptionOpenId("");
+    setNewSalary("");
+    setDate(new Date());
     axios
       .get("/api/salary")
       .then((response) => {
@@ -49,8 +40,35 @@ export default function Salary() {
       .catch((error) => {});
   };
 
+  const editSalary = () => {
+    axios
+      .put(`/api/salary/${editId}`, { salary: salary, date: date })
+      .then((response) => {
+        setEditId("");
+        refreshSalary();
+      })
+      .catch((error) => {});
+  };
+
+  const iniateEditForSalary = (salary) => {
+    setOptionOpenId("");
+    setEditId(salary?._id);
+    setNewSalary(salary?.salary);
+    setDate(salary?.date);
+  };
+
+  const deleteSalary = (salaryId) => {
+    setOptionOpenId("");
+    axios
+      .delete(`/api/salary/${salaryId}`)
+      .then((response) => {
+        refreshSalary();
+      })
+      .catch((error) => {});
+  };
+
   useEffect(() => {
-    refreshPackages();
+    refreshSalary();
   }, []);
 
   const dateFormat = "DD/MM/YYYY";
@@ -77,13 +95,24 @@ export default function Salary() {
             style={{ width: "97%", backgroundColor: "#1f2125" }}
             format={dateFormat}
             inputReadOnly
+            value={dayjs(date)}
             onChange={(e) => {
               setDate(dayjs(e));
             }}
             onFocus={(e) => e.preventDefault()}
           />
         </MonthSelection>
-        <SaveButton onClick={() => savePackage()}>Add Salary</SaveButton>
+        <SaveButton
+          onClick={() => {
+            if (editId) {
+              editSalary();
+            } else {
+              saveSalary();
+            }
+          }}
+        >
+          {editId ? "Edit" : "Add"} Salary
+        </SaveButton>
       </AddAmount>
       <DisplayAmounts>
         <Topbar></Topbar>
@@ -96,7 +125,7 @@ export default function Salary() {
             ?.sort((a, b) => new Date(b) - new Date(a))
             ?.map((singleSalary) => {
               return (
-                <SinglePackage>
+                <SinglePackage blink={editId == singleSalary?._id}>
                   <Image>
                     <HiChartPie />
                   </Image>
@@ -107,7 +136,7 @@ export default function Salary() {
                     </Details2>
                   </DetailsRow>
                   <Money>
-                    {formatIndianNumber(singleSalary?.amountYearly)}
+                    {formatIndianNumber(singleSalary?.salary)}
                     <span
                       style={{
                         fontSize: ".9rem",
@@ -135,8 +164,20 @@ export default function Salary() {
                     </OptionTrigger>
                     {optionOpenId == singleSalary?._id && (
                       <OptionInner>
-                        <OptionItem>Edit</OptionItem>
-                        <OptionItem>Delete</OptionItem>
+                        <OptionItem
+                          onClick={() => {
+                            iniateEditForSalary(singleSalary);
+                          }}
+                        >
+                          Edit
+                        </OptionItem>
+                        <OptionItem
+                          onClick={() => {
+                            deleteSalary(singleSalary?._id);
+                          }}
+                        >
+                          Delete
+                        </OptionItem>
                       </OptionInner>
                     )}
                   </OptionsContainer>
@@ -260,6 +301,17 @@ const SinglePackage = styled.div`
   border-radius: 8px;
   margin: 0.5rem 0rem;
   width: 100%;
+  animation: ${(props) =>
+    props?.blink ? "blink-smooth 1s infinite linear" : ""};
+  @keyframes blink-smooth {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
 `;
 
 const SalaryContainer = styled.div`

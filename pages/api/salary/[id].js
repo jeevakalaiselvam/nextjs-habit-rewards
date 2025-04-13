@@ -1,16 +1,22 @@
-import { getMongoHabitsForUser } from "../../../components/helpers/apiHelper";
+import {
+  getMon,
+  getMongoCollectionForPackage,
+  getMongoCollectionForPackagegoCollectionForPackage,
+} from "../../../components/helpers/apiHelper";
 import clientPromise from "../../../lib/db";
 import { ObjectId } from "mongodb";
 
 export default async function handler(req, res) {
-  const { id, user } = req.query;
+  const { id } = req.query;
 
   if (req.method === "PUT") {
-    const { time, habitId, count } = req.body;
+    const { salary, date } = req.body;
+    console.log(salary, date?.toString());
 
-    // Validate input
-    if (!time || !habitId || !count) {
-      return res.status(400).json({ error: "Title and reward are required" });
+    if (!salary || !date) {
+      return res
+        .status(400)
+        .json({ error: "Yearly Amount and Date are required" });
     }
 
     try {
@@ -18,18 +24,16 @@ export default async function handler(req, res) {
       const db = client.db("habittracker");
 
       const result = await db
-        .collection(getMongoHabitsForUser(user))
-        .updateOne(
-          { _id: new ObjectId(id) },
-          { $set: { time, habitId, count } }
-        );
+        .collection(getMongoCollectionForPackage())
+        .updateOne({ _id: new ObjectId(id) }, { $set: { salary, date } });
 
       if (result.matchedCount === 0) {
-        return res.status(404).json({ error: "Habit not found" });
+        return res.status(404).json({ error: "Salary not found" });
       }
 
-      res.status(200).json({ message: "Habit updated successfully" });
+      res.status(200).json({ message: "Salary updated successfully" });
     } catch (error) {
+      console.error(error);
       res.status(500).json({ error: "Failed to update habit" });
     }
   } else if (req.method === "DELETE") {
@@ -38,13 +42,13 @@ export default async function handler(req, res) {
       const db = client.db("habittracker");
 
       const result = await db
-        .collection(getMongoHabitsForUser(user))
+        .collection(getMongoCollectionForPackage())
         .deleteOne({ _id: new ObjectId(id) });
 
       if (result.deletedCount === 1) {
-        res.status(200).json({ message: "Habit deleted successfully" });
+        res.status(200).json({ message: "Salary deleted successfully" });
       } else {
-        res.status(404).json({ error: "Habit not found" });
+        res.status(404).json({ error: "Salary not found" });
       }
     } catch (error) {
       res.status(500).json({ error: "Failed to delete habit" });
