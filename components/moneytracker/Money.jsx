@@ -249,6 +249,7 @@ export default function Money({ selectedDate }) {
           values?.totalSeconds * values?.PMperSecond -
           allSpendingFamilyInMonthAmount;
         tickerAmount = values?.TperHour - values?.PMperHour;
+        totalAmount = Math.round(totalAmount);
         totalAmountToday =
           (values?.totalSeconds * values?.TperSecond -
             values?.totalSeconds * values?.PMperSecond) /
@@ -269,6 +270,7 @@ export default function Money({ selectedDate }) {
           values?.totalSeconds * values?.TperSecond -
           values?.totalSeconds * values?.PMperSecond -
           allSpendingFamilyInMonthAmount;
+        totalAmount = Math.round(totalAmount);
         tickerAmount = values?.TperDay - values?.PMperDay;
         totalAmountToday =
           (values?.totalSeconds * values?.TperSecond -
@@ -288,6 +290,7 @@ export default function Money({ selectedDate }) {
         totalAmount =
           values?.totalSeconds * values?.PMperSecond -
           allSpendingPersonalInMonthAmount;
+        totalAmount = Math.round(totalAmount);
         tickerAmount = values?.PMperHour;
         totalAmountToday = values?.totalSecondsInToday * values?.PMperSecond;
         tickerAmountToday = values?.PMperHour;
@@ -302,8 +305,9 @@ export default function Money({ selectedDate }) {
         totalAmount =
           values?.totalSeconds * values?.PMperSecond -
           allSpendingPersonalInMonthAmount;
+        totalAmount = Math.round(totalAmount);
         tickerAmount = values?.PMperDay;
-        totalAmountToday = values?.seconds * values?.PMperSecond;
+        totalAmountToday = values?.totalSecondsInToday * values?.PMperSecond;
         tickerAmountToday = values?.PMperDay;
         perMessage = " / day";
         subText = "Personal ";
@@ -343,7 +347,7 @@ export default function Money({ selectedDate }) {
             <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
               <FaIndianRupeeSign />
             </span>
-            {totalAmount ? formatIndianNumber(totalAmount?.toFixed(2)) : 0}
+            {totalAmount ? formatIndianNumber(Math.round(totalAmount)) : 0}
           </MainTitle>
           <Ticker>
             <span
@@ -358,6 +362,27 @@ export default function Money({ selectedDate }) {
               perMessage}
           </Ticker>
         </AmountInfo>
+        <BlueHeader>
+          <LeftH>
+            <TitleH>Family Expense</TitleH>
+            <AmountH>
+              <span style={{ fontSize: "1rem", transform: "translateY(1px)" }}>
+                <FaIndianRupeeSign />
+              </span>
+              <span>{allSpendingFamilyInMonthAmount}</span>
+            </AmountH>
+          </LeftH>
+          <MiddleH></MiddleH>
+          <RightH>
+            <TitleH>Personal Expense</TitleH>
+            <AmountH>
+              <span style={{ fontSize: "1rem", transform: "translateY(1px)" }}>
+                <FaIndianRupeeSign />
+              </span>
+              <span>{allSpendingPersonalInMonthAmount}</span>
+            </AmountH>
+          </RightH>
+        </BlueHeader>
         <DisplayAmounts>
           <DisplayHeader>
             <Options>
@@ -438,6 +463,61 @@ export default function Money({ selectedDate }) {
     );
   }
 }
+
+const TitleH = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #7db9f9;
+`;
+
+const AmountH = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  color: #e3f6fe;
+  font-size: 1.5rem;
+`;
+
+const LeftH = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex: 1;
+`;
+
+const MiddleH = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1px;
+  height: 50px;
+  background-color: #2982e3;
+  border-radius: 4px;
+`;
+
+const RightH = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+  flex-direction: column;
+`;
+
+const BlueHeader = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 120px;
+  padding: 1rem;
+  transform: translateY(1.5rem);
+  border-radius: 2rem 2rem 0 0;
+  background-color: #126cd6;
+  width: 110%;
+  z-index: 4;
+`;
 
 const LineItems = styled.div`
   display: flex;
@@ -652,12 +732,13 @@ const DisplayAmounts = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  z-index: 2;
   width: 110%;
   background-color: #1f2125;
   border-radius: 2rem 2rem 0 0;
   flex-direction: column;
   min-height: 55vh;
+  position: relative;
+  z-index: 50;
 `;
 
 const Container = styled.div`
