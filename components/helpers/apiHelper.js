@@ -102,6 +102,10 @@ export const getMongoCollectionForPackage = (user) => {
   return "jeevasalary";
 };
 
+export const getMongoCollectionForWallet = (user) => {
+  return "jeevawallet";
+};
+
 export const getMongoCollectionForSpending = (user) => {
   return "jeevaspend";
 };

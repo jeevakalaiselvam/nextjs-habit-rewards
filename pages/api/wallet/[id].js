@@ -1,7 +1,7 @@
 import {
   getMon,
-  getMongoCollectionForPackage,
-  getMongoCollectionForPackagegoCollectionForPackage,
+  getMongoCollectionForWallet,
+  getMongoCollectionForWalletgoCollectionForPackage,
 } from "../../../components/helpers/apiHelper";
 import clientPromise from "../../../lib/db";
 import { ObjectId } from "mongodb";
@@ -10,13 +10,13 @@ export default async function handler(req, res) {
   const { id } = req.query;
 
   if (req.method === "PUT") {
-    const { investment, date } = req.body;
-    console.log(investment, date?.toString());
+    const { wallet, id } = req.body;
+    console.log(wallet, id?.toString());
 
-    if (!investment || !date) {
+    if (!wallet || !id) {
       return res
         .status(400)
-        .json({ error: "Yearly Amount and Date are required" });
+        .json({ error: "Yearly Amount and id are required" });
     }
 
     try {
@@ -24,14 +24,14 @@ export default async function handler(req, res) {
       const db = client.db("habittracker");
 
       const result = await db
-        .collection(getMongoCollectionForPackage())
-        .updateOne({ _id: new ObjectId(id) }, { $set: { investment, date } });
+        .collection(getMongoCollectionForWallet())
+        .updateOne({ _id: new ObjectId(id) }, { $set: { wallet, id } });
 
       if (result.matchedCount === 0) {
-        return res.status(404).json({ error: "investment not found" });
+        return res.status(404).json({ error: "wallet not found" });
       }
 
-      res.status(200).json({ message: "investment updated successfully" });
+      res.status(200).json({ message: "wallet updated successfully" });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Failed to update habit" });
@@ -42,13 +42,13 @@ export default async function handler(req, res) {
       const db = client.db("habittracker");
 
       const result = await db
-        .collection(getMongoCollectionForPackage())
+        .collection(getMongoCollectionForWallet())
         .deleteOne({ _id: new ObjectId(id) });
 
       if (result.deletedCount === 1) {
-        res.status(200).json({ message: "investment deleted successfully" });
+        res.status(200).json({ message: "wallet deleted successfully" });
       } else {
-        res.status(404).json({ error: "investment not found" });
+        res.status(404).json({ error: "wallet not found" });
       }
     } catch (error) {
       res.status(500).json({ error: "Failed to delete habit" });

@@ -62,7 +62,7 @@ export const WALLET_OPTIONS = [
     icon: <FaPiggyBank />,
   },
   {
-    name: "Liquid Fund",
+    name: "Liquid Money",
     id: "liquidfund",
     color: "#00CED1",
     icon: <FaIndianRupeeSign />,

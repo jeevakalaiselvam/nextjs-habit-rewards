@@ -1,25 +1,22 @@
-import { getMongoCollectionForPackage } from "../../../components/helpers/apiHelper";
+import { getMongoCollectionForWallet } from "../../../components/helpers/apiHelper";
 import clientPromise from "../../../lib/db";
 
 export default async function handler(req, res) {
-  const { user } = req.query;
-
   if (req.method === "POST") {
-    const { investment, date } = req.body;
-    console.log(investment, date?.toString());
+    const { wallet, id } = req.body;
 
-    if (!investment || !date) {
+    if (!wallet || !id) {
       return res
         .status(400)
-        .json({ error: "Yearly Amount and Date are required" });
+        .json({ error: "Yearly Amount and id are required" });
     }
 
     try {
       const client = await clientPromise;
       const db = client.db("habittracker");
       await db
-        .collection(getMongoCollectionForPackage())
-        .insertOne({ investment, date: date?.toString() });
+        .collection(getMongoCollectionForWallet())
+        .replaceOne({ id: id }, { wallet, id }, { upsert: true });
 
       res.status(201).json({ message: "Package added successfully" });
     } catch (error) {
@@ -31,7 +28,7 @@ export default async function handler(req, res) {
       const client = await clientPromise;
       const db = client.db("habittracker");
       const packages = await db
-        .collection(getMongoCollectionForPackage())
+        .collection(getMongoCollectionForWallet())
         .find({})
         .toArray();
       res.status(200).json(packages);

@@ -3,29 +3,151 @@ import { WALLET_OPTIONS } from "../helpers/iconHelper";
 import { formatIndianNumber } from "../helpers/moneyHelper";
 import { generateDarkTextColorForLightBg } from "../helpers/colorHelper";
 import { FaIndianRupeeSign } from "react-icons/fa6";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Popover, Spin } from "antd";
+import { FaCheck, FaEdit } from "react-icons/fa";
+import { MdEdit } from "react-icons/md";
 
 export default function Wallets() {
-  return (
+  const [walletValue, setWalletValue] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [wallets, setWallets] = useState([]);
+  const [walletIdInEdit, setWalletIdInEdit] = useState("");
+
+  const refreshWallet = () => {
+    setLoading(true);
+    axios
+      .get("/api/wallet")
+      .then((response) => {
+        setWallets(response?.data);
+        setLoading(false);
+      })
+      .catch((error) => {});
+  };
+
+  const saveWallet = () => {
+    setLoading(true);
+    axios
+      .post("/api/wallet", { wallet: walletValue, id: walletIdInEdit })
+      .then((response) => {
+        refreshWallet();
+        setLoading(false);
+      })
+      .catch((error) => {});
+  };
+
+  useEffect(() => {
+    refreshWallet();
+  }, []);
+
+  if (loading) {
     <Container>
-      {WALLET_OPTIONS?.map((wallet) => {
-        return (
-          <WallerContainer color={wallet?.color}>
-            <Name>{wallet?.name?.toUpperCase()}</Name>
-            <Icon>{wallet?.icon}</Icon>
-            <Amount color={generateDarkTextColorForLightBg(wallet?.color)}>
-              <span
-                style={{ fontSize: "1.5rem", transform: "translateY(2px)" }}
+      <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+    </Container>;
+  } else {
+    return (
+      <Container>
+        {WALLET_OPTIONS?.map((wallet) => {
+          const walletValueFromWeb = Number(
+            wallets?.find((walletWeb) => {
+              return walletWeb?.id == wallet?.id;
+            })?.wallet ?? 0
+          );
+
+          console.log({ walletValueFromWeb });
+          return (
+            <WallerContainer color={wallet?.color}>
+              <Name>{wallet?.name?.toUpperCase()}</Name>
+              <Icon>{wallet?.icon}</Icon>
+              {wallet?.id !== walletIdInEdit && (
+                <AmountReadOnly
+                  color={generateDarkTextColorForLightBg(wallet?.color)}
+                >
+                  <span
+                    style={{ fontSize: "1.5rem", transform: "translateY(2px)" }}
+                  >
+                    <FaIndianRupeeSign />
+                  </span>
+                  {formatIndianNumber(walletValueFromWeb)}
+                </AmountReadOnly>
+              )}
+
+              <Popover
+                placement="rightBottom"
+                content={
+                  <Amount color={wallet?.color}>
+                    <span>
+                      <input
+                        inputMode="numeric"
+                        type="number"
+                        value={walletValue}
+                        onChange={(e) => setWalletValue(e.target.value)}
+                      />
+                    </span>
+                    <SaveButton
+                      color={wallet?.color}
+                      onClick={() => {
+                        saveWallet();
+                        setWalletIdInEdit("");
+                      }}
+                    >
+                      UPDATE
+                    </SaveButton>
+                  </Amount>
+                }
+                title={`${wallet?.name}`}
               >
-                <FaIndianRupeeSign />
-              </span>
-              {formatIndianNumber(100)}
-            </Amount>
-          </WallerContainer>
-        );
-      })}
-    </Container>
-  );
+                <Edit
+                  color={generateDarkTextColorForLightBg(wallet?.color, 10)}
+                  onClick={() => {
+                    setWalletIdInEdit(wallet?.id);
+                  }}
+                >
+                  EDIT
+                </Edit>
+              </Popover>
+            </WallerContainer>
+          );
+        })}
+      </Container>
+    );
+  }
 }
+
+const SaveButton = styled.div`
+  display: flex;
+  align-items: center;
+  height: 30px;
+  width: 100%;
+  font-size: 1.25rem;
+  flex-direction: column;
+  background-color: ${(props) => props.color};
+  color: ${(props) => generateDarkTextColorForLightBg(props.color)};
+
+  &:active {
+    background-color: ${(props) =>
+      generateDarkTextColorForLightBg(props.color)};
+    color: ${(props) => "#FEFEFE"};
+  }
+`;
+
+const Edit = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1rem;
+  padding: 0.25rem;
+  font-weight: bold;
+  background-color: ${(props) => generateDarkTextColorForLightBg(props.color)};
+
+  &:active {
+    color: ${(props) => props.color};
+  }
+`;
 
 const Icon = styled.div`
   display: flex;
@@ -39,21 +161,44 @@ const Icon = styled.div`
   font-weight: bold;
 `;
 
+const AmountReadOnly = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  font-size: 2rem;
+  position: absolute;
+  bottom: 0.5rem;
+  right: 1rem;
+  font-weight: bold;
+  color: ${(props) => props.color};
+`;
+
 const Amount = styled.div`
   display: flex;
   align-items: center;
-  position: absolute;
-  bottom: 1rem;
-  right: 1rem;
-  padding: 1rem;
+  justify-content: flex-start;
+  flex-direction: column;
   font-size: 2rem;
   font-weight: bold;
+  width: 200px;
   color: ${(props) => props.color};
+
+  & input {
+    width: 200px;
+    height: 30px;
+    outline: none;
+    border: none;
+    background-color: ${(props) => props.color};
+    color: #fefefe;
+    padding: 0.25rem;
+    font-size: 1.5rem;
+  }
 `;
 
 const Name = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
   flex-direction: column;
   position: absolute;
   top: 1rem;
