@@ -393,37 +393,39 @@ export default function Money({ selectedDate }) {
                   : 0}
               </MainTitle>
             </AmountInfo>
-            <LineItems>
-              {displayItems?.map((item, index) => {
-                return (
-                  <SingleDisplayItem blink={index == 0}>
-                    <SingleDisplayItemLeft>
-                      {<TopLine hide={index == 0}></TopLine>}
-                      <CenterCircle></CenterCircle>
-                      {
-                        <BottomLine
-                          hide={index == displayItems?.length}
-                        ></BottomLine>
-                      }
-                    </SingleDisplayItemLeft>
-                    <SingleDisplayItemRight>
-                      <DateInner>{item}</DateInner>
-                      <MoneyInner>
-                        <span
-                          style={{
-                            fontSize: ".9rem",
-                            transform: "translateY(2px)",
-                          }}
-                        >
-                          <FaIndianRupeeSign />
-                        </span>
-                        {tickerAmount?.toFixed(0)}
-                      </MoneyInner>
-                    </SingleDisplayItemRight>
-                  </SingleDisplayItem>
-                );
-              })}
-            </LineItems>
+            {false && (
+              <LineItems>
+                {displayItems?.map((item, index) => {
+                  return (
+                    <SingleDisplayItem blink={index == 0}>
+                      <SingleDisplayItemLeft>
+                        {<TopLine hide={index == 0}></TopLine>}
+                        <CenterCircle></CenterCircle>
+                        {
+                          <BottomLine
+                            hide={index == displayItems?.length}
+                          ></BottomLine>
+                        }
+                      </SingleDisplayItemLeft>
+                      <SingleDisplayItemRight>
+                        <DateInner>{item}</DateInner>
+                        <MoneyInner>
+                          <span
+                            style={{
+                              fontSize: ".9rem",
+                              transform: "translateY(2px)",
+                            }}
+                          >
+                            <FaIndianRupeeSign />
+                          </span>
+                          {tickerAmount?.toFixed(0)}
+                        </MoneyInner>
+                      </SingleDisplayItemRight>
+                    </SingleDisplayItem>
+                  );
+                })}
+              </LineItems>
+            )}
           </AllItems>
         </DisplayAmounts>
       </Container>
