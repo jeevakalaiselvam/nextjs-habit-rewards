@@ -8,7 +8,7 @@ import { FaRupeeSign } from "react-icons/fa";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { generateSimilarColor } from "../helpers/colorHelper";
 import { ICON_CATEGORY, ICON_COLORS } from "../helpers/iconHelper";
-import { Spin } from "antd";
+import { Popconfirm, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
 export default function Spending({ showEntry, selectedDate }) {
@@ -69,6 +69,15 @@ export default function Spending({ showEntry, selectedDate }) {
       value: (spending?.amount / totalSpending) * 100,
     };
   });
+
+  const deleteSpending = (spendingId) => {
+    axios
+      .delete(`/api/spend/${spendingId}`)
+      .then((response) => {
+        refreshSpendings();
+      })
+      .catch((error) => {});
+  };
 
   if (loading) {
     return (
@@ -151,43 +160,53 @@ export default function Spending({ showEntry, selectedDate }) {
         <Bottom>
           <BTitle>Spends by Category</BTitle>
           <AllSpending>
-            {allCategoriesThisMonth?.map((category) => {
-              let totalAmountInCategory = 0;
-              const timesThisMonth = allSpendings?.reduce((acc, spend) => {
-                if (spend?.category == category) {
-                  totalAmountInCategory += Number(spend?.amount);
-                }
-                return acc + (spend?.category == category ? 1 : 0);
-              }, 0);
-              return (
-                <SpendCard>
-                  <Left color={ICON_COLORS[category]}>
-                    {ICON_CATEGORY[category]}
-                  </Left>
-                  <Middle>
-                    <MTop>{capitalizeFirstLetter(category)}</MTop>
-                    <MBottom>
-                      {timesThisMonth > 1
-                        ? `${timesThisMonth} payments`
-                        : `${timesThisMonth} payment`}
-                    </MBottom>
-                  </Middle>
-                  <Right>
-                    <span
-                      style={{
-                        fontSize: ".8rem",
-                        transform: "translateY(1px)",
+            {allSpendings
+              ?.filter((spending) => {
+                console.log({ spending, category: spending?.category });
+                return spending?.type == selectedTier1;
+              })
+              ?.map((spending) => {
+                const timesThisMonth = 1;
+                return (
+                  <SpendCard>
+                    <Left color={ICON_COLORS[spending?.category]}>
+                      {ICON_CATEGORY[spending?.category]}
+                    </Left>
+                    <Middle>
+                      <MTop>{capitalizeFirstLetter(spending?.category)}</MTop>
+                      <MBottom>
+                        {timesThisMonth > 1
+                          ? `${timesThisMonth} payments`
+                          : `${timesThisMonth} payment`}
+                      </MBottom>
+                    </Middle>
+                    <Popconfirm
+                      title="Delete the task"
+                      description="Are you sure to delete this task?"
+                      onConfirm={() => {
+                        deleteSpending(spending?._id);
                       }}
+                      onCancel={() => {}}
+                      okText="Yes"
+                      cancelText="No"
                     >
-                      <FaIndianRupeeSign />
-                    </span>
-                    <span style={{ fontSize: ".95rem" }}>
-                      {formatIndianNumber(totalAmountInCategory)}
-                    </span>
-                  </Right>
-                </SpendCard>
-              );
-            })}
+                      <Right>
+                        <span
+                          style={{
+                            fontSize: ".8rem",
+                            transform: "translateY(1px)",
+                          }}
+                        >
+                          <FaIndianRupeeSign />
+                        </span>
+                        <span style={{ fontSize: ".95rem" }}>
+                          {formatIndianNumber(spending?.amount)}
+                        </span>
+                      </Right>
+                    </Popconfirm>
+                  </SpendCard>
+                );
+              })}
           </AllSpending>
         </Bottom>
       </Container>
@@ -373,7 +392,17 @@ const AllSpending = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
+  max-height: 45vh;
+  overflow: scroll;
   padding: 1rem 0rem;
+
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
 `;
 
 const BTitle = styled.div`

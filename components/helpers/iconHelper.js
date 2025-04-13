@@ -36,6 +36,12 @@ export const ICON_CATEGORY = {
   house: <HiMiniHome />,
   electricity: <MdOutlineElectricalServices />,
   car: <FaCar />,
+  providentfund: <FaPiggyBank />,
+  liquidfund: <FaIndianRupeeSign />,
+  gold: <AiFillGolden />,
+  mutualfunds: <AiFillFund />,
+  stocks: <RiStockFill />,
+  bonds: <PiCertificateFill />,
 };
 
 export const ICON_COLORS = {
@@ -54,7 +60,12 @@ export const ICON_COLORS = {
   credit: "#F9B846", // golden yellow
   house: "#72C079", // moss green
   electricity: "#FF8D5B", // soft tangerine
-  electricity: "#f75c5c", // soft tangerine
+  providentfund: "#6A5ACD",
+  liquidfund: "#00CED1",
+  gold: "#FFD700",
+  mutualfunds: "#3CB371",
+  stocks: "#FF6347",
+  bonds: "#4682B4",
 };
 
 export const WALLET_OPTIONS = [
