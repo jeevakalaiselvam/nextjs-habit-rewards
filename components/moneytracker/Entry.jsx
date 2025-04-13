@@ -243,7 +243,7 @@ export default function Entry({ setShowEntry }) {
     },
     {
       key: "car",
-      label: "car",
+      label: "Car",
       icon: (
         <span
           style={{ transform: "translateY(2px)", color: ICON_COLORS["car"] }}

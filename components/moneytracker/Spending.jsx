@@ -33,13 +33,12 @@ export default function Spending({ showEntry, selectedDate }) {
 
   const now = new Date(selectedDate);
 
-  console.log({ selectedDate });
-
   const thisMonthSpendings = allSpendings.filter((s) => {
     const spendingDate = new Date(s.date);
+    console.log(new Date(spendingDate), new Date(now));
     return (
-      spendingDate.getFullYear() === now.getFullYear() &&
-      spendingDate.getMonth() === now.getMonth() &&
+      new Date(spendingDate).getFullYear() === new Date(now).getFullYear() &&
+      new Date(spendingDate).getMonth() === new Date(now).getMonth() &&
       s?.type == selectedTier1
     );
   });
@@ -78,6 +77,8 @@ export default function Spending({ showEntry, selectedDate }) {
       })
       .catch((error) => {});
   };
+
+  console.log({ allSpendings });
 
   if (loading) {
     return (
@@ -158,9 +159,9 @@ export default function Spending({ showEntry, selectedDate }) {
           </RightTop>
         </Top>
         <Bottom>
-          <BTitle>Spends by Category</BTitle>
+          <BTitle>All Spendings</BTitle>
           <AllSpending>
-            {allSpendings
+            {thisMonthSpendings
               ?.filter((spending) => {
                 console.log({ spending, category: spending?.category });
                 return spending?.type == selectedTier1;
@@ -350,6 +351,7 @@ const CatName = styled.div`
   align-items: center;
   justify-content: flex-start;
   font-size: 0.9rem;
+  min-width: 70px;
 `;
 
 const CatPercent = styled.div`

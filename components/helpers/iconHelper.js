@@ -66,6 +66,7 @@ export const ICON_COLORS = {
   mutualfunds: "#3CB371",
   stocks: "#FF6347",
   bonds: "#4682B4",
+  car: "#659324",
 };
 
 export const WALLET_OPTIONS = [

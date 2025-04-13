@@ -1,9 +1,13 @@
-import { getMongoHabitsForUser } from "../../../components/helpers/apiHelper";
+import {
+  getMon,
+  getMongoCollectionForSpending,
+  getMongoCollectionForSpendinggoCollectionForSpending,
+} from "../../../components/helpers/apiHelper";
 import clientPromise from "../../../lib/db";
 import { ObjectId } from "mongodb";
 
 export default async function handler(req, res) {
-  const { id, user } = req.query;
+  const { id } = req.query;
 
   if (req.method === "PUT") {
     const { time, habitId, count } = req.body;
@@ -18,7 +22,7 @@ export default async function handler(req, res) {
       const db = client.db("habittracker");
 
       const result = await db
-        .collection(getMongoHabitsForUser(user))
+        .collection(getMongoCollectionForSpending())
         .updateOne(
           { _id: new ObjectId(id) },
           { $set: { time, habitId, count } }
@@ -38,7 +42,7 @@ export default async function handler(req, res) {
       const db = client.db("habittracker");
 
       const result = await db
-        .collection(getMongoHabitsForUser(user))
+        .collection(getMongoCollectionForSpending())
         .deleteOne({ _id: new ObjectId(id) });
 
       if (result.deletedCount === 1) {
@@ -47,6 +51,7 @@ export default async function handler(req, res) {
         res.status(404).json({ error: "Habit not found" });
       }
     } catch (error) {
+      console.log(error);
       res.status(500).json({ error: "Failed to delete habit" });
     }
   } else {
