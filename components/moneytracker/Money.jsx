@@ -15,7 +15,7 @@ import {
 } from "../helpers/dateHelper";
 import {
   calculateEarnings,
-  calculateEarningsToday,
+  calculateEarnings1Today,
   calculateMoneyForPackages,
   formatIndianNumber,
 } from "../helpers/moneyHelper";
@@ -61,12 +61,7 @@ export default function Money({ selectedDate }) {
           0
         );
 
-        console.log({ currentMonthSalaries });
-
-        setValues(calculateEarnings(totalCurrentMonthSalary, selectedDate));
-        setValuesToday(
-          calculateEarningsToday(totalCurrentMonthSalary, selectedDate)
-        );
+        setValues(calculateEarnings(totalCurrentMonthSalary, selectedDate?.$d));
       }
     }, 1000);
 
@@ -109,10 +104,8 @@ export default function Money({ selectedDate }) {
     if (selectedTier2 == "minutes") {
       totalAmount = seconds * TperSecond;
       tickerAmount = TperMinute;
-      totalAmountToday =
-        valuesToday?.seconds * valuesToday?.TperSecond -
-        valuesToday.seconds * valuesToday?.PMperSecond;
-      tickerAmountToday = valuesToday?.TperMinute;
+      totalAmountToday = values?.seconds * values?.TperSecond;
+      tickerAmountToday = values?.TperMinute;
       perMessage = " / minute";
       subText = "Family ";
     }
@@ -120,10 +113,8 @@ export default function Money({ selectedDate }) {
     if (selectedTier2 == "hours") {
       totalAmount = seconds * TperSecond;
       tickerAmount = TperHour;
-      totalAmountToday =
-        valuesToday?.seconds * valuesToday?.TperSecond -
-        valuesToday.seconds * valuesToday?.PMperSecond;
-      tickerAmountToday = valuesToday?.TperHour;
+      totalAmountToday = values?.seconds * values?.TperSecond;
+      tickerAmountToday = values?.TperHour;
       perMessage = " / hour";
       subText = "Family ";
     }
@@ -131,10 +122,8 @@ export default function Money({ selectedDate }) {
     if (selectedTier2 == "days") {
       totalAmount = seconds * TperSecond;
       tickerAmount = TperDay;
-      totalAmountToday =
-        valuesToday?.seconds * valuesToday?.TperSecond -
-        valuesToday.seconds * valuesToday?.PMperSecond;
-      tickerAmountToday = valuesToday?.TperDay;
+      totalAmountToday = values?.seconds * values?.TperSecond;
+      tickerAmountToday = values?.TperDay;
       perMessage = " / day";
       subText = "Family ";
 
@@ -147,8 +136,8 @@ export default function Money({ selectedDate }) {
     if (selectedTier2 == "minutes") {
       totalAmount = seconds * PMperSecond;
       tickerAmount = PMperMinute;
-      totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
-      tickerAmountToday = valuesToday?.PMperMinute;
+      totalAmountToday = values?.seconds * values?.PMperSecond;
+      tickerAmountToday = values?.PMperMinute;
       perMessage = " / minute";
       subText = "Personal ";
     }
@@ -156,8 +145,8 @@ export default function Money({ selectedDate }) {
     if (selectedTier2 == "hours") {
       totalAmount = seconds * PMperSecond;
       tickerAmount = PMperHour;
-      totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
-      tickerAmountToday = valuesToday?.PMperHour;
+      totalAmountToday = values?.seconds * values?.PMperSecond;
+      tickerAmountToday = values?.PMperHour;
       perMessage = " / hour";
       subText = "Personal ";
       let firstEntry = salaries?.[0];
@@ -166,8 +155,8 @@ export default function Money({ selectedDate }) {
     if (selectedTier2 == "days") {
       totalAmount = seconds * PMperSecond;
       tickerAmount = PMperDay;
-      totalAmountToday = valuesToday?.seconds * valuesToday?.PMperSecond;
-      tickerAmountToday = valuesToday?.PMperDay;
+      totalAmountToday = values?.seconds * values?.PMperSecond;
+      tickerAmountToday = values?.PMperDay;
       perMessage = " / day";
       subText = "Personal ";
 

@@ -33,6 +33,12 @@ export const getDateInFormatDMY = (arg) => {
   return formatted;
 };
 
+export const getTotalDaysInMonth = (date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  return new Date(year, month + 1, 0).getDate();
+};
+
 export const getFormattedDateWords = (dateArg) => {
   const dateString = getDateInFormatDMY(new Date(dateArg)); // dd-mm-yyyy
 
@@ -171,4 +177,10 @@ export const isInEarlierMonth = (dateToCheck, referenceDate = new Date()) => {
   return (
     checkYear < refYear || (checkYear === refYear && checkMonth < refMonth)
   );
+};
+
+export const getLastDateOfMonth = (date) => {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  return new Date(year, month + 1, 0); // 0th day of next month = last day of current month
 };
