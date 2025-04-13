@@ -97,57 +97,77 @@ export const generateMonthlyTimestamps = (dateString) => {
   return monthsArray;
 };
 
-export const generateDailyTimestamps = (dateString) => {
-  const startDate = new Date(getStartDate(getFirstDateOfMonth(dateString)));
-  const daysArray = [];
+export const generateDailyTimestamps = (
+  dateOldFormat,
+  ifSelectedDateIsCurrentMonth
+) => {
+  const [day, month, year] = dateOldFormat.split("-").map(Number);
+  const startDate = new Date(
+    year,
+    month - 1,
+    ifSelectedDateIsCurrentMonth ? 1 : day
+  );
+  const now = new Date();
 
-  const year = startDate.getFullYear();
-  const month = startDate.getMonth();
+  const isSameMonth =
+    now.getFullYear() === startDate.getFullYear() &&
+    now.getMonth() === startDate.getMonth();
 
-  const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
+  const endDate =
+    ifSelectedDateIsCurrentMonth && isSameMonth
+      ? now
+      : new Date(year, month, 0); // last day of month
 
+  const dates = [];
   let current = new Date(startDate);
 
-  while (current.getMonth() === month) {
-    const dateStr = current.toLocaleDateString("en-GB").split("/").join("-");
-    daysArray.push(dateStr);
+  while (current <= endDate) {
+    const dd = String(current.getDate()).padStart(2, "0");
+    const mm = String(current.getMonth() + 1).padStart(2, "0");
+    const yyyy = current.getFullYear();
+    dates.push(`${dd}-${mm}-${yyyy}`);
     current.setDate(current.getDate() + 1);
   }
 
-  return daysArray;
+  return dates;
 };
 
-export const generateHourlyTimestamps = (dateString) => {
-  const startDateStr = getFirstDateOfMonth(dateString); // dd-mm-yyyy
-  const [day, month, year] = startDateStr.split("-").map(Number);
-  const startDate = new Date(year, month - 1, day, 0, 0, 0);
+export const generateHourlyTimestamps = (
+  dateOldFormat,
+  ifSelectedDateIsCurrentMonth
+) => {
+  const [day, month, year] = dateOldFormat.split("-").map(Number);
+  const startDate = new Date(
+    year,
+    month - 1,
+    ifSelectedDateIsCurrentMonth ? 1 : day,
+    0,
+    0,
+    0,
+    0
+  );
   const now = new Date();
+  const timestamps = [];
 
-  const hoursArray = [];
+  const endDate = ifSelectedDateIsCurrentMonth
+    ? now
+    : new Date(year, month - 1, day, 23, 59, 59, 999);
+
   let current = new Date(startDate);
 
-  while (current <= now) {
-    const dateStr = current
-      .toLocaleString("en-GB", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-      })
-      .split("/")
-      .join("-");
+  while (current <= endDate) {
+    const dd = String(current.getDate()).padStart(2, "0");
+    const mm = String(current.getMonth() + 1).padStart(2, "0");
+    const yyyy = current.getFullYear();
+    const hour = current.getHours();
+    const hour12 = hour % 12 === 0 ? 12 : hour % 12;
+    const ampm = hour < 12 ? "AM" : "PM";
 
-    let hour = current.getHours();
-    const ampm = hour >= 12 ? "PM" : "AM";
-    hour = hour % 12;
-    hour = hour === 0 ? 12 : hour;
-
-    const hourStr = `${dateStr} ${hour.toString().padStart(2, "0")} ${ampm}`;
-    hoursArray.push(hourStr);
-
+    timestamps.push(`${dd}-${mm}-${yyyy} ${hour12} ${ampm}`);
     current.setHours(current.getHours() + 1);
   }
 
-  return hoursArray;
+  return timestamps;
 };
 
 export const getDDMMYYFromUTC = (utcString) => {

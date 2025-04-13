@@ -125,7 +125,10 @@ export default function Money({ selectedDate }) {
         subText = "Family ";
 
         const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
-        displayItems = generateHourlyTimestamps(dateOldFormat);
+        displayItems = generateHourlyTimestamps(
+          dateOldFormat,
+          ifSelectedDateIsCurrentMonth
+        );
       }
 
       if (selectedTier2 == "days") {
@@ -137,7 +140,10 @@ export default function Money({ selectedDate }) {
         subText = "Family ";
 
         const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
-        displayItems = generateDailyTimestamps(dateOldFormat);
+        displayItems = generateDailyTimestamps(
+          dateOldFormat,
+          ifSelectedDateIsCurrentMonth
+        );
       }
     }
 
@@ -151,7 +157,10 @@ export default function Money({ selectedDate }) {
         subText = "Personal ";
 
         const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
-        displayItems = generateHourlyTimestamps(dateOldFormat);
+        displayItems = generateHourlyTimestamps(
+          dateOldFormat,
+          ifSelectedDateIsCurrentMonth
+        );
       }
 
       if (selectedTier2 == "days") {
@@ -163,7 +172,10 @@ export default function Money({ selectedDate }) {
         subText = "Personal ";
 
         const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
-        displayItems = generateDailyTimestamps(dateOldFormat);
+        displayItems = generateDailyTimestamps(
+          dateOldFormat,
+          ifSelectedDateIsCurrentMonth
+        );
       }
     }
   } else {
@@ -178,8 +190,11 @@ export default function Money({ selectedDate }) {
         perMessage = " / hour";
         subText = "Family ";
 
-        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
-        displayItems = generateHourlyTimestamps(dateOldFormat);
+        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate));
+        displayItems = generateHourlyTimestamps(
+          dateOldFormat,
+          ifSelectedDateIsCurrentMonth
+        );
       }
 
       if (selectedTier2 == "days") {

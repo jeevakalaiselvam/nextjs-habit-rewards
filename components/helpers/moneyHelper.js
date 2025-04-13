@@ -157,7 +157,8 @@ export const calculateEarningsEarlierMonths = (salary, jsDate) => {
     let totalDaysInMonth = getDaysInMonth(selectedDate);
     let pocketSalary = totalDaysInMonth * 1000;
 
-    now = getEndOfMonth(letStartDate);
+    now = getLastDateOfMonth(letStartDate);
+    now = now.setDate(now.getDate() + 1);
 
     msDiff = now - letStartDate;
     seconds = Math.floor(msDiff / 1000);
