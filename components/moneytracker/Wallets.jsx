@@ -223,12 +223,13 @@ const WallerContainer = styled.div`
 const Container = styled.div`
   display: flex;
   align-items: center;
-  flex-direction: column;
   justify-content: flex-start;
   width: 100%;
   min-height: 80vh;
-  overflow: scroll;
-  margin-top: 1rem;
+  flex-direction: column;
   max-height: 80vh;
-  padding: 1rem 1rem 1rem 1rem;
+  padding-top: 2rem;
+  position: relative;
+  overflow: scroll;
+  padding: 2rem 1rem 1rem 1rem;
 `;
