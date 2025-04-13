@@ -10,6 +10,7 @@ import {
   FaMale,
   FaMoneyBillAlt,
   FaShoppingCart,
+  FaWallet,
 } from "react-icons/fa";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { IoFastFood, IoWallet, IoWalletSharp } from "react-icons/io5";
@@ -25,7 +26,11 @@ import {
 } from "react-icons/md";
 import { BsFillCreditCard2FrontFill } from "react-icons/bs";
 import { HiMiniHome } from "react-icons/hi2";
-import { ICON_CATEGORY, ICON_COLORS } from "../helpers/iconHelper";
+import {
+  ICON_CATEGORY,
+  ICON_COLORS,
+  WALLET_OPTIONS,
+} from "../helpers/iconHelper";
 import dayjs from "dayjs";
 
 export default function Entry({ setShowEntry }) {
@@ -271,6 +276,28 @@ export default function Entry({ setShowEntry }) {
       icon: <FaGlobe />,
       extra: "⌘F",
     },
+    {
+      key: "wallet",
+      label: "Wallet",
+      icon: <FaWallet />,
+      extra: "⌘W",
+    },
+  ];
+
+  const itemsWallet = [
+    {
+      key: "11",
+      label: <div style={{ width: "100%" }}>All Wallets</div>,
+      disabled: true,
+    },
+    ...WALLET_OPTIONS?.map((wallet) => {
+      return {
+        key: wallet?.id,
+        label: wallet?.name,
+        icon: wallet?.icon,
+        extra: `⌘${wallet?.name?.slice(0, 1)?.toUpperCase}`,
+      };
+    }),
   ];
 
   const saveAmount = () => {

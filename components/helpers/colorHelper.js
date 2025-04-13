@@ -78,3 +78,13 @@ export const generateSimilarColor = () => {
 
   return hslToHex(newH, newS, newL);
 };
+
+export const generateDarkTextColorForLightBg = (hex, darkenPercent = 40) => {
+  const amt = Math.round(2.55 * darkenPercent);
+
+  const R = Math.max(0, parseInt(hex.slice(1, 3), 16) - amt);
+  const G = Math.max(0, parseInt(hex.slice(3, 5), 16) - amt);
+  const B = Math.max(0, parseInt(hex.slice(5, 7), 16) - amt);
+
+  return `#${[R, G, B].map((x) => x.toString(16).padStart(2, "0")).join("")}`;
+};
