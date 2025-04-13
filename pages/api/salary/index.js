@@ -6,6 +6,7 @@ export default async function handler(req, res) {
 
   if (req.method === "POST") {
     const { amountYearly, date } = req.body;
+    console.log(amountYearly, date?.toString());
 
     if (!amountYearly || !date) {
       return res
@@ -16,10 +17,9 @@ export default async function handler(req, res) {
     try {
       const client = await clientPromise;
       const db = client.db("habittracker");
-      await db.collection(getMongoCollectionForPackage()).deleteMany({});
       await db
         .collection(getMongoCollectionForPackage())
-        .insertOne({ amountYearly, date: date });
+        .insertOne({ amountYearly, date: date?.toString() });
 
       res.status(201).json({ message: "Package added successfully" });
     } catch (error) {

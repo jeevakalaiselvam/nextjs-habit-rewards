@@ -116,9 +116,14 @@ export const generateHourlyTimestamps = (dateString) => {
 };
 
 export const getDDMMYYFromUTC = (utcString) => {
-  const date = new Date(utcString);
+  const date = new Date(Date.parse(utcString)); // Ensures proper UTC parsing
   const day = String(date.getUTCDate()).padStart(2, "0");
-  const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Months are 0-based
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
   const year = date.getUTCFullYear();
   return `${day}-${month}-${year}`;
+};
+
+export const utcToLocal = (utcString) => {
+  const localDate = new Date(utcString);
+  return localDate.toLocaleString(); // or .toLocaleDateString() if you want only the date
 };

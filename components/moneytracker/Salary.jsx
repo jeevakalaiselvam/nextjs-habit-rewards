@@ -4,13 +4,16 @@ import { FaRupeeSign } from "react-icons/fa";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import { HiChartPie, HiCurrencyRupee } from "react-icons/hi";
 import styled from "styled-components";
+import dayjs from "dayjs";
 import {
   getDateInFormatDMY,
   getDDMMYYFromUTC,
   getFirstDateOfMonth,
   getFormattedDateWords,
+  utcToLocal,
 } from "../helpers/dateHelper";
 import { DatePicker } from "antd";
+import { formatIndianNumber } from "../helpers/moneyHelper";
 
 export default function Salary() {
   const [salary, setNewSalary] = useState(null);
@@ -68,7 +71,7 @@ export default function Salary() {
             format={dateFormat}
             inputReadOnly
             onChange={(e) => {
-              setDate(getDDMMYYFromUTC(e));
+              setDate(dayjs(e));
             }}
             onFocus={(e) => e.preventDefault()}
           />
@@ -82,24 +85,34 @@ export default function Salary() {
           <IconSettings></IconSettings>
         </TitleNaming>
         <SalaryContainer>
-          {salaries?.map((packageSingle) => {
-            return (
-              <SinglePackage>
-                <Image>
-                  <HiChartPie />
-                </Image>
-                <DetailsRow>
-                  <Details1>Month Salary</Details1>
-                  <Details2>
-                    {getFormattedDateWords(packageSingle?.date)}
-                  </Details2>
-                </DetailsRow>
-                <Money>
-                  {packageSingle?.amountYearly} <FaIndianRupeeSign />
-                </Money>
-              </SinglePackage>
-            );
-          })}
+          {salaries
+            ?.sort((a, b) => new Date(b) - new Date(a))
+            ?.map((singleSalary) => {
+              return (
+                <SinglePackage>
+                  <Image>
+                    <HiChartPie />
+                  </Image>
+                  <DetailsRow>
+                    <Details1>Month Salary</Details1>
+                    <Details2>
+                      {getFormattedDateWords(utcToLocal(singleSalary?.date))}
+                    </Details2>
+                  </DetailsRow>
+                  <Money>
+                    {formatIndianNumber(singleSalary?.amountYearly)}
+                    <span
+                      style={{
+                        fontSize: ".9rem",
+                        transform: "translateY(2px)",
+                      }}
+                    >
+                      <FaIndianRupeeSign />
+                    </span>
+                  </Money>
+                </SinglePackage>
+              );
+            })}
         </SalaryContainer>
       </DisplayAmounts>
     </Container>
@@ -111,7 +124,7 @@ const MonthSelection = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 1rem 0rem;
+  padding: 1rem 0rem 0rem 0rem;
 `;
 
 const Image = styled.div`
@@ -169,9 +182,11 @@ const SinglePackage = styled.div`
 const SalaryContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-direction: column;
   width: 100%;
+  max-height: 30vh;
+  overflow: scroll;
 `;
 
 const TitleNaming = styled.div`
@@ -229,7 +244,7 @@ const SaveButton = styled.div`
   justify-content: center;
   color: #fefefe;
   background-color: #2a7af1;
-  margin: 1rem 1rem;
+  margin: 1rem 1rem 0rem 1rem;
   border-radius: 8px;
   padding: 1rem 1rem;
   min-width: 95%;
