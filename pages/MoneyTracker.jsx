@@ -14,7 +14,7 @@ import {
 } from "react-icons/hi";
 import { useState } from "react";
 import Money from "../components/moneytracker/Money";
-import Values from "../components/moneytracker/Values";
+import Packages from "../components/moneytracker/Packages";
 import Entry from "../components/moneytracker/Entry";
 import { IoIosCloseCircle } from "react-icons/io";
 import Spending from "../components/moneytracker/Spending";
@@ -36,7 +36,7 @@ export default function MoneyTracker() {
       </Header>
       <Content>{activeTab == 0 && <Money showEntry={showEntry} />}</Content>
       <Content>{activeTab == 1 && <Spending showEntry={showEntry} />}</Content>
-      <Content>{activeTab == 2 && <Values showEntry={showEntry} />}</Content>
+      <Content>{activeTab == 2 && <Packages showEntry={showEntry} />}</Content>
       <Content>{activeTab == 3 && <Wallets showEntry={showEntry} />}</Content>
       <Bottom>
         <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
@@ -127,7 +127,6 @@ const Content = styled.div`
   width: 100%;
   align-items: center;
   justify-content: flex-start;
-  padding: 1rem;
   flex-direction: column;
   flex: 1;
 `;

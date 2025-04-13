@@ -192,11 +192,14 @@ const DisplayAmounts = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 110%;
+  width: 100%;
   background-color: #1f2125;
   border-radius: 2rem 2rem 0 0;
   flex-direction: column;
   min-height: 50vh;
+  position: absolute;
+  bottom: 0;
+  left: 0;
 `;
 
 const SaveButton = styled.div`
@@ -274,7 +277,9 @@ const Container = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  min-height: 65vh;
+  min-height: 80vh;
   flex-direction: column;
-  max-height: 65vh;
+  max-height: 80vh;
+  padding: 2rem 1rem 1rem 1rem;
+  position: relative;
 `;

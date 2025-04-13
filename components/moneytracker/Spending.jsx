@@ -243,7 +243,7 @@ const Options = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 1rem;
+  padding: 2rem 1rem;
 `;
 
 const Option = styled.div`
@@ -370,9 +370,12 @@ const Bottom = styled.div`
 const Container = styled.div`
   display: flex;
   align-items: center;
-  flex-direction: column;
   justify-content: flex-start;
   width: 100%;
-  min-height: 65vh;
-  max-height: 65vh;
+  min-height: 80vh;
+  flex-direction: column;
+  max-height: 80vh;
+  padding-top: 2rem;
+  position: relative;
+  padding: 2rem 1rem 1rem 1rem;
 `;

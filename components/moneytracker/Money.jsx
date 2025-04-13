@@ -334,6 +334,7 @@ const LineItems = styled.div`
   align-items: center;
   justify-content: flex-start;
   min-height: 30vh;
+  padding: 1rem 0rem 3rem 0rem;
   max-height: 30vh;
   overflow: scroll;
   flex-direction: column;
@@ -462,7 +463,7 @@ const Options = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 1rem;
+  padding: 1rem 1rem;
 `;
 
 const Option = styled.div`
@@ -506,7 +507,6 @@ const AmountInfo = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  min-height: 10vh;
   min-width: 100%;
   flex-direction: column;
   transform: translateX(-2px);
@@ -529,15 +529,16 @@ const DisplayAmounts = styled.div`
   border-radius: 2rem 2rem 0 0;
   flex-direction: column;
   min-height: 55vh;
-  transform: translateY(8rem);
 `;
 
 const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  flex-direction: column;
   width: 100%;
-  min-height: 65vh;
-  max-height: 65vh;
+  min-height: 80vh;
+  flex-direction: column;
+  max-height: 80vh;
+  padding: 2rem 1rem 1rem 1rem;
+  position: relative;
 `;

@@ -12,4 +12,5 @@ const Container = styled.div`
   width: 100%;
   min-height: 60vh;
   max-height: 60vh;
+  padding: 3rem 1rem 1rem 1rem;
 `;
