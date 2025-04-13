@@ -6,6 +6,11 @@ export const getCurrentDayIdentifier = () => {
   return formatted;
 };
 
+export const getFirstDateOfMonth = (dateStr) => {
+  const [day, month, year] = dateStr.split("-");
+  return `01-${month}-${year}`;
+};
+
 export const getDateInFormatDMY = (arg) => {
   let date;
   if (arg) {
@@ -35,8 +40,50 @@ export const getFormattedDateWords = (dateArg) => {
   return formatted;
 };
 
+// Helper to parse date
+const getStartDate = (dateString) => {
+  const [day, month, year] = dateString.split("-").map(Number);
+  return new Date(year, month - 1, day);
+};
+
+export const generateMonthlyTimestamps = (dateString) => {
+  const startDate = new Date(getStartDate(getFirstDateOfMonth(dateString)));
+  const now = new Date();
+  const monthsArray = [];
+
+  let current = new Date(startDate);
+
+  while (current <= now) {
+    const monthStr = `${current
+      .toLocaleDateString("en-GB", { month: "2-digit", year: "numeric" })
+      .replace("/", "-")}`;
+
+    monthsArray.push(monthStr);
+    current.setMonth(current.getMonth() + 1);
+  }
+
+  return monthsArray;
+};
+
+export const generateDailyTimestamps = (dateString) => {
+  const startDate = new Date(getStartDate(getFirstDateOfMonth(dateString)));
+  const now = new Date();
+  const daysArray = [];
+
+  let current = new Date(startDate);
+
+  while (current <= now) {
+    const dateStr = current.toLocaleDateString("en-GB").split("/").join("-");
+
+    daysArray.push(dateStr);
+    current.setDate(current.getDate() + 1);
+  }
+
+  return daysArray;
+};
+
 export const generateHourlyTimestamps = (dateString) => {
-  const startDateStr = dateString; // dd-mm-yyyy
+  const startDateStr = getFirstDateOfMonth(dateString); // dd-mm-yyyy
   const [day, month, year] = startDateStr.split("-").map(Number);
   const startDate = new Date(year, month - 1, day, 0, 0, 0);
   const now = new Date();
@@ -66,4 +113,12 @@ export const generateHourlyTimestamps = (dateString) => {
   }
 
   return hoursArray;
+};
+
+export const getDDMMYYFromUTC = (utcString) => {
+  const date = new Date(utcString);
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Months are 0-based
+  const year = date.getUTCFullYear();
+  return `${day}-${month}-${year}`;
 };

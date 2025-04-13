@@ -6,18 +6,22 @@ import { HiChartPie, HiCurrencyRupee } from "react-icons/hi";
 import styled from "styled-components";
 import {
   getDateInFormatDMY,
+  getDDMMYYFromUTC,
+  getFirstDateOfMonth,
   getFormattedDateWords,
 } from "../helpers/dateHelper";
+import { DatePicker } from "antd";
 
-export default function Values() {
-  const [newPackage, setNewPackage] = useState(null);
-  const [allPackages, setAllPackages] = useState([]);
+export default function Salary() {
+  const [salary, setNewSalary] = useState(null);
+  const [date, setDate] = useState(null);
+  const [salaries, setAllSalaries] = useState([]);
 
   const savePackage = () => {
     axios
-      .post("/api/package", {
-        amountYearly: newPackage,
-        date: getDateInFormatDMY(),
+      .post("/api/salary", {
+        amountYearly: salary,
+        date: date,
       })
       .then((response) => {
         refreshPackages();
@@ -27,10 +31,10 @@ export default function Values() {
 
   const refreshPackages = () => {
     axios
-      .get("/api/package")
+      .get("/api/salary")
       .then((response) => {
         const data = response?.data;
-        setAllPackages(data);
+        setAllSalaries(data);
       })
       .catch((error) => {});
   };
@@ -39,12 +43,12 @@ export default function Values() {
     refreshPackages();
   }, []);
 
-  console.log({ allPackages });
+  const dateFormat = "DD/MM/YYYY";
 
   return (
     <Container>
       <AddAmount>
-        <Title>Add Package</Title>
+        <Title>Add Salary</Title>
         <AmountInput>
           <Rupees>
             <FaIndianRupeeSign />
@@ -52,15 +56,24 @@ export default function Values() {
           <input
             type="number"
             inputMode="numeric"
-            value={newPackage}
+            value={salary}
             onChange={(e) => {
-              setNewPackage(e.target.value);
+              setNewSalary(e.target.value);
             }}
           />
         </AmountInput>
-        <SaveButton onClick={() => savePackage()}>
-          Proceed to Add Package
-        </SaveButton>
+        <MonthSelection>
+          <DatePicker
+            style={{ width: "97%", backgroundColor: "#1f2125" }}
+            format={dateFormat}
+            inputReadOnly
+            onChange={(e) => {
+              setDate(getDDMMYYFromUTC(e));
+            }}
+            onFocus={(e) => e.preventDefault()}
+          />
+        </MonthSelection>
+        <SaveButton onClick={() => savePackage()}>Add Salary</SaveButton>
       </AddAmount>
       <DisplayAmounts>
         <Topbar></Topbar>
@@ -68,15 +81,15 @@ export default function Values() {
           <IconName>Recent Changes</IconName>
           <IconSettings></IconSettings>
         </TitleNaming>
-        <PackageContainer>
-          {allPackages?.map((packageSingle) => {
+        <SalaryContainer>
+          {salaries?.map((packageSingle) => {
             return (
               <SinglePackage>
                 <Image>
                   <HiChartPie />
                 </Image>
                 <DetailsRow>
-                  <Details1>Package Change</Details1>
+                  <Details1>Month Salary</Details1>
                   <Details2>
                     {getFormattedDateWords(packageSingle?.date)}
                   </Details2>
@@ -87,11 +100,19 @@ export default function Values() {
               </SinglePackage>
             );
           })}
-        </PackageContainer>
+        </SalaryContainer>
       </DisplayAmounts>
     </Container>
   );
 }
+
+const MonthSelection = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem 0rem;
+`;
 
 const Image = styled.div`
   display: flex;
@@ -145,7 +166,7 @@ const SinglePackage = styled.div`
   width: 100%;
 `;
 
-const PackageContainer = styled.div`
+const SalaryContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -165,9 +186,9 @@ const TitleNaming = styled.div`
 const IconName = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex: 1;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
 `;
 
 const IconSettings = styled.div`
@@ -196,7 +217,7 @@ const DisplayAmounts = styled.div`
   background-color: #1f2125;
   border-radius: 2rem 2rem 0 0;
   flex-direction: column;
-  min-height: 50vh;
+  min-height: 40vh;
   position: absolute;
   bottom: 0;
   left: 0;

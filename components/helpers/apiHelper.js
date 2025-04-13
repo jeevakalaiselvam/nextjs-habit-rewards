@@ -99,7 +99,7 @@ export const getMongoRewardForUser = (user) => {
 };
 
 export const getMongoCollectionForPackage = (user) => {
-  return "jeevapackage";
+  return "jeevasalary";
 };
 
 export const getMongoCollectionForSpending = (user) => {

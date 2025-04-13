@@ -19,7 +19,7 @@ export default async function handler(req, res) {
       await db.collection(getMongoCollectionForPackage()).deleteMany({});
       await db
         .collection(getMongoCollectionForPackage())
-        .insertOne({ amountYearly, date: new Date() });
+        .insertOne({ amountYearly, date: date });
 
       res.status(201).json({ message: "Package added successfully" });
     } catch (error) {

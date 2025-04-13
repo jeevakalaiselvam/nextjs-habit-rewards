@@ -5,7 +5,9 @@ import { FaIndianRupeeSign } from "react-icons/fa6";
 import { HiChartPie, HiCurrencyRupee } from "react-icons/hi";
 import styled from "styled-components";
 import {
+  generateDailyTimestamps,
   generateHourlyTimestamps,
+  generateMonthlyTimestamps,
   getDateInFormatDMY,
   getFormattedDateWords,
 } from "../helpers/dateHelper";
@@ -27,12 +29,12 @@ export default function Money() {
     pocketMoney: 0,
   });
   const [selectedTier1, setSelectedTier1] = useState("family");
-  const [selectedTier2, setSelectedTier2] = useState("minutes");
+  const [selectedTier2, setSelectedTier2] = useState("hours");
 
   const refreshPackages = () => {
     setLoading(true);
     axios
-      .get("/api/package")
+      .get("/api/salary")
       .then((response) => {
         const data = response?.data;
         setAllPackages(data);
@@ -130,18 +132,9 @@ export default function Money() {
       perMessage = " / day";
       subText = "Family ";
 
-      displayItems = new Array(days)
-        ?.fill(1)
-        ?.map((_, index) => {
-          return 1 + index;
-        })
-        ?.map((countToMove) => {
-          let firstEntry = allPackages?.[0];
-          const dateOldFormat = getDateInFormatDMY(new Date(firstEntry?.date));
-          const [day, month, year] = dateOldFormat.split("-").map(Number);
-          const letStartDate = new Date(year, month - 1, 1 + (countToMove - 1));
-          return letStartDate;
-        });
+      let firstEntry = allPackages?.[0];
+      const dateOldFormat = getDateInFormatDMY(new Date(firstEntry?.date));
+      displayItems = generateDailyTimestamps(dateOldFormat);
     }
     if (selectedTier2 == "months") {
       totalAmount = seconds * TperSecond;
@@ -152,6 +145,10 @@ export default function Money() {
       tickerAmountToday = valuesToday?.TperMonth;
       perMessage = " / month";
       subText = "Family ";
+
+      let firstEntry = allPackages?.[0];
+      const dateOldFormat = getDateInFormatDMY(new Date(firstEntry?.date));
+      displayItems = generateMonthlyTimestamps(dateOldFormat);
     }
   }
 
@@ -179,6 +176,9 @@ export default function Money() {
       tickerAmountToday = valuesToday?.PMperHour;
       perMessage = " / hour";
       subText = "Personal ";
+      let firstEntry = allPackages?.[0];
+      const dateOldFormat = getDateInFormatDMY(new Date(firstEntry?.date));
+      displayItems = generateHourlyTimestamps(dateOldFormat);
     }
     if (selectedTier2 == "days") {
       totalAmount = seconds * PMperSecond;
@@ -187,6 +187,10 @@ export default function Money() {
       tickerAmountToday = valuesToday?.PMperDay;
       perMessage = " / day";
       subText = "Personal ";
+
+      let firstEntry = allPackages?.[0];
+      const dateOldFormat = getDateInFormatDMY(new Date(firstEntry?.date));
+      displayItems = generateDailyTimestamps(dateOldFormat);
     }
     if (selectedTier2 == "months") {
       totalAmount = seconds * PMperSecond;
@@ -195,14 +199,19 @@ export default function Money() {
       tickerAmountToday = valuesToday?.PMperMonth;
       perMessage = " / month";
       subText = "Personal ";
+      let firstEntry = allPackages?.[0];
+      const dateOldFormat = getDateInFormatDMY(new Date(firstEntry?.date));
+      displayItems = generateMonthlyTimestamps(dateOldFormat);
     }
   }
+
+  displayItems = displayItems?.reverse();
 
   if (!loading) {
     return (
       <Container>
         <AmountInfo>
-          <Options>
+          <Options2>
             <Option
               selected={selectedTier1 == "family"}
               onClick={() => setSelectedTier1("family")}
@@ -217,13 +226,15 @@ export default function Money() {
               Personal
               {selectedTier1 == "personal" && <SelectedDot></SelectedDot>}
             </Option>
-          </Options>
-          <SubTitle>{subText} Month</SubTitle>
+          </Options2>
+          <SubTitle>{subText} Today</SubTitle>
           <MainTitle>
             <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
               <FaIndianRupeeSign />
             </span>
-            {totalAmount ? formatIndianNumber(totalAmount?.toFixed(2)) : 0}
+            {totalAmountToday
+              ? formatIndianNumber(totalAmountToday?.toFixed(2))
+              : 0}
           </MainTitle>
           <Ticker>
             <span
@@ -265,7 +276,7 @@ export default function Money() {
             </Options>
           </DisplayHeader>
           <AllItems>
-            <SubTitleInner>{subText} Today</SubTitleInner>
+            <SubTitleInner>{subText} Month</SubTitleInner>
             <AmountInfo>
               <MainTitle>
                 <span
@@ -273,15 +284,13 @@ export default function Money() {
                 >
                   <FaIndianRupeeSign />
                 </span>
-                {totalAmountToday
-                  ? formatIndianNumber(totalAmountToday?.toFixed(2))
-                  : 0}
+                {totalAmount ? formatIndianNumber(totalAmount?.toFixed(2)) : 0}
               </MainTitle>
             </AmountInfo>
             <LineItems>
               {displayItems?.map((item, index) => {
                 return (
-                  <SingleDisplayItem>
+                  <SingleDisplayItem blink={index == 0}>
                     <SingleDisplayItemLeft>
                       {<TopLine hide={index == 0}></TopLine>}
                       <CenterCircle></CenterCircle>
@@ -327,7 +336,8 @@ const LineItems = styled.div`
   align-items: center;
   justify-content: flex-start;
   min-height: 30vh;
-  padding: 1rem 0rem 3rem 0rem;
+  margin-top: 2rem;
+  padding: 0rem 0rem 3rem 0rem;
   max-height: 30vh;
   overflow: scroll;
   flex-direction: column;
@@ -408,6 +418,17 @@ const SingleDisplayItem = styled.div`
   justify-content: center;
   width: 100%;
   margin-right: 1rem;
+  animation: ${(props) =>
+    props?.blink ? "blink-smooth 1s infinite linear" : ""};
+  @keyframes blink-smooth {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
 `;
 
 const AllItems = styled.div`
@@ -456,6 +477,14 @@ const Options = styled.div`
   justify-content: center;
   width: 100%;
   padding: 1rem 1rem;
+`;
+
+const Options2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0rem 1rem 1rem 1rem;
 `;
 
 const Option = styled.div`
