@@ -116,6 +116,18 @@ export default function Money({ selectedDate }) {
 
   if (ifSelectedDateIsCurrentMonth) {
     if (selectedTier1 == "family") {
+      if (selectedTier2 == "hours") {
+        totalAmount = values?.seconds * values?.TperSecond;
+        tickerAmount = values?.TperHour;
+        totalAmountToday = values?.totalSecondsInToday * values?.TperSecond;
+        tickerAmountToday = values?.TperHour;
+        perMessage = " / hour";
+        subText = "Family ";
+
+        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
+        displayItems = generateHourlyTimestamps(dateOldFormat);
+      }
+
       if (selectedTier2 == "days") {
         totalAmount = values?.seconds * values?.TperSecond;
         tickerAmount = values?.TperDay;
@@ -130,6 +142,18 @@ export default function Money({ selectedDate }) {
     }
 
     if (selectedTier1 == "personal") {
+      if (selectedTier2 == "hours") {
+        totalAmount = values?.seconds * values?.PMperSecond;
+        tickerAmount = values?.PMperHour;
+        totalAmountToday = values?.totalSecondsInToday * values?.PMperSecond;
+        tickerAmountToday = values?.PMperHour;
+        perMessage = " / hour";
+        subText = "Personal ";
+
+        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
+        displayItems = generateHourlyTimestamps(dateOldFormat);
+      }
+
       if (selectedTier2 == "days") {
         totalAmount = values?.seconds * values?.PMperSecond;
         tickerAmount = values?.PMperDay;
@@ -145,6 +169,19 @@ export default function Money({ selectedDate }) {
   } else {
     let totalDaysInMonth = getDaysInMonth(selectedDate?.$d);
     if (selectedTier1 == "family") {
+      if (selectedTier2 == "hours") {
+        totalAmount = values?.seconds * values?.TperSecond;
+        tickerAmount = values?.TperHour;
+        totalAmountToday =
+          (values?.seconds * values?.TperSecond) / totalDaysInMonth;
+        tickerAmountToday = values?.TperHour;
+        perMessage = " / hour";
+        subText = "Family ";
+
+        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
+        displayItems = generateHourlyTimestamps(dateOldFormat);
+      }
+
       if (selectedTier2 == "days") {
         totalAmount = values?.seconds * values?.TperSecond;
         tickerAmount = values?.TperDay;
@@ -160,6 +197,18 @@ export default function Money({ selectedDate }) {
     }
 
     if (selectedTier1 == "personal") {
+      if (selectedTier2 == "hours") {
+        totalAmount = values?.seconds * values?.PMperSecond;
+        tickerAmount = values?.PMperHour;
+        totalAmountToday = values?.seconds * values?.PMperSecond;
+        tickerAmountToday = values?.PMperHour;
+        perMessage = " / hour";
+        subText = "Personal ";
+
+        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
+        displayItems = generateHourlyTimestamps(dateOldFormat);
+      }
+
       if (selectedTier2 == "days") {
         totalAmount = values?.seconds * values?.PMperSecond;
         tickerAmount = values?.PMperDay;
@@ -223,14 +272,6 @@ export default function Money({ selectedDate }) {
         <DisplayAmounts>
           <DisplayHeader>
             <Options>
-              {" "}
-              <Option
-                selected={selectedTier2 == "minutes"}
-                onClick={() => setSelectedTier2("minutes")}
-              >
-                1 Minute
-                {selectedTier2 == "minutes" && <SelectedDot></SelectedDot>}
-              </Option>
               <Option
                 selected={selectedTier2 == "hours"}
                 onClick={() => setSelectedTier2("hours")}
