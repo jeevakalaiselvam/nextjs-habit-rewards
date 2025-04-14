@@ -34,7 +34,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
     totalEarned: 0,
     pocketMoney: 0,
   });
-  const [selectedTier1, setSelectedTier1] = useState("family");
+  const [selectedTier1, setSelectedTier1] = useState("income");
   const [selectedTier2, setSelectedTier2] = useState("hours");
   const [allSpendings, setAllSpendings] = useState([]);
 
@@ -116,16 +116,6 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
     return () => clearInterval(interval); // cleanup on unmount
   }, [salaries, selectedDate]);
 
-  let totalAmount = 0;
-  let totalAmountToday = 0;
-  let tickerAmount = 0;
-  let tickerAmountToday = 0;
-  let tickerAmountPM = 0;
-  let tickerAmountTodayPM = 0;
-  let displayItems = [];
-  let perMessage = "";
-  let subText = "";
-
   const today = new Date(); // actual current date
 
   const ifSelectedDateIsCurrentMonth =
@@ -162,38 +152,40 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
     0
   );
 
+  let topGreen = 0;
+  let bottomGreen = 0;
+  let topTicker = 0;
+  let bottomTicker = 0;
+  let displayItems = [];
+  let topMessage = "";
+  let bottomMessage = "";
+  let topTickerMessage = "";
+  let bottomTickerMessage = "";
+  let leftTitle = "";
+  let rightTitle = "";
+  let leftAmount = 0;
+  let rightAmount = 0;
+
   if (ifSelectedDateIsCurrentMonth) {
     //CURRENT MONTH SELECTION
-    if (selectedTier1 == "family") {
-      if (selectedTier2 == "hours") {
-        totalAmount = values?.totalSecondsTillNow * values?.TperSecond;
-        tickerAmount = values?.TperHour - values?.PMperHour;
-        totalAmountToday =
+    if (selectedTier1 == "income") {
+      if (selectedTier2 == "days" || selectedTier2 == "hours") {
+        topGreen =
           values?.totalSecondsInToday * values?.TperSecond -
           values?.totalSecondsInToday * values?.PMperSecond;
-        tickerAmountToday = values?.TperDay - values?.PMperDay;
-        perMessage = " / day";
-        subText = "Salary ";
-
-        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
-        displayItems = generateHourlyTimestamps(
-          dateOldFormat,
-          ifSelectedDateIsCurrentMonth
-        );
-      }
-
-      if (selectedTier2 == "days") {
-        totalAmount =
-          values?.seconds * values?.TperSecond -
-          values?.seconds * values?.PMperSecond -
-          allSpendingFamilyInMonthAmount;
-        tickerAmount = values?.TperDay - values?.PMperDay;
-        totalAmountToday =
-          values?.totalSecondsInToday * values?.TperSecond -
-          values?.totalSecondsInToday * values?.PMperSecond;
-        tickerAmountToday = values?.TperDay - values?.PMperDay;
-        perMessage = " / day";
-        subText = "Salary ";
+        topTicker = values?.TperDay - values?.PMperDay;
+        bottomGreen = values?.totalSecondsInToday * values?.PMperSecond;
+        bottomTicker = values?.PMperDay;
+        leftAmount =
+          values?.totalSecondsTillNow * values?.TperSecond -
+          values?.totalSecondsTillNow * values?.PMperSecond;
+        rightAmount = values?.totalSecondsTillNow * values?.PMperSecond;
+        topTickerMessage = " / day";
+        bottomTickerMessage = " / day";
+        topMessage = "Family Today";
+        bottomMessage = "Personal Today";
+        leftTitle = "Family Total";
+        rightTitle = "Personal Total";
 
         const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
         displayItems = generateDailyTimestamps(
@@ -203,33 +195,25 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
       }
     }
 
-    if (selectedTier1 == "personal") {
-      if (selectedTier2 == "hours") {
-        totalAmount =
-          values?.seconds * values?.PMperSecond -
+    if (selectedTier1 == "expense") {
+      if (selectedTier2 == "days" || selectedTier2 == "hours") {
+        topGreen =
+          values?.totalSecondsTillEnd * values?.TperSecond -
+          values?.totalSecondsTillEnd * values?.PMperSecond -
+          allSpendingFamilyInMonthAmount;
+        topTicker = values?.TperDay - values?.PMperDay;
+        bottomGreen =
+          values?.totalSecondsTillEnd * values?.PMperSecond -
           allSpendingPersonalInMonthAmount;
-        tickerAmount = values?.PMperHour;
-        totalAmountToday = values?.totalSecondsInToday * values?.PMperSecond;
-        tickerAmountToday = values?.PMperDay;
-        perMessage = " / day";
-        subText = "Personal ";
-
-        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
-        displayItems = generateHourlyTimestamps(
-          dateOldFormat,
-          ifSelectedDateIsCurrentMonth
-        );
-      }
-
-      if (selectedTier2 == "days") {
-        totalAmount =
-          values?.seconds * values?.PMperSecond -
-          allSpendingPersonalInMonthAmount;
-        tickerAmount = values?.PMperDay;
-        totalAmountToday = values?.totalSecondsInToday * values?.PMperSecond;
-        tickerAmountToday = values?.PMperDay;
-        perMessage = " / day";
-        subText = "Personal ";
+        bottomTicker = values?.PMperDay;
+        leftAmount = allSpendingFamilyInMonthAmount;
+        rightAmount = allSpendingPersonalInMonthAmount;
+        topTickerMessage = " / day";
+        bottomTickerMessage = " / day";
+        topMessage = "Family Balance";
+        bottomMessage = "Personal Balance";
+        leftTitle = "Family Expense";
+        rightTitle = "Personal Expense";
 
         const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
         displayItems = generateDailyTimestamps(
@@ -239,80 +223,30 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
       }
     }
   } else {
-    //OLD MONTH SELECTION
-    let totalDaysInMonth = getDaysInMonth(selectedDate?.$d);
-    if (selectedTier1 == "family") {
-      if (selectedTier2 == "hours") {
-        totalAmount =
-          values?.totalSeconds * values?.TperSecond -
-          values?.totalSeconds * values?.PMperSecond -
-          allSpendingFamilyInMonthAmount;
-        tickerAmount = values?.TperHour - values?.PMperHour;
-        totalAmount = Math.round(totalAmount);
-        totalAmountToday =
-          (values?.totalSeconds * values?.TperSecond -
-            values?.totalSeconds * values?.PMperSecond) /
-          totalDaysInMonth;
-        tickerAmountToday = values?.TperDay - values?.PMperDay;
-        perMessage = " / day";
-        subText = "Family ";
+    if (selectedTier1 == "income") {
+      if (selectedTier2 == "days" || selectedTier2 == "hours") {
+        topGreen =
+          values?.totalSecondsInToday * values?.TperSecond -
+          values?.totalSecondsInToday * values?.PMperSecond;
+        topTicker = values?.TperDay - values?.PMperDay;
+        bottomGreen = values?.totalSecondsInToday * values?.PMperSecond;
+        bottomTicker = values?.PMperDay;
+        leftAmount =
+          values?.seconds * values?.TperSecond -
+          values?.seconds * values?.PMperSecond;
+        rightAmount = values?.seconds * values?.PMperSecond;
+        topTickerMessage = " / day";
+        bottomTickerMessage = " / day";
+        topMessage = "Family Today";
+        bottomMessage = "Personal Today";
+        leftTitle = "Family Total";
+        rightTitle = "Personal Total";
 
-        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate));
-        displayItems = generateHourlyTimestamps(
+        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
+        displayItems = generateDailyTimestamps(
           dateOldFormat,
           ifSelectedDateIsCurrentMonth
         );
-      }
-
-      if (selectedTier2 == "days") {
-        totalAmount =
-          values?.totalSeconds * values?.TperSecond -
-          values?.totalSeconds * values?.PMperSecond -
-          allSpendingFamilyInMonthAmount;
-        totalAmount = Math.round(totalAmount);
-        tickerAmount = values?.TperDay - values?.PMperDay;
-        totalAmountToday =
-          (values?.totalSeconds * values?.TperSecond -
-            values?.totalSeconds * values?.PMperSecond) /
-          totalDaysInMonth;
-        tickerAmountToday = values?.TperDay - values?.PMperDay;
-        perMessage = " / day";
-        subText = "Family ";
-
-        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
-        displayItems = generateDailyTimestamps(dateOldFormat);
-      }
-    }
-
-    if (selectedTier1 == "personal") {
-      if (selectedTier2 == "hours") {
-        totalAmount =
-          values?.totalSeconds * values?.PMperSecond -
-          allSpendingPersonalInMonthAmount;
-        totalAmount = Math.round(totalAmount);
-        tickerAmount = values?.PMperHour;
-        totalAmountToday = values?.totalSecondsInToday * values?.PMperSecond;
-        tickerAmountToday = values?.PMperDay;
-        perMessage = " / day";
-        subText = "Personal ";
-
-        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
-        displayItems = generateHourlyTimestamps(dateOldFormat);
-      }
-
-      if (selectedTier2 == "days") {
-        totalAmount =
-          values?.totalSeconds * values?.PMperSecond -
-          allSpendingPersonalInMonthAmount;
-        totalAmount = Math.round(totalAmount);
-        tickerAmount = values?.PMperDay;
-        totalAmountToday = values?.totalSecondsInToday * values?.PMperSecond;
-        tickerAmountToday = values?.PMperDay;
-        perMessage = " / day";
-        subText = "Personal ";
-
-        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
-        displayItems = generateDailyTimestamps(dateOldFormat);
       }
     }
   }
@@ -325,28 +259,26 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
         <AmountInfo>
           <Options2>
             <Option
-              selected={selectedTier1 == "family"}
-              onClick={() => setSelectedTier1("family")}
+              selected={selectedTier1 == "income"}
+              onClick={() => setSelectedTier1("income")}
             >
-              Salary
-              {selectedTier1 == "family" && <SelectedDot></SelectedDot>}
+              Income
+              {selectedTier1 == "income" && <SelectedDot></SelectedDot>}
             </Option>
             <Option
-              selected={selectedTier1 == "personal"}
-              onClick={() => setSelectedTier1("personal")}
+              selected={selectedTier1 == "expense"}
+              onClick={() => setSelectedTier1("expense")}
             >
-              Personal
-              {selectedTier1 == "personal" && <SelectedDot></SelectedDot>}
+              Expense
+              {selectedTier1 == "expense" && <SelectedDot></SelectedDot>}
             </Option>
           </Options2>
-          <SubTitle>
-            {subText} {isInEarlierMonth(selectedDate?.$d) ? "Income" : "Income"}
-          </SubTitle>
+          <SubTitle>{topMessage}</SubTitle>
           <MainTitle>
             <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
               <FaIndianRupeeSign />
             </span>
-            {totalAmount ? formatIndianNumber(Math.round(totalAmount)) : 0}
+            {topGreen?.toFixed(2)}
           </MainTitle>
           <Ticker>
             <span
@@ -357,51 +289,27 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
             >
               <FaIndianRupeeSign />
             </span>
-            {(tickerAmountToday ? tickerAmountToday?.toFixed(2) : "0") +
-              perMessage}
+            {topTicker?.toFixed(0) + topTickerMessage}
           </Ticker>
         </AmountInfo>
         <BlueHeader>
           <LeftH>
-            <TitleH>
-              {selectedTier1 == "family" ? "Salary" : "Personal"} Income
-            </TitleH>
+            <TitleH>{leftTitle}</TitleH>
             <AmountH>
               <span style={{ fontSize: "1rem", transform: "translateY(1px)" }}>
                 <FaIndianRupeeSign />
               </span>
-              <span>
-                {selectedTier1 == "family"
-                  ? formatIndianNumber(
-                      values?.totalSeconds * values?.TperSecond
-                    )
-                  : formatIndianNumber(
-                      values?.totalSeconds * values?.PMperSecond
-                    )}
-              </span>
+              <span>{formatIndianNumber(leftAmount?.toFixed(0))}</span>
             </AmountH>
           </LeftH>
           <MiddleH></MiddleH>
           <RightH>
-            <TitleH>
-              {selectedTier1 == "family" ? "Salary" : "Personal"} Balance
-            </TitleH>
+            <TitleH>{rightTitle}</TitleH>
             <AmountH>
               <span style={{ fontSize: "1rem", transform: "translateY(1px)" }}>
                 <FaIndianRupeeSign />
               </span>
-              <span>
-                {selectedTier1 == "family"
-                  ? formatIndianNumber(
-                      values?.totalSeconds * values?.TperSecond -
-                        values?.totalSeconds * values?.PMperSecond -
-                        allSpendingFamilyInMonthAmount
-                    )
-                  : formatIndianNumber(
-                      values?.totalSeconds * values?.PMperSecond -
-                        allSpendingPersonalInMonthAmount
-                    )}
-              </span>
+              <span>{formatIndianNumber(rightAmount?.toFixed(0))}</span>
             </AmountH>
           </RightH>
         </BlueHeader>
@@ -425,9 +333,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
             </Options>
           </DisplayHeader>
           <AllItems>
-            <SubTitleInner>
-              {subText} {isInEarlierMonth(selectedDate?.$d) ? "1 Day" : "Today"}
-            </SubTitleInner>
+            <SubTitleInner>{bottomMessage}</SubTitleInner>
             <AmountInfo>
               <MainTitle>
                 <span
@@ -435,9 +341,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
                 >
                   <FaIndianRupeeSign />
                 </span>
-                {totalAmountToday
-                  ? formatIndianNumber(totalAmountToday?.toFixed(2), 2)
-                  : 0}
+                {bottomGreen?.toFixed(2)}
               </MainTitle>
               <Ticker>
                 <span
@@ -448,8 +352,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
                 >
                   <FaIndianRupeeSign />
                 </span>
-                {(tickerAmountToday ? tickerAmountToday?.toFixed(2) : "0") +
-                  perMessage}
+                {bottomTicker?.toFixed(0) + bottomTickerMessage}
               </Ticker>
             </AmountInfo>
             {false && (

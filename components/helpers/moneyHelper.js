@@ -33,7 +33,7 @@ export const calculateEarningsCurrentMonth = (salary, jsDate) => {
 
     const today = new Date(); // actual current date
 
-    let now;
+    let now, end;
 
     let msDiff;
     let seconds;
@@ -47,6 +47,7 @@ export const calculateEarningsCurrentMonth = (salary, jsDate) => {
     let totalDays;
     let totalSecondsInToday;
     let totalSecondsTillNow;
+    let totalSecondsTillEnd;
 
     let TperSecond;
     let TperMinute;
@@ -63,6 +64,7 @@ export const calculateEarningsCurrentMonth = (salary, jsDate) => {
     let pocketSalary = totalDaysInMonth * 1000;
 
     now = getEndOfMonth(today);
+    end = getEndOfMonth(today);
 
     msDiff = now - letStartDate;
     seconds = Math.floor(msDiff / 1000);
@@ -77,6 +79,7 @@ export const calculateEarningsCurrentMonth = (salary, jsDate) => {
 
     totalSecondsInToday = getSecondsElapsedToday(today);
     totalSecondsTillNow = getSecondsFromMonthStart(today);
+    totalSecondsTillEnd = (end - letStartDate) / 1000;
 
     TperSecond = totalSalary / totalSeconds;
     TperMinute = totalSalary / totalMinutes;
@@ -107,6 +110,7 @@ export const calculateEarningsCurrentMonth = (salary, jsDate) => {
       totalDays,
       totalSecondsInToday,
       totalSecondsTillNow,
+      totalSecondsTillEnd,
     };
   }
 };

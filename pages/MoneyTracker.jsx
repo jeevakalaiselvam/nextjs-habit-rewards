@@ -27,7 +27,7 @@ import { BiSolidWalletAlt } from "react-icons/bi";
 import { FaGoogleWallet } from "react-icons/fa";
 
 export default function MoneyTracker() {
-  const [activeTab, setActiveTab] = useState(3);
+  const [activeTab, setActiveTab] = useState(0);
   const [showEntry, setShowEntry] = useState(false);
   const [forceRefreshExpense, setForceRefreshExpense] = useState(false);
   const [date, setDate] = useState(getFirstDateOfCurrentMonth());
