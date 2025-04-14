@@ -120,6 +120,8 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
   let totalAmountToday = 0;
   let tickerAmount = 0;
   let tickerAmountToday = 0;
+  let tickerAmountPM = 0;
+  let tickerAmountTodayPM = 0;
   let displayItems = [];
   let perMessage = "";
   let subText = "";
@@ -164,17 +166,14 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
     //CURRENT MONTH SELECTION
     if (selectedTier1 == "family") {
       if (selectedTier2 == "hours") {
-        totalAmount =
-          values?.seconds * values?.TperSecond -
-          values?.seconds * values?.PMperSecond -
-          allSpendingFamilyInMonthAmount;
+        totalAmount = values?.totalSecondsTillNow * values?.TperSecond;
         tickerAmount = values?.TperHour - values?.PMperHour;
         totalAmountToday =
           values?.totalSecondsInToday * values?.TperSecond -
           values?.totalSecondsInToday * values?.PMperSecond;
         tickerAmountToday = values?.TperDay - values?.PMperDay;
         perMessage = " / day";
-        subText = "Family ";
+        subText = "Salary ";
 
         const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
         displayItems = generateHourlyTimestamps(
@@ -194,7 +193,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
           values?.totalSecondsInToday * values?.PMperSecond;
         tickerAmountToday = values?.TperDay - values?.PMperDay;
         perMessage = " / day";
-        subText = "Family ";
+        subText = "Salary ";
 
         const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
         displayItems = generateDailyTimestamps(
@@ -329,7 +328,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
               selected={selectedTier1 == "family"}
               onClick={() => setSelectedTier1("family")}
             >
-              Family
+              Salary
               {selectedTier1 == "family" && <SelectedDot></SelectedDot>}
             </Option>
             <Option
@@ -341,8 +340,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
             </Option>
           </Options2>
           <SubTitle>
-            {subText}{" "}
-            {isInEarlierMonth(selectedDate?.$d) ? "Balance" : "Balance"}
+            {subText} {isInEarlierMonth(selectedDate?.$d) ? "Income" : "Income"}
           </SubTitle>
           <MainTitle>
             <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
@@ -365,22 +363,45 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
         </AmountInfo>
         <BlueHeader>
           <LeftH>
-            <TitleH>Family Expense</TitleH>
+            <TitleH>
+              {selectedTier1 == "family" ? "Salary" : "Personal"} Income
+            </TitleH>
             <AmountH>
               <span style={{ fontSize: "1rem", transform: "translateY(1px)" }}>
                 <FaIndianRupeeSign />
               </span>
-              <span>{allSpendingFamilyInMonthAmount}</span>
+              <span>
+                {selectedTier1 == "family"
+                  ? formatIndianNumber(
+                      values?.totalSeconds * values?.TperSecond
+                    )
+                  : formatIndianNumber(
+                      values?.totalSeconds * values?.PMperSecond
+                    )}
+              </span>
             </AmountH>
           </LeftH>
           <MiddleH></MiddleH>
           <RightH>
-            <TitleH>Personal Expense</TitleH>
+            <TitleH>
+              {selectedTier1 == "family" ? "Salary" : "Personal"} Balance
+            </TitleH>
             <AmountH>
               <span style={{ fontSize: "1rem", transform: "translateY(1px)" }}>
                 <FaIndianRupeeSign />
               </span>
-              <span>{allSpendingPersonalInMonthAmount}</span>
+              <span>
+                {selectedTier1 == "family"
+                  ? formatIndianNumber(
+                      values?.totalSeconds * values?.TperSecond -
+                        values?.totalSeconds * values?.PMperSecond -
+                        allSpendingFamilyInMonthAmount
+                    )
+                  : formatIndianNumber(
+                      values?.totalSeconds * values?.PMperSecond -
+                        allSpendingPersonalInMonthAmount
+                    )}
+              </span>
             </AmountH>
           </RightH>
         </BlueHeader>
@@ -415,9 +436,21 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
                   <FaIndianRupeeSign />
                 </span>
                 {totalAmountToday
-                  ? formatIndianNumber(totalAmountToday?.toFixed(2))
+                  ? formatIndianNumber(totalAmountToday?.toFixed(2), 2)
                   : 0}
               </MainTitle>
+              <Ticker>
+                <span
+                  style={{
+                    fontSize: ".9rem",
+                    transform: "translateY(2px)",
+                  }}
+                >
+                  <FaIndianRupeeSign />
+                </span>
+                {(tickerAmountToday ? tickerAmountToday?.toFixed(2) : "0") +
+                  perMessage}
+              </Ticker>
             </AmountInfo>
             {false && (
               <LineItems>

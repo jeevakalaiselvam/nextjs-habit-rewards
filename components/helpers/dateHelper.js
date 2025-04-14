@@ -138,6 +138,34 @@ export const getFifteenth = (date) => {
   return fifteenth;
 };
 
+export const getSecondsFromMonthStart = () => {
+  // Get current date in IST
+  const now = new Date();
+
+  // Adjust for IST (UTC+5:30)
+  const istOffset = 5.5 * 60 * 60 * 1000; // 5 hours 30 minutes in milliseconds
+  const nowIST = new Date(now.getTime() + istOffset);
+
+  // Get start of the current month (e.g., April 1, 2025, 00:00:00 IST)
+  const startOfMonth = new Date(
+    nowIST.getFullYear(),
+    nowIST.getMonth(),
+    1,
+    0,
+    0,
+    0,
+    0
+  );
+
+  // Calculate difference in milliseconds
+  const diffMs = nowIST - startOfMonth;
+
+  // Convert to seconds (integer)
+  const seconds = Math.floor(diffMs / 1000);
+
+  return seconds;
+};
+
 export const generateHourlyTimestamps = (
   dateOldFormat,
   ifSelectedDateIsCurrentMonth

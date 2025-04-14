@@ -4,6 +4,7 @@ import {
   getEndOfMonth,
   getLastDateOfMonth,
   getSecondsElapsedToday,
+  getSecondsFromMonthStart,
   getTotalDaysInMonth,
 } from "./dateHelper";
 
@@ -45,6 +46,7 @@ export const calculateEarningsCurrentMonth = (salary, jsDate) => {
     let totalHours;
     let totalDays;
     let totalSecondsInToday;
+    let totalSecondsTillNow;
 
     let TperSecond;
     let TperMinute;
@@ -74,6 +76,7 @@ export const calculateEarningsCurrentMonth = (salary, jsDate) => {
     totalDays = totalDaysInMonth;
 
     totalSecondsInToday = getSecondsElapsedToday(today);
+    totalSecondsTillNow = getSecondsFromMonthStart(today);
 
     TperSecond = totalSalary / totalSeconds;
     TperMinute = totalSalary / totalMinutes;
@@ -103,6 +106,7 @@ export const calculateEarningsCurrentMonth = (salary, jsDate) => {
       totalHours,
       totalDays,
       totalSecondsInToday,
+      totalSecondsTillNow,
     };
   }
 };
@@ -241,8 +245,9 @@ export const isInEarlierMonth = (dateToCheck) => {
   );
 };
 
-export const formatIndianNumber = (num) => {
-  const number = num?.toString().split(".");
+export const formatIndianNumber = (num, precision = 0) => {
+  let inner = Number(num)?.toFixed(precision);
+  const number = inner?.toString().split(".");
   let integerPart = number?.[0];
   const decimalPart = number?.[1] ? "." + number?.[1] : "";
 

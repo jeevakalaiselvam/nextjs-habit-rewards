@@ -1,15 +1,9 @@
 import styled from "styled-components";
-import {
-  getCurrentDayIdentifier,
-  getFirstDateOfCurrentMonth,
-} from "../helpers/dateHelper";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
 export default function Welcome({ title, date, setDate }) {
-  const monthFormat = "YYYY/MM";
-
   return (
     <Container>
       <Name>{title}</Name>
