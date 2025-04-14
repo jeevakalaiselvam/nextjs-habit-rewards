@@ -146,6 +146,28 @@ export default function Wallets() {
   }
 }
 
+const Amount = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  font-size: 2rem;
+  font-weight: bold;
+  width: 200px;
+  color: ${(props) => props.color};
+
+  & input {
+    width: 200px;
+    height: 30px;
+    outline: none;
+    border: none;
+    background-color: ${(props) => props.color};
+    color: #fefefe;
+    padding: 0.25rem;
+    font-size: 1.5rem;
+  }
+`;
+
 const SaveButton = styled.div`
   display: flex;
   align-items: center;
@@ -202,28 +224,6 @@ const AmountReadOnly = styled.div`
   right: 1rem;
   font-weight: bold;
   color: ${(props) => props.color};
-`;
-
-const Amount = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  font-size: 2rem;
-  font-weight: bold;
-  width: 200px;
-  color: ${(props) => props.color};
-
-  & input {
-    width: 200px;
-    height: 30px;
-    outline: none;
-    border: none;
-    background-color: ${(props) => props.color};
-    color: #fefefe;
-    padding: 0.25rem;
-    font-size: 1.5rem;
-  }
 `;
 
 const Name = styled.div`

@@ -4,12 +4,26 @@ import styled from "styled-components";
 import { PieChart, Pie, Cell } from "recharts";
 import { capitalizeFirstLetter } from "../helpers/stringHelper";
 import { formatIndianNumber } from "../helpers/moneyHelper";
-import { FaRupeeSign } from "react-icons/fa";
+import { FaCaretDown, FaRupeeSign } from "react-icons/fa";
 import { FaIndianRupeeSign } from "react-icons/fa6";
-import { generateSimilarColor } from "../helpers/colorHelper";
+import {
+  generateDarkTextColorForLightBg,
+  generateSimilarColor,
+} from "../helpers/colorHelper";
 import { ICON_CATEGORY, ICON_COLORS } from "../helpers/iconHelper";
-import { Popconfirm, Spin } from "antd";
+import {
+  DatePicker,
+  Dropdown,
+  message,
+  Popconfirm,
+  Popover,
+  Space,
+  Spin,
+} from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
+import { itemsFamily, itemsPersonal, itemsType, itemsWallet } from "./Entry";
+import dayjs from "dayjs";
+import { getFifteenth } from "../helpers/dateHelper";
 
 export default function Spending({
   showEntry,
@@ -19,6 +33,14 @@ export default function Spending({
   const [loading, setLoading] = useState(true);
   const [selectedTier1, setSelectedTier1] = useState("family");
   const [allSpendings, setAllSpendings] = useState([]);
+  const [newValueForSpending, setNewValueForSpending] = useState({});
+  const [spendingIdToUpdate, setSpendingIdToUpdate] = useState({
+    amount: "0",
+    recurring: "false",
+    date: getFifteenth(selectedDate),
+    category: "",
+    type: "personal",
+  });
 
   const refreshSpendings = () => {
     setLoading(true);
@@ -82,7 +104,50 @@ export default function Spending({
       .catch((error) => {});
   };
 
-  console.log({ allSpendings });
+  const updateSpendingValue = () => {
+    let values = { ...newValueForSpending };
+    axios
+      .put(`/api/spend/${newValueForSpending?._id}`, { ...values })
+      .then((response) => {
+        message.info("Expense updated !");
+        refreshSpendings();
+      })
+      .catch((error) => {
+        message.error("Error while saving Expense !");
+      });
+  };
+
+  let itemsToTarget = itemsPersonal;
+
+  if (newValueForSpending?.type == "personal") {
+    itemsToTarget = itemsPersonal;
+  }
+
+  if (newValueForSpending?.type == "family") {
+    itemsToTarget = itemsFamily;
+  }
+
+  if (newValueForSpending?.type == "wallet") {
+    itemsToTarget = itemsWallet;
+  }
+
+  const handleMenuClick = (e) => {
+    setNewValueForSpending((old) => ({ ...old, category: String(e.key) }));
+  };
+
+  const handleMenuClickType = (e) => {
+    setNewValueForSpending((old) => ({ ...old, type: String(e.key) }));
+  };
+
+  const menu = {
+    items: itemsToTarget,
+    onClick: handleMenuClick,
+  };
+
+  const menuType = {
+    items: itemsType,
+    onClick: handleMenuClickType,
+  };
 
   if (loading) {
     return (
@@ -175,7 +240,18 @@ export default function Spending({
                 return (
                   <SpendCard>
                     <Left color={ICON_COLORS[spending?.category]}>
-                      {ICON_CATEGORY[spending?.category]}
+                      <Popconfirm
+                        title="Delete the task"
+                        description="Are you sure to delete this task?"
+                        onConfirm={() => {
+                          deleteSpending(spending?._id);
+                        }}
+                        onCancel={() => {}}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        {ICON_CATEGORY[spending?.category]}
+                      </Popconfirm>
                     </Left>
                     <Middle>
                       <MTop>{capitalizeFirstLetter(spending?.category)}</MTop>
@@ -185,17 +261,123 @@ export default function Spending({
                           : `${timesThisMonth} payment`}
                       </MBottom>
                     </Middle>
-                    <Popconfirm
-                      title="Delete the task"
-                      description="Are you sure to delete this task?"
-                      onConfirm={() => {
-                        deleteSpending(spending?._id);
-                      }}
-                      onCancel={() => {}}
-                      okText="Yes"
-                      cancelText="No"
+                    <Popover
+                      placement="bottom"
+                      content={
+                        <Amount>
+                          <span>
+                            <input
+                              inputMode="numeric"
+                              type="number"
+                              value={newValueForSpending?.amount}
+                              onChange={(e) => {
+                                setNewValueForSpending((old) => ({
+                                  ...old,
+                                  amount: e.target.value,
+                                }));
+                              }}
+                            />
+                          </span>
+
+                          <FormContainer>
+                            <AddAmount>
+                              <Title>Type</Title>
+                              <AmountInputDropdown2>
+                                <Dropdown
+                                  trigger={["click"]}
+                                  overlayStyle={{ minWidth: "80%" }}
+                                  menu={menuType}
+                                  overlayClassName="full-width-dropdown"
+                                >
+                                  <Space>
+                                    <span
+                                      style={{
+                                        fontSize: "1rem",
+                                        color: "#ACAEB2",
+                                      }}
+                                    >
+                                      {newValueForSpending.type
+                                        ? capitalizeFirstLetter(
+                                            newValueForSpending.type
+                                          )
+                                        : "Select Type"}
+                                    </span>
+                                    <Caret>
+                                      <FaCaretDown />
+                                    </Caret>
+                                  </Space>
+                                </Dropdown>
+                              </AmountInputDropdown2>
+                              <Title>Expense</Title>
+                              <AmountInputDropdown>
+                                <Dropdown
+                                  trigger={["click"]}
+                                  overlayStyle={{ minWidth: "80%" }}
+                                  menu={menu}
+                                  overlayClassName="full-width-dropdown"
+                                  on
+                                >
+                                  <Space>
+                                    <span
+                                      style={{
+                                        fontSize: "1rem",
+                                        color: "#ACAEB2",
+                                      }}
+                                    >
+                                      {newValueForSpending?.category
+                                        ? capitalizeFirstLetter(
+                                            newValueForSpending?.category
+                                          )
+                                        : "Select Category"}
+                                    </span>
+                                    <Caret>
+                                      <FaCaretDown />
+                                    </Caret>
+                                  </Space>
+                                </Dropdown>
+                              </AmountInputDropdown>
+
+                              <Title>Date</Title>
+                              <MonthSelection>
+                                <DatePicker
+                                  style={{
+                                    width: "100%",
+                                    backgroundColor: "#1f2125",
+                                    padding: "0.5rem 1rem",
+                                    outline: "none",
+                                    border: "none",
+                                  }}
+                                  format="DD-MM-YYYY"
+                                  inputReadOnly
+                                  value={dayjs(newValueForSpending?.date)}
+                                  picker="date"
+                                  onChange={(e) => {
+                                    setNewValueForSpending((old) => ({
+                                      ...old,
+                                      date: new Date(dayjs(e))?.toString(),
+                                    }));
+                                  }}
+                                  onFocus={(e) => e.preventDefault()}
+                                />
+                              </MonthSelection>
+                            </AddAmount>
+                          </FormContainer>
+                          <SaveButton
+                            onClick={() => {
+                              updateSpendingValue();
+                            }}
+                          >
+                            UPDATE
+                          </SaveButton>
+                        </Amount>
+                      }
+                      title={`Update Spending?`}
                     >
-                      <Right>
+                      <Right
+                        onClick={() => {
+                          setNewValueForSpending(spending);
+                        }}
+                      >
                         <span
                           style={{
                             fontSize: ".8rem",
@@ -208,7 +390,7 @@ export default function Spending({
                           {formatIndianNumber(spending?.amount)}
                         </span>
                       </Right>
-                    </Popconfirm>
+                    </Popover>
                   </SpendCard>
                 );
               })}
@@ -218,6 +400,43 @@ export default function Spending({
     );
   }
 }
+
+const Amount = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  font-size: 2rem;
+  font-weight: bold;
+  width: 200px;
+
+  & input {
+    width: 200px;
+    height: 30px;
+    outline: none;
+    border: none;
+    background-color: ${(props) => props.color};
+    padding: 0.25rem;
+    font-size: 1rem;
+    color: #333;
+  }
+`;
+
+const SaveButton = styled.div`
+  display: flex;
+  align-items: center;
+  height: 30px;
+  width: 100%;
+  font-size: 1.25rem;
+  flex-direction: column;
+  color: #fefefe;
+  background-color: #53b5d9;
+
+  &:active {
+    color: #fefefe;
+    background-color: #3b96b7;
+  }
+`;
 
 const MTop = styled.div`
   display: flex;
@@ -447,4 +666,105 @@ const Container = styled.div`
   padding-top: 2rem;
   position: relative;
   padding: 2rem 1rem 1rem 1rem;
+`;
+
+const MonthSelection = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 1rem 0rem 0rem 0rem;
+`;
+
+const Caret = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-1px);
+`;
+
+const AddAmount = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100%;
+  flex-direction: column;
+  margin-top: 0.5rem;
+`;
+
+const Rupees = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  flex: 1;
+  top: 37.5%;
+  left: 1rem;
+  color: #acaeb2;
+`;
+
+const AmountInputDropdown = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+  width: 100%;
+  font-size: 1.1rem;
+  position: relative;
+  background-color: #1f2125;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+`;
+
+const AmountInputDropdown2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+  width: 100%;
+  font-size: 1.1rem;
+  position: relative;
+  background-color: #1f2125;
+  padding: 0.5rem 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+`;
+
+const AmountInput = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+  font-size: 1.5rem;
+  position: relative;
+
+  & input {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    background-color: #1f2125;
+    color: #fefefe;
+    border: none;
+    padding: 1rem 1rem 1rem 3rem;
+    outline: none;
+  }
+`;
+
+const Title = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-start;
+  font-size: 1rem;
+  width: 100%;
+`;
+
+const FormContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
 `;

@@ -10,11 +10,12 @@ export default async function handler(req, res) {
   const { id } = req.query;
 
   if (req.method === "PUT") {
-    const { time, habitId, count } = req.body;
+    const { amount, date, category, recurring, type } = req.body;
 
-    // Validate input
-    if (!time || !habitId || !count) {
-      return res.status(400).json({ error: "Title and reward are required" });
+    if (!amount || !date || !category || !recurring || !type) {
+      return res
+        .status(400)
+        .json({ error: "Amount, Date, Category, Recurring are required" });
     }
 
     try {
@@ -25,16 +26,15 @@ export default async function handler(req, res) {
         .collection(getMongoCollectionForSpending())
         .updateOne(
           { _id: new ObjectId(id) },
-          { $set: { time, habitId, count } }
+          { $set: { amount, date, category, recurring, type } }
         );
 
       if (result.matchedCount === 0) {
-        return res.status(404).json({ error: "Habit not found" });
+        return res.status(404).json({ error: "Spending not found" });
       }
-
-      res.status(200).json({ message: "Habit updated successfully" });
+      res.status(200).json({ message: "Spending updated successfully" });
     } catch (error) {
-      res.status(500).json({ error: "Failed to update habit" });
+      res.status(500).json({ error: "Failed to update Spending" });
     }
   } else if (req.method === "DELETE") {
     try {
