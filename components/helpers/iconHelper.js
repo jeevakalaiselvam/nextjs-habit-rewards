@@ -42,6 +42,7 @@ export const ICON_CATEGORY = {
   mutualfunds: <AiFillFund />,
   stocks: <RiStockFill />,
   bonds: <PiCertificateFill />,
+  achu: <FaFemale />,
 };
 
 export const ICON_COLORS = {
@@ -67,6 +68,7 @@ export const ICON_COLORS = {
   stocks: "#FF6347",
   bonds: "#4682B4",
   car: "#659324",
+  achu: "#19c8d5",
 };
 
 export const WALLET_OPTIONS = [

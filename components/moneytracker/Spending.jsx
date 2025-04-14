@@ -11,7 +11,11 @@ import { ICON_CATEGORY, ICON_COLORS } from "../helpers/iconHelper";
 import { Popconfirm, Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
-export default function Spending({ showEntry, selectedDate }) {
+export default function Spending({
+  showEntry,
+  selectedDate,
+  forceRefreshExpense,
+}) {
   const [loading, setLoading] = useState(true);
   const [selectedTier1, setSelectedTier1] = useState("family");
   const [allSpendings, setAllSpendings] = useState([]);
@@ -29,7 +33,7 @@ export default function Spending({ showEntry, selectedDate }) {
 
   useEffect(() => {
     refreshSpendings();
-  }, [showEntry]);
+  }, [showEntry, forceRefreshExpense]);
 
   const now = new Date(selectedDate);
 

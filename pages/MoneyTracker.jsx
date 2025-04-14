@@ -29,6 +29,7 @@ import { FaGoogleWallet } from "react-icons/fa";
 export default function MoneyTracker() {
   const [activeTab, setActiveTab] = useState(3);
   const [showEntry, setShowEntry] = useState(false);
+  const [forceRefreshExpense, setForceRefreshExpense] = useState(false);
   const [date, setDate] = useState(getFirstDateOfCurrentMonth());
 
   let title = "";
@@ -49,24 +50,40 @@ export default function MoneyTracker() {
     title = "Wallets";
   }
 
-  const dateChanged = () => {};
+  const refreshExpense = () => {
+    setForceRefreshExpense(true);
+  };
 
   return (
     <Container>
       {showEntry && (
         <EntryModal>
-          <Entry setShowEntry={setShowEntry} />
+          <Entry
+            setShowEntry={setShowEntry}
+            refreshExpense={refreshExpense}
+            selectedDate={date}
+          />
         </EntryModal>
       )}
       <Header>
         <Welcome title={title} setDate={setDate} date={date} />
       </Header>
       <Content>
-        {activeTab == 0 && <Money showEntry={showEntry} selectedDate={date} />}
+        {activeTab == 0 && (
+          <Money
+            showEntry={showEntry}
+            selectedDate={date}
+            forceRefreshExpense={forceRefreshExpense}
+          />
+        )}
       </Content>
       <Content>
         {activeTab == 1 && (
-          <Spending showEntry={showEntry} selectedDate={date} />
+          <Spending
+            showEntry={showEntry}
+            selectedDate={date}
+            forceRefreshExpense={forceRefreshExpense}
+          />
         )}
       </Content>
       <Content>

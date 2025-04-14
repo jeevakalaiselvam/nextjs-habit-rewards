@@ -14,6 +14,7 @@ export default function Welcome({ title, date, setDate }) {
     <Container>
       <Name>{title}</Name>
       <DatePicker
+        allowClear={false}
         style={{
           width: "35%",
           backgroundColor: "#1f2125",

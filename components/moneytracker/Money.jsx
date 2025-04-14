@@ -26,7 +26,7 @@ import {
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 
-export default function Money({ selectedDate }) {
+export default function Money({ selectedDate, forceRefreshExpense }) {
   const [loading, setLoading] = useState(true);
   const [salaries, setAllSalaries] = useState([]);
   const [values, setValues] = useState({ totalEarned: 0, pocketMoney: 0 });
@@ -172,8 +172,8 @@ export default function Money({ selectedDate }) {
         totalAmountToday =
           values?.totalSecondsInToday * values?.TperSecond -
           values?.totalSecondsInToday * values?.PMperSecond;
-        tickerAmountToday = values?.TperHour - values?.PMperHour;
-        perMessage = " / hour";
+        tickerAmountToday = values?.TperDay - values?.PMperDay;
+        perMessage = " / day";
         subText = "Family ";
 
         const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
@@ -211,8 +211,8 @@ export default function Money({ selectedDate }) {
           allSpendingPersonalInMonthAmount;
         tickerAmount = values?.PMperHour;
         totalAmountToday = values?.totalSecondsInToday * values?.PMperSecond;
-        tickerAmountToday = values?.PMperHour;
-        perMessage = " / hour";
+        tickerAmountToday = values?.PMperDay;
+        perMessage = " / day";
         subText = "Personal ";
 
         const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
@@ -254,8 +254,8 @@ export default function Money({ selectedDate }) {
           (values?.totalSeconds * values?.TperSecond -
             values?.totalSeconds * values?.PMperSecond) /
           totalDaysInMonth;
-        tickerAmountToday = values?.TperHour - values?.PMperHour;
-        perMessage = " / hour";
+        tickerAmountToday = values?.TperDay - values?.PMperDay;
+        perMessage = " / day";
         subText = "Family ";
 
         const dateOldFormat = getDateInFormatDMY(new Date(selectedDate));
@@ -293,8 +293,8 @@ export default function Money({ selectedDate }) {
         totalAmount = Math.round(totalAmount);
         tickerAmount = values?.PMperHour;
         totalAmountToday = values?.totalSecondsInToday * values?.PMperSecond;
-        tickerAmountToday = values?.PMperHour;
-        perMessage = " / hour";
+        tickerAmountToday = values?.PMperDay;
+        perMessage = " / day";
         subText = "Personal ";
 
         const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));

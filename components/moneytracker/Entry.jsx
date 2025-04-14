@@ -32,14 +32,15 @@ import {
   WALLET_OPTIONS,
 } from "../helpers/iconHelper";
 import dayjs from "dayjs";
+import { getFifteenth } from "../helpers/dateHelper";
 
-export default function Entry({ setShowEntry }) {
+export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
   const [selectedEntry, setSelectedEntry] = useState("expense");
 
   const [values, setValues] = useState({
     amount: "0",
     recurring: "false",
-    date: new Date()?.toString(),
+    date: getFifteenth(selectedDate),
     category: "",
     type: "personal",
   });
@@ -151,6 +152,18 @@ export default function Entry({ setShowEntry }) {
           style={{ transform: "translateY(2px)", color: ICON_COLORS["fuel"] }}
         >
           {ICON_CATEGORY?.["fuel"]}
+        </span>
+      ),
+      extra: "⌘F",
+    },
+    {
+      key: "achu",
+      label: "Achu",
+      icon: (
+        <span
+          style={{ transform: "translateY(2px)", color: ICON_COLORS["achu"] }}
+        >
+          {ICON_CATEGORY?.["achu"]}
         </span>
       ),
       extra: "⌘F",
@@ -327,6 +340,7 @@ export default function Entry({ setShowEntry }) {
       .then((response) => {
         message.info("Expense saved !");
         setShowEntry(false);
+        refreshExpense();
       })
       .catch((error) => {
         alert(JSON.stringify(error));

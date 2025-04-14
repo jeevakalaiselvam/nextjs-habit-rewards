@@ -132,6 +132,12 @@ export const generateDailyTimestamps = (
   return dates;
 };
 
+export const getFifteenth = (date) => {
+  const fifteenth = new Date(date);
+  fifteenth.setDate(15);
+  return fifteenth;
+};
+
 export const generateHourlyTimestamps = (
   dateOldFormat,
   ifSelectedDateIsCurrentMonth
