@@ -7,32 +7,42 @@ export default function Welcome({ title, date, setDate }) {
   return (
     <Container>
       <Name>{title}</Name>
-      <DatePicker
-        allowClear={false}
-        style={{
-          width: "35%",
-          backgroundColor: "#1f2125",
-          outline: "none",
-          border: "none",
-        }}
-        defaultValue={dayjs(date)}
-        format="MMMM, YYYY"
-        value={dayjs(date)}
-        picker="month"
-        onChange={(e) => {
-          setDate(dayjs(e));
-        }}
-      />
+      <Picker>
+        <DatePicker
+          allowClear={false}
+          style={{
+            width: "70%",
+            backgroundColor: "#1f2125",
+            outline: "none",
+            border: "none",
+          }}
+          defaultValue={dayjs(date)}
+          format="MMMM, YYYY"
+          value={dayjs(date)}
+          picker="month"
+          onChange={(e) => {
+            setDate(dayjs(e));
+          }}
+        />
+      </Picker>
     </Container>
   );
 }
 
-const Name = styled.div`
+const Picker = styled.div`
   display: flex;
   align-items: center;
   flex: 2;
+  justify-content: flex-end;
+`;
+
+const Name = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1;
   justify-content: flex-start;
   font-size: 2rem;
+  transform: translateY(-4px);
   text-shadow: 0 0 1px white, 0 0 1px rgba(255, 255, 255.25),
     0 0 1px rgba(255, 255, 255.25);
 `;
