@@ -206,7 +206,7 @@ const Container = styled.div`
   min-height: 100vh;
   max-height: 100vh;
   overflow: scroll;
-  width: 100%;
+  min-width: 100%;
   color: #fefefe;
   position: relative;
 `;

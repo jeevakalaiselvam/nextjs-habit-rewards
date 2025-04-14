@@ -51,5 +51,6 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 90%;
+  min-width: 100vw;
+  padding: 0rem 1rem;
 `;
