@@ -152,7 +152,7 @@ const Icon = styled.div`
 
 const Header = styled.div`
   display: flex;
-  width: 100%;
+  min-width: 100%;
   align-items: center;
   justify-content: center;
   height: 70px;
