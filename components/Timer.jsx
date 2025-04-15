@@ -256,7 +256,7 @@ const StartStopContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: 5rem;
+  margin-top: 1rem;
 `;
 
 const Hour = styled.div`
