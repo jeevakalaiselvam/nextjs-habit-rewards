@@ -249,11 +249,9 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
         }
 
         topGreen = timeDifference * perSecondT;
-        topTicker = Number(perSecondT);
         topMessage = "Earned Today";
         bottomMessage = "Earned Today";
         bottomGreen = timeDifference * perSecondPM;
-        topTickerMessage = " / second";
       }
     }
 

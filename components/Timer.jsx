@@ -94,7 +94,8 @@ export default function Timer({ totalCurrentMonthSalary }) {
   let topTicker = Number(perSecond);
   let topMessage = "Earned Today";
   let bottomMessage = "Remaining Today";
-  let bottomGreen = (8 * 60 * 60 - timeDifference) * perSecond;
+  let bottomGreen =
+    (8 * 60 * 60 - (timeDifference < 0 ? 0 : timeDifference)) * perSecond;
   let topTickerMessage = " / second";
 
   const format = "HH:mm";
@@ -119,25 +120,11 @@ export default function Timer({ totalCurrentMonthSalary }) {
           />
         </TimerSelect>
       )}
-      {false && (
-        <TimerInfo>
-          <Hour>{hours}</Hour>
-          <Min>{minutes}</Min>
-          <Sec>{seconds}</Sec>
-        </TimerInfo>
-      )}
       {isAlreadyStarted && (
         <TimerInfo>
           <Hour>{hoursT}h</Hour>
           <Min>{minutesT}m</Min>
           <Sec>{secondsT}s</Sec>
-        </TimerInfo>
-      )}
-      {!isAlreadyStarted && (
-        <TimerInfo>
-          <Hour>{"0h"}</Hour>
-          <Min>{"0m"}</Min>
-          <Sec>{"0s"}</Sec>
         </TimerInfo>
       )}
       <TimerInfo2>
