@@ -301,7 +301,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
           >
             Expense
             {selectedTier1 == "expense" && <SelectedDot></SelectedDot>}
-          </Option>{" "}
+          </Option>
         </Options2>
         <AmountInfo>
           <SubTitle>{topMessage}</SubTitle>
