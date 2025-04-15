@@ -1,10 +1,19 @@
 import styled from "styled-components";
-import { getDaysInMonth, timeElapsedFrom } from "./helpers/dateHelper";
+import {
+  getDateFromTime24,
+  getDaysInMonth,
+  getRemainingTimeTo8Hours,
+  timeElapsedFrom,
+} from "./helpers/dateHelper";
 import { useEffect, useState } from "react";
 import { FaIndianRupeeSign } from "react-icons/fa6";
+import { TimePicker } from "antd";
+import dayjs from "dayjs";
 
 export default function Timer({ totalCurrentMonthSalary }) {
   const [timerString, setTimerString] = useState("");
+  const [timeHours, setTimeHours] = useState("");
+  const [timeMinutes, setTimeMinutes] = useState("");
 
   let isAlreadyStarted = false;
   let alreadyStartedTimeInStorage = "";
@@ -22,12 +31,17 @@ export default function Timer({ totalCurrentMonthSalary }) {
 
   const startTimer = () => {
     if (window) {
-      localStorage.setItem("TIMER_START", new Date()?.toString());
+      localStorage.setItem(
+        "TIMER_START",
+        getDateFromTime24(timeHours, timeMinutes)
+      );
       let timeStarted = localStorage.getItem("TIMER_START");
       setTimerString(timeStarted);
     }
   };
   const stopTimer = () => {
+    setTimeHours("");
+    setTimeMinutes("");
     if (window) {
       localStorage.setItem("TIMER_START", "");
       setTimerString("");
@@ -53,17 +67,22 @@ export default function Timer({ totalCurrentMonthSalary }) {
   }, [timerString]);
 
   const hours = timerString?.split(" ")?.[0];
-
   const minutes = timerString?.split(" ")?.[1];
-
   const seconds = timerString?.split(" ")?.[2];
+
+  const { hoursT, minutesT, secondsT } = getRemainingTimeTo8Hours(
+    hours,
+    minutes,
+    seconds
+  );
 
   let timeDifference = 0;
 
   if (alreadyStartedTime) {
     timeDifference =
       Number(new Date() - new Date(alreadyStartedTimeInStorage)) / 1000;
-    console.log(timeDifference);
+    timeDifference =
+      timeDifference > 8 * 60 * 60 ? 8 * 60 * 60 : timeDifference;
   }
 
   let perSecond = (
@@ -75,10 +94,32 @@ export default function Timer({ totalCurrentMonthSalary }) {
   let topGreen = timeDifference * perSecond;
   let topTicker = Number(perSecond);
   let topMessage = "Earned Today";
+  let bottomMessage = "Remaining Today";
+  let bottomGreen = (8 * 60 * 60 - timeDifference) * perSecond;
   let topTickerMessage = " / second";
+
+  const format = "HH:mm";
 
   return (
     <Container>
+      {!isAlreadyStarted && (
+        <TimerSelect>
+          <input
+            type="number"
+            inputMode="numeric"
+            value={timeHours}
+            placeholder="HOUR"
+            onChange={(e) => setTimeHours(e.target.value)}
+          />
+          <input
+            type="number"
+            inputMode="numeric"
+            value={timeMinutes}
+            placeholder="MINUTE"
+            onChange={(e) => setTimeMinutes(e.target.value)}
+          />
+        </TimerSelect>
+      )}
       {isAlreadyStarted && (
         <TimerInfo>
           <Hour>{hours}</Hour>
@@ -112,12 +153,29 @@ export default function Timer({ totalCurrentMonthSalary }) {
           </span>
           {(topTicker ? topTicker?.toFixed(2) : 0) + topTickerMessage}
         </Ticker>
+        <SubTitle>{bottomMessage}</SubTitle>
+        <MainTitle ifSelectedDateIsCurrentMonth={true}>
+          <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
+            <FaIndianRupeeSign />
+          </span>
+          {bottomGreen ? (bottomGreen > 0 ? bottomGreen?.toFixed(2) : 0) : 0}
+        </MainTitle>
       </TimerInfo2>
+      {isAlreadyStarted && (
+        <TimerInfo>
+          <Hour>{hoursT}h</Hour>
+          <Min>{minutesT}m</Min>
+          <Sec>{secondsT}s</Sec>
+        </TimerInfo>
+      )}
       <StartStopContainer>
         {!isAlreadyStarted && (
           <Start
+            disabled={timeHours?.length == 0}
             onClick={() => {
-              startTimer();
+              if (timeHours?.length != 0) {
+                startTimer();
+              }
             }}
           >
             START
@@ -137,6 +195,25 @@ export default function Timer({ totalCurrentMonthSalary }) {
   );
 }
 
+const TimerSelect = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  & input {
+    width: 90%;
+    margin-bottom: 1rem;
+    background-color: #141414;
+    color: #fefefe;
+    border: none;
+    font-size: 1.25rem;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    outline: none;
+  }
+`;
+
 const Ticker = styled.div`
   display: flex;
   align-items: center;
@@ -152,7 +229,7 @@ const Ticker = styled.div`
       opacity: 0;
     }
   }
-  padding: 0.5rem 0rem 1rem 0rem;
+  padding: 1.5rem 0rem 1rem 0rem;
 `;
 
 const SubTitle = styled.div`
@@ -179,6 +256,7 @@ const StartStopContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  margin-top: 5rem;
 `;
 
 const Hour = styled.div`
@@ -206,7 +284,6 @@ const TimerInfo = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 2rem;
   width: 100%;
   font-size: 3rem;
 `;
@@ -215,7 +292,7 @@ const TimerInfo2 = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1rem;
   flex-direction: column;
   width: 100%;
 `;
@@ -228,7 +305,7 @@ const Start = styled.div`
   border-radius: 4px;
   padding: 1rem;
   font-size: 2rem;
-  background-color: #2982e3;
+  background-color: ${(props) => (props.disabled ? "#828282" : "#2982e3")};
 
   &:active {
     transform: translate(0px, 2px);

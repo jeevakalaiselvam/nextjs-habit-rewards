@@ -47,6 +47,18 @@ export const getDateInFormatDMY = (arg) => {
   return formatted;
 };
 
+export const getDateFromTime24 = (hourStr, minuteStr = "00") => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth(); // 0-based
+  const day = now.getDate();
+
+  const hour = parseInt(hourStr, 10);
+  const minute = parseInt(minuteStr, 10);
+
+  return new Date(year, month, day, hour, minute, 0, 0);
+};
+
 export const timeElapsedFrom = (oldDateStr) => {
   const oldDate = new Date(oldDateStr);
   const now = new Date();
@@ -181,6 +193,32 @@ export const getSecondsFromMonthStart = () => {
   const seconds = Math.floor(diffMs / 1000);
 
   return seconds;
+};
+
+export const getRemainingTimeTo8Hours = (hStr, mStr, sStr) => {
+  const parseUnit = (str, unit) => {
+    const match = str?.match(new RegExp(`(\\d+)${unit}`, "i"));
+    return match ? parseInt(match[1], 10) : 0;
+  };
+
+  const elapsedHrs = parseUnit(hStr, "h");
+  const elapsedMin = parseUnit(mStr, "m");
+  const elapsedSec = parseUnit(sStr, "s");
+
+  const elapsedSeconds = elapsedHrs * 3600 + elapsedMin * 60 + elapsedSec;
+  const totalSecondsIn8Hours = 8 * 3600;
+
+  const remainingSeconds = totalSecondsIn8Hours - elapsedSeconds;
+
+  if (remainingSeconds <= 0) {
+    return { hoursT: 0, minutesT: 0, secondsT: 0 };
+  }
+
+  const hoursT = Math.floor(remainingSeconds / 3600);
+  const minutesT = Math.floor((remainingSeconds % 3600) / 60);
+  const secondsT = remainingSeconds % 60;
+
+  return { hoursT, minutesT, secondsT };
 };
 
 export const generateHourlyTimestamps = (
