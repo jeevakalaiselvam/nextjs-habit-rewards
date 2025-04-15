@@ -66,17 +66,16 @@ export default function Timer({ totalCurrentMonthSalary }) {
     }
   }, [timerString]);
 
-  const hours = timerString?.split(" ")?.[0];
-  const minutes = timerString?.split(" ")?.[1];
-  const seconds = timerString?.split(" ")?.[2];
+  let hours = timerString?.split(" ")?.[0];
+  let minutes = timerString?.split(" ")?.[1];
+  let seconds = timerString?.split(" ")?.[2];
+  let timeDifference = 0;
 
   const { hoursT, minutesT, secondsT } = getRemainingTimeTo8Hours(
     hours,
     minutes,
     seconds
   );
-
-  let timeDifference = 0;
 
   if (alreadyStartedTime) {
     timeDifference =
@@ -89,7 +88,7 @@ export default function Timer({ totalCurrentMonthSalary }) {
     totalCurrentMonthSalary /
     getDaysInMonth(new Date()) /
     (8 * 60 * 60)
-  )?.toFixed(2);
+  )?.toFixed(10);
 
   let topGreen = timeDifference * perSecond;
   let topTicker = Number(perSecond);
@@ -120,11 +119,18 @@ export default function Timer({ totalCurrentMonthSalary }) {
           />
         </TimerSelect>
       )}
-      {isAlreadyStarted && (
+      {false && (
         <TimerInfo>
           <Hour>{hours}</Hour>
           <Min>{minutes}</Min>
           <Sec>{seconds}</Sec>
+        </TimerInfo>
+      )}
+      {isAlreadyStarted && (
+        <TimerInfo>
+          <Hour>{hoursT}h</Hour>
+          <Min>{minutesT}m</Min>
+          <Sec>{secondsT}s</Sec>
         </TimerInfo>
       )}
       {!isAlreadyStarted && (
@@ -161,13 +167,6 @@ export default function Timer({ totalCurrentMonthSalary }) {
           {bottomGreen ? (bottomGreen > 0 ? bottomGreen?.toFixed(2) : 0) : 0}
         </MainTitle>
       </TimerInfo2>
-      {isAlreadyStarted && (
-        <TimerInfo>
-          <Hour>{hoursT}h</Hour>
-          <Min>{minutesT}m</Min>
-          <Sec>{secondsT}s</Sec>
-        </TimerInfo>
-      )}
       <StartStopContainer>
         {!isAlreadyStarted && (
           <Start
@@ -181,7 +180,17 @@ export default function Timer({ totalCurrentMonthSalary }) {
             START
           </Start>
         )}
-        {isAlreadyStarted && (
+        {isAlreadyStarted && timeDifference < 8 * 60 * 60 && (
+          <Stop
+            onClick={() => {
+              stopTimer();
+            }}
+          >
+            RESTART
+          </Stop>
+        )}
+
+        {isAlreadyStarted && timeDifference >= 8 * 60 * 60 && (
           <Stop
             onClick={() => {
               stopTimer();

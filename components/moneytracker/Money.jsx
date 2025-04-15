@@ -13,6 +13,7 @@ import {
   getFormattedDateWords,
   isInEarlierMonth,
   isSameMonthUTCZGMT,
+  timeElapsedFrom,
 } from "../helpers/dateHelper";
 import {
   calculateEarnings,
@@ -171,10 +172,54 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
   let leftAmount = 0;
   let rightAmount = 0;
 
+  let isAlreadyStarted = false;
+  let alreadyStartedTimeInStorage = "";
+  let alreadyStartedTime = "";
+
+  const [timerString, setTimerString] = useState("");
+  const [timeHours, setTimeHours] = useState("");
+  const [timeMinutes, setTimeMinutes] = useState("");
+
+  if (window) {
+    if (localStorage.getItem("TIMER_START")) {
+      isAlreadyStarted = true;
+      alreadyStartedTimeInStorage = localStorage.getItem("TIMER_START");
+      alreadyStartedTime = new Date(alreadyStartedTime);
+    } else {
+      isAlreadyStarted = false;
+    }
+  }
+
+  useEffect(() => {
+    if (timerString?.length > 0) {
+      let timer = setInterval(() => {
+        let timerString = "";
+
+        if (alreadyStartedTime) {
+          timerString = timeElapsedFrom(alreadyStartedTimeInStorage);
+          setTimerString(timerString);
+        }
+      }, 1000);
+      return () => {
+        clearInterval(timer);
+      };
+    }
+  }, [timerString]);
+
   if (ifSelectedDateIsCurrentMonth) {
     //CURRENT MONTH SELECTION
     if (selectedTier1 == "income") {
       if (selectedTier2 == "days" || selectedTier2 == "hours") {
+        let timeDifference = 0;
+
+        let perSecondT = (
+          totalCurrentMonthSalary /
+          getDaysInMonth(new Date()) /
+          (8 * 60 * 60)
+        )?.toFixed(10);
+
+        let perSecondPM = (1000 / (8 * 60 * 60))?.toFixed(10);
+
         topGreen = values?.totalSecondsInToday * values?.TperSecond;
         topTicker = values?.TperDay;
         bottomGreen = values?.totalSecondsInToday * values?.PMperSecond;
@@ -195,6 +240,20 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
           dateOldFormat,
           ifSelectedDateIsCurrentMonth
         );
+
+        if (alreadyStartedTime) {
+          timeDifference =
+            Number(new Date() - new Date(alreadyStartedTimeInStorage)) / 1000;
+          timeDifference =
+            timeDifference > 8 * 60 * 60 ? 8 * 60 * 60 : timeDifference;
+        }
+
+        topGreen = timeDifference * perSecondT;
+        topTicker = Number(perSecondT);
+        topMessage = "Earned Today";
+        bottomMessage = "Earned Today";
+        bottomGreen = timeDifference * perSecondPM;
+        topTickerMessage = " / second";
       }
     }
 
