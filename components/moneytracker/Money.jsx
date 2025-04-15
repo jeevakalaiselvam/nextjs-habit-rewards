@@ -278,7 +278,6 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
             </span>
             {topGreen ? (topGreen > 0 ? topGreen?.toFixed(2) : 0) : 0}
           </MainTitle>
-          s
           <Ticker>
             <span
               style={{
