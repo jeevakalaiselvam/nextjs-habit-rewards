@@ -302,13 +302,6 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
             Expense
             {selectedTier1 == "expense" && <SelectedDot></SelectedDot>}
           </Option>{" "}
-          <Option
-            selected={selectedTier1 == "timer"}
-            onClick={() => setSelectedTier1("timer")}
-          >
-            Timer
-            {selectedTier1 == "timer" && <SelectedDot></SelectedDot>}
-          </Option>
         </Options2>
         <AmountInfo>
           <SubTitle>{topMessage}</SubTitle>
