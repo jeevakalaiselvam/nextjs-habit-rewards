@@ -297,7 +297,11 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
               <span style={{ fontSize: "1rem", transform: "translateY(1px)" }}>
                 <FaIndianRupeeSign />
               </span>
-              <span>{formatIndianNumber(leftAmount?.toFixed(0))}</span>
+              <span>
+                {formatIndianNumber(
+                  leftAmount ? (leftAmount > 0 ? leftAmount?.toFixed(0) : 0) : 0
+                )}
+              </span>
             </AmountH>
           </LeftH>
           <MiddleH></MiddleH>
@@ -307,7 +311,16 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
               <span style={{ fontSize: "1rem", transform: "translateY(1px)" }}>
                 <FaIndianRupeeSign />
               </span>
-              <span>{formatIndianNumber(rightAmount?.toFixed(0))}</span>
+              <span>
+                {" "}
+                {formatIndianNumber(
+                  rightAmount
+                    ? rightAmount > 0
+                      ? rightAmount?.toFixed(0)
+                      : 0
+                    : 0
+                )}
+              </span>
             </AmountH>
           </RightH>
         </BlueHeader>
