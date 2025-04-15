@@ -25,6 +25,8 @@ import Wallets from "../components/moneytracker/Wallets";
 import { getFirstDateOfCurrentMonth } from "../components/helpers/dateHelper";
 import { BiSolidWalletAlt } from "react-icons/bi";
 import { FaGoogleWallet } from "react-icons/fa";
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
 
 export default function MoneyTracker() {
   const [activeTab, setActiveTab] = useState(0);
@@ -66,7 +68,25 @@ export default function MoneyTracker() {
         </EntryModal>
       )}
       <Header>
-        <Welcome title={title} setDate={setDate} date={date} />
+        <Name>{title}</Name>
+        <Picker>
+          <DatePicker
+            allowClear={false}
+            style={{
+              width: "70%",
+              backgroundColor: "#1f2125",
+              outline: "none",
+              border: "none",
+            }}
+            defaultValue={dayjs(date)}
+            format="MMMM, YYYY"
+            value={dayjs(date)}
+            picker="month"
+            onChange={(e) => {
+              setDate(dayjs(e));
+            }}
+          />
+        </Picker>
       </Header>
       <Content>
         {activeTab == 0 && (
@@ -122,6 +142,34 @@ export default function MoneyTracker() {
   );
 }
 
+const Picker = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 2;
+  justify-content: flex-end;
+`;
+
+const Name = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-start;
+  font-size: 2rem;
+  transform: translateY(-2px);
+  text-shadow: 0 0 1px white, 0 0 1px rgba(255, 255, 255.25),
+    0 0 1px rgba(255, 255, 255.25);
+`;
+
+const Date = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.3rem 0.3rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background-color: #252525;
+`;
+
 const EntryModal = styled.div`
   display: flex;
   width: 95%;
@@ -173,8 +221,7 @@ const Header = styled.div`
   align-items: center;
   justify-content: center;
   height: 70px;
-  padding-top: 2rem;
-  flex-direction: column;
+  padding: 1rem 2rem;
   background-color: #141414;
 `;
 
