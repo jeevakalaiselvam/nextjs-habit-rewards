@@ -278,7 +278,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
             <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
               <FaIndianRupeeSign />
             </span>
-            {topGreen?.toFixed(2)}
+            {topGreen ? topGreen?.toFixed(2) : 0}
           </MainTitle>
           <Ticker>
             <span
@@ -289,7 +289,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
             >
               <FaIndianRupeeSign />
             </span>
-            {topTicker?.toFixed(0) + topTickerMessage}
+            {(topTicker ? topTicker?.toFixed(0) : 0) + topTickerMessage}
           </Ticker>
         </AmountInfo>
         <BlueHeader>
@@ -341,7 +341,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
                 >
                   <FaIndianRupeeSign />
                 </span>
-                {bottomGreen?.toFixed(2)}
+                {bottomGreen ? bottomGreen?.toFixed(2) : 0}
               </MainTitle>
               <Ticker>
                 <span
@@ -352,7 +352,8 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
                 >
                   <FaIndianRupeeSign />
                 </span>
-                {bottomTicker?.toFixed(0) + bottomTickerMessage}
+                {(bottomTicker ? bottomTicker?.toFixed(0) : 0) +
+                  bottomTickerMessage}
               </Ticker>
             </AmountInfo>
             {false && (
@@ -380,7 +381,9 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
                           >
                             <FaIndianRupeeSign />
                           </span>
-                          {tickerAmount?.toFixed(0)}
+                          {tickerAmount
+                            ? tickerAmount?.toFixed(0)
+                            : tickerAmount}
                         </MoneyInner>
                       </SingleDisplayItemRight>
                     </SingleDisplayItem>
