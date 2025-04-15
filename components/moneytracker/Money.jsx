@@ -170,10 +170,8 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
     //CURRENT MONTH SELECTION
     if (selectedTier1 == "income") {
       if (selectedTier2 == "days" || selectedTier2 == "hours") {
-        topGreen =
-          values?.totalSecondsInToday * values?.TperSecond -
-          values?.totalSecondsInToday * values?.PMperSecond;
-        topTicker = values?.TperDay - values?.PMperDay;
+        topGreen = values?.totalSecondsInToday * values?.TperSecond;
+        topTicker = values?.TperDay;
         bottomGreen = values?.totalSecondsInToday * values?.PMperSecond;
         bottomTicker = values?.PMperDay;
         leftAmount =
@@ -278,8 +276,9 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
             <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
               <FaIndianRupeeSign />
             </span>
-            {topGreen ? topGreen?.toFixed(2) : 0}
+            {topGreen ? (topGreen > 0 ? topGreen?.toFixed(2) : 0) : 0}
           </MainTitle>
+          s
           <Ticker>
             <span
               style={{
