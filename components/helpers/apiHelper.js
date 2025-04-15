@@ -98,6 +98,10 @@ export const getMongoRewardForUser = (user) => {
   }
 };
 
+export const getMongoCollectionForWorkItem = (user) => {
+  return "jeevaworkitem";
+};
+
 export const getMongoCollectionForPackage = (user) => {
   return "jeevasalary";
 };
@@ -111,6 +115,7 @@ export const getMongoCollectionForSpending = (user) => {
 };
 
 export const getMongoHabitsForUser = (user) => {
+  return "jeevahabit";
   if (user == "Jeeva") {
     return "jeevahabit";
   }

@@ -138,7 +138,9 @@ export const calculateEarningsEarlierMonths = (salary, jsDate) => {
     const [day, month, year] = date?.split("-").map(Number);
     const letStartDate = new Date(year, month - 1, 1);
 
-    let now;
+    const today = new Date(); // actual current date
+
+    let now, end;
 
     let msDiff;
     let seconds;
@@ -151,6 +153,8 @@ export const calculateEarningsEarlierMonths = (salary, jsDate) => {
     let totalHours;
     let totalDays;
     let totalSecondsInToday;
+    let totalSecondsTillNow;
+    let totalSecondsTillEnd;
 
     let TperSecond;
     let TperMinute;
@@ -166,8 +170,8 @@ export const calculateEarningsEarlierMonths = (salary, jsDate) => {
     let totalDaysInMonth = getDaysInMonth(selectedDate);
     let pocketSalary = totalDaysInMonth * 1000;
 
-    now = getLastDateOfMonth(letStartDate);
-    now = now.setDate(now.getDate() + 1);
+    now = getEndOfMonth(selectedDate);
+    end = getEndOfMonth(selectedDate);
 
     msDiff = now - letStartDate;
     seconds = Math.floor(msDiff / 1000);
@@ -181,6 +185,8 @@ export const calculateEarningsEarlierMonths = (salary, jsDate) => {
     totalDays = totalDaysInMonth;
 
     totalSecondsInToday = 24 * 60 * 60;
+    totalSecondsTillNow = getSecondsFromMonthStart(selectedDate);
+    totalSecondsTillEnd = (end - letStartDate) / 1000;
 
     TperSecond = totalSalary / totalSeconds;
     TperMinute = totalSalary / totalMinutes;
@@ -191,27 +197,6 @@ export const calculateEarningsEarlierMonths = (salary, jsDate) => {
     PMperMinute = pocketSalary / totalMinutes;
     PMperHour = pocketSalary / totalHours;
     PMperDay = pocketSalary / totalDays;
-
-    console.log({
-      totalDaysInMonth,
-      TperSecond,
-      TperMinute,
-      TperHour,
-      TperDay,
-      PMperSecond,
-      PMperMinute,
-      PMperHour,
-      PMperDay,
-      seconds,
-      minutes,
-      hours,
-      days,
-      totalSeconds,
-      totalMinutes,
-      totalHours,
-      totalDays,
-      totalSecondsInToday,
-    });
 
     return {
       TperSecond,
@@ -231,6 +216,8 @@ export const calculateEarningsEarlierMonths = (salary, jsDate) => {
       totalHours,
       totalDays,
       totalSecondsInToday,
+      totalSecondsTillNow,
+      totalSecondsTillEnd,
     };
   }
 };

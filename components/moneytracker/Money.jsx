@@ -25,6 +25,8 @@ import {
 } from "../helpers/moneyHelper";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
+import HabitTracker from "./HabitTracker";
+import Timer from "../Timer";
 
 export default function Money({ selectedDate, forceRefreshExpense }) {
   const [loading, setLoading] = useState(true);
@@ -34,7 +36,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
     totalEarned: 0,
     pocketMoney: 0,
   });
-  const [selectedTier1, setSelectedTier1] = useState("income");
+  const [selectedTier1, setSelectedTier1] = useState("timer");
   const [selectedTier2, setSelectedTier2] = useState("hours");
   const [allSpendings, setAllSpendings] = useState([]);
 
@@ -87,13 +89,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
           today?.getFullYear() === new Date(selectedDate).getFullYear() &&
           today?.getMonth() === new Date(selectedDate).getMonth();
 
-        console.log(
-          today?.getFullYear(),
-          new Date(selectedDate).getFullYear(),
-          today?.getMonth(),
-          new Date(selectedDate).getMonth(),
-          ifSelectedDateIsCurrentMonth
-        );
+        console.log(totalCurrentMonthSalary);
 
         if (ifSelectedDateIsCurrentMonth) {
           setValues(
@@ -115,6 +111,15 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
 
     return () => clearInterval(interval); // cleanup on unmount
   }, [salaries, selectedDate]);
+
+  const currentMonthSalaries = salaries?.filter((salary) => {
+    return isSameMonthUTCZGMT(salary?.date, selectedDate);
+  });
+
+  const totalCurrentMonthSalary = currentMonthSalaries?.reduce(
+    (acc, sal) => acc + Number(sal?.salary),
+    0
+  );
 
   const today = new Date(); // actual current date
 
@@ -161,8 +166,8 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
   let bottomMessage = "";
   let topTickerMessage = "";
   let bottomTickerMessage = "";
-  let leftTitle = "";
-  let rightTitle = "";
+  let leftTitle = "LEFT TITLE";
+  let rightTitle = "RIGHT TITLE";
   let leftAmount = 0;
   let rightAmount = 0;
 
@@ -247,32 +252,69 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
         );
       }
     }
+
+    if (selectedTier1 == "expense") {
+      if (selectedTier2 == "days" || selectedTier2 == "hours") {
+        topGreen =
+          values?.totalSecondsTillEnd * values?.TperSecond -
+          values?.totalSecondsTillEnd * values?.PMperSecond -
+          allSpendingFamilyInMonthAmount;
+        topTicker = values?.TperDay - values?.PMperDay;
+        bottomGreen =
+          values?.totalSecondsTillEnd * values?.PMperSecond -
+          allSpendingPersonalInMonthAmount;
+        bottomTicker = values?.PMperDay;
+        leftAmount = allSpendingFamilyInMonthAmount;
+        rightAmount = allSpendingPersonalInMonthAmount;
+        topTickerMessage = " / day";
+        bottomTickerMessage = " / day";
+        topMessage = "Family Balance";
+        bottomMessage = "Personal Balance";
+        leftTitle = "Family Expense";
+        rightTitle = "Personal Expense";
+
+        const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
+        displayItems = generateDailyTimestamps(
+          dateOldFormat,
+          ifSelectedDateIsCurrentMonth
+        );
+      }
+    }
   }
 
   displayItems = displayItems?.reverse();
 
-  if (!loading) {
+  if (!loading && (selectedTier1 == "income" || selectedTier1 == "expense")) {
     return (
       <Container>
+        <Options2>
+          <Option
+            selected={selectedTier1 == "income"}
+            onClick={() => setSelectedTier1("income")}
+          >
+            Income
+            {selectedTier1 == "income" && <SelectedDot></SelectedDot>}
+          </Option>
+          <Option
+            selected={selectedTier1 == "expense"}
+            onClick={() => setSelectedTier1("expense")}
+          >
+            Expense
+            {selectedTier1 == "expense" && <SelectedDot></SelectedDot>}
+          </Option>{" "}
+          <Option
+            selected={selectedTier1 == "timer"}
+            onClick={() => setSelectedTier1("timer")}
+          >
+            Timer
+            {selectedTier1 == "timer" && <SelectedDot></SelectedDot>}
+          </Option>
+        </Options2>
         <AmountInfo>
-          <Options2>
-            <Option
-              selected={selectedTier1 == "income"}
-              onClick={() => setSelectedTier1("income")}
-            >
-              Income
-              {selectedTier1 == "income" && <SelectedDot></SelectedDot>}
-            </Option>
-            <Option
-              selected={selectedTier1 == "expense"}
-              onClick={() => setSelectedTier1("expense")}
-            >
-              Expense
-              {selectedTier1 == "expense" && <SelectedDot></SelectedDot>}
-            </Option>
-          </Options2>
           <SubTitle>{topMessage}</SubTitle>
-          <MainTitle>
+          <MainTitle
+            ifSelectedDateIsCurrentMonth={ifSelectedDateIsCurrentMonth}
+          >
             <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
               <FaIndianRupeeSign />
             </span>
@@ -346,7 +388,9 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
           <AllItems>
             <SubTitleInner>{bottomMessage}</SubTitleInner>
             <AmountInfo>
-              <MainTitle>
+              <MainTitle
+                ifSelectedDateIsCurrentMonth={ifSelectedDateIsCurrentMonth}
+              >
                 <span
                   style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}
                 >
@@ -407,11 +451,74 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
       </Container>
     );
   } else {
-    return (
-      <Container>
-        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
-      </Container>
-    );
+    if (loading) {
+      return (
+        <Container>
+          <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+        </Container>
+      );
+    } else {
+      if (selectedTier1 == "actuals") {
+        return (
+          <Container>
+            <Options2>
+              <Option
+                selected={selectedTier1 == "income"}
+                onClick={() => setSelectedTier1("income")}
+              >
+                Income
+                {selectedTier1 == "income" && <SelectedDot></SelectedDot>}
+              </Option>
+              <Option
+                selected={selectedTier1 == "expense"}
+                onClick={() => setSelectedTier1("expense")}
+              >
+                Expense
+                {selectedTier1 == "expense" && <SelectedDot></SelectedDot>}
+              </Option>{" "}
+              <Option
+                selected={selectedTier1 == "timer"}
+                onClick={() => setSelectedTier1("timer")}
+              >
+                Timer
+                {selectedTier1 == "timer" && <SelectedDot></SelectedDot>}
+              </Option>
+            </Options2>
+            <HabitTracker />
+          </Container>
+        );
+      }
+      if (selectedTier1 == "timer") {
+        return (
+          <Container>
+            <Options2>
+              <Option
+                selected={selectedTier1 == "income"}
+                onClick={() => setSelectedTier1("income")}
+              >
+                Income
+                {selectedTier1 == "income" && <SelectedDot></SelectedDot>}
+              </Option>
+              <Option
+                selected={selectedTier1 == "expense"}
+                onClick={() => setSelectedTier1("expense")}
+              >
+                Expense
+                {selectedTier1 == "expense" && <SelectedDot></SelectedDot>}
+              </Option>{" "}
+              <Option
+                selected={selectedTier1 == "timer"}
+                onClick={() => setSelectedTier1("timer")}
+              >
+                Timer
+                {selectedTier1 == "timer" && <SelectedDot></SelectedDot>}
+              </Option>
+            </Options2>
+            <Timer totalCurrentMonthSalary={totalCurrentMonthSalary} />
+          </Container>
+        );
+      }
+    }
   }
 }
 
@@ -623,7 +730,7 @@ const Options2 = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 0rem 1rem 1rem 1rem;
+  padding: 1.5rem 1rem 1rem 1rem;
 `;
 
 const Option = styled.div`
@@ -660,7 +767,8 @@ const MainTitle = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 3rem;
-  color: #04b488;
+  color: ${(props) =>
+    props.ifSelectedDateIsCurrentMonth ? "#04b488" : "#53B5D9"};
 `;
 
 const AmountInfo = styled.div`
@@ -689,6 +797,7 @@ const DisplayAmounts = styled.div`
   flex-direction: column;
   min-height: 38vh;
   position: relative;
+  padding-top: 2rem;
   z-index: 12;
 `;
 
@@ -700,6 +809,6 @@ const Container = styled.div`
   min-height: 80vh;
   flex-direction: column;
   max-height: 80vh;
-  padding: 2rem 1rem 1rem 1rem;
+  padding: 0rem 1rem 1rem 1rem;
   position: relative;
 `;

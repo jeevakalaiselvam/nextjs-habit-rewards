@@ -47,6 +47,23 @@ export const getDateInFormatDMY = (arg) => {
   return formatted;
 };
 
+export const timeElapsedFrom = (oldDateStr) => {
+  const oldDate = new Date(oldDateStr);
+  const now = new Date();
+
+  let diffMs = now - oldDate;
+
+  const hours = Math.floor(diffMs / (1000 * 60 * 60));
+  diffMs -= hours * 1000 * 60 * 60;
+
+  const minutes = Math.floor(diffMs / (1000 * 60));
+  diffMs -= minutes * 1000 * 60;
+
+  const seconds = Math.floor(diffMs / 1000);
+
+  return `${hours}h ${minutes}m ${seconds}s`;
+};
+
 export const getTotalDaysInMonth = (date) => {
   const year = date.getFullYear();
   const month = date.getMonth();
