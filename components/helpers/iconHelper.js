@@ -2,6 +2,7 @@ import { AiFillFund, AiFillGolden } from "react-icons/ai";
 import { BiSolidCylinder, BiSolidMoviePlay } from "react-icons/bi";
 import { BsFillCreditCard2FrontFill, BsFillFuelPumpFill } from "react-icons/bs";
 import {
+  FaBusAlt,
   FaCar,
   FaFemale,
   FaGamepad,
@@ -18,6 +19,7 @@ import { HiMiniHome } from "react-icons/hi2";
 import { IoFastFood, IoGift } from "react-icons/io5";
 import {
   MdEventNote,
+  MdFastfood,
   MdOutlineElectricalServices,
   MdSubscriptions,
 } from "react-icons/md";
@@ -64,6 +66,9 @@ export const ICON_CATEGORY = {
   Jeeva: <FaMale />,
   Sindhu: <FaFemale />,
   Event: <MdEventNote />,
+  Travel: <FaBusAlt />,
+  Snacks: <MdFastfood />,
+  Extra: <FaIndianRupeeSign />,
 };
 
 export const ICON_COLORS = {
@@ -109,6 +114,9 @@ export const ICON_COLORS = {
   Jeeva: "#c1ff7a",
   Sindhu: "#6068ff",
   Event: "#91ff9e",
+  Travel: "#ffd97a",
+  Snacks: "#60a5ff",
+  Extra: "#b991ff",
 };
 
 export const WALLET_OPTIONS = [
@@ -213,5 +221,23 @@ export const GROCERY_OPTIONS = [
     id: "Event",
     color: "#91ff9e",
     icon: <MdEventNote />,
+  },
+  {
+    name: "Travel",
+    id: "Travel",
+    color: "#ffd97a",
+    icon: <FaBusAlt />,
+  },
+  {
+    name: "Snacks",
+    id: "Snacks",
+    color: "#60a5ff",
+    icon: <MdFastfood />,
+  },
+  {
+    name: "Extra",
+    id: "Extra",
+    color: "#b991ff",
+    icon: <FaIndianRupeeSign />,
   },
 ];
