@@ -133,6 +133,10 @@ export default function Spending({
     itemsToTarget = itemsWallet;
   }
 
+  if (newValueForSpending?.type == "Grocery") {
+    itemsToTarget = itemsWallet;
+  }
+
   const handleMenuClick = (e) => {
     setNewValueForSpending((old) => ({ ...old, category: String(e.key) }));
   };
@@ -166,21 +170,28 @@ export default function Spending({
               selected={selectedTier1 == "Family"}
               onClick={() => setSelectedTier1("Family")}
             >
-              Family
+              Home
               {selectedTier1 == "Family" && <SelectedDot></SelectedDot>}
-            </Option>
+            </Option>{" "}
+            <Option
+              selected={selectedTier1 == "Grocery"}
+              onClick={() => setSelectedTier1("Grocery")}
+            >
+              Grocery
+              {selectedTier1 == "Grocery" && <SelectedDot></SelectedDot>}
+            </Option>{" "}
             <Option
               selected={selectedTier1 == "Personal"}
               onClick={() => setSelectedTier1("Personal")}
             >
-              Personal
+              Jeeva
               {selectedTier1 == "Personal" && <SelectedDot></SelectedDot>}
             </Option>{" "}
             <Option
               selected={selectedTier1 == "Investment"}
               onClick={() => setSelectedTier1("Investment")}
             >
-              Investment
+              Invest
               {selectedTier1 == "Investment" && <SelectedDot></SelectedDot>}
             </Option>
           </Options>
@@ -220,17 +231,17 @@ export default function Spending({
           </LeftTop>
           <RightTop>
             {allCategoriesThisMonth?.map((category) => {
-              const percentage =
-                (allSpendings
-                  ?.filter((spend) => spend?.category == category)
-                  ?.reduce((acc, spend) => acc + Number(spend?.amount), 0) /
-                  totalSpending) *
-                100;
+              const catSpending = allSpendings
+                ?.filter((spend) => spend?.category == category)
+                ?.reduce((acc, spend) => acc + Number(spend?.amount), 0);
+              const percentage = (catSpending / totalSpending) * 100;
               return (
                 <CatItem>
                   <CatIcon color={ICON_COLORS[category]}></CatIcon>
                   <CatName>{capitalizeFirstLetter(category)}</CatName>
-                  <CatPercent>{percentage.toFixed(0)}%</CatPercent>
+                  <CatPercent>
+                    {formatIndianNumber(catSpending?.toFixed(0))}
+                  </CatPercent>
                 </CatItem>
               );
             })}
@@ -582,17 +593,18 @@ const CatName = styled.div`
   padding: 0rem 0rem 0rem 0.5rem;
   align-items: center;
   justify-content: flex-start;
-  font-size: 0.9rem;
-  min-width: 70px;
+  font-size: 0.8rem;
+  min-width: 100px;
 `;
 
 const CatPercent = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   flex: 1;
   font-size: 0.9rem;
   color: #8f8f8f;
+  margin-right: 0.5rem;
 `;
 
 const CatItem = styled.div`
@@ -607,7 +619,6 @@ const LeftTop = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
   position: relative;
 `;
 
@@ -616,8 +627,8 @@ const RightTop = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  flex: 1;
-  padding: 0 0.25rem 0 1rem;
+  flex: 2;
+  padding: 0 0.25rem 0 0.25rem;
 `;
 
 const AllSpending = styled.div`

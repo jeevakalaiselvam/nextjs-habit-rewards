@@ -1,5 +1,5 @@
 import { AiFillFund, AiFillGolden } from "react-icons/ai";
-import { BiSolidMoviePlay } from "react-icons/bi";
+import { BiSolidCylinder, BiSolidMoviePlay } from "react-icons/bi";
 import { BsFillCreditCard2FrontFill, BsFillFuelPumpFill } from "react-icons/bs";
 import {
   FaCar,
@@ -11,13 +11,19 @@ import {
   FaPiggyBank,
   FaShoppingCart,
 } from "react-icons/fa";
-import { FaIndianRupeeSign } from "react-icons/fa6";
+import { FaIndianRupeeSign, FaShieldDog } from "react-icons/fa6";
+import { GiChickenOven, GiFruitBowl } from "react-icons/gi";
+import { HiShoppingCart } from "react-icons/hi";
 import { HiMiniHome } from "react-icons/hi2";
 import { IoFastFood, IoGift } from "react-icons/io5";
-import { MdOutlineElectricalServices, MdSubscriptions } from "react-icons/md";
+import {
+  MdEventNote,
+  MdOutlineElectricalServices,
+  MdSubscriptions,
+} from "react-icons/md";
 import { PiCertificateFill } from "react-icons/pi";
-import { RiStockFill } from "react-icons/ri";
-import { TbDeviceDesktopFilled } from "react-icons/tb";
+import { RiPlantFill, RiStockFill } from "react-icons/ri";
+import { TbDeviceDesktopFilled, TbMilkFilled } from "react-icons/tb";
 
 export const ICON_CATEGORY = {
   Fuel: <BsFillFuelPumpFill />,
@@ -45,6 +51,19 @@ export const ICON_CATEGORY = {
   Achu: <FaFemale />,
   Mom: <FaFemale />,
   Dad: <FaFemale />,
+  Malligai: <HiShoppingCart />,
+  Vegetables: <RiPlantFill />,
+  Fruits: <GiFruitBowl />,
+  LPG: <BiSolidCylinder />,
+  Meat: <GiChickenOven />,
+  Puppy: <FaShieldDog />,
+  Milk: <TbMilkFilled />,
+  Patti: <FaFemale />,
+  Mom: <FaFemale />,
+  Dad: <FaMale />,
+  Jeeva: <FaMale />,
+  Sindhu: <FaFemale />,
+  Event: <MdEventNote />,
 };
 
 export const ICON_COLORS = {
@@ -76,6 +95,20 @@ export const ICON_COLORS = {
   Personal: "#FF6347",
   Family: "#5474FD",
   Investment: "#3BD987",
+  Grocery: "#d7f227",
+  Malligai: "#cd5ab2",
+  Vegetables: "#5acd80",
+  Fruits: "#6A5ACD",
+  LPG: "#de5050",
+  Meat: "#bfcb33",
+  Puppy: "#36c8e2",
+  Milk: "#b0e6f0",
+  Patti: "#fbb3ab",
+  Mom: "#ed91ff",
+  Dad: "#89ff9d",
+  Jeeva: "#c1ff7a",
+  Sindhu: "#6068ff",
+  Event: "#91ff9e",
 };
 
 export const WALLET_OPTIONS = [
@@ -100,4 +133,85 @@ export const WALLET_OPTIONS = [
   },
   { name: "Stocks", id: "Stocks", color: "#FF6347", icon: <RiStockFill /> },
   { name: "Bonds", id: "Bonds", color: "#4682B4", icon: <PiCertificateFill /> },
+];
+
+export const GROCERY_OPTIONS = [
+  {
+    name: "Malligai",
+    id: "Malligai",
+    color: "#cd5ab2",
+    icon: <HiShoppingCart />,
+  },
+  {
+    name: "Vegetables",
+    id: "Vegetables",
+    color: "#5acd80",
+    icon: <RiPlantFill />,
+  },
+  {
+    name: "Fruits",
+    id: "Fruits",
+    color: "#6A5ACD",
+    icon: <GiFruitBowl />,
+  },
+  {
+    name: "LPG",
+    id: "LPG",
+    color: "#de5050",
+    icon: <BiSolidCylinder />,
+  },
+  {
+    name: "Meat",
+    id: "Meat",
+    color: "#bfcb33",
+    icon: <GiChickenOven />,
+  },
+  {
+    name: "Puppy",
+    id: "Puppy",
+    color: "#36c8e2",
+    icon: <FaShieldDog />,
+  },
+  {
+    name: "Milk",
+    id: "Milk",
+    color: "#b0e6f0",
+    icon: <TbMilkFilled />,
+  },
+  {
+    name: "Patti",
+    id: "Patti",
+    color: "#fbb3ab",
+    icon: <FaFemale />,
+  },
+  {
+    name: "Mom",
+    id: "Mom",
+    color: "#ed91ff",
+    icon: <FaFemale />,
+  },
+  {
+    name: "Dad",
+    id: "Dad",
+    color: "#89ff9d",
+    icon: <FaMale />,
+  },
+  {
+    name: "Jeeva",
+    id: "Jeeva",
+    color: "#c1ff7a",
+    icon: <FaMale />,
+  },
+  {
+    name: "Sindhu",
+    id: "Sindhu",
+    color: "#6068ff",
+    icon: <FaFemale />,
+  },
+  {
+    name: "Event",
+    id: "Event",
+    color: "#91ff9e",
+    icon: <MdEventNote />,
+  },
 ];

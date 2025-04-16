@@ -27,6 +27,7 @@ import {
 import { BsFillCreditCard2FrontFill } from "react-icons/bs";
 import { HiMiniHome } from "react-icons/hi2";
 import {
+  GROCERY_OPTIONS,
   ICON_CATEGORY,
   ICON_COLORS,
   WALLET_OPTIONS,
@@ -286,6 +287,56 @@ export const itemsFamily = [
   },
 ];
 
+export const itemsWallet = [
+  {
+    key: "111",
+    label: <div style={{ width: "100%" }}>All Wallets</div>,
+    disabled: true,
+  },
+  ...WALLET_OPTIONS?.map((wallet) => {
+    return {
+      key: wallet?.id,
+      label: wallet?.name,
+      icon: (
+        <span
+          style={{
+            transform: "translateY(2px)",
+            color: wallet?.color,
+          }}
+        >
+          {wallet?.icon}
+        </span>
+      ),
+      extra: `⌘${wallet?.name?.slice(0, 1)?.toUpperCase()}`,
+    };
+  }),
+];
+
+export const itemsGrocery = [
+  {
+    key: "1111",
+    label: <div style={{ width: "100%" }}>All Grocery</div>,
+    disabled: true,
+  },
+  ...GROCERY_OPTIONS?.map((grocery) => {
+    return {
+      key: grocery?.id,
+      label: grocery?.name,
+      icon: (
+        <span
+          style={{
+            transform: "translateY(2px)",
+            color: grocery?.color,
+          }}
+        >
+          {grocery?.icon}
+        </span>
+      ),
+      extra: `⌘${grocery?.name?.slice(0, 1)?.toUpperCase()}`,
+    };
+  }),
+];
+
 export const itemsType = [
   {
     key: "11",
@@ -323,6 +374,21 @@ export const itemsType = [
     extra: "⌘F",
   },
   {
+    key: "Grocery",
+    label: "Grocery",
+    icon: (
+      <span
+        style={{
+          transform: "translateY(2px)",
+          color: ICON_COLORS["Grocery"],
+        }}
+      >
+        {<MdLocalGroceryStore />}
+      </span>
+    ),
+    extra: "⌘G",
+  },
+  {
     key: "Investment",
     label: "Investment",
     icon: (
@@ -337,31 +403,6 @@ export const itemsType = [
     ),
     extra: "⌘W",
   },
-];
-
-export const itemsWallet = [
-  {
-    key: "111",
-    label: <div style={{ width: "100%" }}>All Wallets</div>,
-    disabled: true,
-  },
-  ...WALLET_OPTIONS?.map((wallet) => {
-    return {
-      key: wallet?.id,
-      label: wallet?.name,
-      icon: (
-        <span
-          style={{
-            transform: "translateY(2px)",
-            color: wallet?.color,
-          }}
-        >
-          {wallet?.icon}
-        </span>
-      ),
-      extra: `⌘${wallet?.name?.slice(0, 1)?.toUpperCase()}`,
-    };
-  }),
 ];
 
 export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
@@ -401,6 +442,10 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
 
   if (values?.type == "Investment") {
     itemsToTarget = itemsWallet;
+  }
+
+  if (values?.type == "Grocery") {
+    itemsToTarget = itemsGrocery;
   }
 
   const handleMenuClick = (e) => {
