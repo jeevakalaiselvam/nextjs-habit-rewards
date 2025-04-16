@@ -31,7 +31,7 @@ export default function Spending({
   forceRefreshExpense,
 }) {
   const [loading, setLoading] = useState(true);
-  const [selectedTier1, setSelectedTier1] = useState("family");
+  const [selectedTier1, setSelectedTier1] = useState("Family");
   const [allSpendings, setAllSpendings] = useState([]);
   const [newValueForSpending, setNewValueForSpending] = useState({});
   const [spendingIdToUpdate, setSpendingIdToUpdate] = useState({
@@ -61,7 +61,9 @@ export default function Spending({
 
   const thisMonthSpendings = allSpendings.filter((s) => {
     const spendingDate = new Date(s.date);
-    console.log(new Date(spendingDate), new Date(now));
+    console.log(
+      new Date(spendingDate).getFullYear() === new Date(now).getFullYear()
+    );
     return (
       new Date(spendingDate).getFullYear() === new Date(now).getFullYear() &&
       new Date(spendingDate).getMonth() === new Date(now).getMonth() &&
@@ -119,15 +121,15 @@ export default function Spending({
 
   let itemsToTarget = itemsPersonal;
 
-  if (newValueForSpending?.type == "personal") {
+  if (newValueForSpending?.type == "Personal") {
     itemsToTarget = itemsPersonal;
   }
 
-  if (newValueForSpending?.type == "family") {
+  if (newValueForSpending?.type == "Family") {
     itemsToTarget = itemsFamily;
   }
 
-  if (newValueForSpending?.type == "wallet") {
+  if (newValueForSpending?.type == "Investment") {
     itemsToTarget = itemsWallet;
   }
 
@@ -161,18 +163,25 @@ export default function Spending({
         <MainTop>
           <Options>
             <Option
-              selected={selectedTier1 == "family"}
-              onClick={() => setSelectedTier1("family")}
+              selected={selectedTier1 == "Family"}
+              onClick={() => setSelectedTier1("Family")}
             >
               Family
-              {selectedTier1 == "family" && <SelectedDot></SelectedDot>}
+              {selectedTier1 == "Family" && <SelectedDot></SelectedDot>}
             </Option>
             <Option
-              selected={selectedTier1 == "personal"}
-              onClick={() => setSelectedTier1("personal")}
+              selected={selectedTier1 == "Personal"}
+              onClick={() => setSelectedTier1("Personal")}
             >
               Personal
-              {selectedTier1 == "personal" && <SelectedDot></SelectedDot>}
+              {selectedTier1 == "Personal" && <SelectedDot></SelectedDot>}
+            </Option>{" "}
+            <Option
+              selected={selectedTier1 == "Investment"}
+              onClick={() => setSelectedTier1("Investment")}
+            >
+              Investment
+              {selectedTier1 == "Investment" && <SelectedDot></SelectedDot>}
             </Option>
           </Options>
         </MainTop>

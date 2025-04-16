@@ -180,15 +180,17 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
   const [timeHours, setTimeHours] = useState("");
   const [timeMinutes, setTimeMinutes] = useState("");
 
-  if (window) {
-    if (localStorage.getItem("TIMER_START")) {
-      isAlreadyStarted = true;
-      alreadyStartedTimeInStorage = localStorage.getItem("TIMER_START");
-      alreadyStartedTime = new Date(alreadyStartedTime);
-    } else {
-      isAlreadyStarted = false;
+  useEffect(() => {
+    if (window) {
+      if (localStorage.getItem("TIMER_START")) {
+        isAlreadyStarted = true;
+        alreadyStartedTimeInStorage = localStorage.getItem("TIMER_START");
+        alreadyStartedTime = new Date(alreadyStartedTime);
+      } else {
+        isAlreadyStarted = false;
+      }
     }
-  }
+  }, []);
 
   useEffect(() => {
     if (timerString?.length > 0) {

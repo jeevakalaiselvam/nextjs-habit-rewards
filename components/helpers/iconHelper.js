@@ -20,77 +20,84 @@ import { RiStockFill } from "react-icons/ri";
 import { TbDeviceDesktopFilled } from "react-icons/tb";
 
 export const ICON_CATEGORY = {
-  fuel: <BsFillFuelPumpFill />,
-  subscription: <MdSubscriptions />,
-  gift: <IoGift />,
-  games: <FaGamepad />,
-  movies: <BiSolidMoviePlay />,
-  food: <IoFastFood />,
-  clothing: <FaShoppingCart />,
-  gadget: <TbDeviceDesktopFilled />,
-  grocery: <FaGamepad />,
-  mom: <FaFemale />,
-  dad: <FaMale />,
-  loan: <FaMoneyBillAlt />,
-  credit: <BsFillCreditCard2FrontFill />,
-  house: <HiMiniHome />,
-  electricity: <MdOutlineElectricalServices />,
-  car: <FaCar />,
-  providentfund: <FaPiggyBank />,
-  liquidfund: <FaIndianRupeeSign />,
-  gold: <AiFillGolden />,
-  mutualfunds: <AiFillFund />,
-  stocks: <RiStockFill />,
-  bonds: <PiCertificateFill />,
-  achu: <FaFemale />,
+  Fuel: <BsFillFuelPumpFill />,
+  Subscription: <MdSubscriptions />,
+  Gift: <IoGift />,
+  Games: <FaGamepad />,
+  Movies: <BiSolidMoviePlay />,
+  Food: <IoFastFood />,
+  Clothing: <FaShoppingCart />,
+  Gadget: <TbDeviceDesktopFilled />,
+  Grocery: <FaGamepad />,
+  Mom: <FaFemale />,
+  Dad: <FaMale />,
+  Loan: <FaMoneyBillAlt />,
+  Credit: <BsFillCreditCard2FrontFill />,
+  House: <HiMiniHome />,
+  Electricity: <MdOutlineElectricalServices />,
+  Car: <FaCar />,
+  "Provident Fund": <FaPiggyBank />,
+  "Liquid Fund": <FaIndianRupeeSign />,
+  Gold: <AiFillGolden />,
+  "Mutual Funds": <AiFillFund />,
+  Stocks: <RiStockFill />,
+  Bonds: <PiCertificateFill />,
+  Achu: <FaFemale />,
+  Mom: <FaFemale />,
+  Dad: <FaFemale />,
 };
 
 export const ICON_COLORS = {
-  fuel: "#FEAE4E", // warm orange
-  subscription: "#FF6C60", // coral red
-  gift: "#4DDC9C", // minty green
-  games: "#8F63FD", // lavender purple
-  movies: "#5474FD", // sky blue
-  food: "#FDAC46", // orange (base)
-  clothing: "#3BD987", // green (base)
-  gadget: "#5474FD", // blue (base)
-  grocery: "#FE6662", // red (base)
-  mom: "#F984C1", // pink
-  dad: "#55C3F0", // teal blue
-  loan: "#C87CFE", // violet
-  credit: "#F9B846", // golden yellow
-  house: "#72C079", // moss green
-  electricity: "#FF8D5B", // soft tangerine
-  providentfund: "#6A5ACD",
-  liquidfund: "#00CED1",
-  gold: "#FFD700",
-  mutualfunds: "#3CB371",
-  stocks: "#FF6347",
-  bonds: "#4682B4",
-  car: "#659324",
-  achu: "#19c8d5",
+  Fuel: "#FEAE4E", // warm orange
+  Subscription: "#FF6C60", // coral red
+  Gift: "#4DDC9C", // minty green
+  Games: "#8F63FD", // lavender purple
+  Movies: "#5474FD", // sky blue
+  Food: "#FDAC46", // orange (base)
+  Clothing: "#3BD987", // green (base)
+  Gadget: "#5474FD", // blue (base)
+  Grocery: "#FE6662", // red (base)
+  Mom: "#F984C1", // pink
+  Dad: "#55C3F0", // teal blue
+  Loan: "#C87CFE", // violet
+  Credit: "#F9B846", // golden yellow
+  House: "#72C079", // moss green
+  Electricity: "#FF8D5B", // soft tangerine
+  "Provident Fund": "#6A5ACD",
+  "Liquid Fund": "#00CED1",
+  Gold: "#FFD700",
+  "Mutual Funds": "#3CB371",
+  Stocks: "#FF6347",
+  Bonds: "#4682B4",
+  Car: "#659324",
+  Achu: "#19c8d5",
+  Mom: "#19c8d5",
+  Dad: "#19c8d5",
+  Personal: "#FF6347",
+  Family: "#5474FD",
+  Investment: "#3BD987",
 };
 
 export const WALLET_OPTIONS = [
   {
     name: "Provident Fund",
-    id: "providentfund",
+    id: "Provident Fund",
     color: "#6A5ACD",
     icon: <FaPiggyBank />,
   },
   {
     name: "Liquid Money",
-    id: "liquidfund",
+    id: "Liquid Money",
     color: "#00CED1",
     icon: <FaIndianRupeeSign />,
   },
-  { name: "Gold", id: "gold", color: "#FFD700", icon: <AiFillGolden /> },
+  { name: "Gold", id: "Gold", color: "#FFD700", icon: <AiFillGolden /> },
   {
     name: "Mutual Funds",
-    id: "mutualfunds",
+    id: "Mutual Funds",
     color: "#3CB371",
     icon: <AiFillFund />,
   },
-  { name: "Stocks", id: "stocks", color: "#FF6347", icon: <RiStockFill /> },
-  { name: "Bonds", id: "bonds", color: "#4682B4", icon: <PiCertificateFill /> },
+  { name: "Stocks", id: "Stocks", color: "#FF6347", icon: <RiStockFill /> },
+  { name: "Bonds", id: "Bonds", color: "#4682B4", icon: <PiCertificateFill /> },
 ];

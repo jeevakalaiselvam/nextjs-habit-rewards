@@ -44,118 +44,138 @@ export const itemsPersonal = [
     type: "divider",
   },
   {
-    key: "games",
+    key: "Games",
     label: "Games",
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["games"] }}
+        style={{ transform: "translateY(2px)", color: ICON_COLORS["Games"] }}
       >
-        {ICON_CATEGORY?.["games"]}
+        {ICON_CATEGORY?.["Games"]}
       </span>
     ),
     extra: "⌘G",
   },
   {
-    key: "movies",
+    key: "Movies",
     label: "Movies",
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["movies"] }}
+        style={{ transform: "translateY(2px)", color: ICON_COLORS["Movies"] }}
       >
-        {ICON_CATEGORY?.["movies"]}
+        {ICON_CATEGORY?.["Movies"]}
       </span>
     ),
     extra: "⌘M",
   },
   {
-    key: "food",
+    key: "Food",
     label: "Food",
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["food"] }}
+        style={{ transform: "translateY(2px)", color: ICON_COLORS["Food"] }}
       >
-        {ICON_CATEGORY?.["food"]}
+        {ICON_CATEGORY?.["Food"]}
       </span>
     ),
     extra: "⌘F",
   },
   {
-    key: "clothing",
+    key: "Clothing",
     label: "Clothing",
     icon: (
       <span
         style={{
           transform: "translateY(2px)",
-          color: ICON_COLORS["clothing"],
+          color: ICON_COLORS["Clothing"],
         }}
       >
-        {ICON_CATEGORY?.["clothing"]}
+        {ICON_CATEGORY?.["Clothing"]}
       </span>
     ),
     extra: "⌘F",
   },
   {
-    key: "gadget",
+    key: "Gadget",
     label: "Gadget",
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["gadget"] }}
+        style={{ transform: "translateY(2px)", color: ICON_COLORS["Gadget"] }}
       >
-        {ICON_CATEGORY?.["gadget"]}
+        {ICON_CATEGORY?.["Gadget"]}
       </span>
     ),
     extra: "⌘F",
   },
   {
-    key: "gift",
+    key: "Gift",
     label: "Gift",
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["gift"] }}
+        style={{ transform: "translateY(2px)", color: ICON_COLORS["Gift"] }}
       >
-        {ICON_CATEGORY?.["gift"]}
+        {ICON_CATEGORY?.["Gift"]}
       </span>
     ),
     extra: "⌘G",
   },
   {
-    key: "subscription",
+    key: "Subscription",
     label: "Subscription",
     icon: (
       <span
         style={{
           transform: "translateY(2px)",
-          color: ICON_COLORS["subscription"],
+          color: ICON_COLORS["Subscription"],
         }}
       >
-        {ICON_CATEGORY?.["subscription"]}
+        {ICON_CATEGORY?.["Subscription"]}
       </span>
     ),
     extra: "⌘S",
   },
   {
-    key: "fuel",
+    key: "Fuel",
     label: "Fuel",
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["fuel"] }}
+        style={{ transform: "translateY(2px)", color: ICON_COLORS["Fuel"] }}
       >
-        {ICON_CATEGORY?.["fuel"]}
+        {ICON_CATEGORY?.["Fuel"]}
       </span>
     ),
     extra: "⌘F",
   },
   {
-    key: "achu",
+    key: "Achu",
     label: "Achu",
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["achu"] }}
+        style={{ transform: "translateY(2px)", color: ICON_COLORS["Achu"] }}
       >
-        {ICON_CATEGORY?.["achu"]}
+        {ICON_CATEGORY?.["Achu"]}
       </span>
     ),
     extra: "⌘F",
+  },
+  {
+    key: "Mom",
+    label: "Mom",
+    icon: (
+      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["Mom"] }}>
+        {ICON_CATEGORY?.["Mom"]}
+      </span>
+    ),
+    extra: "⌘M",
+  },
+  {
+    key: "Dad",
+    label: "Dad",
+    icon: (
+      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["Dad"] }}>
+        {ICON_CATEGORY?.["Dad"]}
+      </span>
+    ),
+    extra: "⌘D",
   },
 ];
 
@@ -169,97 +189,97 @@ export const itemsFamily = [
     type: "divider",
   },
   {
-    key: "grocery",
+    key: "Grocery",
     label: "Grocery",
     icon: (
       <span
         style={{
           transform: "translateY(2px)",
-          color: ICON_COLORS["grocery"],
+          color: ICON_COLORS["Grocery"],
         }}
       >
-        {ICON_CATEGORY?.["grocery"]}
+        {ICON_CATEGORY?.["Grocery"]}
       </span>
     ),
     extra: "⌘G",
   },
   {
-    key: "mom",
+    key: "Mom",
     label: "Mom",
     icon: (
-      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["mom"] }}>
-        {ICON_CATEGORY?.["mom"]}
+      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["Mom"] }}>
+        {ICON_CATEGORY?.["Mom"]}
       </span>
     ),
     extra: "⌘M",
   },
   {
-    key: "dad",
+    key: "Dad",
     label: "Dad",
     icon: (
-      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["dad"] }}>
-        {ICON_CATEGORY?.["dad"]}
+      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["Dad"] }}>
+        {ICON_CATEGORY?.["Dad"]}
       </span>
     ),
     extra: "⌘D",
   },
   {
-    key: "loan",
+    key: "Loan",
     label: "Loan",
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["loan"] }}
+        style={{ transform: "translateY(2px)", color: ICON_COLORS["Loan"] }}
       >
-        {ICON_CATEGORY?.["loan"]}
+        {ICON_CATEGORY?.["Loan"]}
       </span>
     ),
     extra: "⌘K",
   },
   {
-    key: "credit",
+    key: "Credit",
     label: "Credit",
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["credit"] }}
+        style={{ transform: "translateY(2px)", color: ICON_COLORS["Credit"] }}
       >
-        {ICON_CATEGORY?.["credit"]}
+        {ICON_CATEGORY?.["Credit"]}
       </span>
     ),
     extra: "⌘C",
   },
   {
-    key: "house",
+    key: "House",
     label: "House",
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["house"] }}
+        style={{ transform: "translateY(2px)", color: ICON_COLORS["House"] }}
       >
-        {ICON_CATEGORY?.["house"]}
+        {ICON_CATEGORY?.["House"]}
       </span>
     ),
     extra: "⌘H",
   },
   {
-    key: "car",
+    key: "Car",
     label: "Car",
     icon: (
-      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["car"] }}>
-        {ICON_CATEGORY?.["car"]}
+      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["Car"] }}>
+        {ICON_CATEGORY?.["Car"]}
       </span>
     ),
     extra: "⌘H",
   },
   {
-    key: "electricity",
+    key: "Electricity",
     label: "Electricity",
     icon: (
       <span
         style={{
           transform: "translateY(2px)",
-          color: ICON_COLORS["electricity"],
+          color: ICON_COLORS["Electricity"],
         }}
       >
-        {ICON_CATEGORY?.["electricity"]}
+        {ICON_CATEGORY?.["Electricity"]}
       </span>
     ),
     extra: "⌘H",
@@ -273,21 +293,48 @@ export const itemsType = [
     disabled: true,
   },
   {
-    key: "personal",
+    key: "Personal",
     label: "Personal",
-    icon: <IoWallet />,
+    icon: (
+      <span
+        style={{
+          transform: "translateY(2px)",
+          color: ICON_COLORS["Personal"],
+        }}
+      >
+        {<IoWallet />}
+      </span>
+    ),
     extra: "⌘P",
   },
   {
-    key: "family",
+    key: "Family",
     label: "Family",
-    icon: <FaGlobe />,
+    icon: (
+      <span
+        style={{
+          transform: "translateY(2px)",
+          color: ICON_COLORS["Family"],
+        }}
+      >
+        {<FaGlobe />}
+      </span>
+    ),
     extra: "⌘F",
   },
   {
-    key: "wallet",
-    label: "Wallet",
-    icon: <FaWallet />,
+    key: "Investment",
+    label: "Investment",
+    icon: (
+      <span
+        style={{
+          transform: "translateY(2px)",
+          color: ICON_COLORS["Investment"],
+        }}
+      >
+        {<FaWallet />}
+      </span>
+    ),
     extra: "⌘W",
   },
 ];
@@ -344,15 +391,15 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
 
   let itemsToTarget = itemsPersonal;
 
-  if (values?.type == "personal") {
+  if (values?.type == "Personal") {
     itemsToTarget = itemsPersonal;
   }
 
-  if (values?.type == "family") {
+  if (values?.type == "Family") {
     itemsToTarget = itemsFamily;
   }
 
-  if (values?.type == "wallet") {
+  if (values?.type == "Investment") {
     itemsToTarget = itemsWallet;
   }
 

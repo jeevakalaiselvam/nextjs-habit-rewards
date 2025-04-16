@@ -59,7 +59,7 @@ export default function Wallets() {
   }, []);
 
   const allWalletsSpendings = allSpendings?.filter((spend) => {
-    return spend?.type == "wallet";
+    return spend?.type == "Investment";
   });
 
   if (loading) {
