@@ -65,6 +65,8 @@ export const ICON_CATEGORY = {
   Dad: <FaMale />,
   Jeeva: <FaMale />,
   Sindhu: <FaFemale />,
+  Jeeva: <FaMale />,
+  Sindhu: <FaFemale />,
   Event: <MdEventNote />,
   Travel: <FaBusAlt />,
   Snacks: <MdFastfood />,
@@ -83,6 +85,8 @@ export const ICON_COLORS = {
   Grocery: "#FE6662", // red (base)
   Mom: "#F984C1", // pink
   Dad: "#55C3F0", // teal blue
+  Sindhu: "#84f9af", // pink
+  Jeeva: "#e6f055", // teal blue
   Loan: "#C87CFE", // violet
   Credit: "#F9B846", // golden yellow
   House: "#72C079", // moss green

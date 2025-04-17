@@ -225,6 +225,30 @@ export const itemsFamily = [
     extra: "⌘D",
   },
   {
+    key: "Sindhu",
+    label: "Sindhu",
+    icon: (
+      <span
+        style={{ transform: "translateY(2px)", color: ICON_COLORS["Sindhu"] }}
+      >
+        {ICON_CATEGORY?.["Sindhu"]}
+      </span>
+    ),
+    extra: "⌘S",
+  },
+  {
+    key: "Jeeva",
+    label: "Jeeva",
+    icon: (
+      <span
+        style={{ transform: "translateY(2px)", color: ICON_COLORS["Jeeva"] }}
+      >
+        {ICON_CATEGORY?.["Jeeva"]}
+      </span>
+    ),
+    extra: "⌘J",
+  },
+  {
     key: "Loan",
     label: "Loan",
     icon: (
