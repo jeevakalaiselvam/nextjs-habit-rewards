@@ -135,7 +135,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
     return (
       spendingDate.getFullYear() === now.getFullYear() &&
       spendingDate.getMonth() === now.getMonth() &&
-      s?.type == "family"
+      s?.type == "Family"
     );
   });
 
@@ -144,7 +144,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
     return (
       spendingDate.getFullYear() === now.getFullYear() &&
       spendingDate.getMonth() === now.getMonth() &&
-      s?.type == "personal"
+      s?.type == "Personal"
     );
   });
 
@@ -221,7 +221,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
         )?.toFixed(10);
 
         let perSecondPM = (1000 / (8 * 60 * 60))?.toFixed(10);
-
+        //JEEVA
         topGreen = values?.totalSecondsInToday * values?.TperSecond;
         topTicker = values?.TperDay;
         bottomGreen = values?.totalSecondsInToday * values?.PMperSecond;

@@ -437,7 +437,7 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
     recurring: "false",
     date: getFifteenth(selectedDate),
     category: "",
-    type: "personal",
+    type: "Personal",
   });
 
   const saveAmount = () => {

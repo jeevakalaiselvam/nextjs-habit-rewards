@@ -191,7 +191,6 @@ export const getSecondsFromMonthStart = () => {
 
   // Convert to seconds (integer)
   const seconds = Math.floor(diffMs / 1000);
-
   return seconds;
 };
 
