@@ -7,6 +7,7 @@ import {
   FaFemale,
   FaGamepad,
   FaGlobe,
+  FaInternetExplorer,
   FaMale,
   FaMoneyBillAlt,
   FaPiggyBank,
@@ -42,7 +43,8 @@ export const ICON_CATEGORY = {
   Loan: <FaMoneyBillAlt />,
   Credit: <BsFillCreditCard2FrontFill />,
   House: <HiMiniHome />,
-  Electricity: <MdOutlineElectricalServices />,
+  Electricity: <FaInternetExplorer />,
+  Internet: <MdOutlineElectricalServices />,
   Car: <FaCar />,
   "Provident Fund": <FaPiggyBank />,
   "Liquid Fund": <FaIndianRupeeSign />,
@@ -74,6 +76,7 @@ export const ICON_CATEGORY = {
 };
 
 export const ICON_COLORS = {
+  Internet: "#4ea0fe",
   Fuel: "#FEAE4E", // warm orange
   Subscription: "#FF6C60", // coral red
   Gift: "#4DDC9C", // minty green

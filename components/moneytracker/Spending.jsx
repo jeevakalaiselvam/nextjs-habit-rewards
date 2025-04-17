@@ -181,19 +181,19 @@ export default function Spending({
               {selectedTier1 == "Grocery" && <SelectedDot></SelectedDot>}
             </Option>{" "}
             <Option
-              selected={selectedTier1 == "Personal"}
-              onClick={() => setSelectedTier1("Personal")}
-            >
-              Jeeva
-              {selectedTier1 == "Personal" && <SelectedDot></SelectedDot>}
-            </Option>{" "}
-            <Option
               selected={selectedTier1 == "Investment"}
               onClick={() => setSelectedTier1("Investment")}
             >
               Invest
               {selectedTier1 == "Investment" && <SelectedDot></SelectedDot>}
             </Option>
+            <Option
+              selected={selectedTier1 == "Personal"}
+              onClick={() => setSelectedTier1("Personal")}
+            >
+              Jeeva
+              {selectedTier1 == "Personal" && <SelectedDot></SelectedDot>}
+            </Option>{" "}
           </Options>
         </MainTop>
         <Top>
@@ -230,21 +230,32 @@ export default function Spending({
             </PieChart>
           </LeftTop>
           <RightTop>
-            {allCategoriesThisMonth?.map((category) => {
-              const catSpending = allSpendings
-                ?.filter((spend) => spend?.category == category)
-                ?.reduce((acc, spend) => acc + Number(spend?.amount), 0);
-              const percentage = (catSpending / totalSpending) * 100;
-              return (
-                <CatItem>
-                  <CatIcon color={ICON_COLORS[category]}></CatIcon>
-                  <CatName>{capitalizeFirstLetter(category)}</CatName>
-                  <CatPercent>
-                    {formatIndianNumber(catSpending?.toFixed(0))}
-                  </CatPercent>
-                </CatItem>
-              );
-            })}
+            {allCategoriesThisMonth
+              ?.sort((cat1, cat2) => {
+                const catSpending1 = allSpendings
+                  ?.filter((spend) => spend?.category == cat1)
+                  ?.reduce((acc, spend) => acc + Number(spend?.amount), 0);
+                const catSpending2 = allSpendings
+                  ?.filter((spend) => spend?.category == cat2)
+                  ?.reduce((acc, spend) => acc + Number(spend?.amount), 0);
+
+                return catSpending2 - catSpending1;
+              })
+              ?.map((category) => {
+                const catSpending = allSpendings
+                  ?.filter((spend) => spend?.category == category)
+                  ?.reduce((acc, spend) => acc + Number(spend?.amount), 0);
+                const percentage = (catSpending / totalSpending) * 100;
+                return (
+                  <CatItem>
+                    <CatIcon color={ICON_COLORS[category]}></CatIcon>
+                    <CatName>{capitalizeFirstLetter(category)}</CatName>
+                    <CatPercent>
+                      {formatIndianNumber(catSpending?.toFixed(0))}
+                    </CatPercent>
+                  </CatItem>
+                );
+              })}
           </RightTop>
         </Top>
         <Bottom>

@@ -178,6 +178,38 @@ export const itemsPersonal = [
     ),
     extra: "⌘D",
   },
+  {
+    key: "Mutual Funds",
+    label: "Mutual Funds",
+    icon: (
+      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["Dad"] }}>
+        {ICON_CATEGORY?.["Mutual Funds"]}
+      </span>
+    ),
+    extra: "⌘M",
+  },
+  {
+    key: "Stocks",
+    label: "Stocks",
+    icon: (
+      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["Dad"] }}>
+        {ICON_CATEGORY?.["Stocks"]}
+      </span>
+    ),
+    extra: "⌘S",
+  },
+  {
+    key: "Gold",
+    label: "Gold",
+    icon: (
+      <span
+        style={{ transform: "translateY(2px)", color: ICON_COLORS["Gold"] }}
+      >
+        {ICON_CATEGORY?.["Gold"]}
+      </span>
+    ),
+    extra: "⌘G",
+  },
 ];
 
 export const itemsFamily = [
@@ -308,6 +340,21 @@ export const itemsFamily = [
       </span>
     ),
     extra: "⌘H",
+  },
+  {
+    key: "Internet",
+    label: "Internet",
+    icon: (
+      <span
+        style={{
+          transform: "translateY(2px)",
+          color: ICON_COLORS["Internet"],
+        }}
+      >
+        {ICON_CATEGORY?.["Internet"]}
+      </span>
+    ),
+    extra: "⌘I",
   },
 ];
 

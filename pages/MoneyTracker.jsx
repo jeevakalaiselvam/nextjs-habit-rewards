@@ -27,10 +27,12 @@ import { BiSolidWalletAlt } from "react-icons/bi";
 import { FaGoogleWallet } from "react-icons/fa";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
+import WalletEMI from "../components/moneytracker/WalletEMI";
+import { MdAccessTimeFilled } from "react-icons/md";
 
 export default function MoneyTracker() {
-  const [activeTab, setActiveTab] = useState(0);
-  const [showEntry, setShowEntry] = useState(false);
+  const [activeTab, setActiveTab] = useState(3);
+  const [showEntry, setShowEntry] = useState(true);
   const [forceRefreshExpense, setForceRefreshExpense] = useState(false);
   const [date, setDate] = useState(getFirstDateOfCurrentMonth());
 
@@ -58,7 +60,7 @@ export default function MoneyTracker() {
 
   return (
     <Container>
-      {showEntry && (
+      {showEntry && activeTab == 1 && (
         <EntryModal>
           <Entry
             setShowEntry={setShowEntry}
@@ -66,6 +68,11 @@ export default function MoneyTracker() {
             selectedDate={date}
           />
         </EntryModal>
+      )}
+      {showEntry && activeTab == 3 && (
+        <WalletEMIModal>
+          <WalletEMI />
+        </WalletEMIModal>
       )}
       <Header>
         <Name>{title}</Name>
@@ -127,7 +134,11 @@ export default function MoneyTracker() {
               setShowEntry((old) => !old);
             }}
           >
-            {!showEntry && <HiPlus />}
+            {!showEntry && activeTab == 0 && <HiPlus />}
+            {!showEntry && activeTab == 1 && <HiPlus />}
+            {!showEntry && activeTab == 2 && <HiPlus />}
+            {!showEntry && activeTab == 3 && <MdAccessTimeFilled />}
+
             {showEntry && <IoIosCloseCircle />}
           </Inner>
         </Icon>
@@ -174,14 +185,32 @@ const EntryModal = styled.div`
   display: flex;
   width: 95%;
   z-index: 100;
-  min-height: 70vh;
-  max-height: 70vh;
+  min-height: 78vh;
+  max-height: 78vh;
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
   border-radius: 0.5rem;
   position: absolute;
   top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #1b1b1d;
+`;
+
+const WalletEMIModal = styled.div`
+  display: flex;
+  width: 95%;
+  z-index: 100;
+  min-height: 78vh;
+  max-height: 78vh;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  border-radius: 0.5rem;
+  position: absolute;
+  top: 5%;
+  padding: 1rem;
   left: 50%;
   transform: translateX(-50%);
   background-color: #1b1b1d;
