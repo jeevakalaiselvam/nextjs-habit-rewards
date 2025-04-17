@@ -235,7 +235,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
         topMessage = "Family Today";
         bottomMessage = "Personal Today";
         leftTitle = "Family Total";
-        rightTitle = "Personal Total";
+        rightTitle = "Jeeva Total";
 
         const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
         displayItems = generateDailyTimestamps(
@@ -275,7 +275,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
         topMessage = "Family Balance";
         bottomMessage = "Personal Balance";
         leftTitle = "Family Expense";
-        rightTitle = "Personal Expense";
+        rightTitle = "Jeeva Expense";
 
         const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
         displayItems = generateDailyTimestamps(
@@ -302,7 +302,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
         topMessage = "Family Today";
         bottomMessage = "Personal Today";
         leftTitle = "Family Total";
-        rightTitle = "Personal Total";
+        rightTitle = "Jeeva Total";
 
         const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
         displayItems = generateDailyTimestamps(
@@ -330,7 +330,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
         topMessage = "Family Balance";
         bottomMessage = "Personal Balance";
         leftTitle = "Family Expense";
-        rightTitle = "Personal Expense";
+        rightTitle = "Jeeva Expense";
 
         const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
         displayItems = generateDailyTimestamps(
