@@ -1,7 +1,7 @@
-import { DownOutlined, SettingOutlined } from "@ant-design/icons";
-import { DatePicker, Dropdown, message, Space } from "antd";
-import { useState } from "react";
-import { BiSolidMoviePlay } from "react-icons/bi";
+import { DownOutlined, SettingOutlined } from '@ant-design/icons';
+import { DatePicker, Dropdown, message, Space } from 'antd';
+import { useState } from 'react';
+import { BiSolidMoviePlay } from 'react-icons/bi';
 import {
   FaCaretDown,
   FaFemale,
@@ -11,357 +11,369 @@ import {
   FaMoneyBillAlt,
   FaShoppingCart,
   FaWallet,
-} from "react-icons/fa";
-import { FaIndianRupeeSign } from "react-icons/fa6";
-import { IoFastFood, IoWallet, IoWalletSharp } from "react-icons/io5";
-import styled from "styled-components";
-import { capitalizeFirstLetter } from "../helpers/stringHelper";
-import { RiDeviceFill } from "react-icons/ri";
-import { TbDeviceDesktopFilled } from "react-icons/tb";
-import axios from "axios";
+} from 'react-icons/fa';
+import { FaIndianRupeeSign } from 'react-icons/fa6';
+import { IoFastFood, IoWallet, IoWalletSharp } from 'react-icons/io5';
+import styled from 'styled-components';
+import { capitalizeFirstLetter } from '../helpers/stringHelper';
+import { RiDeviceFill } from 'react-icons/ri';
+import { TbDeviceDesktopFilled } from 'react-icons/tb';
+import axios from 'axios';
 import {
   MdFamilyRestroom,
   MdLocalGroceryStore,
   MdOutlineElectricalServices,
-} from "react-icons/md";
-import { BsFillCreditCard2FrontFill } from "react-icons/bs";
-import { HiMiniHome } from "react-icons/hi2";
+} from 'react-icons/md';
+import { BsFillCreditCard2FrontFill } from 'react-icons/bs';
+import { HiMiniHome } from 'react-icons/hi2';
 import {
   GROCERY_OPTIONS,
   ICON_CATEGORY,
   ICON_COLORS,
   WALLET_OPTIONS,
-} from "../helpers/iconHelper";
-import dayjs from "dayjs";
-import { getFifteenth } from "../helpers/dateHelper";
+} from '../helpers/iconHelper';
+import dayjs from 'dayjs';
+import { getFifteenth } from '../helpers/dateHelper';
 
 export const itemsPersonal = [
   {
-    key: "1",
-    label: <div style={{ width: "100%" }}>All Categories</div>,
+    key: '1',
+    label: <div style={{ width: '100%' }}>All Categories</div>,
     disabled: true,
   },
   {
-    type: "divider",
+    type: 'divider',
   },
   {
-    key: "Games",
-    label: "Games",
+    key: 'Games',
+    label: 'Games',
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["Games"] }}
+        style={{ transform: 'translateY(2px)', color: ICON_COLORS['Games'] }}
       >
-        {ICON_CATEGORY?.["Games"]}
+        {ICON_CATEGORY?.['Games']}
       </span>
     ),
-    extra: "⌘G",
+    extra: '⌘G',
   },
   {
-    key: "Movies",
-    label: "Movies",
+    key: 'Movies',
+    label: 'Movies',
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["Movies"] }}
+        style={{ transform: 'translateY(2px)', color: ICON_COLORS['Movies'] }}
       >
-        {ICON_CATEGORY?.["Movies"]}
+        {ICON_CATEGORY?.['Movies']}
       </span>
     ),
-    extra: "⌘M",
+    extra: '⌘M',
   },
   {
-    key: "Food",
-    label: "Food",
+    key: 'Food',
+    label: 'Food',
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["Food"] }}
+        style={{ transform: 'translateY(2px)', color: ICON_COLORS['Food'] }}
       >
-        {ICON_CATEGORY?.["Food"]}
+        {ICON_CATEGORY?.['Food']}
       </span>
     ),
-    extra: "⌘F",
+    extra: '⌘F',
   },
   {
-    key: "Clothing",
-    label: "Clothing",
-    icon: (
-      <span
-        style={{
-          transform: "translateY(2px)",
-          color: ICON_COLORS["Clothing"],
-        }}
-      >
-        {ICON_CATEGORY?.["Clothing"]}
-      </span>
-    ),
-    extra: "⌘F",
-  },
-  {
-    key: "Gadget",
-    label: "Gadget",
-    icon: (
-      <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["Gadget"] }}
-      >
-        {ICON_CATEGORY?.["Gadget"]}
-      </span>
-    ),
-    extra: "⌘F",
-  },
-  {
-    key: "Gift",
-    label: "Gift",
-    icon: (
-      <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["Gift"] }}
-      >
-        {ICON_CATEGORY?.["Gift"]}
-      </span>
-    ),
-    extra: "⌘G",
-  },
-  {
-    key: "Subscription",
-    label: "Subscription",
+    key: 'Clothing',
+    label: 'Clothing',
     icon: (
       <span
         style={{
-          transform: "translateY(2px)",
-          color: ICON_COLORS["Subscription"],
+          transform: 'translateY(2px)',
+          color: ICON_COLORS['Clothing'],
         }}
       >
-        {ICON_CATEGORY?.["Subscription"]}
+        {ICON_CATEGORY?.['Clothing']}
       </span>
     ),
-    extra: "⌘S",
+    extra: '⌘F',
   },
   {
-    key: "Fuel",
-    label: "Fuel",
+    key: 'Gadget',
+    label: 'Gadget',
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["Fuel"] }}
+        style={{ transform: 'translateY(2px)', color: ICON_COLORS['Gadget'] }}
       >
-        {ICON_CATEGORY?.["Fuel"]}
+        {ICON_CATEGORY?.['Gadget']}
       </span>
     ),
-    extra: "⌘F",
+    extra: '⌘F',
   },
   {
-    key: "Achu",
-    label: "Achu",
+    key: 'Gift',
+    label: 'Gift',
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["Achu"] }}
+        style={{ transform: 'translateY(2px)', color: ICON_COLORS['Gift'] }}
       >
-        {ICON_CATEGORY?.["Achu"]}
+        {ICON_CATEGORY?.['Gift']}
       </span>
     ),
-    extra: "⌘F",
+    extra: '⌘G',
   },
   {
-    key: "Mom",
-    label: "Mom",
-    icon: (
-      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["Mom"] }}>
-        {ICON_CATEGORY?.["Mom"]}
-      </span>
-    ),
-    extra: "⌘M",
-  },
-  {
-    key: "Dad",
-    label: "Dad",
-    icon: (
-      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["Dad"] }}>
-        {ICON_CATEGORY?.["Dad"]}
-      </span>
-    ),
-    extra: "⌘D",
-  },
-  {
-    key: "Mutual Funds",
-    label: "Mutual Funds",
-    icon: (
-      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["Dad"] }}>
-        {ICON_CATEGORY?.["Mutual Funds"]}
-      </span>
-    ),
-    extra: "⌘M",
-  },
-  {
-    key: "Stocks",
-    label: "Stocks",
-    icon: (
-      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["Dad"] }}>
-        {ICON_CATEGORY?.["Stocks"]}
-      </span>
-    ),
-    extra: "⌘S",
-  },
-  {
-    key: "Gold",
-    label: "Gold",
+    key: 'Subscription',
+    label: 'Subscription',
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["Gold"] }}
+        style={{
+          transform: 'translateY(2px)',
+          color: ICON_COLORS['Subscription'],
+        }}
       >
-        {ICON_CATEGORY?.["Gold"]}
+        {ICON_CATEGORY?.['Subscription']}
       </span>
     ),
-    extra: "⌘G",
+    extra: '⌘S',
+  },
+  {
+    key: 'Fuel',
+    label: 'Fuel',
+    icon: (
+      <span
+        style={{ transform: 'translateY(2px)', color: ICON_COLORS['Fuel'] }}
+      >
+        {ICON_CATEGORY?.['Fuel']}
+      </span>
+    ),
+    extra: '⌘F',
+  },
+  {
+    key: 'Achu',
+    label: 'Achu',
+    icon: (
+      <span
+        style={{ transform: 'translateY(2px)', color: ICON_COLORS['Achu'] }}
+      >
+        {ICON_CATEGORY?.['Achu']}
+      </span>
+    ),
+    extra: '⌘F',
+  },
+  {
+    key: 'Mom',
+    label: 'Mom',
+    icon: (
+      <span style={{ transform: 'translateY(2px)', color: ICON_COLORS['Mom'] }}>
+        {ICON_CATEGORY?.['Mom']}
+      </span>
+    ),
+    extra: '⌘M',
+  },
+  {
+    key: 'Dad',
+    label: 'Dad',
+    icon: (
+      <span style={{ transform: 'translateY(2px)', color: ICON_COLORS['Dad'] }}>
+        {ICON_CATEGORY?.['Dad']}
+      </span>
+    ),
+    extra: '⌘D',
+  },
+  {
+    key: 'Mutual Funds',
+    label: 'Mutual Funds',
+    icon: (
+      <span style={{ transform: 'translateY(2px)', color: ICON_COLORS['Dad'] }}>
+        {ICON_CATEGORY?.['Mutual Funds']}
+      </span>
+    ),
+    extra: '⌘M',
+  },
+  {
+    key: 'Stocks',
+    label: 'Stocks',
+    icon: (
+      <span style={{ transform: 'translateY(2px)', color: ICON_COLORS['Dad'] }}>
+        {ICON_CATEGORY?.['Stocks']}
+      </span>
+    ),
+    extra: '⌘S',
+  },
+  {
+    key: 'Gold',
+    label: 'Gold',
+    icon: (
+      <span
+        style={{ transform: 'translateY(2px)', color: ICON_COLORS['Gold'] }}
+      >
+        {ICON_CATEGORY?.['Gold']}
+      </span>
+    ),
+    extra: '⌘G',
   },
 ];
 
 export const itemsFamily = [
   {
-    key: "1",
-    label: <div style={{ width: "100%" }}>All Categories</div>,
+    key: '1',
+    label: <div style={{ width: '100%' }}>All Categories</div>,
     disabled: true,
   },
   {
-    type: "divider",
+    type: 'divider',
   },
   {
-    key: "Grocery",
-    label: "Grocery",
+    key: 'Grocery',
+    label: 'Grocery',
     icon: (
       <span
         style={{
-          transform: "translateY(2px)",
-          color: ICON_COLORS["Grocery"],
+          transform: 'translateY(2px)',
+          color: ICON_COLORS['Grocery'],
         }}
       >
-        {ICON_CATEGORY?.["Grocery"]}
+        {ICON_CATEGORY?.['Grocery']}
       </span>
     ),
-    extra: "⌘G",
+    extra: '⌘G',
   },
   {
-    key: "Mom",
-    label: "Mom",
+    key: 'Mom',
+    label: 'Mom',
     icon: (
-      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["Mom"] }}>
-        {ICON_CATEGORY?.["Mom"]}
+      <span style={{ transform: 'translateY(2px)', color: ICON_COLORS['Mom'] }}>
+        {ICON_CATEGORY?.['Mom']}
       </span>
     ),
-    extra: "⌘M",
+    extra: '⌘M',
   },
   {
-    key: "Dad",
-    label: "Dad",
+    key: 'Dad',
+    label: 'Dad',
     icon: (
-      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["Dad"] }}>
-        {ICON_CATEGORY?.["Dad"]}
+      <span style={{ transform: 'translateY(2px)', color: ICON_COLORS['Dad'] }}>
+        {ICON_CATEGORY?.['Dad']}
       </span>
     ),
-    extra: "⌘D",
+    extra: '⌘D',
   },
   {
-    key: "Sindhu",
-    label: "Sindhu",
-    icon: (
-      <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["Sindhu"] }}
-      >
-        {ICON_CATEGORY?.["Sindhu"]}
-      </span>
-    ),
-    extra: "⌘S",
-  },
-  {
-    key: "Jeeva",
-    label: "Jeeva",
+    key: 'Sindhu',
+    label: 'Sindhu',
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["Jeeva"] }}
+        style={{ transform: 'translateY(2px)', color: ICON_COLORS['Sindhu'] }}
       >
-        {ICON_CATEGORY?.["Jeeva"]}
+        {ICON_CATEGORY?.['Sindhu']}
       </span>
     ),
-    extra: "⌘J",
+    extra: '⌘S',
   },
   {
-    key: "Loan",
-    label: "Loan",
+    key: 'Jeeva',
+    label: 'Jeeva',
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["Loan"] }}
+        style={{ transform: 'translateY(2px)', color: ICON_COLORS['Jeeva'] }}
       >
-        {ICON_CATEGORY?.["Loan"]}
+        {ICON_CATEGORY?.['Jeeva']}
       </span>
     ),
-    extra: "⌘K",
+    extra: '⌘J',
   },
   {
-    key: "Credit",
-    label: "Credit",
+    key: 'Achu',
+    label: 'Achu',
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["Credit"] }}
+        style={{ transform: 'translateY(2px)', color: ICON_COLORS['Achu'] }}
       >
-        {ICON_CATEGORY?.["Credit"]}
+        {ICON_CATEGORY?.['Achu']}
       </span>
     ),
-    extra: "⌘C",
+    extra: '⌘A',
   },
   {
-    key: "House",
-    label: "House",
+    key: 'Loan',
+    label: 'Loan',
     icon: (
       <span
-        style={{ transform: "translateY(2px)", color: ICON_COLORS["House"] }}
+        style={{ transform: 'translateY(2px)', color: ICON_COLORS['Loan'] }}
       >
-        {ICON_CATEGORY?.["House"]}
+        {ICON_CATEGORY?.['Loan']}
       </span>
     ),
-    extra: "⌘H",
+    extra: '⌘K',
   },
   {
-    key: "Car",
-    label: "Car",
+    key: 'Credit',
+    label: 'Credit',
     icon: (
-      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["Car"] }}>
-        {ICON_CATEGORY?.["Car"]}
+      <span
+        style={{ transform: 'translateY(2px)', color: ICON_COLORS['Credit'] }}
+      >
+        {ICON_CATEGORY?.['Credit']}
       </span>
     ),
-    extra: "⌘H",
+    extra: '⌘C',
   },
   {
-    key: "Electricity",
-    label: "Electricity",
+    key: 'House',
+    label: 'House',
+    icon: (
+      <span
+        style={{ transform: 'translateY(2px)', color: ICON_COLORS['House'] }}
+      >
+        {ICON_CATEGORY?.['House']}
+      </span>
+    ),
+    extra: '⌘H',
+  },
+  {
+    key: 'Car',
+    label: 'Car',
+    icon: (
+      <span style={{ transform: 'translateY(2px)', color: ICON_COLORS['Car'] }}>
+        {ICON_CATEGORY?.['Car']}
+      </span>
+    ),
+    extra: '⌘H',
+  },
+  {
+    key: 'Electricity',
+    label: 'Electricity',
     icon: (
       <span
         style={{
-          transform: "translateY(2px)",
-          color: ICON_COLORS["Electricity"],
+          transform: 'translateY(2px)',
+          color: ICON_COLORS['Electricity'],
         }}
       >
-        {ICON_CATEGORY?.["Electricity"]}
+        {ICON_CATEGORY?.['Electricity']}
       </span>
     ),
-    extra: "⌘H",
+    extra: '⌘H',
   },
   {
-    key: "Internet",
-    label: "Internet",
+    key: 'Internet',
+    label: 'Internet',
     icon: (
       <span
         style={{
-          transform: "translateY(2px)",
-          color: ICON_COLORS["Internet"],
+          transform: 'translateY(2px)',
+          color: ICON_COLORS['Internet'],
         }}
       >
-        {ICON_CATEGORY?.["Internet"]}
+        {ICON_CATEGORY?.['Internet']}
       </span>
     ),
-    extra: "⌘I",
+    extra: '⌘I',
   },
 ];
 
 export const itemsWallet = [
   {
-    key: "111",
-    label: <div style={{ width: "100%" }}>All Wallets</div>,
+    key: '111',
+    label: <div style={{ width: '100%' }}>All Wallets</div>,
     disabled: true,
   },
   ...WALLET_OPTIONS?.map((wallet) => {
@@ -371,7 +383,7 @@ export const itemsWallet = [
       icon: (
         <span
           style={{
-            transform: "translateY(2px)",
+            transform: 'translateY(2px)',
             color: wallet?.color,
           }}
         >
@@ -385,8 +397,8 @@ export const itemsWallet = [
 
 export const itemsGrocery = [
   {
-    key: "1111",
-    label: <div style={{ width: "100%" }}>All Grocery</div>,
+    key: '1111',
+    label: <div style={{ width: '100%' }}>All Grocery</div>,
     disabled: true,
   },
   ...GROCERY_OPTIONS?.map((grocery) => {
@@ -396,7 +408,7 @@ export const itemsGrocery = [
       icon: (
         <span
           style={{
-            transform: "translateY(2px)",
+            transform: 'translateY(2px)',
             color: grocery?.color,
           }}
         >
@@ -410,112 +422,112 @@ export const itemsGrocery = [
 
 export const itemsType = [
   {
-    key: "11",
-    label: <div style={{ width: "100%" }}>All Types</div>,
+    key: '11',
+    label: <div style={{ width: '100%' }}>All Types</div>,
     disabled: true,
   },
   {
-    key: "Personal",
-    label: "Personal",
+    key: 'Personal',
+    label: 'Personal',
     icon: (
       <span
         style={{
-          transform: "translateY(2px)",
-          color: ICON_COLORS["Personal"],
+          transform: 'translateY(2px)',
+          color: ICON_COLORS['Personal'],
         }}
       >
         {<IoWallet />}
       </span>
     ),
-    extra: "⌘P",
+    extra: '⌘P',
   },
   {
-    key: "Family",
-    label: "Family",
+    key: 'Family',
+    label: 'Family',
     icon: (
       <span
         style={{
-          transform: "translateY(2px)",
-          color: ICON_COLORS["Family"],
+          transform: 'translateY(2px)',
+          color: ICON_COLORS['Family'],
         }}
       >
         {<FaGlobe />}
       </span>
     ),
-    extra: "⌘F",
+    extra: '⌘F',
   },
   {
-    key: "Grocery",
-    label: "Grocery",
+    key: 'Grocery',
+    label: 'Grocery',
     icon: (
       <span
         style={{
-          transform: "translateY(2px)",
-          color: ICON_COLORS["Grocery"],
+          transform: 'translateY(2px)',
+          color: ICON_COLORS['Grocery'],
         }}
       >
         {<MdLocalGroceryStore />}
       </span>
     ),
-    extra: "⌘G",
+    extra: '⌘G',
   },
   {
-    key: "Investment",
-    label: "Investment",
+    key: 'Investment',
+    label: 'Investment',
     icon: (
       <span
         style={{
-          transform: "translateY(2px)",
-          color: ICON_COLORS["Investment"],
+          transform: 'translateY(2px)',
+          color: ICON_COLORS['Investment'],
         }}
       >
         {<FaWallet />}
       </span>
     ),
-    extra: "⌘W",
+    extra: '⌘W',
   },
 ];
 
 export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
-  const [selectedEntry, setSelectedEntry] = useState("expense");
+  const [selectedEntry, setSelectedEntry] = useState('expense');
 
   const [values, setValues] = useState({
-    amount: "0",
-    recurring: "false",
+    amount: '0',
+    recurring: 'false',
     date: getFifteenth(selectedDate),
-    category: "",
-    type: "Personal",
+    category: '',
+    type: 'Personal',
   });
 
   const saveAmount = () => {
     axios
-      .post("/api/spend", { ...values })
+      .post('/api/spend', { ...values })
       .then((response) => {
-        message.info("Expense saved !");
+        message.info('Expense saved !');
         setShowEntry(false);
         refreshExpense();
       })
       .catch((error) => {
         alert(JSON.stringify(error));
-        message.error("Error while saving Expense !");
+        message.error('Error while saving Expense !');
       });
   };
 
   let itemsToTarget = itemsPersonal;
 
-  if (values?.type == "Personal") {
+  if (values?.type == 'Personal') {
     itemsToTarget = itemsPersonal;
   }
 
-  if (values?.type == "Family") {
+  if (values?.type == 'Family') {
     itemsToTarget = itemsFamily;
   }
 
-  if (values?.type == "Investment") {
+  if (values?.type == 'Investment') {
     itemsToTarget = itemsWallet;
   }
 
-  if (values?.type == "Grocery") {
+  if (values?.type == 'Grocery') {
     itemsToTarget = itemsGrocery;
   }
 
@@ -542,24 +554,24 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
       {
         <Options>
           <Option
-            selected={selectedEntry == "expense"}
+            selected={selectedEntry == 'expense'}
             onClick={() => {
-              setValues((old) => ({ ...old, recurring: "false" }));
-              setSelectedEntry("expense");
+              setValues((old) => ({ ...old, recurring: 'false' }));
+              setSelectedEntry('expense');
             }}
           >
             Single Expense
-            {selectedEntry == "expense" && <SelectedDot></SelectedDot>}
+            {selectedEntry == 'expense' && <SelectedDot></SelectedDot>}
           </Option>
           <Option
-            selected={selectedEntry == "recurring"}
+            selected={selectedEntry == 'recurring'}
             onClick={() => {
-              setValues((old) => ({ ...old, recurring: "true" }));
-              setSelectedEntry("recurring");
+              setValues((old) => ({ ...old, recurring: 'true' }));
+              setSelectedEntry('recurring');
             }}
           >
             Recurring Expense
-            {selectedEntry == "recurring" && <SelectedDot></SelectedDot>}
+            {selectedEntry == 'recurring' && <SelectedDot></SelectedDot>}
           </Option>
         </Options>
       }
@@ -569,16 +581,16 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
             <Title>Type</Title>
             <AmountInputDropdown2>
               <Dropdown
-                trigger={["click"]}
-                overlayStyle={{ minWidth: "80%" }}
+                trigger={['click']}
+                overlayStyle={{ minWidth: '80%' }}
                 menu={menuType}
                 overlayClassName="full-width-dropdown"
               >
                 <Space>
-                  <span style={{ fontSize: "1rem", color: "#ACAEB2" }}>
+                  <span style={{ fontSize: '1rem', color: '#ACAEB2' }}>
                     {values?.type
                       ? capitalizeFirstLetter(values?.type)
-                      : "Select Type"}
+                      : 'Select Type'}
                   </span>
                   <Caret>
                     <FaCaretDown />
@@ -589,17 +601,17 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
             <Title>Expense</Title>
             <AmountInputDropdown>
               <Dropdown
-                trigger={["click"]}
-                overlayStyle={{ minWidth: "80%" }}
+                trigger={['click']}
+                overlayStyle={{ minWidth: '80%' }}
                 menu={menu}
                 overlayClassName="full-width-dropdown"
                 on
               >
                 <Space>
-                  <span style={{ fontSize: "1rem", color: "#ACAEB2" }}>
+                  <span style={{ fontSize: '1rem', color: '#ACAEB2' }}>
                     {values?.category
                       ? capitalizeFirstLetter(values?.category)
-                      : "Select Category"}
+                      : 'Select Category'}
                   </span>
                   <Caret>
                     <FaCaretDown />
@@ -629,11 +641,11 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
             <MonthSelection>
               <DatePicker
                 style={{
-                  width: "100%",
-                  backgroundColor: "#1f2125",
-                  padding: "0.5rem 1rem",
-                  outline: "none",
-                  border: "none",
+                  width: '100%',
+                  backgroundColor: '#1f2125',
+                  padding: '0.5rem 1rem',
+                  outline: 'none',
+                  border: 'none',
                 }}
                 format="DD-MM-YYYY"
                 inputReadOnly
@@ -805,7 +817,7 @@ const Option = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
-  color: ${(props) => (props?.selected ? "#53B5D9" : "#959595")};
+  color: ${(props) => (props?.selected ? '#53B5D9' : '#959595')};
   position: relative;
 `;
 

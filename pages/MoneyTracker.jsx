@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import Welcome from "../components/moneytracker/Welcome";
+import styled from 'styled-components';
+import Welcome from '../components/moneytracker/Welcome';
 import {
   HiChartBar,
   HiChartPie,
@@ -14,44 +14,44 @@ import {
   HiViewBoards,
   HiViewGrid,
   HiViewList,
-} from "react-icons/hi";
-import { useState } from "react";
-import Money from "../components/moneytracker/Money";
-import Salary from "../components/moneytracker/Salary";
-import Entry from "../components/moneytracker/Entry";
-import { IoIosCloseCircle } from "react-icons/io";
-import Spending from "../components/moneytracker/Spending";
-import Wallets from "../components/moneytracker/Wallets";
-import { getFirstDateOfCurrentMonth } from "../components/helpers/dateHelper";
-import { BiSolidWalletAlt } from "react-icons/bi";
-import { FaGoogleWallet } from "react-icons/fa";
-import { DatePicker } from "antd";
-import dayjs from "dayjs";
-import WalletEMI from "../components/moneytracker/WalletEMI";
-import { MdAccessTimeFilled } from "react-icons/md";
+} from 'react-icons/hi';
+import { useState } from 'react';
+import Money from '../components/moneytracker/Money';
+import Salary from '../components/moneytracker/Salary';
+import Entry from '../components/moneytracker/Entry';
+import { IoIosCloseCircle } from 'react-icons/io';
+import Spending from '../components/moneytracker/Spending';
+import Wallets from '../components/moneytracker/Wallets';
+import { getFirstDateOfCurrentMonth } from '../components/helpers/dateHelper';
+import { BiSolidWalletAlt } from 'react-icons/bi';
+import { FaGoogleWallet } from 'react-icons/fa';
+import { DatePicker } from 'antd';
+import dayjs from 'dayjs';
+import WalletEMI from '../components/moneytracker/WalletEMI';
+import { MdAccessTimeFilled } from 'react-icons/md';
 
 export default function MoneyTracker() {
-  const [activeTab, setActiveTab] = useState(3);
-  const [showEntry, setShowEntry] = useState(true);
+  const [activeTab, setActiveTab] = useState(0);
+  const [showEntry, setShowEntry] = useState(false);
   const [forceRefreshExpense, setForceRefreshExpense] = useState(false);
   const [date, setDate] = useState(getFirstDateOfCurrentMonth());
 
-  let title = "";
+  let title = '';
 
   if (activeTab == 0) {
-    title = "Income";
+    title = 'Income';
   }
 
   if (activeTab == 1) {
-    title = "Expense";
+    title = 'Expense';
   }
 
   if (activeTab == 2) {
-    title = "Salaries";
+    title = 'Salaries';
   }
 
   if (activeTab == 3) {
-    title = "Wallets";
+    title = 'Wallets';
   }
 
   const refreshExpense = () => {
@@ -80,10 +80,10 @@ export default function MoneyTracker() {
           <DatePicker
             allowClear={false}
             style={{
-              width: "70%",
-              backgroundColor: "#1f2125",
-              outline: "none",
-              border: "none",
+              width: '70%',
+              backgroundColor: '#1f2125',
+              outline: 'none',
+              border: 'none',
             }}
             defaultValue={dayjs(date)}
             format="MMMM, YYYY"
@@ -241,7 +241,7 @@ const Icon = styled.div`
   font-size: 1.75rem;
   flex: 1;
   color: #717f8d;
-  color: ${(props) => (props?.["data-active"] ? "#52b8da" : "#717f8d")};
+  color: ${(props) => (props?.['data-active'] ? '#52b8da' : '#717f8d')};
 `;
 
 const Header = styled.div`
