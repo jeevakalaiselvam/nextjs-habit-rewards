@@ -352,7 +352,7 @@ export default function Spending({
                                   type="text"
                                   value={newValueForSpending?.title}
                                   onChange={(e) => {
-                                    setValues((old) => ({
+                                    setNewValueForSpending((old) => ({
                                       ...old,
                                       title: String(e.target.value),
                                     }));
