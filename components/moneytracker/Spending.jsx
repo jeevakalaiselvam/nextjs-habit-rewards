@@ -1,16 +1,16 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { PieChart, Pie, Cell } from 'recharts';
-import { capitalizeFirstLetter } from '../helpers/stringHelper';
-import { formatIndianNumber } from '../helpers/moneyHelper';
-import { FaCaretDown, FaRupeeSign } from 'react-icons/fa';
-import { FaIndianRupeeSign } from 'react-icons/fa6';
+import axios from "axios";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import { PieChart, Pie, Cell } from "recharts";
+import { capitalizeFirstLetter } from "../helpers/stringHelper";
+import { formatIndianNumber } from "../helpers/moneyHelper";
+import { FaCaretDown, FaRupeeSign } from "react-icons/fa";
+import { FaIndianRupeeSign } from "react-icons/fa6";
 import {
   generateDarkTextColorForLightBg,
   generateSimilarColor,
-} from '../helpers/colorHelper';
-import { ICON_CATEGORY, ICON_COLORS } from '../helpers/iconHelper';
+} from "../helpers/colorHelper";
+import { ICON_CATEGORY, ICON_COLORS } from "../helpers/iconHelper";
 import {
   DatePicker,
   Dropdown,
@@ -19,11 +19,11 @@ import {
   Popover,
   Space,
   Spin,
-} from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
-import { itemsFamily, itemsPersonal, itemsType, itemsWallet } from './Entry';
-import dayjs from 'dayjs';
-import { getFifteenth } from '../helpers/dateHelper';
+} from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
+import { itemsFamily, itemsPersonal, itemsType, itemsWallet } from "./Entry";
+import dayjs from "dayjs";
+import { getFifteenth } from "../helpers/dateHelper";
 
 export default function Spending({
   showEntry,
@@ -31,21 +31,21 @@ export default function Spending({
   forceRefreshExpense,
 }) {
   const [loading, setLoading] = useState(true);
-  const [selectedTier1, setSelectedTier1] = useState('Family');
+  const [selectedTier1, setSelectedTier1] = useState("Family");
   const [allSpendings, setAllSpendings] = useState([]);
   const [newValueForSpending, setNewValueForSpending] = useState({});
   const [spendingIdToUpdate, setSpendingIdToUpdate] = useState({
-    amount: '0',
-    recurring: 'false',
+    amount: "0",
+    recurring: "false",
     date: getFifteenth(selectedDate),
-    category: '',
-    type: 'personal',
+    category: "",
+    type: "personal",
   });
 
   const refreshSpendings = () => {
     setLoading(true);
     axios
-      .get('/api/spend')
+      .get("/api/spend")
       .then((response) => {
         setAllSpendings(response?.data);
         setLoading(false);
@@ -111,29 +111,29 @@ export default function Spending({
     axios
       .put(`/api/spend/${newValueForSpending?._id}`, { ...values })
       .then((response) => {
-        message.info('Expense updated !');
+        message.info("Expense updated !");
         refreshSpendings();
       })
       .catch((error) => {
-        message.error('Error while saving Expense !');
+        message.error("Error while saving Expense !");
       });
   };
 
   let itemsToTarget = itemsPersonal;
 
-  if (newValueForSpending?.type == 'Personal') {
+  if (newValueForSpending?.type == "Personal") {
     itemsToTarget = itemsPersonal;
   }
 
-  if (newValueForSpending?.type == 'Family') {
+  if (newValueForSpending?.type == "Family") {
     itemsToTarget = itemsFamily;
   }
 
-  if (newValueForSpending?.type == 'Investment') {
+  if (newValueForSpending?.type == "Investment") {
     itemsToTarget = itemsWallet;
   }
 
-  if (newValueForSpending?.type == 'Grocery') {
+  if (newValueForSpending?.type == "Grocery") {
     itemsToTarget = itemsWallet;
   }
 
@@ -167,33 +167,33 @@ export default function Spending({
         <MainTop>
           <Options>
             <Option
-              selected={selectedTier1 == 'Family'}
-              onClick={() => setSelectedTier1('Family')}
+              selected={selectedTier1 == "Family"}
+              onClick={() => setSelectedTier1("Family")}
             >
               Home
-              {selectedTier1 == 'Family' && <SelectedDot></SelectedDot>}
-            </Option>{' '}
+              {selectedTier1 == "Family" && <SelectedDot></SelectedDot>}
+            </Option>{" "}
             <Option
-              selected={selectedTier1 == 'Grocery'}
-              onClick={() => setSelectedTier1('Grocery')}
+              selected={selectedTier1 == "Grocery"}
+              onClick={() => setSelectedTier1("Grocery")}
             >
               Grocery
-              {selectedTier1 == 'Grocery' && <SelectedDot></SelectedDot>}
-            </Option>{' '}
+              {selectedTier1 == "Grocery" && <SelectedDot></SelectedDot>}
+            </Option>{" "}
             <Option
-              selected={selectedTier1 == 'Investment'}
-              onClick={() => setSelectedTier1('Investment')}
+              selected={selectedTier1 == "Investment"}
+              onClick={() => setSelectedTier1("Investment")}
             >
               Invest
-              {selectedTier1 == 'Investment' && <SelectedDot></SelectedDot>}
+              {selectedTier1 == "Investment" && <SelectedDot></SelectedDot>}
             </Option>
             <Option
-              selected={selectedTier1 == 'Personal'}
-              onClick={() => setSelectedTier1('Personal')}
+              selected={selectedTier1 == "Personal"}
+              onClick={() => setSelectedTier1("Personal")}
             >
               Jeeva
-              {selectedTier1 == 'Personal' && <SelectedDot></SelectedDot>}
-            </Option>{' '}
+              {selectedTier1 == "Personal" && <SelectedDot></SelectedDot>}
+            </Option>{" "}
           </Options>
         </MainTop>
         <Top>
@@ -202,11 +202,11 @@ export default function Spending({
               <TTop>Spent</TTop>
               <TBottom>
                 <span
-                  style={{ fontSize: '1rem', transform: 'translateY(2px)' }}
+                  style={{ fontSize: "1rem", transform: "translateY(2px)" }}
                 >
                   <FaIndianRupeeSign />
                 </span>
-                <span style={{ fontSize: '1.25rem' }}>
+                <span style={{ fontSize: "1.25rem" }}>
                   {formatIndianNumber(totalSpending)}
                 </span>
               </TBottom>
@@ -220,7 +220,7 @@ export default function Spending({
                 outerRadius={70}
                 fill="#8884d8"
                 paddingAngle={0}
-                stroke={'none'}
+                stroke={"none"}
                 dataKey="value"
               >
                 {data.map((entry, index) => (
@@ -319,23 +319,23 @@ export default function Spending({
                               <Title>Type</Title>
                               <AmountInputDropdown2>
                                 <Dropdown
-                                  trigger={['click']}
-                                  overlayStyle={{ minWidth: '80%' }}
+                                  trigger={["click"]}
+                                  overlayStyle={{ minWidth: "80%" }}
                                   menu={menuType}
                                   overlayClassName="full-width-dropdown"
                                 >
                                   <Space>
                                     <span
                                       style={{
-                                        fontSize: '1rem',
-                                        color: '#ACAEB2',
+                                        fontSize: "1rem",
+                                        color: "#ACAEB2",
                                       }}
                                     >
                                       {newValueForSpending.type
                                         ? capitalizeFirstLetter(
                                             newValueForSpending.type
                                           )
-                                        : 'Select Type'}
+                                        : "Select Type"}
                                     </span>
                                     <Caret>
                                       <FaCaretDown />
@@ -343,11 +343,26 @@ export default function Spending({
                                   </Space>
                                 </Dropdown>
                               </AmountInputDropdown2>
+
+                              <Title>Info</Title>
+                              <AmountInput>
+                                <input
+                                  type="text"
+                                  value={newValueForSpending?.title}
+                                  onChange={(e) => {
+                                    setValues((old) => ({
+                                      ...old,
+                                      title: String(e.target.value),
+                                    }));
+                                  }}
+                                />
+                              </AmountInput>
+
                               <Title>Expense</Title>
                               <AmountInputDropdown>
                                 <Dropdown
-                                  trigger={['click']}
-                                  overlayStyle={{ minWidth: '80%' }}
+                                  trigger={["click"]}
+                                  overlayStyle={{ minWidth: "80%" }}
                                   menu={menu}
                                   overlayClassName="full-width-dropdown"
                                   on
@@ -355,15 +370,15 @@ export default function Spending({
                                   <Space>
                                     <span
                                       style={{
-                                        fontSize: '1rem',
-                                        color: '#ACAEB2',
+                                        fontSize: "1rem",
+                                        color: "#ACAEB2",
                                       }}
                                     >
                                       {newValueForSpending?.category
                                         ? capitalizeFirstLetter(
                                             newValueForSpending?.category
                                           )
-                                        : 'Select Category'}
+                                        : "Select Category"}
                                     </span>
                                     <Caret>
                                       <FaCaretDown />
@@ -376,11 +391,11 @@ export default function Spending({
                               <MonthSelection>
                                 <DatePicker
                                   style={{
-                                    width: '100%',
-                                    backgroundColor: '#1f2125',
-                                    padding: '0.5rem 1rem',
-                                    outline: 'none',
-                                    border: 'none',
+                                    width: "100%",
+                                    backgroundColor: "#1f2125",
+                                    padding: "0.5rem 1rem",
+                                    outline: "none",
+                                    border: "none",
                                   }}
                                   format="DD-MM-YYYY"
                                   inputReadOnly
@@ -406,7 +421,7 @@ export default function Spending({
                           </SaveButton>
                         </Amount>
                       }
-                      title={`Update Spending?`}
+                      title={<Title>Edit Spending</Title>}
                     >
                       <Right
                         onClick={() => {
@@ -415,13 +430,13 @@ export default function Spending({
                       >
                         <span
                           style={{
-                            fontSize: '.8rem',
-                            transform: 'translateY(1px)',
+                            fontSize: ".8rem",
+                            transform: "translateY(1px)",
                           }}
                         >
                           <FaIndianRupeeSign />
                         </span>
-                        <span style={{ fontSize: '.95rem' }}>
+                        <span style={{ fontSize: ".95rem" }}>
                           {formatIndianNumber(spending?.amount)}
                         </span>
                       </Right>
@@ -564,7 +579,7 @@ const Option = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
-  color: ${(props) => (props?.selected ? '#53B5D9' : '#959595')};
+  color: ${(props) => (props?.selected ? "#53B5D9" : "#959595")};
   position: relative;
 `;
 
@@ -736,6 +751,8 @@ const Rupees = styled.div`
   flex: 1;
   top: 37.5%;
   left: 1rem;
+  font-size: 0.9rem;
+  transform: translateY(2px);
   color: #acaeb2;
 `;
 
