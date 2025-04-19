@@ -345,7 +345,7 @@ export default function Spending({
                 overlayStyle={{ minWidth: "80%" }}
                 menu={menuCategoriesInCurrentSpending}
                 overlayClassName="full-width-dropdown"
-                on
+                placement="left"
               >
                 <Space>
                   <span style={{ fontSize: "1rem", color: "#ACAEB2" }}>
