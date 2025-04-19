@@ -600,7 +600,7 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
                 </Space>
               </Dropdown>
             </AmountInputDropdown2>
-            <Title>Expense</Title>
+            <Title>Category</Title>
             <AmountInputDropdown>
               <Dropdown
                 trigger={["click"]}
@@ -621,19 +621,6 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
                 </Space>
               </Dropdown>
             </AmountInputDropdown>
-            <Title>Info</Title>
-            <AmountInputDropdown>
-              <input
-                type="text"
-                value={values?.title}
-                onChange={(e) => {
-                  setValues((old) => ({
-                    ...old,
-                    title: String(e.target.value),
-                  }));
-                }}
-              />
-            </AmountInputDropdown>
             <Title>Expense</Title>
             <AmountInput>
               <Rupees>
@@ -651,6 +638,19 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
                 }}
               />
             </AmountInput>
+            <Title>Info</Title>
+            <AmountInputDropdown>
+              <input
+                type="text"
+                value={values?.title}
+                onChange={(e) => {
+                  setValues((old) => ({
+                    ...old,
+                    title: String(e.target.value),
+                  }));
+                }}
+              />
+            </AmountInputDropdown>
 
             <Title>Date</Title>
             <MonthSelection>

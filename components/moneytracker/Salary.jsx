@@ -17,6 +17,7 @@ import { formatIndianNumber } from "../helpers/moneyHelper";
 
 export default function Salary({ selectedDate }) {
   const [salary, setNewSalary] = useState(null);
+  const [title, setNewTitle] = useState(null);
   const [editId, setEditId] = useState("");
   const [date, setDate] = useState(null);
   const [salaries, setAllSalaries] = useState([]);
@@ -61,6 +62,7 @@ export default function Salary({ selectedDate }) {
     setOptionOpenId("");
     setEditId(salary?._id);
     setNewSalary(salary?.salary);
+    setNewTitle(salary?.title ?? "Salary Info");
     setDate(salary?.date);
   };
 
@@ -86,6 +88,15 @@ export default function Salary({ selectedDate }) {
     <Container>
       <AddAmount>
         <Title>Add Salary</Title>
+        <AmountTitle>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => {
+              setNewTitle(e.target.value);
+            }}
+          />
+        </AmountTitle>
         <AmountInput>
           <Rupees>
             <FaIndianRupeeSign />
@@ -140,7 +151,7 @@ export default function Salary({ selectedDate }) {
                     <HiChartPie />
                   </Image>
                   <DetailsRow>
-                    <Details1>Verizon</Details1>
+                    <Details1>{singleSalary?.title ?? "No Info"}</Details1>
                     <Details2>
                       {formatDateToMonthYear(utcToLocal(singleSalary?.date))}
                     </Details2>
@@ -410,12 +421,30 @@ const Rupees = styled.div`
   color: #fbfcfe;
 `;
 
+const AmountTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  font-size: 1rem;
+  position: relative;
+
+  & input {
+    margin-top: 2rem;
+    background-color: #1f2125;
+    color: #8f9094;
+    border: none;
+    padding: 1rem 1rem 1rem 3rem;
+    outline: none;
+  }
+`;
+
 const AmountInput = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   flex: 1;
-  font-size: 1.5rem;
+  font-size: 1rem;
   position: relative;
 
   & input {
