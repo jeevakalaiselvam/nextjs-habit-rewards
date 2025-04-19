@@ -789,7 +789,7 @@ const AmountInputDropdown2 = styled.div`
 const AmountInput = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex: 1;
   width: 100%;
   font-size: 1.5rem;
@@ -801,7 +801,7 @@ const AmountInput = styled.div`
     background-color: #1f2125;
     color: #fefefe;
     border: none;
-    padding: 1rem 1rem 1rem 3rem;
+    padding: 1rem 1rem 1rem 1rem;
     outline: none;
   }
 `;
