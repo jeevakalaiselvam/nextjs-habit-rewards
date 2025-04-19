@@ -24,6 +24,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { itemsFamily, itemsPersonal, itemsType, itemsWallet } from "./Entry";
 import dayjs from "dayjs";
 import { getFifteenth } from "../helpers/dateHelper";
+import { HiViewBoards } from "react-icons/hi";
 
 export default function Spending({
   showEntry,
@@ -31,6 +32,7 @@ export default function Spending({
   forceRefreshExpense,
 }) {
   const [loading, setLoading] = useState(true);
+  const [selectedSpendingCat, setSelectedSpendingCat] = useState("All");
   const [selectedTier1, setSelectedTier1] = useState("Family");
   const [allSpendings, setAllSpendings] = useState([]);
   const [newValueForSpending, setNewValueForSpending] = useState({});
@@ -59,7 +61,7 @@ export default function Spending({
 
   const now = new Date(selectedDate);
 
-  const thisMonthSpendings = allSpendings.filter((s) => {
+  let thisMonthSpendings = allSpendings.filter((s) => {
     const spendingDate = new Date(s.date);
     console.log(
       new Date(spendingDate).getFullYear() === new Date(now).getFullYear()
@@ -72,6 +74,12 @@ export default function Spending({
   });
 
   let allCategoriesThisMonth = [];
+
+  let thisMonthSpendingsForCatSelected = thisMonthSpendings?.filter((spend) => {
+    return (
+      spend?.category == selectedSpendingCat || selectedSpendingCat === "All"
+    );
+  });
 
   thisMonthSpendings?.forEach((spend) => {
     allCategoriesThisMonth = [
@@ -119,7 +127,8 @@ export default function Spending({
       });
   };
 
-  let itemsToTarget = itemsPersonal;
+  let itemsToTarget = itemsFamily;
+  let itemsToTargetForCategory = itemsFamily;
 
   if (newValueForSpending?.type == "Personal") {
     itemsToTarget = itemsPersonal;
@@ -137,6 +146,22 @@ export default function Spending({
     itemsToTarget = itemsWallet;
   }
 
+  if (selectedTier1 == "Personal") {
+    itemsToTargetForCategory = itemsPersonal;
+  }
+
+  if (selectedTier1 == "Family") {
+    itemsToTargetForCategory = itemsFamily;
+  }
+
+  if (selectedTier1 == "Investment") {
+    itemsToTargetForCategory = itemsWallet;
+  }
+
+  if (selectedTier1 == "Grocery") {
+    itemsToTargetForCategory = itemsWallet;
+  }
+
   const handleMenuClick = (e) => {
     setNewValueForSpending((old) => ({ ...old, category: String(e.key) }));
   };
@@ -145,9 +170,57 @@ export default function Spending({
     setNewValueForSpending((old) => ({ ...old, type: String(e.key) }));
   };
 
+  const handleSpendingCatMenuChange = (e) => {
+    setSelectedSpendingCat(e.key);
+  };
+
   const menu = {
     items: itemsToTarget,
     onClick: handleMenuClick,
+  };
+
+  const menuCategoriesInCurrentSpending = {
+    items: [
+      {
+        key: "All",
+        label: "All",
+        icon: (
+          <span
+            style={{
+              transform: "translateY(2px)",
+              color: "#FEFEFE",
+            }}
+          >
+            {<HiViewBoards />}
+          </span>
+        ),
+        extra: "⌘A",
+      },
+      ...itemsToTargetForCategory?.map((category) => {
+        const catSpending = allSpendings?.filter(
+          (spend) =>
+            spend?.category == category?.key && spend?.type == selectedTier1
+        );
+
+        return {
+          ...category,
+          extra: (
+            <span
+              style={{
+                minWidth: "50px",
+                borderRadius: "2px",
+                background: catSpending?.length > 0 ? "#333" : "#333",
+                padding: ".2rem .2rem",
+                color: catSpending?.length > 0 ? "#eee" : "#484848",
+              }}
+            >
+              {catSpending?.length}
+            </span>
+          ),
+        };
+      }),
+    ],
+    onClick: handleSpendingCatMenuChange,
   };
 
   const menuType = {
@@ -263,11 +336,30 @@ export default function Spending({
           </RightTop>
         </Top>
         <Bottom>
-          <BTitle>All Spendings</BTitle>
+          <BTitlee>
+            <BTitle1>All Spendings</BTitle1>
+            <BTitle2>
+              <Dropdown
+                trigger={["click"]}
+                overlayStyle={{ minWidth: "80%" }}
+                menu={menuCategoriesInCurrentSpending}
+                overlayClassName="full-width-dropdown"
+                on
+              >
+                <Space>
+                  <span style={{ fontSize: "1rem", color: "#ACAEB2" }}>
+                    {selectedSpendingCat ?? "Select Category"}
+                  </span>
+                  <Caret>
+                    <FaCaretDown />
+                  </Caret>
+                </Space>
+              </Dropdown>
+            </BTitle2>
+          </BTitlee>
           <AllSpending>
-            {thisMonthSpendings
+            {thisMonthSpendingsForCatSelected
               ?.filter((spending) => {
-                console.log({ spending, category: spending?.category });
                 return spending?.type == selectedTier1;
               })
               ?.map((spending) => {
@@ -682,10 +774,28 @@ const AllSpending = styled.div`
   }
 `;
 
-const BTitle = styled.div`
+const BTitlee = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  width: 100%;
+  font-size: 1.1rem;
+  padding-left: 0rem;
+`;
+
+const BTitle1 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  font-size: 1.1rem;
+  padding-left: 0rem;
+`;
+
+const BTitle2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
   width: 100%;
   font-size: 1.1rem;
   padding-left: 0rem;
