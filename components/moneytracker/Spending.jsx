@@ -76,6 +76,7 @@ export default function Spending({
   let allCategoriesThisMonth = [];
 
   let thisMonthSpendingsForCatSelected = thisMonthSpendings?.filter((spend) => {
+    console.log(spend);
     return (
       spend?.category == selectedSpendingCat || selectedSpendingCat === "All"
     );
@@ -305,17 +306,17 @@ export default function Spending({
           <RightTop>
             {allCategoriesThisMonth
               ?.sort((cat1, cat2) => {
-                const catSpending1 = allSpendings
+                const catSpending1 = thisMonthSpendings
                   ?.filter((spend) => spend?.category == cat1)
                   ?.reduce((acc, spend) => acc + Number(spend?.amount), 0);
-                const catSpending2 = allSpendings
+                const catSpending2 = thisMonthSpendings
                   ?.filter((spend) => spend?.category == cat2)
                   ?.reduce((acc, spend) => acc + Number(spend?.amount), 0);
 
                 return catSpending2 - catSpending1;
               })
               ?.map((category) => {
-                const catSpending = allSpendings
+                const catSpending = thisMonthSpendings
                   ?.filter(
                     (spend) =>
                       spend?.category == category &&

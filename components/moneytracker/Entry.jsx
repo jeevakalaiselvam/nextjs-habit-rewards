@@ -329,11 +329,13 @@ export const itemsFamily = [
     extra: "⌘H",
   },
   {
-    key: "Car",
-    label: "Car",
+    key: "Vehicle",
+    label: "Vehicle",
     icon: (
-      <span style={{ transform: "translateY(2px)", color: ICON_COLORS["Car"] }}>
-        {ICON_CATEGORY?.["Car"]}
+      <span
+        style={{ transform: "translateY(2px)", color: ICON_COLORS["Vehicle"] }}
+      >
+        {ICON_CATEGORY?.["Vehicle"]}
       </span>
     ),
     extra: "⌘H",
