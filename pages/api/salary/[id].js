@@ -10,10 +10,10 @@ export default async function handler(req, res) {
   const { id } = req.query;
 
   if (req.method === "PUT") {
-    const { salary, date } = req.body;
+    const { salary, date, title } = req.body;
     console.log(salary, date?.toString());
 
-    if (!salary || !date) {
+    if (!salary || !date || !title) {
       return res
         .status(400)
         .json({ error: "Yearly Amount and Date are required" });
@@ -25,7 +25,10 @@ export default async function handler(req, res) {
 
       const result = await db
         .collection(getMongoCollectionForPackage())
-        .updateOne({ _id: new ObjectId(id) }, { $set: { salary, date } });
+        .updateOne(
+          { _id: new ObjectId(id) },
+          { $set: { salary, date, title } }
+        );
 
       if (result.matchedCount === 0) {
         return res.status(404).json({ error: "Salary not found" });

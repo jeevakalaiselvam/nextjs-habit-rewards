@@ -5,10 +5,10 @@ export default async function handler(req, res) {
   const { user } = req.query;
 
   if (req.method === "POST") {
-    const { salary, date } = req.body;
-    console.log(salary, date?.toString());
+    const { salary, date, title } = req.body;
+    console.log(salary, date?.toString(), title);
 
-    if (!salary || !date) {
+    if (!salary || !date || !title) {
       return res
         .status(400)
         .json({ error: "Yearly Amount and Date are required" });
@@ -19,7 +19,7 @@ export default async function handler(req, res) {
       const db = client.db("habittracker");
       await db
         .collection(getMongoCollectionForPackage())
-        .insertOne({ salary, date: date?.toString() });
+        .insertOne({ salary, date: date?.toString(), title });
 
       res.status(201).json({ message: "Package added successfully" });
     } catch (error) {

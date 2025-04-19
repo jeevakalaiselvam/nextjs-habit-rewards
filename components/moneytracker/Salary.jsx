@@ -28,6 +28,7 @@ export default function Salary({ selectedDate }) {
       .post("/api/salary", {
         salary: salary,
         date: date,
+        title: title,
       })
       .then((response) => {
         refreshSalary();
@@ -50,7 +51,11 @@ export default function Salary({ selectedDate }) {
 
   const editSalary = () => {
     axios
-      .put(`/api/salary/${editId}`, { salary: salary, date: date })
+      .put(`/api/salary/${editId}`, {
+        salary: salary,
+        date: date,
+        title: title,
+      })
       .then((response) => {
         setEditId("");
         refreshSalary();
@@ -416,7 +421,7 @@ const Rupees = styled.div`
   justify-content: center;
   position: absolute;
   flex: 1;
-  top: 55%;
+  top: 49%;
   left: 1rem;
   color: #fbfcfe;
 `;
@@ -428,13 +433,15 @@ const AmountTitle = styled.div`
   flex: 1;
   font-size: 1rem;
   position: relative;
+  width: 100%;
 
   & input {
     margin-top: 2rem;
+    width: 100%;
     background-color: #1f2125;
     color: #8f9094;
     border: none;
-    padding: 1rem 1rem 1rem 3rem;
+    padding: 0.5rem 1rem;
     outline: none;
   }
 `;
@@ -446,9 +453,11 @@ const AmountInput = styled.div`
   flex: 1;
   font-size: 1rem;
   position: relative;
+  width: 100%;
 
   & input {
-    margin-top: 2rem;
+    width: 100%;
+    margin-top: 1rem;
     background-color: #1f2125;
     color: #8f9094;
     border: none;
@@ -457,12 +466,21 @@ const AmountInput = styled.div`
   }
 `;
 
-const Title = styled.div`
+const Main = styled.div`
   display: flex;
   align-items: center;
   flex: 1;
   justify-content: center;
   font-size: 1.5rem;
+`;
+
+const Title = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-start;
+  font-size: 1rem;
+  width: 100%;
 `;
 
 const Icon = styled.div`
@@ -478,7 +496,7 @@ const AddAmount = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 100%;
+  min-width: 90vw;
   flex-direction: column;
 `;
 
