@@ -10,9 +10,9 @@ export default async function handler(req, res) {
   const { id } = req.query;
 
   if (req.method === "PUT") {
-    const { amount, date, category, recurring, type } = req.body;
+    const { amount, date, category, recurring, type, title } = req.body;
 
-    if (!amount || !date || !category || !recurring || !type) {
+    if (!amount || !date || !category || !recurring || !type || !title) {
       return res
         .status(400)
         .json({ error: "Amount, Date, Category, Recurring are required" });
@@ -26,7 +26,7 @@ export default async function handler(req, res) {
         .collection(getMongoCollectionForSpending())
         .updateOne(
           { _id: new ObjectId(id) },
-          { $set: { amount, date, category, recurring, type } }
+          { $set: { amount, date, category, recurring, type, title } }
         );
 
       if (result.matchedCount === 0) {
