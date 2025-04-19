@@ -291,9 +291,11 @@ export default function Spending({
                     <Middle>
                       <MTop>{capitalizeFirstLetter(spending?.category)}</MTop>
                       <MBottom>
-                        {timesThisMonth > 1
-                          ? `${timesThisMonth} payments`
-                          : `${timesThisMonth} payment`}
+                        {spending?.title || "No Info"}
+                        {false &&
+                          (timesThisMonth > 1
+                            ? `${timesThisMonth} payments`
+                            : `${timesThisMonth} payment`)}
                       </MBottom>
                     </Middle>
                     <Popover
