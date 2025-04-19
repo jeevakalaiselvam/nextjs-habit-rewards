@@ -801,7 +801,7 @@ const Option = styled.div`
   position: relative;
 `;
 
-const SubTitle = styled.div`
+const SubTitleInner = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -811,7 +811,7 @@ const SubTitle = styled.div`
   font-size: 1.5rem;
 `;
 
-const SubTitleInner = styled.div`
+const SubTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;

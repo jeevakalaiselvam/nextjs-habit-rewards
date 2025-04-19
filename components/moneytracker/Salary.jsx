@@ -14,8 +14,10 @@ import {
 } from "../helpers/dateHelper";
 import { DatePicker } from "antd";
 import { formatIndianNumber } from "../helpers/moneyHelper";
+import { HiOutlineChevronDoubleUp } from "react-icons/hi2";
 
 export default function Salary({ selectedDate }) {
+  const [addMode, setAddMode] = useState(false);
   const [salary, setNewSalary] = useState(null);
   const [title, setNewTitle] = useState(null);
   const [editId, setEditId] = useState("");
@@ -31,6 +33,7 @@ export default function Salary({ selectedDate }) {
         title: title,
       })
       .then((response) => {
+        setAddMode(false);
         refreshSalary();
       })
       .catch((error) => {});
@@ -58,6 +61,7 @@ export default function Salary({ selectedDate }) {
       })
       .then((response) => {
         setEditId("");
+        setAddMode(false);
         refreshSalary();
       })
       .catch((error) => {});
@@ -91,75 +95,93 @@ export default function Salary({ selectedDate }) {
 
   return (
     <Container>
-      <AddAmount>
-        <Title>Add Salary</Title>
-        <AmountTitle>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => {
-              setNewTitle(e.target.value);
+      {addMode && (
+        <AddAmount>
+          <Title>
+            Add Salary
+            <CloseAdd onClick={() => setAddMode(false)}>
+              <HiOutlineChevronDoubleUp />
+            </CloseAdd>
+          </Title>
+          <AmountTitle>
+            <input
+              type="text"
+              value={title}
+              onChange={(e) => {
+                setNewTitle(e.target.value);
+              }}
+            />
+          </AmountTitle>
+          <AmountInput>
+            <Rupees>
+              <FaIndianRupeeSign />
+            </Rupees>
+            <input
+              type="number"
+              inputMode="numeric"
+              value={salary}
+              onChange={(e) => {
+                setNewSalary(e.target.value);
+              }}
+            />
+          </AmountInput>
+          <MonthSelection>
+            <DatePicker
+              style={{ width: "100%", backgroundColor: "#1f2125" }}
+              format="MMMM, YYYY"
+              inputReadOnly
+              value={dayjs(date)}
+              picker="month"
+              onChange={(e) => {
+                setDate(dayjs(e));
+              }}
+              onFocus={(e) => e.preventDefault()}
+            />
+          </MonthSelection>
+          <SaveButton
+            onClick={() => {
+              if (editId) {
+                editSalary();
+              } else {
+                saveSalary();
+              }
             }}
-          />
-        </AmountTitle>
-        <AmountInput>
-          <Rupees>
-            <FaIndianRupeeSign />
-          </Rupees>
-          <input
-            type="number"
-            inputMode="numeric"
-            value={salary}
-            onChange={(e) => {
-              setNewSalary(e.target.value);
-            }}
-          />
-        </AmountInput>
-        <MonthSelection>
-          <DatePicker
-            style={{ width: "97%", backgroundColor: "#1f2125" }}
-            format="MMMM, YYYY"
-            inputReadOnly
-            value={dayjs(date)}
-            picker="month"
-            onChange={(e) => {
-              setDate(dayjs(e));
-            }}
-            onFocus={(e) => e.preventDefault()}
-          />
-        </MonthSelection>
+          >
+            {editId ? "Edit" : "Add"} Salary
+          </SaveButton>
+        </AddAmount>
+      )}
+      {!addMode && (
         <SaveButton
           onClick={() => {
-            if (editId) {
-              editSalary();
-            } else {
-              saveSalary();
-            }
+            setAddMode(true);
           }}
         >
-          {editId ? "Edit" : "Add"} Salary
+          Add Salary
         </SaveButton>
-      </AddAmount>
-      <DisplayAmounts>
+      )}
+      <DisplayAmounts addMode={addMode}>
         <Topbar></Topbar>
         <TitleNaming>
           <IconName>Month Salary</IconName>
           <IconSettings></IconSettings>
         </TitleNaming>
-        <SalaryContainer>
+        <SalaryContainer addMode={addMode}>
           {currentMonthSalaries
             ?.sort((a, b) => new Date(b) - new Date(a))
             ?.map((singleSalary) => {
               return (
                 <SinglePackage blink={editId == singleSalary?._id}>
                   <Image>
-                    <HiChartPie />
+                    <FaIndianRupeeSign />
                   </Image>
                   <DetailsRow>
                     <Details1>{singleSalary?.title ?? "No Info"}</Details1>
-                    <Details2>
-                      {formatDateToMonthYear(utcToLocal(singleSalary?.date))}
-                    </Details2>
+                    {false && (
+                      <Details2>
+                        {formatDateToMonthYear(utcToLocal(singleSalary?.date))}
+                      </Details2>
+                    )}
                   </DetailsRow>
                   <Money>
                     {formatIndianNumber(singleSalary?.salary)}
@@ -175,6 +197,7 @@ export default function Salary({ selectedDate }) {
                   <OptionsContainer>
                     <OptionTrigger
                       onClick={() => {
+                        setAddMode(true);
                         if (optionOpenId == singleSalary?._id) {
                           setOptionOpenId("");
                         } else {
@@ -212,9 +235,50 @@ export default function Salary({ selectedDate }) {
             })}
         </SalaryContainer>
       </DisplayAmounts>
+      {!addMode && (
+        <TotalInMonth>
+          <SubTitle>Total Income</SubTitle>
+          <MainTitle ifSelectedDateIsCurrentMonth={true}>
+            <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
+              <FaIndianRupeeSign />
+            </span>
+            {currentMonthSalaries?.reduce(
+              (acc, item) => acc + Number(item?.salary),
+              0
+            )}
+          </MainTitle>
+        </TotalInMonth>
+      )}
     </Container>
   );
 }
+
+const SubTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4f4f4f;
+  transform: translateX(6px);
+  padding: 1rem;
+  font-size: 1.5rem;
+`;
+
+const MainTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+  color: ${(props) =>
+    props.ifSelectedDateIsCurrentMonth ? "#04b488" : "#53B5D9"};
+`;
+
+const TotalInMonth = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  flex-direction: column;
+`;
 
 const OptionItem = styled.div`
   display: flex;
@@ -278,10 +342,10 @@ const Image = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  font-size: 2rem;
-  color: #673fac;
+  width: 30px;
+  height: 30px;
+  font-size: 1rem;
+  color: #04b488;
   margin-right: 1rem;
 `;
 
@@ -289,6 +353,7 @@ const Money = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
+  color: #04b488;
 `;
 
 const DetailsRow = styled.div`
@@ -305,7 +370,7 @@ const Details1 = styled.div`
   justify-content: flex-start;
   height: 30px;
   width: 100%;
-  font-size: 1.1rem;
+  font-size: 1rem;
 `;
 
 const Details2 = styled.div`
@@ -322,7 +387,7 @@ const SinglePackage = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 1rem;
+  padding: 0.5rem 0.5rem;
   background-color: #1f2125;
   border-radius: 8px;
   margin: 0.5rem 0rem;
@@ -346,9 +411,9 @@ const SalaryContainer = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  max-height: 30vh;
+  max-height: ${(props) => (props?.addMode ? "80vh" : "30vh")};
   overflow: scroll;
-  padding: 0rem 1rem;
+  padding: 0rem 0rem;
 `;
 
 const TitleNaming = styled.div`
@@ -356,8 +421,8 @@ const TitleNaming = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 1rem;
-  margin-top: 1rem;
+  padding: 0rem 0.25rem;
+  margin: 0.5rem;
 `;
 
 const IconName = styled.div`
@@ -393,10 +458,7 @@ const DisplayAmounts = styled.div`
   width: 100%;
   border-radius: 2rem 2rem 0 0;
   flex-direction: column;
-  min-height: 40vh;
-  position: absolute;
-  bottom: 0;
-  left: 0;
+  min-height: ${(props) => (props?.addMode ? "40vh" : "50vh")};
 `;
 
 const SaveButton = styled.div`
@@ -408,7 +470,7 @@ const SaveButton = styled.div`
   margin: 1rem 1rem 0rem 1rem;
   border-radius: 8px;
   padding: 1rem 1rem;
-  min-width: 95%;
+  min-width: 100%;
 
   &:active {
     transform: translate(-1px, 2px);
@@ -461,7 +523,7 @@ const AmountInput = styled.div`
     background-color: #1f2125;
     color: #8f9094;
     border: none;
-    padding: 1rem 1rem 1rem 3rem;
+    padding: 0.5rem 1rem 0.5rem 3rem;
     outline: none;
   }
 `;
@@ -481,6 +543,18 @@ const Title = styled.div`
   justify-content: flex-start;
   font-size: 1rem;
   width: 100%;
+  position: relative;
+`;
+
+const CloseAdd = styled.div`
+  position: absolute;
+  top: 50%;
+  right: 0.5rem;
+  transform: translateY(-40%);
+
+  &:active {
+    color: #2a7af1;
+  }
 `;
 
 const Icon = styled.div`
@@ -508,6 +582,6 @@ const Container = styled.div`
   min-height: 80vh;
   flex-direction: column;
   max-height: 80vh;
-  padding: 2rem 1rem 1rem 1rem;
+  padding: 1rem 1rem 1rem 1rem;
   position: relative;
 `;
