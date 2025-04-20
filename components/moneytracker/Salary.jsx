@@ -6,6 +6,7 @@ import styled from "styled-components";
 import dayjs from "dayjs";
 import {
   formatDateToMonthYear,
+  getDaysInMonth,
   getFirstDateOfCurrentMonth,
   getFirstDateOfMonth,
   getFormattedDateWords,
@@ -15,6 +16,7 @@ import {
 import { DatePicker } from "antd";
 import { formatIndianNumber } from "../helpers/moneyHelper";
 import { HiOutlineChevronDoubleUp } from "react-icons/hi2";
+import { JEEVA_INCOME_PER_DAY } from "../helpers/configHelper";
 
 export default function Salary({ selectedDate }) {
   const [addMode, setAddMode] = useState(false);
@@ -93,6 +95,15 @@ export default function Salary({ selectedDate }) {
     return isSameMonthUTCZGMT(salary?.date, selectedDate);
   });
 
+  const totalInMonth = currentMonthSalaries?.reduce(
+    (acc, item) => acc + Number(item?.salary),
+    0
+  );
+
+  let jeevaIncome = 0;
+  let totalDaysInMonth = getDaysInMonth(selectedDate);
+  jeevaIncome = totalDaysInMonth * JEEVA_INCOME_PER_DAY;
+
   return (
     <Container>
       {addMode && (
@@ -164,18 +175,38 @@ export default function Salary({ selectedDate }) {
         <Topbar></Topbar>
         {!addMode && (
           <TotalInMonth>
-            <SubTitle>Total Income</SubTitle>
-            <MainTitle ifSelectedDateIsCurrentMonth={true}>
-              <span
-                style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}
-              >
-                <FaIndianRupeeSign />
-              </span>
-              {currentMonthSalaries?.reduce(
-                (acc, item) => acc + Number(item?.salary),
-                0
-              )}
-            </MainTitle>
+            <MainLeft>
+              <MainLInner>
+                <SubTitle>Family Income</SubTitle>
+                <MainTitle ifSelectedDateIsCurrentMonth={true}>
+                  <span
+                    style={{
+                      fontSize: "1.5rem",
+                      transform: "translateY(3px)",
+                    }}
+                  >
+                    <FaIndianRupeeSign />
+                  </span>
+                  {formatIndianNumber(totalInMonth)}
+                </MainTitle>
+              </MainLInner>
+            </MainLeft>
+            <MainRight>
+              <MainLInner>
+                <SubTitle>Jeeva Income</SubTitle>
+                <MainTitle ifSelectedDateIsCurrentMonth={true}>
+                  <span
+                    style={{
+                      fontSize: "1.5rem",
+                      transform: "translateY(3px)",
+                    }}
+                  >
+                    <FaIndianRupeeSign />
+                  </span>
+                  {formatIndianNumber(jeevaIncome)}
+                </MainTitle>
+              </MainLInner>
+            </MainRight>
           </TotalInMonth>
         )}
         <TitleNaming>
@@ -255,6 +286,28 @@ export default function Salary({ selectedDate }) {
   );
 }
 
+const MainLInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+`;
+
+const MainLeft = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+`;
+
+const MainRight = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+`;
+
 const SubTitle = styled.div`
   display: flex;
   align-items: center;
@@ -262,14 +315,14 @@ const SubTitle = styled.div`
   color: #4f4f4f;
   transform: translateX(6px);
   padding: 1rem;
-  font-size: 1.5rem;
+  font-size: 1rem;
 `;
 
 const MainTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
+  padding: 0rem 0rem 0.5rem 0rem;
   color: ${(props) =>
     props.ifSelectedDateIsCurrentMonth ? "#04b488" : "#53B5D9"};
 `;
@@ -279,7 +332,7 @@ const TotalInMonth = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 2rem;
-  flex-direction: column;
+  width: 100%;
 `;
 
 const OptionItem = styled.div`

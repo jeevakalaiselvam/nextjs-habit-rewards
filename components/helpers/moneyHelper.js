@@ -1,3 +1,4 @@
+import { JEEVA_INCOME_PER_DAY } from "./configHelper";
 import {
   getDateInFormatDMY,
   getDaysInMonth,
@@ -61,7 +62,7 @@ export const calculateEarningsCurrentMonth = (salary, jsDate) => {
 
     let totalSalary = Number(monthSalary);
     let totalDaysInMonth = getDaysInMonth(selectedDate);
-    let pocketSalary = totalDaysInMonth * 1000;
+    let pocketSalary = totalDaysInMonth * JEEVA_INCOME_PER_DAY;
 
     now = getEndOfMonth(today);
     end = getEndOfMonth(today);
@@ -168,7 +169,7 @@ export const calculateEarningsEarlierMonths = (salary, jsDate) => {
 
     let totalSalary = Number(monthSalary);
     let totalDaysInMonth = getDaysInMonth(selectedDate);
-    let pocketSalary = totalDaysInMonth * 1000;
+    let pocketSalary = totalDaysInMonth * JEEVA_INCOME_PER_DAY;
 
     now = getEndOfMonth(selectedDate);
     end = getEndOfMonth(selectedDate);
