@@ -471,8 +471,12 @@ export default function Spending({
                 </span>
                 <span style={{ fontSize: "1rem" }}>
                   {showSpendingCircle
-                    ? formatIndianNumber(totalSpending ?? 0)
-                    : formatIndianNumber(Number(topGreen ?? 0))}
+                    ? formatIndianNumber(
+                        isNaN(totalSpending) ? 0 : totalSpending ?? 0
+                      )
+                    : formatIndianNumber(
+                        Number(isNaN(topGreen) ? 0 : topGreen ?? 0)
+                      )}
                 </span>
               </TBottom>
             </Total>

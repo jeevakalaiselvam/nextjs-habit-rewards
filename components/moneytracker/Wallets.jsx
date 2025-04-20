@@ -67,7 +67,6 @@ export default function Wallets() {
       <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
     </Container>;
   } else {
-    console.clear();
     return (
       <Container>
         {WALLET_OPTIONS?.map((wallet) => {
@@ -175,7 +174,7 @@ const Amount = styled.div`
     outline: none;
     border: none;
     background-color: ${(props) => props.color};
-    color: #fefefe;
+    color: ${(props) => generateDarkTextColorForLightBg(props.color)};
     padding: 0.25rem;
     font-size: 1.5rem;
   }
