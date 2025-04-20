@@ -333,6 +333,7 @@ const TotalInMonth = styled.div`
   justify-content: center;
   font-size: 2rem;
   width: 100%;
+  padding: 1rem 0rem;
 `;
 
 const OptionItem = styled.div`
@@ -485,7 +486,7 @@ const IconName = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex: 1;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
 `;
 
 const IconSettings = styled.div`

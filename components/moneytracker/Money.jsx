@@ -605,6 +605,7 @@ const TitleH = styled.div`
   align-items: center;
   justify-content: center;
   color: #7db9f9;
+  font-size: 0.9rem;
 `;
 
 const AmountH = styled.div`
@@ -613,7 +614,7 @@ const AmountH = styled.div`
   justify-content: center;
   padding: 1rem;
   color: #e3f6fe;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 `;
 
 const LeftH = styled.div`
@@ -816,6 +817,7 @@ const Option = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
+  font-size: 0.9rem;
   color: ${(props) => (props?.selected ? "#53B5D9" : "#959595")};
   position: relative;
 `;

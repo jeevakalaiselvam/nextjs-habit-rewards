@@ -457,7 +457,7 @@ export default function Spending({
                 >
                   <FaIndianRupeeSign />
                 </span>
-                <span style={{ fontSize: "1.25rem" }}>
+                <span style={{ fontSize: "1rem" }}>
                   {showSpendingCircle
                     ? formatIndianNumber(totalSpending)
                     : formatIndianNumber(Number(topGreen))}
@@ -881,6 +881,7 @@ const Option = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
+  font-size: 0.9rem;
   color: ${(props) => (props?.selected ? "#53B5D9" : "#959595")};
   position: relative;
 `;
@@ -890,6 +891,7 @@ const TTop = styled.div`
   align-items: center;
   justify-content: center;
   color: #606060;
+  font-size: 0.9rem;
   margin-bottom: 0.5rem;
 `;
 
