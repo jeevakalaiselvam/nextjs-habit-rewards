@@ -544,6 +544,14 @@ export default function Spending({
                     <CatPercent>
                       <span
                         style={{
+                          fontSize: ".75rem",
+                          transform: "translateY(2px)",
+                        }}
+                      >
+                        <FaIndianRupeeSign />
+                      </span>
+                      <span
+                        style={{
                           transform: "translateY(1px)",
                           color:
                             selectedSpendingCat == category
