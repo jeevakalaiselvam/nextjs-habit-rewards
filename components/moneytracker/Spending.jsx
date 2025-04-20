@@ -421,7 +421,7 @@ export default function Spending({
               selected={selectedTier1 == "Family"}
               onClick={() => {
                 setSelectedTier1("Family");
-                setShowSpendingCircle(0);
+                setShowSpendingCircle(1);
               }}
             >
               Home
@@ -431,7 +431,7 @@ export default function Spending({
               selected={selectedTier1 == "Grocery"}
               onClick={() => {
                 setSelectedTier1("Grocery");
-                setShowSpendingCircle(0);
+                setShowSpendingCircle(1);
               }}
             >
               Grocery
@@ -441,7 +441,7 @@ export default function Spending({
               selected={selectedTier1 == "Investment"}
               onClick={() => {
                 setSelectedTier1("Investment");
-                setShowSpendingCircle(0);
+                setShowSpendingCircle(1);
               }}
             >
               Invest
@@ -451,7 +451,7 @@ export default function Spending({
               selected={selectedTier1 == "Personal"}
               onClick={() => {
                 setSelectedTier1("Personal");
-                setShowSpendingCircle(0);
+                setShowSpendingCircle(1);
               }}
             >
               Jeeva
@@ -486,10 +486,6 @@ export default function Spending({
                   }
 
                   if (old == 1) {
-                    return 2;
-                  }
-
-                  if (old == 2) {
                     return 0;
                   }
                 })

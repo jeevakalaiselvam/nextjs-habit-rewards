@@ -67,6 +67,7 @@ export default function Wallets() {
       <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
     </Container>;
   } else {
+    console.clear();
     return (
       <Container>
         {WALLET_OPTIONS?.map((wallet) => {
@@ -77,16 +78,27 @@ export default function Wallets() {
           );
 
           let toAddWalletSpendings = allWalletsSpendings?.reduce(
-            (acc, wSpending) =>
-              acc + (wSpending?.category == wallet?.id)
-                ? Number(wSpending?.amount)
-                : 0,
+            (acc, wSpending) => {
+              if (wSpending?.category == wallet?.id) {
+                console.log({
+                  walletValueFromWeb,
+                  wallet: wallet?.id,
+                  category: wSpending?.category,
+                  acc,
+                  wSpending: wSpending?.amount,
+                });
+                return acc + Number(wSpending?.amount);
+              } else {
+                return acc;
+              }
+            },
             0
           );
 
-          walletValueFromWeb = walletValueFromWeb + toAddWalletSpendings;
+          console.log("FINAL: ", toAddWalletSpendings);
 
-          console.log({ walletValueFromWeb });
+          let walletTotal = walletValueFromWeb + toAddWalletSpendings;
+
           return (
             <WallerContainer color={wallet?.color}>
               <Name>{wallet?.name?.toUpperCase()}</Name>
@@ -100,7 +112,7 @@ export default function Wallets() {
                   >
                     <FaIndianRupeeSign />
                   </span>
-                  {formatIndianNumber(walletValueFromWeb)}
+                  {formatIndianNumber(walletTotal)}
                 </AmountReadOnly>
               )}
 
@@ -132,6 +144,7 @@ export default function Wallets() {
                 <Edit
                   color={generateDarkTextColorForLightBg(wallet?.color, 10)}
                   onClick={() => {
+                    setWalletValue(walletValueFromWeb);
                     setWalletIdInEdit(wallet?.id);
                   }}
                 >

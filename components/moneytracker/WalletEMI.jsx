@@ -64,7 +64,7 @@ export default function WalletEMI() {
   let topTickerMessage = "Month";
 
   let MIN = 60000;
-  let MAX = 60000;
+  let MAX = 90000;
   let EXTREME = 120000;
 
   let perMonthMinEstimate = sum / MIN;
