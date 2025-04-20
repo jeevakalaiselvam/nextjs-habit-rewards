@@ -406,6 +406,17 @@ export default function Spending({
     );
   }
 
+  const replaceCatName = (cat) => {
+    if (cat?.toLowerCase() == "Provident Fund"?.toLowerCase()) {
+      return "PF";
+    }
+    if (cat?.toLowerCase() == "Mutual Funds"?.toLowerCase()) {
+      return "MF";
+    } else {
+      return cat;
+    }
+  };
+
   if (loading) {
     return (
       <Container>
@@ -540,7 +551,9 @@ export default function Spending({
                     }}
                   >
                     <CatIcon color={ICON_COLORS[category]}></CatIcon>
-                    <CatName>{capitalizeFirstLetter(category)}</CatName>
+                    <CatName>
+                      {capitalizeFirstLetter(replaceCatName(category))}
+                    </CatName>
                     <CatPercent>
                       <span
                         style={{
