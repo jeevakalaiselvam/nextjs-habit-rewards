@@ -162,6 +162,22 @@ export default function Salary({ selectedDate }) {
       )}
       <DisplayAmounts addMode={addMode}>
         <Topbar></Topbar>
+        {!addMode && (
+          <TotalInMonth>
+            <SubTitle>Total Income</SubTitle>
+            <MainTitle ifSelectedDateIsCurrentMonth={true}>
+              <span
+                style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}
+              >
+                <FaIndianRupeeSign />
+              </span>
+              {currentMonthSalaries?.reduce(
+                (acc, item) => acc + Number(item?.salary),
+                0
+              )}
+            </MainTitle>
+          </TotalInMonth>
+        )}
         <TitleNaming>
           <IconName>Month Salary</IconName>
           <IconSettings></IconSettings>
@@ -235,20 +251,6 @@ export default function Salary({ selectedDate }) {
             })}
         </SalaryContainer>
       </DisplayAmounts>
-      {!addMode && (
-        <TotalInMonth>
-          <SubTitle>Total Income</SubTitle>
-          <MainTitle ifSelectedDateIsCurrentMonth={true}>
-            <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
-              <FaIndianRupeeSign />
-            </span>
-            {currentMonthSalaries?.reduce(
-              (acc, item) => acc + Number(item?.salary),
-              0
-            )}
-          </MainTitle>
-        </TotalInMonth>
-      )}
     </Container>
   );
 }
@@ -411,7 +413,7 @@ const SalaryContainer = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  max-height: ${(props) => (props?.addMode ? "80vh" : "30vh")};
+  max-height: ${(props) => (props?.addMode ? "80vh" : "55vh")};
   overflow: scroll;
   padding: 0rem 0rem;
 `;

@@ -3,7 +3,11 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { PieChart, Pie, Cell } from "recharts";
 import { capitalizeFirstLetter } from "../helpers/stringHelper";
-import { formatIndianNumber } from "../helpers/moneyHelper";
+import {
+  calculateEarningsCurrentMonth,
+  calculateEarningsEarlierMonths,
+  formatIndianNumber,
+} from "../helpers/moneyHelper";
 import { FaCaretDown, FaRupeeSign } from "react-icons/fa";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import {
@@ -23,7 +27,12 @@ import {
 import { LoadingOutlined } from "@ant-design/icons";
 import { itemsFamily, itemsPersonal, itemsType, itemsWallet } from "./Entry";
 import dayjs from "dayjs";
-import { getFifteenth } from "../helpers/dateHelper";
+import {
+  generateDailyTimestamps,
+  getDateInFormatDMY,
+  getFifteenth,
+  isSameMonthUTCZGMT,
+} from "../helpers/dateHelper";
 import { HiViewBoards } from "react-icons/hi";
 
 export default function Spending({
@@ -32,10 +41,13 @@ export default function Spending({
   forceRefreshExpense,
 }) {
   const [loading, setLoading] = useState(true);
+  const [showSpendingCircle, setShowSpendingCircle] = useState(true);
   const [selectedSpendingCat, setSelectedSpendingCat] = useState("All");
   const [selectedTier1, setSelectedTier1] = useState("Family");
   const [allSpendings, setAllSpendings] = useState([]);
   const [newValueForSpending, setNewValueForSpending] = useState({});
+  const [values, setValues] = useState({ totalEarned: 0, pocketMoney: 0 });
+  const [salaries, setAllSalaries] = useState([]);
   const [spendingIdToUpdate, setSpendingIdToUpdate] = useState({
     amount: "0",
     recurring: "false",
@@ -43,6 +55,58 @@ export default function Spending({
     category: "",
     type: "personal",
   });
+
+  const today = new Date(); // actual current date
+
+  const now = new Date(selectedDate);
+
+  const ifSelectedDateIsCurrentMonth =
+    today?.getFullYear() === new Date(selectedDate).getFullYear() &&
+    today?.getMonth() === new Date(selectedDate).getMonth();
+
+  const allSpendingFamilyInMonth = allSpendings.filter((s) => {
+    const spendingDate = new Date(s.date);
+    return (
+      spendingDate.getFullYear() === now.getFullYear() &&
+      spendingDate.getMonth() === now.getMonth() &&
+      s?.type == "Family"
+    );
+  });
+
+  const allSpendingPersonalInMonth = allSpendings.filter((s) => {
+    const spendingDate = new Date(s.date);
+    return (
+      spendingDate.getFullYear() === now.getFullYear() &&
+      spendingDate.getMonth() === now.getMonth() &&
+      s?.type == "Personal"
+    );
+  });
+
+  const allSpendingFamilyInMonthAmount = allSpendingFamilyInMonth?.reduce(
+    (acc, spend) => acc + Number(spend?.amount),
+    0
+  );
+
+  const allSpendingPersonalInMonthAmount = allSpendingPersonalInMonth?.reduce(
+    (acc, spend) => acc + Number(spend?.amount),
+    0
+  );
+
+  const refreshPackages = () => {
+    setLoading(true);
+    axios
+      .get("/api/salary")
+      .then((response) => {
+        const data = response?.data;
+        setAllSalaries(data);
+        setLoading(false);
+      })
+      .catch((error) => {});
+  };
+
+  useEffect(() => {
+    refreshPackages();
+  }, []);
 
   const refreshSpendings = () => {
     setLoading(true);
@@ -59,13 +123,8 @@ export default function Spending({
     refreshSpendings();
   }, [showEntry, forceRefreshExpense]);
 
-  const now = new Date(selectedDate);
-
   let thisMonthSpendings = allSpendings.filter((s) => {
     const spendingDate = new Date(s.date);
-    console.log(
-      new Date(spendingDate).getFullYear() === new Date(now).getFullYear()
-    );
     return (
       new Date(spendingDate).getFullYear() === new Date(now).getFullYear() &&
       new Date(spendingDate).getMonth() === new Date(now).getMonth() &&
@@ -76,7 +135,6 @@ export default function Spending({
   let allCategoriesThisMonth = [];
 
   let thisMonthSpendingsForCatSelected = thisMonthSpendings?.filter((spend) => {
-    console.log(spend);
     return (
       spend?.category == selectedSpendingCat || selectedSpendingCat === "All"
     );
@@ -224,10 +282,129 @@ export default function Spending({
     onClick: handleSpendingCatMenuChange,
   };
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (selectedDate) {
+        const currentMonthSalaries = salaries?.filter((salary) => {
+          return isSameMonthUTCZGMT(salary?.date, selectedDate);
+        });
+
+        const totalCurrentMonthSalary = currentMonthSalaries?.reduce(
+          (acc, sal) => acc + Number(sal?.salary),
+          0
+        );
+
+        const today = new Date(); // actual current date
+
+        const ifSelectedDateIsCurrentMonth =
+          today?.getFullYear() === new Date(selectedDate).getFullYear() &&
+          today?.getMonth() === new Date(selectedDate).getMonth();
+
+        if (ifSelectedDateIsCurrentMonth) {
+          setValues(
+            calculateEarningsCurrentMonth(
+              totalCurrentMonthSalary,
+              new Date(selectedDate)
+            )
+          );
+        } else {
+          setValues(
+            calculateEarningsEarlierMonths(
+              totalCurrentMonthSalary,
+              selectedDate?.$d
+            )
+          );
+        }
+      }
+    }, 1000);
+
+    return () => clearInterval(interval); // cleanup on unmount
+  }, [salaries, selectedDate]);
+
   const menuType = {
     items: itemsType,
     onClick: handleMenuClickType,
   };
+
+  let topGreen = 0;
+  let bottomGreen = 0;
+  let topTicker = 0;
+  let bottomTicker = 0;
+  let displayItems = [];
+  let topMessage = "";
+  let bottomMessage = "";
+  let topTickerMessage = "";
+  let bottomTickerMessage = "";
+  let leftTitle = "LEFT TITLE";
+  let rightTitle = "RIGHT TITLE";
+  let leftAmount = 0;
+  let rightAmount = 0;
+
+  const allSpendingInvestmentInMonth = allSpendings.filter((s) => {
+    const spendingDate = new Date(s.date);
+    return (
+      spendingDate.getFullYear() === now.getFullYear() &&
+      spendingDate.getMonth() === now.getMonth() &&
+      s?.type == "Investment"
+    );
+  });
+
+  const allSpendingInvestmentInMonthAmount =
+    allSpendingInvestmentInMonth?.reduce(
+      (acc, spend) => acc + Number(spend?.amount),
+      0
+    );
+
+  if (ifSelectedDateIsCurrentMonth) {
+    //CURRENT MONTH SELECTION
+    topGreen =
+      values?.totalSecondsTillEnd * values?.TperSecond -
+      values?.totalSecondsTillEnd * values?.PMperSecond -
+      allSpendingFamilyInMonthAmount;
+    topTicker = values?.TperDay - values?.PMperDay;
+    bottomGreen =
+      values?.totalSecondsTillEnd * values?.PMperSecond -
+      allSpendingPersonalInMonthAmount;
+    bottomTicker = values?.PMperDay;
+    leftAmount = allSpendingFamilyInMonthAmount;
+    rightAmount = allSpendingPersonalInMonthAmount;
+    topTickerMessage = " / day";
+    bottomTickerMessage = " / day";
+    topMessage = "Family Balance";
+    bottomMessage = "Personal Balance";
+    leftTitle = "Family Expense";
+    rightTitle = "Jeeva Expense";
+
+    const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
+    displayItems = generateDailyTimestamps(
+      dateOldFormat,
+      ifSelectedDateIsCurrentMonth
+    );
+  } else {
+    topGreen =
+      values?.totalSecondsTillEnd * values?.TperSecond -
+      values?.totalSecondsTillEnd * values?.PMperSecond -
+      allSpendingFamilyInMonthAmount;
+    topTicker = values?.TperDay - values?.PMperDay;
+    bottomGreen =
+      values?.totalSecondsTillEnd * values?.PMperSecond -
+      allSpendingPersonalInMonthAmount;
+    bottomTicker = values?.PMperDay;
+    leftAmount = allSpendingFamilyInMonthAmount;
+    rightAmount = allSpendingPersonalInMonthAmount;
+    topTickerMessage = " / day";
+    bottomTickerMessage = " / day";
+    topMessage = "Family Balance";
+    bottomMessage = "Personal Balance";
+    leftTitle = "Family Expense";
+    rightTitle = "Jeeva Expense";
+
+    const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
+    displayItems = generateDailyTimestamps(
+      dateOldFormat,
+      ifSelectedDateIsCurrentMonth
+    );
+  }
 
   if (loading) {
     return (
@@ -273,7 +450,7 @@ export default function Spending({
         <Top>
           <LeftTop>
             <Total>
-              <TTop>Spent</TTop>
+              <TTop>{showSpendingCircle ? "Spent" : "Balance"}</TTop>
               <TBottom>
                 <span
                   style={{ fontSize: "1rem", transform: "translateY(2px)" }}
@@ -281,11 +458,17 @@ export default function Spending({
                   <FaIndianRupeeSign />
                 </span>
                 <span style={{ fontSize: "1.25rem" }}>
-                  {formatIndianNumber(totalSpending)}
+                  {showSpendingCircle
+                    ? formatIndianNumber(totalSpending)
+                    : formatIndianNumber(Number(topGreen))}
                 </span>
               </TBottom>
             </Total>
-            <PieChart width={175} height={175}>
+            <PieChart
+              width={175}
+              height={175}
+              onClick={() => setShowSpendingCircle((old) => !old)}
+            >
               <Pie
                 data={data}
                 cx="50%"
@@ -329,7 +512,22 @@ export default function Spending({
                     <CatIcon color={ICON_COLORS[category]}></CatIcon>
                     <CatName>{capitalizeFirstLetter(category)}</CatName>
                     <CatPercent>
-                      {formatIndianNumber(catSpending?.toFixed(0))}
+                      <span
+                        style={{
+                          transform: "translateY(1px)",
+                          fontSize: ".75rem",
+                          opacity: "0.5",
+                        }}
+                      >
+                        <FaIndianRupeeSign />
+                      </span>
+                      <span
+                        style={{
+                          transform: "translateY(1px)",
+                        }}
+                      >
+                        {formatIndianNumber(catSpending?.toFixed(0))}
+                      </span>
                     </CatPercent>
                   </CatItem>
                 );
@@ -719,13 +917,13 @@ const CatName = styled.div`
   align-items: center;
   justify-content: flex-start;
   font-size: 0.8rem;
-  min-width: 100px;
+  min-width: 70px;
 `;
 
 const CatPercent = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
   flex: 1;
   font-size: 0.9rem;
   color: #8f8f8f;
@@ -807,7 +1005,7 @@ const Top = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 95%;
-  padding: 1rem 0;
+  padding: 2rem 0 1rem 0;
 `;
 
 const Bottom = styled.div`

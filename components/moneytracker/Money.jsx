@@ -139,6 +139,21 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
     );
   });
 
+  const allSpendingInvestmentInMonth = allSpendings.filter((s) => {
+    const spendingDate = new Date(s.date);
+    return (
+      spendingDate.getFullYear() === now.getFullYear() &&
+      spendingDate.getMonth() === now.getMonth() &&
+      s?.type == "Investment"
+    );
+  });
+
+  const allSpendingInvestmentInMonthAmount =
+    allSpendingInvestmentInMonth?.reduce(
+      (acc, spend) => acc + Number(spend?.amount),
+      0
+    );
+
   const allSpendingPersonalInMonth = allSpendings.filter((s) => {
     const spendingDate = new Date(s.date);
     return (
@@ -262,7 +277,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
         topGreen =
           values?.totalSecondsTillEnd * values?.TperSecond -
           values?.totalSecondsTillEnd * values?.PMperSecond -
-          allSpendingFamilyInMonthAmount;
+          (allSpendingFamilyInMonthAmount + allSpendingInvestmentInMonthAmount);
         topTicker = values?.TperDay - values?.PMperDay;
         bottomGreen =
           values?.totalSecondsTillEnd * values?.PMperSecond -
@@ -317,7 +332,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
         topGreen =
           values?.totalSecondsTillEnd * values?.TperSecond -
           values?.totalSecondsTillEnd * values?.PMperSecond -
-          allSpendingFamilyInMonthAmount;
+          (allSpendingFamilyInMonthAmount + allSpendingInvestmentInMonthAmount);
         topTicker = values?.TperDay - values?.PMperDay;
         bottomGreen =
           values?.totalSecondsTillEnd * values?.PMperSecond -
@@ -377,7 +392,11 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
             <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
               <FaIndianRupeeSign />
             </span>
-            {topGreen ? (topGreen > 0 ? topGreen?.toFixed(2) : 0) : 0}
+            {topGreen
+              ? topGreen > 0
+                ? topGreen?.toFixed(2)
+                : topGreen?.toFixed(2)
+              : 0}
           </MainTitle>
           <Ticker>
             <span
