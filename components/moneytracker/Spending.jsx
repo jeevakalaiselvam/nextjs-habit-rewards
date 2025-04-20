@@ -41,7 +41,7 @@ export default function Spending({
   forceRefreshExpense,
 }) {
   const [loading, setLoading] = useState(true);
-  const [showSpendingCircle, setShowSpendingCircle] = useState(true);
+  const [showSpendingCircle, setShowSpendingCircle] = useState(0);
   const [selectedSpendingCat, setSelectedSpendingCat] = useState("All");
   const [selectedTier1, setSelectedTier1] = useState("Family");
   const [allSpendings, setAllSpendings] = useState([]);
@@ -360,7 +360,7 @@ export default function Spending({
     topGreen =
       values?.totalSecondsTillEnd * values?.TperSecond -
       values?.totalSecondsTillEnd * values?.PMperSecond -
-      allSpendingFamilyInMonthAmount;
+      (allSpendingFamilyInMonthAmount + allSpendingInvestmentInMonthAmount);
     topTicker = values?.TperDay - values?.PMperDay;
     bottomGreen =
       values?.totalSecondsTillEnd * values?.PMperSecond -
@@ -384,7 +384,7 @@ export default function Spending({
     topGreen =
       values?.totalSecondsTillEnd * values?.TperSecond -
       values?.totalSecondsTillEnd * values?.PMperSecond -
-      allSpendingFamilyInMonthAmount;
+      (allSpendingFamilyInMonthAmount + allSpendingInvestmentInMonthAmount);
     topTicker = values?.TperDay - values?.PMperDay;
     bottomGreen =
       values?.totalSecondsTillEnd * values?.PMperSecond -
@@ -467,7 +467,21 @@ export default function Spending({
             <PieChart
               width={175}
               height={175}
-              onClick={() => setShowSpendingCircle((old) => !old)}
+              onClick={() =>
+                setShowSpendingCircle((old) => {
+                  if (old == 0) {
+                    return 1;
+                  }
+
+                  if (old == 1) {
+                    return 2;
+                  }
+
+                  if (old == 2) {
+                    return 0;
+                  }
+                })
+              }
             >
               <Pie
                 data={data}
@@ -508,22 +522,21 @@ export default function Spending({
                   ?.reduce((acc, spend) => acc + Number(spend?.amount), 0);
                 const percentage = (catSpending / totalSpending) * 100;
                 return (
-                  <CatItem>
+                  <CatItem
+                    onClick={() => {
+                      setSelectedSpendingCat(category);
+                    }}
+                  >
                     <CatIcon color={ICON_COLORS[category]}></CatIcon>
                     <CatName>{capitalizeFirstLetter(category)}</CatName>
                     <CatPercent>
                       <span
                         style={{
                           transform: "translateY(1px)",
-                          fontSize: ".75rem",
-                          opacity: "0.5",
-                        }}
-                      >
-                        <FaIndianRupeeSign />
-                      </span>
-                      <span
-                        style={{
-                          transform: "translateY(1px)",
+                          color:
+                            selectedSpendingCat == category
+                              ? "#FEFEFE"
+                              : "#8f8f8f",
                         }}
                       >
                         {formatIndianNumber(catSpending?.toFixed(0))}
@@ -580,7 +593,7 @@ export default function Spending({
                       </Popconfirm>
                     </Left>
                     <Middle>
-                      <MTop>{capitalizeFirstLetter(spending?.category)}</MTop>
+                      {/* <MTop>{capitalizeFirstLetter(spending?.category)}</MTop> */}
                       <MBottom>
                         {spending?.title || "No Info"}
                         {false &&
@@ -723,13 +736,13 @@ export default function Spending({
                       >
                         <span
                           style={{
-                            fontSize: ".8rem",
+                            fontSize: ".75rem",
                             transform: "translateY(1px)",
                           }}
                         >
                           <FaIndianRupeeSign />
                         </span>
-                        <span style={{ fontSize: ".95rem" }}>
+                        <span style={{ fontSize: ".75rem" }}>
                           {formatIndianNumber(spending?.amount)}
                         </span>
                       </Right>
@@ -792,7 +805,6 @@ const MBottom = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 0.5rem;
   flex: 1;
   font-size: 0.9rem;
   color: #6c6d6f;
@@ -803,10 +815,7 @@ const Left = styled.div`
   align-items: center;
   justify-content: center;
   border-radius: 2rem;
-  width: 45px;
-  height: 45px;
-  font-size: 1.75rem;
-  background-color: #faf2e6;
+  font-size: 1rem;
   color: ${(props) => props.color};
 `;
 
@@ -923,7 +932,7 @@ const CatName = styled.div`
 const CatPercent = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-end;
   flex: 1;
   font-size: 0.9rem;
   color: #8f8f8f;
