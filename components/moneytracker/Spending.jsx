@@ -559,7 +559,7 @@ export default function Spending({
                 placement="left"
               >
                 <Space>
-                  <span style={{ fontSize: "1rem", color: "#ACAEB2" }}>
+                  <span style={{ fontSize: ".9rem", color: "#ACAEB2" }}>
                     {selectedSpendingCat ?? "Select Category"}
                   </span>
                   <Caret>
@@ -996,7 +996,7 @@ const BTitle1 = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   padding-left: 0rem;
 `;
 
@@ -1005,7 +1005,7 @@ const BTitle2 = styled.div`
   align-items: center;
   justify-content: flex-end;
   width: 100%;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   padding-left: 0rem;
 `;
 
