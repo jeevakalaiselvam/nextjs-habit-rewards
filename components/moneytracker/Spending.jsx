@@ -419,28 +419,40 @@ export default function Spending({
           <Options>
             <Option
               selected={selectedTier1 == "Family"}
-              onClick={() => setSelectedTier1("Family")}
+              onClick={() => {
+                setSelectedTier1("Family");
+                setShowSpendingCircle(0);
+              }}
             >
               Home
               {selectedTier1 == "Family" && <SelectedDot></SelectedDot>}
             </Option>{" "}
             <Option
               selected={selectedTier1 == "Grocery"}
-              onClick={() => setSelectedTier1("Grocery")}
+              onClick={() => {
+                setSelectedTier1("Grocery");
+                setShowSpendingCircle(0);
+              }}
             >
               Grocery
               {selectedTier1 == "Grocery" && <SelectedDot></SelectedDot>}
             </Option>{" "}
             <Option
               selected={selectedTier1 == "Investment"}
-              onClick={() => setSelectedTier1("Investment")}
+              onClick={() => {
+                setSelectedTier1("Investment");
+                setShowSpendingCircle(0);
+              }}
             >
               Invest
               {selectedTier1 == "Investment" && <SelectedDot></SelectedDot>}
             </Option>
             <Option
               selected={selectedTier1 == "Personal"}
-              onClick={() => setSelectedTier1("Personal")}
+              onClick={() => {
+                setSelectedTier1("Personal");
+                setShowSpendingCircle(0);
+              }}
             >
               Jeeva
               {selectedTier1 == "Personal" && <SelectedDot></SelectedDot>}
@@ -459,8 +471,8 @@ export default function Spending({
                 </span>
                 <span style={{ fontSize: "1rem" }}>
                   {showSpendingCircle
-                    ? formatIndianNumber(totalSpending)
-                    : formatIndianNumber(Number(topGreen))}
+                    ? formatIndianNumber(totalSpending ?? 0)
+                    : formatIndianNumber(Number(topGreen ?? 0))}
                 </span>
               </TBottom>
             </Total>

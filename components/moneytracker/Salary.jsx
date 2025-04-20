@@ -101,8 +101,9 @@ export default function Salary({ selectedDate }) {
   );
 
   let jeevaIncome = 0;
-  let totalDaysInMonth = getDaysInMonth(selectedDate);
+  let totalDaysInMonth = getDaysInMonth(new Date(selectedDate));
   jeevaIncome = totalDaysInMonth * JEEVA_INCOME_PER_DAY;
+  let afterJeeva = totalInMonth - jeevaIncome;
 
   return (
     <Container>
@@ -187,7 +188,7 @@ export default function Salary({ selectedDate }) {
                   >
                     <FaIndianRupeeSign />
                   </span>
-                  {formatIndianNumber(totalInMonth)}
+                  {formatIndianNumber(afterJeeva)}
                 </MainTitle>
               </MainLInner>
             </MainLeft>
