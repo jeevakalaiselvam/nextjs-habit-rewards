@@ -194,6 +194,24 @@ export const getSecondsFromMonthStart = () => {
   return seconds;
 };
 
+export const getMonthsAfterCurrent = (currentTimestamp, startDate, endDate) => {
+  const current = new Date(currentTimestamp);
+  const start = new Date(startDate);
+  const end = new Date(endDate);
+
+  if (current > end) return 0;
+
+  const effectiveStart = current > start ? current : start;
+
+  const startYear = effectiveStart.getUTCFullYear();
+  const startMonth = effectiveStart.getUTCMonth();
+  const endYear = end.getUTCFullYear();
+  const endMonth = end.getUTCMonth();
+
+  let left = (endYear - startYear) * 12 + (endMonth - startMonth) + 1;
+  return left;
+};
+
 export const getRemainingTimeTo8Hours = (hStr, mStr, sStr) => {
   const parseUnit = (str, unit) => {
     const match = str?.match(new RegExp(`(\\d+)${unit}`, "i"));

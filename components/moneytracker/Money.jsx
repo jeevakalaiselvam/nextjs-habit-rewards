@@ -90,8 +90,6 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
           today?.getFullYear() === new Date(selectedDate).getFullYear() &&
           today?.getMonth() === new Date(selectedDate).getMonth();
 
-        console.log(totalCurrentMonthSalary);
-
         if (ifSelectedDateIsCurrentMonth) {
           setValues(
             calculateEarningsCurrentMonth(
@@ -130,7 +128,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
     today?.getMonth() === new Date(selectedDate).getMonth();
 
   const allSpendingRecurring = allSpendings?.filter((spend) => {
-    return spend?.recurring == "Multi" || spend?.recurring;
+    return spend?.recurring == "Multi";
   });
 
   const allSpendingSingleInMonth = allSpendings.filter((s) => {

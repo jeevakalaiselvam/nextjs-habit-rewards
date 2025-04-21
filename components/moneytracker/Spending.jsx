@@ -31,6 +31,7 @@ import {
   generateDailyTimestamps,
   getDateInFormatDMY,
   getFifteenth,
+  getMonthsAfterCurrent,
   isSameMonthUTCZGMT,
 } from "../helpers/dateHelper";
 import { HiViewBoards } from "react-icons/hi";
@@ -40,6 +41,7 @@ export default function Spending({
   selectedDate,
   forceRefreshExpense,
 }) {
+  const [showEMIInMonth, setShowEMIInMonth] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showSpendingCircle, setShowSpendingCircle] = useState(0);
   const [selectedSpendingCat, setSelectedSpendingCat] = useState("All");
@@ -65,7 +67,7 @@ export default function Spending({
     today?.getMonth() === new Date(selectedDate).getMonth();
 
   const allSpendingRecurring = allSpendings?.filter((spend) => {
-    return spend?.recurring == "Multi" || spend?.recurring;
+    return spend?.recurring == "Multi";
   });
 
   const allSpendingSingleInMonth = allSpendings.filter((s) => {
@@ -77,15 +79,33 @@ export default function Spending({
     );
   });
 
-  const allSpendingRecurringInMonth = allSpendingRecurring?.filter((spend) => {
+  let allSpendingRecurringInMonth = allSpendingRecurring?.filter((spend) => {
     const target = new Date(selectedDate).toUTCString();
     const start = spend?.startDate;
     const end = spend?.endDate;
 
+    let monthsLeft = getMonthsAfterCurrent(
+      new Date(selectedDate).toUTCString(),
+      new Date(spend?.startDate)?.toUTCString(),
+      new Date(spend?.endDate)?.toISOString()
+    );
+
     const isBetween =
       new Date(target) >= new Date(start) && new Date(target) <= new Date(end);
-    return isBetween;
+    return isBetween && monthsLeft >= 1;
   });
+
+  allSpendingRecurringInMonth = allSpendingRecurringInMonth.map(
+    (recExpense) => {
+      let monthsLeft = getMonthsAfterCurrent(
+        new Date(selectedDate).toUTCString(),
+        new Date(recExpense?.startDate)?.toUTCString(),
+        new Date(recExpense?.endDate)?.toISOString()
+      );
+
+      return { ...recExpense, left: monthsLeft };
+    }
+  );
 
   const allSpendingInMonth = [
     ...allSpendingSingleInMonth,
@@ -132,12 +152,6 @@ export default function Spending({
     );
   });
 
-  console.log(
-    allSpendingFamilyInMonth,
-    allSpendingPersonalInMonth,
-    allSpendingInvestmentInMonth
-  );
-
   const refreshPackages = () => {
     setLoading(true);
     axios
@@ -155,6 +169,7 @@ export default function Spending({
   }, []);
 
   const refreshSpendings = () => {
+    setSpendingIdToUpdate("");
     setLoading(true);
     axios
       .get("/api/spend")
@@ -360,7 +375,7 @@ export default function Spending({
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (selectedDate) {
+      if (selectedDate && !spendingIdToUpdate) {
         const currentMonthSalaries = salaries?.filter((salary) => {
           return isSameMonthUTCZGMT(salary?.date, selectedDate);
         });
@@ -643,7 +658,16 @@ export default function Spending({
         </Top>
         <Bottom>
           <BTitlee>
-            <BTitle1>All Spendings</BTitle1>
+            {!showEMIInMonth && (
+              <BTitle1 onClick={() => setShowEMIInMonth((old) => !old)}>
+                All Spendings
+              </BTitle1>
+            )}
+            {showEMIInMonth && (
+              <BTitle1 onClick={() => setShowEMIInMonth((old) => !old)}>
+                All Spendings
+              </BTitle1>
+            )}
             <BTitle2>
               <Dropdown
                 trigger={["click"]}
@@ -696,207 +720,214 @@ export default function Spending({
                             : `${timesThisMonth} payment`)}
                       </MBottom>
                     </Middle>
-                    <Popover
-                      placement="left"
-                      content={
-                        <Amount>
-                          <input
-                            style={{ width: "100%", marginBottom: ".5rem" }}
-                            inputMode="numeric"
-                            type="number"
-                            value={newValueForSpending?.amount}
-                            onChange={(e) => {
-                              setNewValueForSpending((old) => ({
-                                ...old,
-                                amount: e.target.value,
-                              }));
-                            }}
-                          />
+                    <Right>
+                      {spending?.left && (
+                        <EMILeft>{spending?.left} EMI</EMILeft>
+                      )}
+                      <Popover
+                        placement="left"
+                        content={
+                          <Amount>
+                            <input
+                              style={{ width: "100%", marginBottom: ".5rem" }}
+                              inputMode="numeric"
+                              type="number"
+                              value={newValueForSpending?.amount}
+                              onChange={(e) => {
+                                setNewValueForSpending((old) => ({
+                                  ...old,
+                                  amount: e.target.value,
+                                }));
+                              }}
+                            />
 
-                          <AmountInputDropdown2>
-                            <Dropdown
-                              trigger={["click"]}
-                              overlayStyle={{ minWidth: "80%" }}
-                              menu={menuTypeRecurring}
-                              overlayClassName="full-width-dropdown"
+                            <AmountInputDropdown2>
+                              <Dropdown
+                                trigger={["click"]}
+                                overlayStyle={{ minWidth: "80%" }}
+                                menu={menuTypeRecurring}
+                                overlayClassName="full-width-dropdown"
+                              >
+                                <Space>
+                                  <span
+                                    style={{
+                                      fontSize: "1rem",
+                                      color: "#ACAEB2",
+                                    }}
+                                  >
+                                    {newValueForSpending?.recurring
+                                      ? capitalizeFirstLetter(
+                                          newValueForSpending?.recurring
+                                        )
+                                      : "Select Type"}
+                                  </span>
+                                  <Caret>
+                                    <FaCaretDown />
+                                  </Caret>
+                                </Space>
+                              </Dropdown>
+                            </AmountInputDropdown2>
+                            <FormContainer>
+                              <AmountInputDropdownPeriod>
+                                <Picker1>
+                                  <DatePicker
+                                    allowClear={false}
+                                    style={{
+                                      width: "100%",
+                                      backgroundColor: "#1f2125",
+                                      outline: "none",
+                                      border: "none",
+                                    }}
+                                    defaultValue={dayjs(
+                                      newValueForSpending?.startDate
+                                    )}
+                                    format="MMMM, YYYY"
+                                    value={dayjs(
+                                      newValueForSpending?.startDate
+                                    )}
+                                    picker="month"
+                                    onChange={(e) => {
+                                      setNewValueForSpending((old) => ({
+                                        ...old,
+                                        startDate: dayjs(e),
+                                      }));
+                                    }}
+                                  />
+                                </Picker1>
+                                <Picker2>
+                                  <DatePicker
+                                    allowClear={false}
+                                    style={{
+                                      width: "100%",
+                                      backgroundColor: "#1f2125",
+                                      outline: "none",
+                                      border: "none",
+                                    }}
+                                    defaultValue={dayjs(
+                                      newValueForSpending?.endDate
+                                    )}
+                                    format="MMMM, YYYY"
+                                    value={dayjs(newValueForSpending?.endDate)}
+                                    picker="month"
+                                    onChange={(e) => {
+                                      setNewValueForSpending((old) => ({
+                                        ...old,
+                                        endDate: dayjs(e),
+                                      }));
+                                    }}
+                                  />
+                                </Picker2>
+                              </AmountInputDropdownPeriod>
+                              <AddAmount>
+                                <AmountInputDropdown2>
+                                  <Dropdown
+                                    trigger={["click"]}
+                                    overlayStyle={{ minWidth: "80%" }}
+                                    menu={menuType}
+                                    overlayClassName="full-width-dropdown"
+                                  >
+                                    <Space>
+                                      <span
+                                        style={{
+                                          fontSize: "1rem",
+                                          color: "#ACAEB2",
+                                        }}
+                                      >
+                                        {newValueForSpending.type
+                                          ? capitalizeFirstLetter(
+                                              newValueForSpending.type
+                                            )
+                                          : "Select Type"}
+                                      </span>
+                                      <Caret>
+                                        <FaCaretDown />
+                                      </Caret>
+                                    </Space>
+                                  </Dropdown>
+                                </AmountInputDropdown2>
+
+                                <AmountInput>
+                                  <input
+                                    style={{ minWidth: "100%" }}
+                                    type="text"
+                                    value={newValueForSpending?.title}
+                                    onChange={(e) => {
+                                      setNewValueForSpending((old) => ({
+                                        ...old,
+                                        title: String(e.target.value),
+                                      }));
+                                    }}
+                                  />
+                                </AmountInput>
+
+                                <AmountInputDropdown>
+                                  <Dropdown
+                                    trigger={["click"]}
+                                    overlayStyle={{ minWidth: "80%" }}
+                                    menu={menu}
+                                    overlayClassName="full-width-dropdown"
+                                    on
+                                  >
+                                    <Space>
+                                      <span
+                                        style={{
+                                          fontSize: "1rem",
+                                          color: "#ACAEB2",
+                                        }}
+                                      >
+                                        {newValueForSpending?.category
+                                          ? capitalizeFirstLetter(
+                                              newValueForSpending?.category
+                                            )
+                                          : "Select Category"}
+                                      </span>
+                                      <Caret>
+                                        <FaCaretDown />
+                                      </Caret>
+                                    </Space>
+                                  </Dropdown>
+                                </AmountInputDropdown>
+
+                                <MonthSelection>
+                                  <DatePicker
+                                    style={{
+                                      width: "100%",
+                                      backgroundColor: "#1f2125",
+                                      padding: "0.5rem 1rem",
+                                      outline: "none",
+                                      border: "none",
+                                    }}
+                                    format="DD-MM-YYYY"
+                                    inputReadOnly
+                                    value={dayjs(newValueForSpending?.date)}
+                                    picker="date"
+                                    onChange={(e) => {
+                                      setNewValueForSpending((old) => ({
+                                        ...old,
+                                        date: new Date(dayjs(e))?.toString(),
+                                      }));
+                                    }}
+                                    onFocus={(e) => e.preventDefault()}
+                                  />
+                                </MonthSelection>
+                              </AddAmount>
+                            </FormContainer>
+                            <SaveButton
+                              onClick={() => {
+                                updateSpendingValue();
+                              }}
                             >
-                              <Space>
-                                <span
-                                  style={{ fontSize: "1rem", color: "#ACAEB2" }}
-                                >
-                                  {newValueForSpending?.recurring
-                                    ? capitalizeFirstLetter(
-                                        newValueForSpending?.recurring
-                                      )
-                                    : "Select Type"}
-                                </span>
-                                <Caret>
-                                  <FaCaretDown />
-                                </Caret>
-                              </Space>
-                            </Dropdown>
-                          </AmountInputDropdown2>
-                          <FormContainer>
-                            <AmountInputDropdownPeriod>
-                              <Picker1>
-                                <DatePicker
-                                  allowClear={false}
-                                  style={{
-                                    width: "100%",
-                                    backgroundColor: "#1f2125",
-                                    outline: "none",
-                                    border: "none",
-                                  }}
-                                  defaultValue={dayjs(
-                                    newValueForSpending?.startDate
-                                  )}
-                                  format="MMMM, YYYY"
-                                  value={dayjs(newValueForSpending?.startDate)}
-                                  picker="month"
-                                  onChange={(e) => {
-                                    setNewValueForSpending((old) => ({
-                                      ...old,
-                                      startDate: dayjs(e),
-                                    }));
-                                  }}
-                                />
-                              </Picker1>
-                              <Picker2>
-                                <DatePicker
-                                  allowClear={false}
-                                  style={{
-                                    width: "100%",
-                                    backgroundColor: "#1f2125",
-                                    outline: "none",
-                                    border: "none",
-                                  }}
-                                  defaultValue={dayjs(
-                                    newValueForSpending?.endDate
-                                  )}
-                                  format="MMMM, YYYY"
-                                  value={dayjs(newValueForSpending?.endDate)}
-                                  picker="month"
-                                  onChange={(e) => {
-                                    setNewValueForSpending((old) => ({
-                                      ...old,
-                                      endDate: dayjs(e),
-                                    }));
-                                  }}
-                                />
-                              </Picker2>
-                            </AmountInputDropdownPeriod>
-                            <AddAmount>
-                              <AmountInputDropdown2>
-                                <Dropdown
-                                  trigger={["click"]}
-                                  overlayStyle={{ minWidth: "80%" }}
-                                  menu={menuType}
-                                  overlayClassName="full-width-dropdown"
-                                >
-                                  <Space>
-                                    <span
-                                      style={{
-                                        fontSize: "1rem",
-                                        color: "#ACAEB2",
-                                      }}
-                                    >
-                                      {newValueForSpending.type
-                                        ? capitalizeFirstLetter(
-                                            newValueForSpending.type
-                                          )
-                                        : "Select Type"}
-                                    </span>
-                                    <Caret>
-                                      <FaCaretDown />
-                                    </Caret>
-                                  </Space>
-                                </Dropdown>
-                              </AmountInputDropdown2>
-
-                              <AmountInput>
-                                <input
-                                  style={{ minWidth: "100%" }}
-                                  type="text"
-                                  value={newValueForSpending?.title}
-                                  onChange={(e) => {
-                                    setNewValueForSpending((old) => ({
-                                      ...old,
-                                      title: String(e.target.value),
-                                    }));
-                                  }}
-                                />
-                              </AmountInput>
-
-                              <AmountInputDropdown>
-                                <Dropdown
-                                  trigger={["click"]}
-                                  overlayStyle={{ minWidth: "80%" }}
-                                  menu={menu}
-                                  overlayClassName="full-width-dropdown"
-                                  on
-                                >
-                                  <Space>
-                                    <span
-                                      style={{
-                                        fontSize: "1rem",
-                                        color: "#ACAEB2",
-                                      }}
-                                    >
-                                      {newValueForSpending?.category
-                                        ? capitalizeFirstLetter(
-                                            newValueForSpending?.category
-                                          )
-                                        : "Select Category"}
-                                    </span>
-                                    <Caret>
-                                      <FaCaretDown />
-                                    </Caret>
-                                  </Space>
-                                </Dropdown>
-                              </AmountInputDropdown>
-
-                              <MonthSelection>
-                                <DatePicker
-                                  style={{
-                                    width: "100%",
-                                    backgroundColor: "#1f2125",
-                                    padding: "0.5rem 1rem",
-                                    outline: "none",
-                                    border: "none",
-                                  }}
-                                  format="DD-MM-YYYY"
-                                  inputReadOnly
-                                  value={dayjs(newValueForSpending?.date)}
-                                  picker="date"
-                                  onChange={(e) => {
-                                    setNewValueForSpending((old) => ({
-                                      ...old,
-                                      date: new Date(dayjs(e))?.toString(),
-                                    }));
-                                  }}
-                                  onFocus={(e) => e.preventDefault()}
-                                />
-                              </MonthSelection>
-                            </AddAmount>
-                          </FormContainer>
-                          <SaveButton
-                            onClick={() => {
-                              updateSpendingValue();
-                            }}
-                          >
-                            UPDATE
-                          </SaveButton>
-                        </Amount>
-                      }
-                      title={<Title>Edit Spending</Title>}
-                    >
-                      <Right
-                        onClick={() => {
-                          setNewValueForSpending(spending);
-                        }}
+                              UPDATE
+                            </SaveButton>
+                          </Amount>
+                        }
+                        title={<Title>Edit Spending</Title>}
                       >
-                        <EMILeft>EMI</EMILeft>
-                        <EMIRight>
+                        <EMIRight
+                          onClick={() => {
+                            setNewValueForSpending(spending);
+                          }}
+                        >
                           <span
                             style={{
                               fontSize: ".75rem",
@@ -909,8 +940,8 @@ export default function Spending({
                             {formatIndianNumber(spending?.amount)}
                           </span>
                         </EMIRight>
-                      </Right>
-                    </Popover>
+                      </Popover>
+                    </Right>
                   </SpendCard>
                 );
               })}
@@ -928,6 +959,7 @@ const EMIRight = styled.div`
   background-color: #404448;
   padding: 0.2rem 0.5rem;
   border-radius: 16px;
+  min-width: 70px;
 `;
 
 const EMILeft = styled.div`
@@ -936,7 +968,8 @@ const EMILeft = styled.div`
   justify-content: center;
   background-color: #126cd6;
   color: #fefefe;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
+  min-width: 20px;
   margin-right: 1rem;
   padding: 0.2rem 0.5rem;
   border-radius: 16px;
