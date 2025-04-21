@@ -103,7 +103,7 @@ export default function Salary({ selectedDate }) {
   let jeevaIncome = 0;
   let totalDaysInMonth = getDaysInMonth(new Date(selectedDate));
   jeevaIncome = totalDaysInMonth * JEEVA_INCOME_PER_DAY;
-  let afterJeeva = totalInMonth - jeevaIncome;
+  let afterJeeva = totalInMonth;
 
   return (
     <Container>
@@ -192,22 +192,24 @@ export default function Salary({ selectedDate }) {
                 </MainTitle>
               </MainLInner>
             </MainLeft>
-            <MainRight>
-              <MainLInner>
-                <SubTitle>Jeeva Income</SubTitle>
-                <MainTitle ifSelectedDateIsCurrentMonth={true}>
-                  <span
-                    style={{
-                      fontSize: "1.5rem",
-                      transform: "translateY(3px)",
-                    }}
-                  >
-                    <FaIndianRupeeSign />
-                  </span>
-                  {formatIndianNumber(jeevaIncome)}
-                </MainTitle>
-              </MainLInner>
-            </MainRight>
+            {false && (
+              <MainRight>
+                <MainLInner>
+                  <SubTitle>Jeeva Income</SubTitle>
+                  <MainTitle ifSelectedDateIsCurrentMonth={true}>
+                    <span
+                      style={{
+                        fontSize: "1.5rem",
+                        transform: "translateY(3px)",
+                      }}
+                    >
+                      <FaIndianRupeeSign />
+                    </span>
+                    {formatIndianNumber(jeevaIncome)}
+                  </MainTitle>
+                </MainLInner>
+              </MainRight>
+            )}
           </TotalInMonth>
         )}
         <TitleNaming>

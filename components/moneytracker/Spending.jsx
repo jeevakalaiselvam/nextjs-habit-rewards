@@ -418,68 +418,33 @@ export default function Spending({
   };
 
   let topGreen = 0;
-  let bottomGreen = 0;
-  let topTicker = 0;
-  let bottomTicker = 0;
-  let displayItems = [];
-  let topMessage = "";
-  let bottomMessage = "";
-  let topTickerMessage = "";
-  let bottomTickerMessage = "";
-  let leftTitle = "LEFT TITLE";
-  let rightTitle = "RIGHT TITLE";
-  let leftAmount = 0;
-  let rightAmount = 0;
 
   if (ifSelectedDateIsCurrentMonth) {
     //CURRENT MONTH SELECTION
-    topGreen =
-      values?.totalSecondsTillEnd * values?.TperSecond -
-      values?.totalSecondsTillEnd * values?.PMperSecond -
-      (allSpendingFamilyInMonthAmount + allSpendingInvestmentInMonthAmount);
-    topTicker = values?.TperDay - values?.PMperDay;
-    bottomGreen =
-      values?.totalSecondsTillEnd * values?.PMperSecond -
-      allSpendingPersonalInMonthAmount;
-    bottomTicker = values?.PMperDay;
-    leftAmount = allSpendingFamilyInMonthAmount;
-    rightAmount = allSpendingPersonalInMonthAmount;
-    topTickerMessage = " / day";
-    bottomTickerMessage = " / day";
-    topMessage = "Family Balance";
-    bottomMessage = "Personal Balance";
-    leftTitle = "Family Expense";
-    rightTitle = "Jeeva Expense";
+    if (selectedTier1 == "Family") {
+      topGreen =
+        values?.totalSecondsTillEnd * values?.TperSecond -
+        values?.totalSecondsTillEnd * values?.PMperSecond -
+        (allSpendingFamilyInMonthAmount + allSpendingInvestmentInMonthAmount);
+    }
 
-    const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
-    displayItems = generateDailyTimestamps(
-      dateOldFormat,
-      ifSelectedDateIsCurrentMonth
-    );
+    if (selectedTier1 == "Personal") {
+      topGreen =
+        values?.totalSecondsTillEnd * values?.PMperSecond -
+        allSpendingPersonalInMonthAmount;
+    }
   } else {
-    topGreen =
-      values?.totalSecondsTillEnd * values?.TperSecond -
-      values?.totalSecondsTillEnd * values?.PMperSecond -
-      (allSpendingFamilyInMonthAmount + allSpendingInvestmentInMonthAmount);
-    topTicker = values?.TperDay - values?.PMperDay;
-    bottomGreen =
-      values?.totalSecondsTillEnd * values?.PMperSecond -
-      allSpendingPersonalInMonthAmount;
-    bottomTicker = values?.PMperDay;
-    leftAmount = allSpendingFamilyInMonthAmount;
-    rightAmount = allSpendingPersonalInMonthAmount;
-    topTickerMessage = " / day";
-    bottomTickerMessage = " / day";
-    topMessage = "Family Balance";
-    bottomMessage = "Personal Balance";
-    leftTitle = "Family Expense";
-    rightTitle = "Jeeva Expense";
-
-    const dateOldFormat = getDateInFormatDMY(new Date(selectedDate?.$d));
-    displayItems = generateDailyTimestamps(
-      dateOldFormat,
-      ifSelectedDateIsCurrentMonth
-    );
+    if (selectedTier1 == "Family") {
+      topGreen =
+        values?.totalSecondsTillEnd * values?.TperSecond -
+        values?.totalSecondsTillEnd * values?.PMperSecond -
+        (allSpendingFamilyInMonthAmount + allSpendingInvestmentInMonthAmount);
+    }
+    if (selectedTier1 == "Personal") {
+      topGreen =
+        values?.totalSecondsTillEnd * values?.PMperSecond -
+        allSpendingPersonalInMonthAmount;
+    }
   }
 
   const replaceCatName = (cat) => {
