@@ -895,17 +895,20 @@ export default function Spending({
                           setNewValueForSpending(spending);
                         }}
                       >
-                        <span
-                          style={{
-                            fontSize: ".75rem",
-                            transform: "translateY(1px)",
-                          }}
-                        >
-                          <FaIndianRupeeSign />
-                        </span>
-                        <span style={{ fontSize: ".75rem" }}>
-                          {formatIndianNumber(spending?.amount)}
-                        </span>
+                        <EMILeft>EMI</EMILeft>
+                        <EMIRight>
+                          <span
+                            style={{
+                              fontSize: ".75rem",
+                              transform: "translateY(1px)",
+                            }}
+                          >
+                            <FaIndianRupeeSign />
+                          </span>
+                          <span style={{ fontSize: ".75rem" }}>
+                            {formatIndianNumber(spending?.amount)}
+                          </span>
+                        </EMIRight>
                       </Right>
                     </Popover>
                   </SpendCard>
@@ -917,11 +920,33 @@ export default function Spending({
     );
   }
 }
+
+const EMIRight = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #404448;
+  padding: 0.2rem 0.5rem;
+  border-radius: 16px;
+`;
+
+const EMILeft = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #126cd6;
+  color: #fefefe;
+  font-size: 0.8rem;
+  margin-right: 1rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 16px;
+`;
+
 const Picker1 = styled.div`
   display: flex;
   align-items: center;
-  flex: 2;
   justify-content: flex-start;
+  flex: 2;
 `;
 
 const Picker2 = styled.div`
@@ -1021,9 +1046,6 @@ const Right = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #404448;
-  padding: 0.2rem 0.5rem;
-  border-radius: 16px;
 `;
 
 const SpendCard = styled.div`
