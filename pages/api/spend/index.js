@@ -3,7 +3,16 @@ import clientPromise from "../../../lib/db";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { amount, date, category, recurring, type, title } = req.body;
+    const {
+      amount,
+      date,
+      category,
+      recurring,
+      type,
+      title,
+      startDate,
+      endDate,
+    } = req.body;
 
     if (!amount || !date || !category || !recurring || !type || !title) {
       return res
@@ -16,7 +25,16 @@ export default async function handler(req, res) {
       const db = client.db("habittracker");
       await db
         .collection(getMongoCollectionForSpending())
-        .insertOne({ amount, date, category, recurring, type, title });
+        .insertOne({
+          amount,
+          date,
+          category,
+          recurring,
+          type,
+          title,
+          startDate,
+          endDate,
+        });
 
       res.status(201).json({ message: "Spend added successfully" });
     } catch (error) {

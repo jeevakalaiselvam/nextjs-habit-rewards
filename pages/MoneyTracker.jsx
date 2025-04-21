@@ -95,7 +95,7 @@ export default function MoneyTracker() {
           />
         </Picker>
       </Header>
-      <Content>
+      <Content showEntry={showEntry}>
         {activeTab == 0 && (
           <Money
             showEntry={showEntry}
@@ -183,19 +183,18 @@ const Date = styled.div`
 
 const EntryModal = styled.div`
   display: flex;
-  width: 95%;
+  width: 98%;
   z-index: 100;
-  min-height: 78vh;
-  max-height: 78vh;
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
   border-radius: 0.5rem;
   position: absolute;
-  top: 5%;
+  top: 45%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   background-color: #1b1b1d;
+  border: 1px solid #395ec333;
 `;
 
 const WalletEMIModal = styled.div`
@@ -261,6 +260,7 @@ const Content = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   flex: 1;
+  filter: ${(props) => (props.showEntry ? "blur(10px)" : "blur(0px)")};
 `;
 
 const Bottom = styled.div`

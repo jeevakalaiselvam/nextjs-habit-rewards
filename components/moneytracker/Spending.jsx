@@ -8,7 +8,7 @@ import {
   calculateEarningsEarlierMonths,
   formatIndianNumber,
 } from "../helpers/moneyHelper";
-import { FaCaretDown, FaRupeeSign } from "react-icons/fa";
+import { FaCaretDown, FaGlobe, FaRupeeSign } from "react-icons/fa";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import {
   generateDarkTextColorForLightBg,
@@ -236,6 +236,53 @@ export default function Spending({
   const menu = {
     items: itemsToTarget,
     onClick: handleMenuClick,
+  };
+
+  const handleMenuClickTypeRecurring = (e) => {
+    setNewValueForSpending((old) => ({ ...old, recurring: String(e.key) }));
+  };
+
+  const itemsTypeRecurring = [
+    {
+      key: "11",
+      label: <div style={{ width: "100%" }}>All Types</div>,
+      disabled: true,
+    },
+    {
+      key: "Single",
+      label: "Single",
+      icon: (
+        <span
+          style={{
+            transform: "translateY(2px)",
+            color: ICON_COLORS["Single"],
+          }}
+        >
+          {<FaGlobe />}
+        </span>
+      ),
+      extra: "⌘S",
+    },
+    {
+      key: "Multi",
+      label: "Multi",
+      icon: (
+        <span
+          style={{
+            transform: "translateY(2px)",
+            color: ICON_COLORS["Multi"],
+          }}
+        >
+          {<FaGlobe />}
+        </span>
+      ),
+      extra: "⌘M",
+    },
+  ];
+
+  const menuTypeRecurring = {
+    items: itemsTypeRecurring,
+    onClick: handleMenuClickTypeRecurring,
   };
 
   const menuCategoriesInCurrentSpending = {
@@ -636,26 +683,95 @@ export default function Spending({
                       </MBottom>
                     </Middle>
                     <Popover
-                      placement="bottom"
+                      placement="left"
                       content={
                         <Amount>
-                          <span>
-                            <input
-                              inputMode="numeric"
-                              type="number"
-                              value={newValueForSpending?.amount}
-                              onChange={(e) => {
-                                setNewValueForSpending((old) => ({
-                                  ...old,
-                                  amount: e.target.value,
-                                }));
-                              }}
-                            />
-                          </span>
+                          <input
+                            style={{ width: "100%", marginBottom: ".5rem" }}
+                            inputMode="numeric"
+                            type="number"
+                            value={newValueForSpending?.amount}
+                            onChange={(e) => {
+                              setNewValueForSpending((old) => ({
+                                ...old,
+                                amount: e.target.value,
+                              }));
+                            }}
+                          />
 
+                          <AmountInputDropdown2>
+                            <Dropdown
+                              trigger={["click"]}
+                              overlayStyle={{ minWidth: "80%" }}
+                              menu={menuTypeRecurring}
+                              overlayClassName="full-width-dropdown"
+                            >
+                              <Space>
+                                <span
+                                  style={{ fontSize: "1rem", color: "#ACAEB2" }}
+                                >
+                                  {newValueForSpending?.recurring
+                                    ? capitalizeFirstLetter(
+                                        newValueForSpending?.recurring
+                                      )
+                                    : "Select Type"}
+                                </span>
+                                <Caret>
+                                  <FaCaretDown />
+                                </Caret>
+                              </Space>
+                            </Dropdown>
+                          </AmountInputDropdown2>
                           <FormContainer>
+                            <AmountInputDropdownPeriod>
+                              <Picker1>
+                                <DatePicker
+                                  allowClear={false}
+                                  style={{
+                                    width: "100%",
+                                    backgroundColor: "#1f2125",
+                                    outline: "none",
+                                    border: "none",
+                                  }}
+                                  defaultValue={dayjs(
+                                    newValueForSpending?.startDate
+                                  )}
+                                  format="MMMM, YYYY"
+                                  value={dayjs(newValueForSpending?.startDate)}
+                                  picker="month"
+                                  onChange={(e) => {
+                                    setNewValueForSpending((old) => ({
+                                      ...old,
+                                      startDate: dayjs(e),
+                                    }));
+                                  }}
+                                />
+                              </Picker1>
+                              <Picker2>
+                                <DatePicker
+                                  allowClear={false}
+                                  style={{
+                                    width: "100%",
+                                    backgroundColor: "#1f2125",
+                                    outline: "none",
+                                    border: "none",
+                                  }}
+                                  defaultValue={dayjs(
+                                    newValueForSpending?.endDate
+                                  )}
+                                  format="MMMM, YYYY"
+                                  value={dayjs(newValueForSpending?.endDate)}
+                                  picker="month"
+                                  onChange={(e) => {
+                                    setNewValueForSpending((old) => ({
+                                      ...old,
+                                      endDate: dayjs(e),
+                                    }));
+                                  }}
+                                />
+                              </Picker2>
+                            </AmountInputDropdownPeriod>
                             <AddAmount>
-                              <Title>Type</Title>
                               <AmountInputDropdown2>
                                 <Dropdown
                                   trigger={["click"]}
@@ -683,9 +799,9 @@ export default function Spending({
                                 </Dropdown>
                               </AmountInputDropdown2>
 
-                              <Title>Info</Title>
                               <AmountInput>
                                 <input
+                                  style={{ minWidth: "100%" }}
                                   type="text"
                                   value={newValueForSpending?.title}
                                   onChange={(e) => {
@@ -697,7 +813,6 @@ export default function Spending({
                                 />
                               </AmountInput>
 
-                              <Title>Expense</Title>
                               <AmountInputDropdown>
                                 <Dropdown
                                   trigger={["click"]}
@@ -726,7 +841,6 @@ export default function Spending({
                                 </Dropdown>
                               </AmountInputDropdown>
 
-                              <Title>Date</Title>
                               <MonthSelection>
                                 <DatePicker
                                   style={{
@@ -789,6 +903,33 @@ export default function Spending({
     );
   }
 }
+const Picker1 = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 2;
+  justify-content: flex-start;
+`;
+
+const Picker2 = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 2;
+  justify-content: flex-end;
+`;
+
+const AmountInputDropdownPeriod = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+  width: 100%;
+  font-size: 1.1rem;
+  position: relative;
+  background-color: #1f2125;
+  padding: 0.5rem 0.5rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+`;
 
 const Amount = styled.div`
   display: flex;
@@ -797,7 +938,7 @@ const Amount = styled.div`
   flex-direction: column;
   font-size: 2rem;
   font-weight: bold;
-  width: 200px;
+  width: 250px;
 
   & input {
     width: 200px;
@@ -817,6 +958,7 @@ const SaveButton = styled.div`
   height: 30px;
   width: 100%;
   font-size: 1.25rem;
+  margin-top: 0.25rem;
   flex-direction: column;
   color: #fefefe;
   background-color: #53b5d9;
@@ -1078,8 +1220,8 @@ const MonthSelection = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-bottom: 1rem;
-  padding: 1rem 0rem 0rem 0rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
 `;
 
 const Caret = styled.div`
@@ -1095,7 +1237,6 @@ const AddAmount = styled.div`
   justify-content: center;
   min-width: 100%;
   flex-direction: column;
-  margin-top: 0.5rem;
 `;
 
 const Rupees = styled.div`
@@ -1121,8 +1262,8 @@ const AmountInputDropdown = styled.div`
   position: relative;
   background-color: #1f2125;
   padding: 0.5rem 1rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
 `;
 
 const AmountInputDropdown2 = styled.div`
@@ -1131,12 +1272,12 @@ const AmountInputDropdown2 = styled.div`
   justify-content: flex-start;
   flex: 1;
   width: 100%;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   position: relative;
   background-color: #1f2125;
   padding: 0.5rem 1rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
 `;
 
 const AmountInput = styled.div`
@@ -1145,12 +1286,12 @@ const AmountInput = styled.div`
   justify-content: flex-start;
   flex: 1;
   width: 100%;
-  font-size: 1.5rem;
+  font-size: 0.9rem;
   position: relative;
 
   & input {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
     background-color: #1f2125;
     color: #fefefe;
     border: none;
@@ -1164,7 +1305,7 @@ const Title = styled.div`
   align-items: center;
   flex: 1;
   justify-content: flex-start;
-  font-size: 1rem;
+  font-size: 0.9rem;
   width: 100%;
 `;
 

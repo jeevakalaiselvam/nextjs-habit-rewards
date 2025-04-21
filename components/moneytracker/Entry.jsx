@@ -33,7 +33,10 @@ import {
   WALLET_OPTIONS,
 } from "../helpers/iconHelper";
 import dayjs from "dayjs";
-import { getFifteenth } from "../helpers/dateHelper";
+import {
+  getFifteenth,
+  getFirstDateOfCurrentMonth,
+} from "../helpers/dateHelper";
 
 export const itemsPersonal = [
   {
@@ -490,15 +493,55 @@ export const itemsType = [
   },
 ];
 
+export const itemsTypeRecurring = [
+  {
+    key: "11",
+    label: <div style={{ width: "100%" }}>All Types</div>,
+    disabled: true,
+  },
+  {
+    key: "Single",
+    label: "Single",
+    icon: (
+      <span
+        style={{
+          transform: "translateY(2px)",
+          color: ICON_COLORS["Single"],
+        }}
+      >
+        {<FaGlobe />}
+      </span>
+    ),
+    extra: "⌘S",
+  },
+  {
+    key: "Multi",
+    label: "Multi",
+    icon: (
+      <span
+        style={{
+          transform: "translateY(2px)",
+          color: ICON_COLORS["Multi"],
+        }}
+      >
+        {<FaGlobe />}
+      </span>
+    ),
+    extra: "⌘M",
+  },
+];
+
 export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
   const [selectedEntry, setSelectedEntry] = useState("expense");
 
   const [values, setValues] = useState({
     amount: "0",
-    recurring: "false",
+    recurring: "Single",
     date: getFifteenth(selectedDate),
     category: "",
     type: "Family",
+    startDate: getFirstDateOfCurrentMonth(),
+    endDate: getFirstDateOfCurrentMonth(),
   });
 
   const saveAmount = () => {
@@ -541,6 +584,10 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
     setValues((old) => ({ ...old, type: String(e.key) }));
   };
 
+  const handleMenuClickTypeRecurring = (e) => {
+    setValues((old) => ({ ...old, recurring: String(e.key) }));
+  };
+
   const menu = {
     items: itemsToTarget,
     onClick: handleMenuClick,
@@ -551,36 +598,76 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
     onClick: handleMenuClickType,
   };
 
+  const menuTypeRecurring = {
+    items: itemsTypeRecurring,
+    onClick: handleMenuClickTypeRecurring,
+  };
+
   return (
     <Container>
-      {
-        <Options>
-          <Option
-            selected={selectedEntry == "expense"}
-            onClick={() => {
-              setValues((old) => ({ ...old, recurring: "false" }));
-              setSelectedEntry("expense");
-            }}
-          >
-            Single Expense
-            {selectedEntry == "expense" && <SelectedDot></SelectedDot>}
-          </Option>
-          <Option
-            selected={selectedEntry == "recurring"}
-            onClick={() => {
-              setValues((old) => ({ ...old, recurring: "true" }));
-              setSelectedEntry("recurring");
-            }}
-          >
-            Recurring Expense
-            {selectedEntry == "recurring" && <SelectedDot></SelectedDot>}
-          </Option>
-        </Options>
-      }
       <EntryForm>
         <FormContainer>
           <AddAmount>
-            <Title>Type</Title>
+            <TitleMain>New Expense</TitleMain>
+            <AmountInputDropdown2>
+              <Dropdown
+                trigger={["click"]}
+                overlayStyle={{ minWidth: "80%" }}
+                menu={menuTypeRecurring}
+                overlayClassName="full-width-dropdown"
+              >
+                <Space>
+                  <span style={{ fontSize: ".9rem", color: "#ACAEB2" }}>
+                    {values?.recurring
+                      ? capitalizeFirstLetter(values?.recurring)
+                      : "Select Type"}
+                  </span>
+                  <Caret>
+                    <FaCaretDown />
+                  </Caret>
+                </Space>
+              </Dropdown>
+            </AmountInputDropdown2>
+            {values?.recurring == "Multi" && (
+              <AmountInputDropdownPeriod>
+                <Picker1>
+                  <DatePicker
+                    allowClear={false}
+                    style={{
+                      width: "90%",
+                      backgroundColor: "#1f2125",
+                      outline: "none",
+                      border: "none",
+                    }}
+                    defaultValue={dayjs(values?.startDate)}
+                    format="MMMM, YYYY"
+                    value={dayjs(values?.startDate)}
+                    picker="month"
+                    onChange={(e) => {
+                      setValues((old) => ({ ...old, startDate: dayjs(e) }));
+                    }}
+                  />
+                </Picker1>
+                <Picker2>
+                  <DatePicker
+                    allowClear={false}
+                    style={{
+                      width: "90%",
+                      backgroundColor: "#1f2125",
+                      outline: "none",
+                      border: "none",
+                    }}
+                    defaultValue={dayjs(values?.endDate)}
+                    format="MMMM, YYYY"
+                    value={dayjs(values?.endDate)}
+                    picker="month"
+                    onChange={(e) => {
+                      setValues((old) => ({ ...old, endDate: dayjs(e) }));
+                    }}
+                  />
+                </Picker2>
+              </AmountInputDropdownPeriod>
+            )}
             <AmountInputDropdown2>
               <Dropdown
                 trigger={["click"]}
@@ -589,7 +676,7 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
                 overlayClassName="full-width-dropdown"
               >
                 <Space>
-                  <span style={{ fontSize: "1rem", color: "#ACAEB2" }}>
+                  <span style={{ fontSize: ".9rem", color: "#ACAEB2" }}>
                     {values?.type
                       ? capitalizeFirstLetter(values?.type)
                       : "Select Type"}
@@ -600,7 +687,6 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
                 </Space>
               </Dropdown>
             </AmountInputDropdown2>
-            <Title>Category</Title>
             <AmountInputDropdown>
               <Dropdown
                 trigger={["click"]}
@@ -610,7 +696,7 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
                 on
               >
                 <Space>
-                  <span style={{ fontSize: "1rem", color: "#ACAEB2" }}>
+                  <span style={{ fontSize: ".9rem", color: "#ACAEB2" }}>
                     {values?.category
                       ? capitalizeFirstLetter(values?.category)
                       : "Select Category"}
@@ -621,7 +707,6 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
                 </Space>
               </Dropdown>
             </AmountInputDropdown>
-            <Title>Expense</Title>
             <AmountInput>
               <Rupees>
                 <FaIndianRupeeSign />
@@ -638,7 +723,6 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
                 }}
               />
             </AmountInput>
-            <Title>Info</Title>
             <AmountInputDropdown>
               <input
                 type="text"
@@ -651,8 +735,6 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
                 }}
               />
             </AmountInputDropdown>
-
-            <Title>Date</Title>
             <MonthSelection>
               <DatePicker
                 style={{
@@ -679,6 +761,20 @@ export default function Entry({ setShowEntry, refreshExpense, selectedDate }) {
     </Container>
   );
 }
+
+const Picker1 = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 2;
+  justify-content: flex-start;
+`;
+
+const Picker2 = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 2;
+  justify-content: flex-end;
+`;
 
 const MonthSelection = styled.div`
   display: flex;
@@ -726,8 +822,9 @@ const Rupees = styled.div`
   justify-content: center;
   position: absolute;
   flex: 1;
-  top: 37.5%;
+  top: 42%;
   left: 1rem;
+  font-size: 0.9rem;
   color: #acaeb2;
 `;
 
@@ -741,8 +838,8 @@ const AmountInputDropdown = styled.div`
   position: relative;
   background-color: #1f2125;
   padding: 0.5rem 1rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 
   & input {
     background-color: #1f2125;
@@ -762,8 +859,22 @@ const AmountInputDropdown2 = styled.div`
   position: relative;
   background-color: #1f2125;
   padding: 0.5rem 1rem;
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+`;
+
+const AmountInputDropdownPeriod = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+  width: 100%;
+  font-size: 0.9rem;
+  position: relative;
+  background-color: #1f2125;
+  padding: 0.5rem 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 `;
 
 const AmountInput = styled.div`
@@ -771,17 +882,18 @@ const AmountInput = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
-  width: 100%;
-  font-size: 1.5rem;
+  min-width: 100%;
   position: relative;
 
   & input {
-    margin-top: 1rem;
-    margin-bottom: 1rem;
+    min-width: 100%;
+    margin-bottom: 0.5rem;
+    margin-top: 0.75rem;
     background-color: #1f2125;
     color: #fefefe;
     border: none;
-    padding: 1rem 1rem 1rem 3rem;
+    font-size: 0.9rem;
+    padding: 0.5rem 0.5rem 0.5rem 3rem;
     outline: none;
   }
 `;
@@ -791,10 +903,19 @@ const Title = styled.div`
   align-items: center;
   flex: 1;
   justify-content: flex-start;
-  font-size: 1rem;
+  font-size: 0.9rem;
   width: 100%;
 `;
 
+const TitleMain = styled.div`
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-start;
+  font-size: 1.15rem;
+  margin-bottom: 0.5rem;
+  width: 100%;
+`;
 const FormContainer = styled.div`
   display: flex;
   align-items: center;
@@ -810,7 +931,6 @@ const EntryForm = styled.div`
   justify-content: center;
   flex-direction: column;
   width: 100%;
-  padding: 1rem;
 `;
 
 const SelectedDot = styled.div`

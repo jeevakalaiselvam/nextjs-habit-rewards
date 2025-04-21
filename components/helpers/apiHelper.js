@@ -111,7 +111,7 @@ export const getMongoCollectionForWallet = (user) => {
 };
 
 export const getMongoCollectionForSpending = (user) => {
-  return "jeevaspend";
+  return "jeevaspendnew";
 };
 
 export const getMongoHabitsForUser = (user) => {

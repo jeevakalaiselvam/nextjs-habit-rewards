@@ -10,7 +10,16 @@ export default async function handler(req, res) {
   const { id } = req.query;
 
   if (req.method === "PUT") {
-    const { amount, date, category, recurring, type, title } = req.body;
+    const {
+      amount,
+      date,
+      category,
+      recurring,
+      type,
+      title,
+      startDate,
+      endDate,
+    } = req.body;
 
     if (!amount || !date || !category || !recurring || !type || !title) {
       return res
@@ -26,7 +35,18 @@ export default async function handler(req, res) {
         .collection(getMongoCollectionForSpending())
         .updateOne(
           { _id: new ObjectId(id) },
-          { $set: { amount, date, category, recurring, type, title } }
+          {
+            $set: {
+              amount,
+              date,
+              category,
+              recurring,
+              type,
+              title,
+              startDate,
+              endDate,
+            },
+          }
         );
 
       if (result.matchedCount === 0) {
