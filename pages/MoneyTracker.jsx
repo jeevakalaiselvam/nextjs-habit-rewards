@@ -60,7 +60,7 @@ export default function MoneyTracker() {
 
   return (
     <Container>
-      {showEntry && activeTab == 1 && (
+      {showEntry && (activeTab == 1 || activeTab == 0) && (
         <EntryModal>
           <Entry
             setShowEntry={setShowEntry}

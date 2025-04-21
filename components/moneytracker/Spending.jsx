@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { all } from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { PieChart, Pie, Cell } from "recharts";
@@ -64,22 +64,44 @@ export default function Spending({
     today?.getFullYear() === new Date(selectedDate).getFullYear() &&
     today?.getMonth() === new Date(selectedDate).getMonth();
 
-  const allSpendingFamilyInMonth = allSpendings.filter((s) => {
+  const allSpendingRecurring = allSpendings?.filter((spend) => {
+    return spend?.recurring == "Multi" || spend?.recurring;
+  });
+
+  const allSpendingSingleInMonth = allSpendings.filter((s) => {
     const spendingDate = new Date(s.date);
     return (
       spendingDate.getFullYear() === now.getFullYear() &&
       spendingDate.getMonth() === now.getMonth() &&
-      s?.type == "Family"
+      s?.recurring == "Single"
     );
   });
 
-  const allSpendingPersonalInMonth = allSpendings.filter((s) => {
-    const spendingDate = new Date(s.date);
-    return (
-      spendingDate.getFullYear() === now.getFullYear() &&
-      spendingDate.getMonth() === now.getMonth() &&
-      s?.type == "Personal"
-    );
+  const allSpendingRecurringInMonth = allSpendingRecurring?.filter((spend) => {
+    const target = new Date(selectedDate).toUTCString();
+    const start = spend?.startDate;
+    const end = spend?.endDate;
+
+    const isBetween =
+      new Date(target) >= new Date(start) && new Date(target) <= new Date(end);
+    return isBetween;
+  });
+
+  const allSpendingInMonth = [
+    ...allSpendingSingleInMonth,
+    ...allSpendingRecurringInMonth,
+  ];
+
+  const allSpendingFamilyInMonth = allSpendingInMonth.filter((s) => {
+    return s?.type == "Family";
+  });
+
+  const allSpendingPersonalInMonth = allSpendingInMonth.filter((s) => {
+    return s?.type == "Personal";
+  });
+
+  const allSpendingInvestmentInMonth = allSpendingInMonth.filter((s) => {
+    return s?.type == "Investment";
   });
 
   const allSpendingFamilyInMonthAmount = allSpendingFamilyInMonth?.reduce(
@@ -90,6 +112,30 @@ export default function Spending({
   const allSpendingPersonalInMonthAmount = allSpendingPersonalInMonth?.reduce(
     (acc, spend) => acc + Number(spend?.amount),
     0
+  );
+
+  const allSpendingInvestmentInMonthAmount =
+    allSpendingInvestmentInMonth?.reduce(
+      (acc, spend) => acc + Number(spend?.amount),
+      0
+    );
+
+  let thisMonthSpendings = allSpendingInMonth.filter((s) => {
+    return s?.type == selectedTier1;
+  });
+
+  let allCategoriesThisMonth = [];
+
+  let thisMonthSpendingsForCatSelected = thisMonthSpendings?.filter((spend) => {
+    return (
+      spend?.category == selectedSpendingCat || selectedSpendingCat === "All"
+    );
+  });
+
+  console.log(
+    allSpendingFamilyInMonth,
+    allSpendingPersonalInMonth,
+    allSpendingInvestmentInMonth
   );
 
   const refreshPackages = () => {
@@ -122,23 +168,6 @@ export default function Spending({
   useEffect(() => {
     refreshSpendings();
   }, [showEntry, forceRefreshExpense]);
-
-  let thisMonthSpendings = allSpendings.filter((s) => {
-    const spendingDate = new Date(s.date);
-    return (
-      new Date(spendingDate).getFullYear() === new Date(now).getFullYear() &&
-      new Date(spendingDate).getMonth() === new Date(now).getMonth() &&
-      s?.type == selectedTier1
-    );
-  });
-
-  let allCategoriesThisMonth = [];
-
-  let thisMonthSpendingsForCatSelected = thisMonthSpendings?.filter((spend) => {
-    return (
-      spend?.category == selectedSpendingCat || selectedSpendingCat === "All"
-    );
-  });
 
   thisMonthSpendings?.forEach((spend) => {
     allCategoriesThisMonth = [
@@ -386,21 +415,6 @@ export default function Spending({
   let rightTitle = "RIGHT TITLE";
   let leftAmount = 0;
   let rightAmount = 0;
-
-  const allSpendingInvestmentInMonth = allSpendings.filter((s) => {
-    const spendingDate = new Date(s.date);
-    return (
-      spendingDate.getFullYear() === now.getFullYear() &&
-      spendingDate.getMonth() === now.getMonth() &&
-      s?.type == "Investment"
-    );
-  });
-
-  const allSpendingInvestmentInMonthAmount =
-    allSpendingInvestmentInMonth?.reduce(
-      (acc, spend) => acc + Number(spend?.amount),
-      0
-    );
 
   if (ifSelectedDateIsCurrentMonth) {
     //CURRENT MONTH SELECTION

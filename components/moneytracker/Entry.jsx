@@ -834,7 +834,7 @@ const AmountInputDropdown = styled.div`
   justify-content: flex-start;
   flex: 1;
   width: 100%;
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   position: relative;
   background-color: #1f2125;
   padding: 0.5rem 1rem;

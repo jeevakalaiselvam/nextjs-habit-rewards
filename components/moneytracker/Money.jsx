@@ -121,46 +121,52 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
     (acc, sal) => acc + Number(sal?.salary),
     0
   );
-
   const today = new Date(); // actual current date
+
+  const now = new Date(selectedDate);
 
   const ifSelectedDateIsCurrentMonth =
     today?.getFullYear() === new Date(selectedDate).getFullYear() &&
     today?.getMonth() === new Date(selectedDate).getMonth();
 
-  const now = new Date(selectedDate);
+  const allSpendingRecurring = allSpendings?.filter((spend) => {
+    return spend?.recurring == "Multi" || spend?.recurring;
+  });
 
-  const allSpendingFamilyInMonth = allSpendings.filter((s) => {
+  const allSpendingSingleInMonth = allSpendings.filter((s) => {
     const spendingDate = new Date(s.date);
     return (
       spendingDate.getFullYear() === now.getFullYear() &&
       spendingDate.getMonth() === now.getMonth() &&
-      s?.type == "Family"
+      s?.recurring == "Single"
     );
   });
 
-  const allSpendingInvestmentInMonth = allSpendings.filter((s) => {
-    const spendingDate = new Date(s.date);
-    return (
-      spendingDate.getFullYear() === now.getFullYear() &&
-      spendingDate.getMonth() === now.getMonth() &&
-      s?.type == "Investment"
-    );
+  const allSpendingRecurringInMonth = allSpendingRecurring?.filter((spend) => {
+    const target = new Date(selectedDate).toUTCString();
+    const start = spend?.startDate;
+    const end = spend?.endDate;
+
+    const isBetween =
+      new Date(target) >= new Date(start) && new Date(target) <= new Date(end);
+    return isBetween;
   });
 
-  const allSpendingInvestmentInMonthAmount =
-    allSpendingInvestmentInMonth?.reduce(
-      (acc, spend) => acc + Number(spend?.amount),
-      0
-    );
+  const allSpendingInMonth = [
+    ...allSpendingSingleInMonth,
+    ...allSpendingRecurringInMonth,
+  ];
 
-  const allSpendingPersonalInMonth = allSpendings.filter((s) => {
-    const spendingDate = new Date(s.date);
-    return (
-      spendingDate.getFullYear() === now.getFullYear() &&
-      spendingDate.getMonth() === now.getMonth() &&
-      s?.type == "Personal"
-    );
+  const allSpendingFamilyInMonth = allSpendingInMonth.filter((s) => {
+    return s?.type == "Family";
+  });
+
+  const allSpendingPersonalInMonth = allSpendingInMonth.filter((s) => {
+    return s?.type == "Personal";
+  });
+
+  const allSpendingInvestmentInMonth = allSpendingInMonth.filter((s) => {
+    return s?.type == "Investment";
   });
 
   const allSpendingFamilyInMonthAmount = allSpendingFamilyInMonth?.reduce(
@@ -171,6 +177,30 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
   const allSpendingPersonalInMonthAmount = allSpendingPersonalInMonth?.reduce(
     (acc, spend) => acc + Number(spend?.amount),
     0
+  );
+
+  const allSpendingInvestmentInMonthAmount =
+    allSpendingInvestmentInMonth?.reduce(
+      (acc, spend) => acc + Number(spend?.amount),
+      0
+    );
+
+  let thisMonthSpendings = allSpendingInMonth.filter((s) => {
+    return s?.type == selectedTier1;
+  });
+
+  let allCategoriesThisMonth = [];
+
+  let thisMonthSpendingsForCatSelected = thisMonthSpendings?.filter((spend) => {
+    return (
+      spend?.category == selectedSpendingCat || selectedSpendingCat === "All"
+    );
+  });
+
+  console.log(
+    allSpendingFamilyInMonth,
+    allSpendingPersonalInMonth,
+    allSpendingInvestmentInMonth
   );
 
   let topGreen = 0;
