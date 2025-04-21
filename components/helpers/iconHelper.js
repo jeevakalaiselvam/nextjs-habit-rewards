@@ -95,7 +95,7 @@ export const ICON_COLORS = {
   House: "#72C079", // moss green
   Electricity: "#FF8D5B", // soft tangerine
   "Provident Fund": "#6A5ACD",
-  "Liquid Fund": "#00CED1",
+  "Liquid Money": "#00CED1",
   Gold: "#FFD700",
   "Mutual Funds": "#3CB371",
   Stocks: "#FF6347",
