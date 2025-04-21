@@ -668,24 +668,26 @@ export default function Spending({
                 All Spendings
               </BTitle1>
             )}
-            <BTitle2>
-              <Dropdown
-                trigger={["click"]}
-                overlayStyle={{ minWidth: "80%" }}
-                menu={menuCategoriesInCurrentSpending}
-                overlayClassName="full-width-dropdown"
-                placement="left"
-              >
-                <Space>
-                  <span style={{ fontSize: ".9rem", color: "#ACAEB2" }}>
-                    {selectedSpendingCat ?? "Select Category"}
-                  </span>
-                  <Caret>
-                    <FaCaretDown />
-                  </Caret>
-                </Space>
-              </Dropdown>
-            </BTitle2>
+            {false && (
+              <BTitle2>
+                <Dropdown
+                  trigger={["click"]}
+                  overlayStyle={{ minWidth: "80%" }}
+                  menu={menuCategoriesInCurrentSpending}
+                  overlayClassName="full-width-dropdown"
+                  placement="left"
+                >
+                  <Space>
+                    <span style={{ fontSize: ".9rem", color: "#ACAEB2" }}>
+                      {selectedSpendingCat ?? "Select Category"}
+                    </span>
+                    <Caret>
+                      <FaCaretDown />
+                    </Caret>
+                  </Space>
+                </Dropdown>
+              </BTitle2>
+            )}
           </BTitlee>
           <AllSpending>
             {thisMonthSpendingsForCatSelected
