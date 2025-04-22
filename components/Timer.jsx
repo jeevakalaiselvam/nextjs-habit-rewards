@@ -117,22 +117,24 @@ export default function Timer({ totalCurrentMonthSalary }) {
 
   return (
     <Container>
-      <TimerSelect>
-        <input
-          type="number"
-          inputMode="numeric"
-          value={timeHours}
-          placeholder="HOUR"
-          onChange={(e) => setTimeHours(e.target.value)}
-        />
-        <input
-          type="number"
-          inputMode="numeric"
-          value={timeMinutes}
-          placeholder="MINUTE"
-          onChange={(e) => setTimeMinutes(e.target.value)}
-        />
-      </TimerSelect>
+      {!(isRunning || elapsed > 0) && (
+        <TimerSelect>
+          <input
+            type="number"
+            inputMode="numeric"
+            value={timeHours}
+            placeholder="HOUR"
+            onChange={(e) => setTimeHours(e.target.value)}
+          />
+          <input
+            type="number"
+            inputMode="numeric"
+            value={timeMinutes}
+            placeholder="MINUTE"
+            onChange={(e) => setTimeMinutes(e.target.value)}
+          />
+        </TimerSelect>
+      )}
       <TimerInfo>
         <Hour>{getHMS(elapsed)?.hours}h</Hour>
         <Min>{getHMS(elapsed)?.minutes}m</Min>
