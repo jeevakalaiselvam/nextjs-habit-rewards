@@ -217,7 +217,7 @@ export default function Timer({ totalCurrentMonthSalary }) {
             Resume
           </Button>
         )}
-        <Button onClick={reset}>Reset</Button>
+        <ButtonReset onClick={reset}>Reset</ButtonReset>
       </StartStopContainer>
     </Container>
   );
@@ -367,6 +367,22 @@ const Button = styled.div`
   padding: 1rem;
   font-size: 2rem;
   background-color: #04b488;
+
+  &:active {
+    transform: translate(0px, 2px);
+  }
+`;
+
+const ButtonReset = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  margin-right: 1rem;
+  border-radius: 4px;
+  padding: 1rem;
+  font-size: 2rem;
+  background-color: #fe6662;
 
   &:active {
     transform: translate(0px, 2px);
