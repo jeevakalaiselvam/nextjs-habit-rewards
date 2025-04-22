@@ -1,88 +1,106 @@
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
-import {
-  getDateFromTime24,
-  getDaysInMonth,
-  getRemainingTimeTo8Hours,
-  timeElapsedFrom,
-} from "./helpers/dateHelper";
-import { useEffect, useState } from "react";
+import { getDateFromTime24, getDaysInMonth } from "./helpers/dateHelper";
 import { FaIndianRupeeSign } from "react-icons/fa6";
-import { TimePicker } from "antd";
-import dayjs from "dayjs";
+
+const TIMER_KEY = "persistent_timer";
+
+const formatTime = (totalSeconds) => {
+  const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+  const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+  const secs = String(totalSeconds % 60).padStart(2, "0");
+  return `${hrs}:${mins}:${secs}`;
+};
 
 export default function Timer({ totalCurrentMonthSalary }) {
-  const [timerString, setTimerString] = useState("");
+  const [elapsed, setElapsed] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const intervalRef = useRef(null);
   const [timeHours, setTimeHours] = useState("");
   const [timeMinutes, setTimeMinutes] = useState("");
 
-  let isAlreadyStarted = false;
-  let alreadyStartedTimeInStorage = "";
-  let alreadyStartedTime = "";
-
-  if (window) {
-    if (localStorage.getItem("TIMER_START")) {
-      isAlreadyStarted = true;
-      alreadyStartedTimeInStorage = localStorage.getItem("TIMER_START");
-      alreadyStartedTime = new Date(alreadyStartedTime);
-    } else {
-      isAlreadyStarted = false;
-    }
-  }
-
-  const startTimer = () => {
-    if (window) {
-      localStorage.setItem(
-        "TIMER_START",
-        getDateFromTime24(timeHours, timeMinutes)
-      );
-      let timeStarted = localStorage.getItem("TIMER_START");
-      setTimerString(timeStarted);
-    }
-  };
-  const stopTimer = () => {
-    setTimeHours("");
-    setTimeMinutes("");
-    if (window) {
-      localStorage.setItem("TIMER_START", "");
-      setTimerString("");
-      localStorage.setItem("TIMER_END", new Date()?.toString());
-    }
-  };
-
+  // Load saved state on mount
   useEffect(() => {
-    if (timerString?.length > 0) {
-      let timer = setInterval(() => {
-        let timerString = "";
-
-        if (alreadyStartedTime) {
-          timerString = timeElapsedFrom(alreadyStartedTimeInStorage);
-          console.log(timerString);
-          setTimerString(timerString);
-        }
-      }, 1000);
-      return () => {
-        clearInterval(timer);
-      };
+    const saved = JSON.parse(localStorage.getItem(TIMER_KEY));
+    if (saved) {
+      setElapsed(saved.elapsed || 0);
+      setIsRunning(saved.isRunning || false);
+      if (saved.isRunning && saved.startTime) {
+        const timeSinceLast = Math.floor((Date.now() - saved.startTime) / 1000);
+        setElapsed(saved.elapsed + timeSinceLast);
+      }
     }
-  }, [timerString]);
+  }, []);
 
-  let hours = timerString?.split(" ")?.[0];
-  let minutes = timerString?.split(" ")?.[1];
-  let seconds = timerString?.split(" ")?.[2];
-  let timeDifference = 0;
+  // Save to localStorage on every change
+  useEffect(() => {
+    const startTime = isRunning ? Date.now() : null;
+    localStorage.setItem(
+      TIMER_KEY,
+      JSON.stringify({ elapsed, isRunning, startTime })
+    );
+  }, [elapsed, isRunning]);
 
-  const { hoursT, minutesT, secondsT } = getRemainingTimeTo8Hours(
-    hours,
-    minutes,
-    seconds
-  );
+  // Timer logic
+  useEffect(() => {
+    if (isRunning) {
+      intervalRef.current = setInterval(() => {
+        setElapsed((prev) => prev + 1);
+      }, 1000);
+    } else {
+      clearInterval(intervalRef.current);
+    }
 
-  if (alreadyStartedTime) {
-    timeDifference =
-      Number(new Date() - new Date(alreadyStartedTimeInStorage)) / 1000;
-    timeDifference =
-      timeDifference > 8 * 60 * 60 ? 8 * 60 * 60 : timeDifference;
-  }
+    return () => clearInterval(intervalRef.current);
+  }, [isRunning]);
+
+  const getElapsedSinceTodayTime = (hour, minute) => {
+    const now = new Date();
+
+    const startTime = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      hour,
+      minute,
+      0
+    );
+
+    const diffMs = now - startTime;
+    const elapsedSeconds = Math.floor(diffMs / 1000);
+
+    return elapsedSeconds;
+  };
+
+  const start = () => {
+    let preSetElapsed = getElapsedSinceTodayTime(timeHours, timeMinutes);
+    if (!isRunning && elapsed === 0) {
+      setElapsed(preSetElapsed);
+      setIsRunning(true);
+    }
+  };
+
+  const pause = () => setIsRunning(false);
+
+  const resume = () => {
+    if (!isRunning && elapsed > 0) {
+      setIsRunning(true);
+    }
+  };
+
+  const reset = () => {
+    setIsRunning(false);
+    setElapsed(0);
+    localStorage.removeItem(TIMER_KEY);
+  };
+
+  const getHMS = (elapsedSeconds) => {
+    const hours = Math.floor(elapsedSeconds / 3600);
+    const minutes = Math.floor((elapsedSeconds % 3600) / 60);
+    const seconds = elapsedSeconds % 60;
+
+    return { hours, minutes, seconds };
+  };
 
   let perSecond = (
     totalCurrentMonthSalary /
@@ -90,43 +108,37 @@ export default function Timer({ totalCurrentMonthSalary }) {
     (8 * 60 * 60)
   )?.toFixed(10);
 
-  let topGreen = timeDifference * perSecond;
+  let topGreen = elapsed * perSecond;
   let topTicker = Number(perSecond);
   let topMessage = "Earned Today";
   let bottomMessage = "Remaining Today";
-  let bottomGreen =
-    (8 * 60 * 60 - (timeDifference < 0 ? 0 : timeDifference)) * perSecond;
+  let bottomGreen = (8 * 60 * 60 - (elapsed < 0 ? 0 : elapsed)) * perSecond;
   let topTickerMessage = " / second";
-
-  const format = "HH:mm";
 
   return (
     <Container>
-      {!isAlreadyStarted && (
-        <TimerSelect>
-          <input
-            type="number"
-            inputMode="numeric"
-            value={timeHours}
-            placeholder="HOUR"
-            onChange={(e) => setTimeHours(e.target.value)}
-          />
-          <input
-            type="number"
-            inputMode="numeric"
-            value={timeMinutes}
-            placeholder="MINUTE"
-            onChange={(e) => setTimeMinutes(e.target.value)}
-          />
-        </TimerSelect>
-      )}
-      {isAlreadyStarted && (
-        <TimerInfo>
-          <Hour>{hoursT}h</Hour>
-          <Min>{minutesT}m</Min>
-          <Sec>{secondsT}s</Sec>
-        </TimerInfo>
-      )}
+      <TimerSelect>
+        <input
+          type="number"
+          inputMode="numeric"
+          value={timeHours}
+          placeholder="HOUR"
+          onChange={(e) => setTimeHours(e.target.value)}
+        />
+        <input
+          type="number"
+          inputMode="numeric"
+          value={timeMinutes}
+          placeholder="MINUTE"
+          onChange={(e) => setTimeMinutes(e.target.value)}
+        />
+      </TimerSelect>
+      <TimerInfo>
+        <Hour>{getHMS(elapsed)?.hours}h</Hour>
+        <Min>{getHMS(elapsed)?.minutes}m</Min>
+        <Sec>{getHMS(elapsed)?.seconds}s</Sec>
+      </TimerInfo>
+
       <TimerInfo2>
         <SubTitle>{topMessage}</SubTitle>
         <MainTitle ifSelectedDateIsCurrentMonth={true}>
@@ -155,60 +167,26 @@ export default function Timer({ totalCurrentMonthSalary }) {
         </MainTitle>
       </TimerInfo2>
       <StartStopContainer>
-        {!isAlreadyStarted && (
-          <Start
-            disabled={timeHours?.length == 0}
-            onClick={() => {
-              if (timeHours?.length != 0) {
-                startTimer();
-              }
-            }}
-          >
-            START
-          </Start>
+        {!(isRunning || elapsed > 0) && (
+          <Button onClick={start} disabled={isRunning || elapsed > 0}>
+            Start
+          </Button>
         )}
-        {isAlreadyStarted && timeDifference < 8 * 60 * 60 && (
-          <Stop
-            onClick={() => {
-              stopTimer();
-            }}
-          >
-            RESTART
-          </Stop>
+        {isRunning && (
+          <Button onClick={pause} disabled={!isRunning}>
+            Pause
+          </Button>
         )}
-
-        {isAlreadyStarted && timeDifference >= 8 * 60 * 60 && (
-          <Stop
-            onClick={() => {
-              stopTimer();
-            }}
-          >
-            COMPLETE
-          </Stop>
+        {!(isRunning || elapsed === 0) && (
+          <Button onClick={resume} disabled={isRunning || elapsed === 0}>
+            Resume
+          </Button>
         )}
+        <Button onClick={reset}>Reset</Button>
       </StartStopContainer>
     </Container>
   );
 }
-
-const TimerSelect = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-
-  & input {
-    width: 90%;
-    margin-bottom: 1rem;
-    background-color: #141414;
-    color: #fefefe;
-    border: none;
-    font-size: 1.25rem;
-    text-align: center;
-    padding: 0.5rem 1rem;
-    outline: none;
-  }
-`;
 
 const Ticker = styled.div`
   display: flex;
@@ -245,43 +223,6 @@ const MainTitle = styled.div`
   font-size: 3rem;
   color: ${(props) =>
     props.ifSelectedDateIsCurrentMonth ? "#04b488" : "#53B5D9"};
-`;
-
-const StartStopContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin-top: 0.5rem;
-`;
-
-const Hour = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-`;
-
-const Min = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-`;
-
-const Sec = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-`;
-
-const TimerInfo = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  width: 100%;
-  font-size: 3rem;
 `;
 
 const TimerInfo2 = styled.div`
@@ -323,13 +264,86 @@ const Stop = styled.div`
   }
 `;
 
+const TimerSelect = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  & input {
+    width: 90%;
+    margin-bottom: 1rem;
+    background-color: #141414;
+    color: #fefefe;
+    border: none;
+    font-size: 1.25rem;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    outline: none;
+  }
+`;
+
+const Hour = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+`;
+
+const Min = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+`;
+
+const Sec = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+`;
+
+const TimerInfo = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  font-size: 3rem;
+`;
+
+const StartStopContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 1rem;
+`;
+
+const Button = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  margin-right: 1rem;
+  border-radius: 4px;
+  padding: 1rem;
+  font-size: 2rem;
+  background-color: #04b488;
+
+  &:active {
+    transform: translate(0px, 2px);
+  }
+`;
+
 const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  width: 100%;
   padding: 2rem 1rem;
   min-height: 60vh;
+  width: 100%;
   max-height: 60vh;
 `;
