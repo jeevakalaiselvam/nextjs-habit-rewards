@@ -345,7 +345,7 @@ const TimerInfo = styled.div`
   justify-content: center;
   width: 100%;
   font-size: 3rem;
-  margin-bottom: ${(props) => (props?.marginHigh ? "2rem" : "")};
+  margin-bottom: ${(props) => (props?.marginHigh ? "1rem" : "")};
 `;
 
 const StartStopContainer = styled.div`
