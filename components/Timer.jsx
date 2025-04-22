@@ -128,7 +128,7 @@ export default function Timer({ totalCurrentMonthSalary }) {
   let topMessage = "Earned Today";
   let bottomMessage = "Remaining Today";
   let bottomGreen = (8 * 60 * 60 - (elapsed < 0 ? 0 : elapsed)) * perSecond;
-  let topTickerMessage = (Number(topGreen) / 500)?.toFixed(0) + " Task Closure";
+  let topTickerMessage = Math.floor(Number(topGreen) / 500) + " Task Closed";
 
   let totalTime = 8 * 60 * 60;
   let timeLeftInToday = getSecondsLeftToday();
@@ -155,14 +155,14 @@ export default function Timer({ totalCurrentMonthSalary }) {
           />
         </TimerSelect>
       )}
-      {<SubTitle>{"Work Time"}</SubTitle>}
-      {
+      {(isRunning || elapsed > 0) && <SubTitle>{"Work Time"}</SubTitle>}
+      {(isRunning || elapsed > 0) && (
         <TimerInfo marginHigh={!(isRunning || elapsed === 0)}>
           <Hour>{getHMS(elapsed)?.hours}h</Hour>
           <Min>{getHMS(elapsed)?.minutes}m</Min>
           <Sec>{getHMS(elapsed)?.seconds}s</Sec>
         </TimerInfo>
-      }
+      )}
 
       {!(isRunning || elapsed === 0) && <SubTitle>{"Work Needed"}</SubTitle>}
       {!(isRunning || elapsed === 0) && (
