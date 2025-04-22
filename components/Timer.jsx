@@ -102,6 +102,21 @@ export default function Timer({ totalCurrentMonthSalary }) {
     return { hours, minutes, seconds };
   };
 
+  const getSecondsLeftToday = () => {
+    const now = new Date();
+    const endOfDay = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      23,
+      59,
+      59,
+      999
+    );
+    const diffMs = endOfDay - now;
+    return Math.floor(diffMs / 1000);
+  };
+
   let perSecond = (
     totalCurrentMonthSalary /
     getDaysInMonth(new Date()) /
@@ -113,7 +128,12 @@ export default function Timer({ totalCurrentMonthSalary }) {
   let topMessage = "Earned Today";
   let bottomMessage = "Remaining Today";
   let bottomGreen = (8 * 60 * 60 - (elapsed < 0 ? 0 : elapsed)) * perSecond;
-  let topTickerMessage = " / second";
+  let topTickerMessage = (Number(topGreen) / 500)?.toFixed(0) + " Task Closure";
+
+  let totalTime = 8 * 60 * 60;
+  let timeLeftInToday = getSecondsLeftToday();
+  let timeAlreadyCompleted = elapsed;
+  let timeNeeded = totalTime - timeAlreadyCompleted;
 
   return (
     <Container>
@@ -135,39 +155,52 @@ export default function Timer({ totalCurrentMonthSalary }) {
           />
         </TimerSelect>
       )}
-      <TimerInfo>
-        <Hour>{getHMS(elapsed)?.hours}h</Hour>
-        <Min>{getHMS(elapsed)?.minutes}m</Min>
-        <Sec>{getHMS(elapsed)?.seconds}s</Sec>
-      </TimerInfo>
+      {<SubTitle>{"Work Time"}</SubTitle>}
+      {
+        <TimerInfo marginHigh={!(isRunning || elapsed === 0)}>
+          <Hour>{getHMS(elapsed)?.hours}h</Hour>
+          <Min>{getHMS(elapsed)?.minutes}m</Min>
+          <Sec>{getHMS(elapsed)?.seconds}s</Sec>
+        </TimerInfo>
+      }
 
-      <TimerInfo2>
-        <SubTitle>{topMessage}</SubTitle>
-        <MainTitle ifSelectedDateIsCurrentMonth={true}>
-          <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
-            <FaIndianRupeeSign />
-          </span>
-          {topGreen ? (topGreen > 0 ? topGreen?.toFixed(2) : 0) : 0}
-        </MainTitle>
-        <Ticker>
-          <span
-            style={{
-              fontSize: ".9rem",
-              transform: "translateY(2px)",
-            }}
-          >
-            <FaIndianRupeeSign />
-          </span>
-          {(topTicker ? topTicker?.toFixed(2) : 0) + topTickerMessage}
-        </Ticker>
-        <SubTitle>{bottomMessage}</SubTitle>
-        <MainTitle ifSelectedDateIsCurrentMonth={true}>
-          <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
-            <FaIndianRupeeSign />
-          </span>
-          {bottomGreen ? (bottomGreen > 0 ? bottomGreen?.toFixed(2) : 0) : 0}
-        </MainTitle>
-      </TimerInfo2>
+      {!(isRunning || elapsed === 0) && <SubTitle>{"Work Needed"}</SubTitle>}
+      {!(isRunning || elapsed === 0) && (
+        <TimerInfo marginHigh={!(isRunning || elapsed === 0)}>
+          <Hour>{getHMS(timeNeeded)?.hours}h</Hour>
+          <Min>{getHMS(timeNeeded)?.minutes}m</Min>
+          <Sec>{getHMS(timeNeeded)?.seconds}s</Sec>
+        </TimerInfo>
+      )}
+
+      {!(isRunning || elapsed === 0) && <SubTitle>{"Time Left"}</SubTitle>}
+      {!(isRunning || elapsed === 0) && (
+        <TimerInfo marginHigh={!(isRunning || elapsed === 0)}>
+          <Hour>{getHMS(timeLeftInToday)?.hours}h</Hour>
+          <Min>{getHMS(timeLeftInToday)?.minutes}m</Min>
+          <Sec>{getHMS(timeLeftInToday)?.seconds}s</Sec>
+        </TimerInfo>
+      )}
+
+      {(isRunning || elapsed === 0) && (
+        <TimerInfo2>
+          <SubTitle>{topMessage}</SubTitle>
+          <MainTitle ifSelectedDateIsCurrentMonth={true}>
+            <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
+              <FaIndianRupeeSign />
+            </span>
+            {topGreen ? (topGreen > 0 ? topGreen?.toFixed(2) : 0) : 0}
+          </MainTitle>
+          <Ticker>{topTickerMessage}</Ticker>
+          <SubTitle>{bottomMessage}</SubTitle>
+          <MainTitle ifSelectedDateIsCurrentMonth={true}>
+            <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
+              <FaIndianRupeeSign />
+            </span>
+            {bottomGreen ? (bottomGreen > 0 ? bottomGreen?.toFixed(2) : 0) : 0}
+          </MainTitle>
+        </TimerInfo2>
+      )}
       <StartStopContainer>
         {!(isRunning || elapsed > 0) && (
           <Button onClick={start} disabled={isRunning || elapsed > 0}>
@@ -312,6 +345,7 @@ const TimerInfo = styled.div`
   justify-content: center;
   width: 100%;
   font-size: 3rem;
+  margin-bottom: ${(props) => (props?.marginHigh ? "2rem" : "")};
 `;
 
 const StartStopContainer = styled.div`
