@@ -187,6 +187,8 @@ function ActivityTracker({ totalCurrentMonthSalary }) {
   let timeAlreadyCompleted = secondsElapsed;
   let timeNeeded = totalTimeInDay - timeAlreadyCompleted;
 
+  console.log({ startInput });
+
   return (
     <Container>
       {!runningActivity && !totalTime && (
@@ -518,7 +520,7 @@ const Button = styled.div`
   align-items: center;
   justify-content: center;
   width: 90%;
-  margin-right: 1rem;
+  margin-top: 1rem;
   border-radius: 4px;
   padding: 1rem;
   font-size: 2rem;
