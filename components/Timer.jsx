@@ -171,16 +171,98 @@ export default function Timer({ totalCurrentMonthSalary }) {
         </TimerSelect>
       )}
 
-      {status === "running" && <SubTitle>{"Work Time"}</SubTitle>}
-      {status === "running" && (
-        <TimerInfo marginHigh={!status === "running"}>
-          <Hour>{getHMS(elapsed)?.hours}h</Hour>
-          <Min>{getHMS(elapsed)?.minutes}m</Min>
-          <Sec>{getHMS(elapsed)?.seconds}s</Sec>
-        </TimerInfo>
-      )}
+      <TimerInfo2>
+        <MoneyLeft>
+          {status === "running" && <SubTitle2>{topMessage}</SubTitle2>}
+          {status === "running" && (
+            <MainTitle ifSelectedDateIsCurrentMonth={true}>
+              <span style={{ fontSize: "1rem", transform: "translateY(3px)" }}>
+                <FaIndianRupeeSign />
+              </span>
+              {topGreen ? (topGreen > 0 ? topGreen?.toFixed(1) : 0) : 0}
+            </MainTitle>
+          )}
+        </MoneyLeft>
+        <MoneyRight>
+          <SubTitle2>{bottomMessage}</SubTitle2>
+          <MainTitle ifSelectedDateIsCurrentMonth={true}>
+            <span style={{ fontSize: "1rem", transform: "translateY(3px)" }}>
+              <FaIndianRupeeSign />
+            </span>
+            {bottomGreen ? (bottomGreen > 0 ? bottomGreen?.toFixed(1) : 0) : 0}
+          </MainTitle>
+        </MoneyRight>
+      </TimerInfo2>
+      <IndividualContainer>
+        <SingleEntry>
+          {status === "running" && <SubTitle>{"Analysis"}</SubTitle>}
+          {status === "running" && (
+            <TimerInfo marginHigh={!status === "running"}>
+              <Hour>{getHMS(elapsed)?.hours}h</Hour>
+              <Min>{getHMS(elapsed)?.minutes}m</Min>
+              <Sec>{getHMS(elapsed)?.seconds}s</Sec>
+            </TimerInfo>
+          )}
+          {status === "running" && <PAButton>START</PAButton>}
+        </SingleEntry>
+        <SingleEntry>
+          {status === "running" && <SubTitle>{"Tracking"}</SubTitle>}
+          {status === "running" && (
+            <TimerInfo marginHigh={!status === "running"}>
+              <Hour>{getHMS(elapsed)?.hours}h</Hour>
+              <Min>{getHMS(elapsed)?.minutes}m</Min>
+              <Sec>{getHMS(elapsed)?.seconds}s</Sec>
+            </TimerInfo>
+          )}
+          {status === "running" && <PAButton>START</PAButton>}
+        </SingleEntry>
+        <SingleEntry>
+          {status === "running" && <SubTitle>{"Calls"}</SubTitle>}
+          {status === "running" && (
+            <TimerInfo marginHigh={!status === "running"}>
+              <Hour>{getHMS(elapsed)?.hours}h</Hour>
+              <Min>{getHMS(elapsed)?.minutes}m</Min>
+              <Sec>{getHMS(elapsed)?.seconds}s</Sec>
+            </TimerInfo>
+          )}
+          {status === "running" && <PAButton>START</PAButton>}
+        </SingleEntry>
+        <SingleEntry>
+          {status === "running" && <SubTitle>{"Bugs"}</SubTitle>}
+          {status === "running" && (
+            <TimerInfo marginHigh={!status === "running"}>
+              <Hour>{getHMS(elapsed)?.hours}h</Hour>
+              <Min>{getHMS(elapsed)?.minutes}m</Min>
+              <Sec>{getHMS(elapsed)?.seconds}s</Sec>
+            </TimerInfo>
+          )}
+          {status === "running" && <PAButton>START</PAButton>}
+        </SingleEntry>
+        <SingleEntry>
+          {status === "running" && <SubTitle>{"Build"}</SubTitle>}
+          {status === "running" && (
+            <TimerInfo marginHigh={!status === "running"}>
+              <Hour>{getHMS(elapsed)?.hours}h</Hour>
+              <Min>{getHMS(elapsed)?.minutes}m</Min>
+              <Sec>{getHMS(elapsed)?.seconds}s</Sec>
+            </TimerInfo>
+          )}
+          {status === "running" && <PAButton>START</PAButton>}
+        </SingleEntry>
+        <SingleEntry>
+          {status === "running" && <SubTitle>{"Total Time"}</SubTitle>}
+          {status === "running" && (
+            <TimerInfo marginHigh={!status === "running"}>
+              <Hour>{getHMS(elapsed)?.hours}h</Hour>
+              <Min>{getHMS(elapsed)?.minutes}m</Min>
+              <Sec>{getHMS(elapsed)?.seconds}s</Sec>
+            </TimerInfo>
+          )}
+          {status === "running" && <PAButton>START</PAButton>}
+        </SingleEntry>
+      </IndividualContainer>
 
-      {status === "paused" && <SubTitle>{"Work Needed"}</SubTitle>}
+      {status === "paused" && <SubTitle>{""}</SubTitle>}
       {status === "paused" && (
         <TimerInfo marginHigh={!status === "paused"}>
           <Hour>{getHMS(timeNeeded * 1000)?.hours}h</Hour>
@@ -198,25 +280,7 @@ export default function Timer({ totalCurrentMonthSalary }) {
         </TimerInfo>
       )}
 
-      <TimerInfo2>
-        {status === "running" && <SubTitle>{topMessage}</SubTitle>}
-        {status === "running" && (
-          <MainTitle ifSelectedDateIsCurrentMonth={true}>
-            <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
-              <FaIndianRupeeSign />
-            </span>
-            {topGreen ? (topGreen > 0 ? topGreen?.toFixed(2) : 0) : 0}
-          </MainTitle>
-        )}
-        <Ticker>{topTickerMessage}</Ticker>
-        <SubTitle>{bottomMessage}</SubTitle>
-        <MainTitle ifSelectedDateIsCurrentMonth={true}>
-          <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
-            <FaIndianRupeeSign />
-          </span>
-          {bottomGreen ? (bottomGreen > 0 ? bottomGreen?.toFixed(2) : 0) : 0}
-        </MainTitle>
-      </TimerInfo2>
+      <Ticker>{topTickerMessage}</Ticker>
       <StartStopContainer>
         {status === "stopped" && (
           <Button
@@ -255,11 +319,42 @@ export default function Timer({ totalCurrentMonthSalary }) {
   );
 }
 
+const MoneyLeft = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex: 1;
+`;
+
+const MoneyRight = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+`;
+
+const IndividualContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+`;
+
+const SingleEntry = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
 const Ticker = styled.div`
   display: flex;
   align-items: center;
-  color: #929498;
   justify-content: center;
+  color: #929498;
   animation: blink-smooth 1s infinite linear;
   @keyframes blink-smooth {
     0%,
@@ -278,16 +373,28 @@ const SubTitle = styled.div`
   align-items: center;
   justify-content: center;
   color: #4f4f4f;
+  flex: 1;
   transform: translateX(6px);
   padding: 1rem;
-  font-size: 1.5rem;
+  font-size: 1rem;
+`;
+
+const SubTitle2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4f4f4f;
+  width: 100%;
+  transform: translateX(6px);
+  padding: 1rem;
+  font-size: 1rem;
 `;
 
 const MainTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
+  font-size: 2rem;
   color: ${(props) =>
     props.ifSelectedDateIsCurrentMonth ? "#04b488" : "#53B5D9"};
 `;
@@ -296,9 +403,8 @@ const TimerInfo2 = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  flex-direction: column;
   width: 100%;
+  margin-bottom: 1rem;
 `;
 
 const Start = styled.div`
@@ -375,8 +481,7 @@ const TimerInfo = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  width: 100%;
-  font-size: 3rem;
+  flex: 1;
   margin-bottom: ${(props) => (props?.marginHigh ? "1rem" : "")};
   color: ${(props) => (props.danger ? "#fe6662" : "")};
 `;
@@ -399,6 +504,21 @@ const Button = styled.div`
   border-radius: 4px;
   padding: 1rem;
   font-size: 2rem;
+  background-color: #04b488;
+
+  &:active {
+    transform: translate(0px, 2px);
+  }
+`;
+
+const PAButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 1rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  padding: 0.5rem;
   background-color: #04b488;
 
   &:active {

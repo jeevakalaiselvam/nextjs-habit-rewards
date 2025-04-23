@@ -37,7 +37,7 @@ export default function Money({ selectedDate, forceRefreshExpense }) {
     totalEarned: 0,
     pocketMoney: 0,
   });
-  const [selectedTier1, setSelectedTier1] = useState("income");
+  const [selectedTier1, setSelectedTier1] = useState("timer");
   const [selectedTier2, setSelectedTier2] = useState("hours");
   const [allSpendings, setAllSpendings] = useState([]);
 
