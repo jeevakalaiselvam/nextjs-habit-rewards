@@ -173,6 +173,8 @@ function ActivityTracker({ totalCurrentMonthSalary }) {
     (8 * 60 * 60)
   )?.toFixed(10);
 
+  let totalEarnableToday = 8 * 60 * 60 * perSecond;
+
   let secondsElapsed = totalTime / 1000;
   let topGreen = secondsElapsed * perSecond;
   let topTicker = Number(perSecond);
@@ -180,6 +182,7 @@ function ActivityTracker({ totalCurrentMonthSalary }) {
   let bottomMessage = "Remaining";
   let bottomGreen =
     (8 * 60 * 60 - (secondsElapsed < 0 ? 0 : secondsElapsed)) * perSecond;
+  topGreen = topGreen > totalEarnableToday ? totalEarnableToday : topGreen;
   let topTickerMessage = Math.floor(Number(topGreen) / 500) + " Task Closed";
 
   let totalTimeInDay = 8 * 60 * 60;
@@ -269,7 +272,7 @@ function ActivityTracker({ totalCurrentMonthSalary }) {
 
       {totalTime > 0 && (
         <StartStopContainer>
-          <Button
+          <ButtonLeft
             onClick={() => {
               if (runningActivity == selectedKey) {
                 handleStop();
@@ -280,7 +283,7 @@ function ActivityTracker({ totalCurrentMonthSalary }) {
             disabled={runningActivity === selectedKey}
           >
             {runningActivity == selectedKey ? "PAUSE" : "START"}
-          </Button>
+          </ButtonLeft>
           <ButtonReset
             onClick={handleReset}
             disabled={runningActivity !== selectedKey}
@@ -332,7 +335,7 @@ const TimerInfo3 = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 2rem 1rem;
+  padding: 1rem 1rem;
   margin-bottom: ${(props) => (props?.marginHigh ? "1rem" : "")};
   color: ${(props) => (props.danger ? "#fe6662" : "")};
 `;
@@ -391,7 +394,7 @@ const SubTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${(props) => (props.selected ? "#04b488" : "#383838")};
+  color: ${(props) => (props.selected ? "#52b8da" : "#5f5f5f")};
   width: 100px;
   transform: translateX(6px);
   padding: 1rem;
@@ -511,8 +514,23 @@ const StartStopContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: 0.5rem;
   padding: 1rem;
+`;
+
+const ButtonLeft = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+  padding: 1rem;
+  font-size: 2rem;
+  background-color: #04b488;
+
+  &:active {
+    transform: translate(0px, 2px);
+  }
 `;
 
 const Button = styled.div`
@@ -520,8 +538,8 @@ const Button = styled.div`
   align-items: center;
   justify-content: center;
   width: 90%;
-  margin-top: 1rem;
   border-radius: 4px;
+  margin-left: 0.5rem;
   padding: 1rem;
   font-size: 2rem;
   background-color: #04b488;
@@ -566,7 +584,7 @@ const ButtonReset = styled.div`
   align-items: center;
   justify-content: center;
   width: 90%;
-  margin-right: 1rem;
+  margin-left: 0.5rem;
   border-radius: 4px;
   padding: 1rem;
   font-size: 2rem;
