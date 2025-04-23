@@ -427,7 +427,7 @@ const Container = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  padding: 2rem 1rem;
+  padding: 1rem 1rem;
   min-height: 60vh;
   width: 100%;
   max-height: 60vh;
