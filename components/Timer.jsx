@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { getDaysInMonth } from "./helpers/dateHelper";
+import { FaIndianRupeeSign } from "react-icons/fa6";
 
 const ACTIVITY_KEYS = ["Tracking", "Analysis", "Build", "Bugfix", "Calls"];
 
@@ -24,7 +26,7 @@ const formatTime = (ms) => {
   };
 };
 
-function ActivityTracker() {
+function ActivityTracker({ totalCurrentMonthSalary }) {
   const [selectedKey, setSelectedKey] = useState(ACTIVITY_KEYS?.[0]);
   const [activityData, setActivityData] = useState(() => getStoredData());
   const [runningActivity, setRunningActivity] = useState(() => {
@@ -137,6 +139,54 @@ function ActivityTracker() {
     0
   );
 
+  const getHMS = (elapsedSeconds) => {
+    const totalSeconds = Math.floor(elapsedSeconds / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+
+    return {
+      hours: hours.toString().padStart(2, "0"),
+      minutes: minutes.toString(),
+      seconds: seconds.toString().padStart(2, "0"),
+    };
+  };
+
+  const getSecondsLeftToday = () => {
+    const now = new Date();
+    const endOfDay = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      23,
+      59,
+      59,
+      999
+    );
+    const diffMs = endOfDay - now;
+    return Math.floor(diffMs / 1000);
+  };
+
+  let perSecond = (
+    totalCurrentMonthSalary /
+    getDaysInMonth(new Date()) /
+    (8 * 60 * 60)
+  )?.toFixed(10);
+
+  let secondsElapsed = totalTime / 1000;
+  let topGreen = secondsElapsed * perSecond;
+  let topTicker = Number(perSecond);
+  let topMessage = "Earned";
+  let bottomMessage = "Remaining";
+  let bottomGreen =
+    (8 * 60 * 60 - (secondsElapsed < 0 ? 0 : secondsElapsed)) * perSecond;
+  let topTickerMessage = Math.floor(Number(topGreen) / 500) + " Task Closed";
+
+  let totalTimeInDay = 8 * 60 * 60;
+  let timeLeftInToday = getSecondsLeftToday();
+  let timeAlreadyCompleted = secondsElapsed;
+  let timeNeeded = totalTimeInDay - timeAlreadyCompleted;
+
   return (
     <Container>
       {!runningActivity && !totalTime && (
@@ -189,6 +239,31 @@ function ActivityTracker() {
             </TimerInfo>
           </SingleEntry>
         ))}
+
+      <TimerInfo2>
+        <MoneyLeft>
+          {<SubTitle2>{topMessage}</SubTitle2>}
+          {
+            <MainTitle ifSelectedDateIsCurrentMonth={true}>
+              <span
+                style={{ fontSize: "1.5rem", transform: "translateY(3px)" }}
+              >
+                <FaIndianRupeeSign />
+              </span>
+              {topGreen ? (topGreen > 0 ? topGreen?.toFixed(1) : 0) : 0}
+            </MainTitle>
+          }
+        </MoneyLeft>
+        <MoneyRight>
+          <SubTitle2>{bottomMessage}</SubTitle2>
+          <MainTitle ifSelectedDateIsCurrentMonth={true}>
+            <span style={{ fontSize: "1.5rem", transform: "translateY(3px)" }}>
+              <FaIndianRupeeSign />
+            </span>
+            {bottomGreen ? (bottomGreen > 0 ? bottomGreen?.toFixed(1) : 0) : 0}
+          </MainTitle>
+        </MoneyRight>
+      </TimerInfo2>
 
       {totalTime > 0 && (
         <StartStopContainer>
