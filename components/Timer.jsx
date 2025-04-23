@@ -7,6 +7,7 @@ const STORAGE_KEYS = {
   startTime: "timer-start-time",
   elapsed: "timer-elapsed",
   status: "timer-status",
+  presetTime: "preset-time",
 };
 
 export default function Timer({ totalCurrentMonthSalary }) {
@@ -41,18 +42,40 @@ export default function Timer({ totalCurrentMonthSalary }) {
   const startInterval = (startTime, previousElapsed = 0) => {
     clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
-      setElapsed(previousElapsed + (Date.now() - startTime));
+      const savedElapsed =
+        parseInt(localStorage.getItem(STORAGE_KEYS.presetTime), 10) || 0;
+      setElapsed(previousElapsed + 0 + (Date.now() - startTime));
     }, 1000);
+  };
+
+  const getElapsedSinceTodayTime = (hour, minute) => {
+    const now = new Date();
+
+    const startTime = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      hour,
+      minute,
+      0
+    );
+
+    const diffMs = now - startTime;
+    const elapsedSeconds = Math.floor(diffMs);
+
+    return elapsedSeconds;
   };
 
   const handleStart = () => {
     const startTime = Date.now();
+    let preSetElapsed = getElapsedSinceTodayTime(timeHours, timeMinutes);
+    localStorage.setItem(STORAGE_KEYS.presetTime, preSetElapsed);
     localStorage.setItem(STORAGE_KEYS.startTime, startTime);
     localStorage.setItem(STORAGE_KEYS.elapsed, "0");
     localStorage.setItem(STORAGE_KEYS.status, "running");
     setElapsed(0);
     setStatus("running");
-    startInterval(startTime);
+    startInterval(startTime, preSetElapsed);
   };
 
   const handlePause = () => {
