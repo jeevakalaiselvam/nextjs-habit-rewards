@@ -171,20 +171,43 @@ export default function Timer({ totalCurrentMonthSalary }) {
         </TimerSelect>
       )}
 
-      <TimerInfo>
-        <Hour>{getHMS(elapsed)?.hours}h</Hour>
-        <Min>{getHMS(elapsed)?.minutes}m</Min>
-        <Sec>{getHMS(elapsed)?.seconds}s</Sec>
-      </TimerInfo>
+      {status === "running" && <SubTitle>{"Work Time"}</SubTitle>}
+      {status === "running" && (
+        <TimerInfo marginHigh={!status === "running"}>
+          <Hour>{getHMS(elapsed)?.hours}h</Hour>
+          <Min>{getHMS(elapsed)?.minutes}m</Min>
+          <Sec>{getHMS(elapsed)?.seconds}s</Sec>
+        </TimerInfo>
+      )}
+
+      {status === "paused" && <SubTitle>{"Work Needed"}</SubTitle>}
+      {status === "paused" && (
+        <TimerInfo marginHigh={!status === "paused"}>
+          <Hour>{getHMS(timeNeeded * 1000)?.hours}h</Hour>
+          <Min>{getHMS(timeNeeded * 1000)?.minutes}m</Min>
+          <Sec>{getHMS(timeNeeded * 1000)?.seconds}s</Sec>
+        </TimerInfo>
+      )}
+
+      {status === "paused" && <SubTitle>{"Time Left"}</SubTitle>}
+      {status === "paused" && (
+        <TimerInfo marginHigh={!status === "paused"} danger={true}>
+          <Hour>{getHMS(timeLeftInToday * 1000)?.hours}h</Hour>
+          <Min>{getHMS(timeLeftInToday * 1000)?.minutes}m</Min>
+          <Sec>{getHMS(timeLeftInToday * 1000)?.seconds}s</Sec>
+        </TimerInfo>
+      )}
 
       <TimerInfo2>
-        <SubTitle>{topMessage}</SubTitle>
-        <MainTitle ifSelectedDateIsCurrentMonth={true}>
-          <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
-            <FaIndianRupeeSign />
-          </span>
-          {topGreen ? (topGreen > 0 ? topGreen?.toFixed(2) : 0) : 0}
-        </MainTitle>
+        {status === "running" && <SubTitle>{topMessage}</SubTitle>}
+        {status === "running" && (
+          <MainTitle ifSelectedDateIsCurrentMonth={true}>
+            <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
+              <FaIndianRupeeSign />
+            </span>
+            {topGreen ? (topGreen > 0 ? topGreen?.toFixed(2) : 0) : 0}
+          </MainTitle>
+        )}
         <Ticker>{topTickerMessage}</Ticker>
         <SubTitle>{bottomMessage}</SubTitle>
         <MainTitle ifSelectedDateIsCurrentMonth={true}>
@@ -355,6 +378,7 @@ const TimerInfo = styled.div`
   width: 100%;
   font-size: 3rem;
   margin-bottom: ${(props) => (props?.marginHigh ? "1rem" : "")};
+  color: ${(props) => (props.danger ? "#fe6662" : "")};
 `;
 
 const StartStopContainer = styled.div`
