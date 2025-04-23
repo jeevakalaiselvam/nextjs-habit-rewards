@@ -205,7 +205,7 @@ export default function Timer({ totalCurrentMonthSalary }) {
           </ButtonReset>
         )}
       </StartStopContainer>
-    </ContainerA>
+    </Container>
   );
 }
 
