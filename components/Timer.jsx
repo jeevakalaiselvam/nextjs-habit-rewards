@@ -6,12 +6,12 @@ import { FaIndianRupeeSign } from "react-icons/fa6";
 const ACTIVITY_KEYS = ["Tracking", "Analysis", "Build", "Bugfix", "Calls"];
 
 const getStoredData = () => {
-  const data = localStorage.getItem("activityData");
+  const data = localStorage.getItem("ACTIVITY_DATA_TIMER");
   return data ? JSON.parse(data) : {};
 };
 
 const storeData = (data) => {
-  localStorage.setItem("activityData", JSON.stringify(data));
+  localStorage.setItem("ACTIVITY_DATA_TIMER", JSON.stringify(data));
 };
 
 const formatTime = (ms) => {
@@ -192,12 +192,15 @@ function ActivityTracker({ totalCurrentMonthSalary }) {
 
   console.log({ startInput });
 
+  const showStartButtons = !runningActivity && !totalTime;
+
   return (
     <Container>
-      {!runningActivity && !totalTime && (
+      {showStartButtons && (
         <TimerSelect>
           <input
             type="number"
+            inputMode="numeric"
             placeholder="Hours"
             value={startInput.hours}
             onChange={(e) =>
@@ -209,6 +212,7 @@ function ActivityTracker({ totalCurrentMonthSalary }) {
           />
           <input
             type="number"
+            inputMode="numeric"
             placeholder="Minutes"
             value={startInput.minutes}
             onChange={(e) =>
@@ -282,22 +286,22 @@ function ActivityTracker({ totalCurrentMonthSalary }) {
             }}
             disabled={runningActivity === selectedKey}
           >
-            {runningActivity == selectedKey ? "PAUSE" : "START"}
+            {runningActivity == selectedKey ? "Pause" : "Start"}
           </ButtonLeft>
           <ButtonReset
             onClick={handleReset}
             disabled={runningActivity !== selectedKey}
           >
-            RESET
+            Reset
           </ButtonReset>
         </StartStopContainer>
       )}
-      {!runningActivity && !totalTime && (
+      {showStartButtons && (
         <Button
           className="bg-blue-500 text-white px-3 py-1 rounded"
           onClick={handleSetInitialTime}
         >
-          START WORK
+          Start
         </Button>
       )}
     </Container>
@@ -397,7 +401,7 @@ const SubTitle = styled.div`
   color: ${(props) => (props.selected ? "#52b8da" : "#5f5f5f")};
   width: 100px;
   transform: translateX(6px);
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   font-size: 1rem;
 `;
 
@@ -416,7 +420,7 @@ const MainTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  font-size: 2.5rem;
   color: ${(props) =>
     props.ifSelectedDateIsCurrentMonth ? "#04b488" : "#53B5D9"};
 `;
@@ -426,7 +430,9 @@ const TimerInfo2 = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  padding: 1rem;
   margin-bottom: 1rem;
+  transform: translateX(-0.5rem);
 `;
 
 const Start = styled.div`
@@ -504,7 +510,6 @@ const TimerInfo = styled.div`
   align-items: flex-start;
   justify-content: center;
   flex: 1.5;
-  margin-bottom: ${(props) => (props?.marginHigh ? "1rem" : "")};
   color: ${(props) =>
     props.danger ? "#fe6662" : props.active ? "#e3e3e3" : "#303030"};
 `;
