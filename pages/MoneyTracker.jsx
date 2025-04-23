@@ -138,7 +138,6 @@ export default function MoneyTracker() {
             {!showEntry && activeTab == 1 && <HiPlus />}
             {!showEntry && activeTab == 2 && <HiPlus />}
             {!showEntry && activeTab == 3 && <MdAccessTimeFilled />}
-
             {showEntry && <IoIosCloseCircle />}
           </Inner>
         </Icon>

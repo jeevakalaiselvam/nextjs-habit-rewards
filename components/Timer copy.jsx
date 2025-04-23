@@ -1,95 +1,105 @@
 import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
-import { getDaysInMonth } from "./helpers/dateHelper";
+import { getDateFromTime24, getDaysInMonth } from "./helpers/dateHelper";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 
-const STORAGE_KEYS = {
-  startTime: "timer-start-time",
-  elapsed: "timer-elapsed",
-  status: "timer-status",
+const TIMER_KEY = "persistent_timer";
+
+const formatTime = (totalSeconds) => {
+  const hrs = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
+  const mins = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
+  const secs = String(totalSeconds % 60).padStart(2, "0");
+  return `${hrs}:${mins}:${secs}`;
 };
 
 export default function Timer({ totalCurrentMonthSalary }) {
   const [elapsed, setElapsed] = useState(0);
-  const [status, setStatus] = useState("stopped"); // 'running', 'paused', 'stopped'
+  const [isRunning, setIsRunning] = useState(false);
   const intervalRef = useRef(null);
   const [timeHours, setTimeHours] = useState("");
   const [timeMinutes, setTimeMinutes] = useState("");
 
-  // Load saved state from localStorage on mount
+  // Load saved state on mount
   useEffect(() => {
-    const savedStatus = localStorage.getItem(STORAGE_KEYS.status);
-    const savedElapsed =
-      parseInt(localStorage.getItem(STORAGE_KEYS.elapsed), 10) || 0;
-    const savedStart = parseInt(
-      localStorage.getItem(STORAGE_KEYS.startTime),
-      10
-    );
-
-    if (savedStatus === "running" && savedStart) {
-      const timePassed = Date.now() - savedStart;
-      setElapsed(savedElapsed + timePassed);
-      startInterval(savedStart, savedElapsed);
-    } else {
-      setElapsed(savedElapsed);
+    const saved = JSON.parse(localStorage.getItem(TIMER_KEY));
+    if (saved) {
+      setElapsed(saved.elapsed || 0);
+      setIsRunning(saved.isRunning || false);
+      if (saved.isRunning && saved.startTime) {
+        const timeSinceLast = Math.floor((Date.now() - saved.startTime) / 1000);
+        setElapsed(saved.elapsed + timeSinceLast);
+      }
     }
-
-    setStatus(savedStatus || "stopped");
-    return () => clearInterval(intervalRef.current);
   }, []);
 
-  const startInterval = (startTime, previousElapsed = 0) => {
-    clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(() => {
-      setElapsed(previousElapsed + (Date.now() - startTime));
-    }, 1000);
+  // Save to localStorage on every change
+  useEffect(() => {
+    const startTime = isRunning ? Date.now() : null;
+    localStorage.setItem(
+      TIMER_KEY,
+      JSON.stringify({ elapsed, isRunning, startTime })
+    );
+  }, [elapsed, isRunning]);
+
+  // Timer logic
+  useEffect(() => {
+    if (isRunning) {
+      intervalRef.current = setInterval(() => {
+        setElapsed((prev) => prev + 1);
+      }, 1000);
+    } else {
+      clearInterval(intervalRef.current);
+    }
+
+    return () => clearInterval(intervalRef.current);
+  }, [isRunning]);
+
+  const getElapsedSinceTodayTime = (hour, minute) => {
+    const now = new Date();
+
+    const startTime = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      now.getDate(),
+      hour,
+      minute,
+      0
+    );
+
+    const diffMs = now - startTime;
+    const elapsedSeconds = Math.floor(diffMs / 1000);
+
+    return elapsedSeconds;
   };
 
-  const handleStart = () => {
-    const startTime = Date.now();
-    localStorage.setItem(STORAGE_KEYS.startTime, startTime);
-    localStorage.setItem(STORAGE_KEYS.elapsed, "0");
-    localStorage.setItem(STORAGE_KEYS.status, "running");
+  const start = () => {
+    let preSetElapsed = getElapsedSinceTodayTime(timeHours, timeMinutes);
+    if (!isRunning && elapsed === 0) {
+      setElapsed(preSetElapsed);
+      setIsRunning(true);
+    }
+  };
+
+  const pause = () => setIsRunning(false);
+
+  const resume = () => {
+    if (!isRunning && elapsed > 0) {
+      setIsRunning(true);
+    }
+  };
+
+  const reset = () => {
+    setIsRunning(false);
     setElapsed(0);
-    setStatus("running");
-    startInterval(startTime);
-  };
-
-  const handlePause = () => {
-    clearInterval(intervalRef.current);
-    localStorage.setItem(STORAGE_KEYS.elapsed, elapsed.toString());
-    localStorage.setItem(STORAGE_KEYS.status, "paused");
-    setStatus("paused");
-  };
-
-  const handleResume = () => {
-    const resumeTime = Date.now();
-    localStorage.setItem(STORAGE_KEYS.startTime, resumeTime);
-    localStorage.setItem(STORAGE_KEYS.status, "running");
-    setStatus("running");
-    startInterval(resumeTime, elapsed);
-  };
-
-  const handleStop = () => {
-    clearInterval(intervalRef.current);
-    localStorage.removeItem(STORAGE_KEYS.startTime);
-    localStorage.removeItem(STORAGE_KEYS.elapsed);
-    localStorage.setItem(STORAGE_KEYS.status, "stopped");
-    setElapsed(0);
-    setStatus("stopped");
+    localStorage.removeItem(TIMER_KEY);
   };
 
   const getHMS = (elapsedSeconds) => {
-    const totalSeconds = Math.floor(elapsedSeconds / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
+    const hours = Math.floor(elapsedSeconds / 3600);
+    const minutes = Math.floor((elapsedSeconds % 3600) / 60);
+    const seconds = elapsedSeconds % 60;
 
-    return {
-      hours: hours.toString().padStart(2, "0"),
-      minutes: minutes.toString(),
-      seconds: seconds.toString().padStart(2, "0"),
-    };
+    return { hours, minutes, seconds };
   };
 
   const getSecondsLeftToday = () => {
@@ -113,23 +123,21 @@ export default function Timer({ totalCurrentMonthSalary }) {
     (8 * 60 * 60)
   )?.toFixed(10);
 
-  let secondsElapsed = elapsed / 1000;
-  let topGreen = secondsElapsed * perSecond;
+  let topGreen = elapsed * perSecond;
   let topTicker = Number(perSecond);
   let topMessage = "Earned Today";
   let bottomMessage = "Remaining Today";
-  let bottomGreen =
-    (8 * 60 * 60 - (secondsElapsed < 0 ? 0 : secondsElapsed)) * perSecond;
+  let bottomGreen = (8 * 60 * 60 - (elapsed < 0 ? 0 : elapsed)) * perSecond;
   let topTickerMessage = Math.floor(Number(topGreen) / 500) + " Task Closed";
 
   let totalTime = 8 * 60 * 60;
   let timeLeftInToday = getSecondsLeftToday();
-  let timeAlreadyCompleted = secondsElapsed;
+  let timeAlreadyCompleted = elapsed;
   let timeNeeded = totalTime - timeAlreadyCompleted;
 
   return (
     <Container>
-      {status === "stopped" && (
+      {!(isRunning || elapsed > 0) && (
         <TimerSelect>
           <input
             type="number"
@@ -147,65 +155,71 @@ export default function Timer({ totalCurrentMonthSalary }) {
           />
         </TimerSelect>
       )}
+      {(isRunning || elapsed > 0) && <SubTitle>{"Work Time"}</SubTitle>}
+      {(isRunning || elapsed > 0) && (
+        <TimerInfo marginHigh={!(isRunning || elapsed === 0)}>
+          <Hour>{getHMS(elapsed)?.hours}h</Hour>
+          <Min>{getHMS(elapsed)?.minutes}m</Min>
+          <Sec>{getHMS(elapsed)?.seconds}s</Sec>
+        </TimerInfo>
+      )}
 
-      <TimerInfo>
-        <Hour>{getHMS(elapsed)?.hours}h</Hour>
-        <Min>{getHMS(elapsed)?.minutes}m</Min>
-        <Sec>{getHMS(elapsed)?.seconds}s</Sec>
-      </TimerInfo>
+      {!(isRunning || elapsed === 0) && <SubTitle>{"Work Needed"}</SubTitle>}
+      {!(isRunning || elapsed === 0) && (
+        <TimerInfo marginHigh={!(isRunning || elapsed === 0)}>
+          <Hour>{getHMS(timeNeeded)?.hours}h</Hour>
+          <Min>{getHMS(timeNeeded)?.minutes}m</Min>
+          <Sec>{getHMS(timeNeeded)?.seconds}s</Sec>
+        </TimerInfo>
+      )}
 
-      <TimerInfo2>
-        <SubTitle>{topMessage}</SubTitle>
-        <MainTitle ifSelectedDateIsCurrentMonth={true}>
-          <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
-            <FaIndianRupeeSign />
-          </span>
-          {topGreen ? (topGreen > 0 ? topGreen?.toFixed(2) : 0) : 0}
-        </MainTitle>
-        <Ticker>{topTickerMessage}</Ticker>
-        <SubTitle>{bottomMessage}</SubTitle>
-        <MainTitle ifSelectedDateIsCurrentMonth={true}>
-          <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
-            <FaIndianRupeeSign />
-          </span>
-          {bottomGreen ? (bottomGreen > 0 ? bottomGreen?.toFixed(2) : 0) : 0}
-        </MainTitle>
-      </TimerInfo2>
+      {!(isRunning || elapsed === 0) && <SubTitle>{"Time Left"}</SubTitle>}
+      {!(isRunning || elapsed === 0) && (
+        <TimerInfo marginHigh={!(isRunning || elapsed === 0)}>
+          <Hour>{getHMS(timeLeftInToday)?.hours}h</Hour>
+          <Min>{getHMS(timeLeftInToday)?.minutes}m</Min>
+          <Sec>{getHMS(timeLeftInToday)?.seconds}s</Sec>
+        </TimerInfo>
+      )}
+
+      {(isRunning || elapsed === 0) && (
+        <TimerInfo2>
+          <SubTitle>{topMessage}</SubTitle>
+          <MainTitle ifSelectedDateIsCurrentMonth={true}>
+            <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
+              <FaIndianRupeeSign />
+            </span>
+            {topGreen ? (topGreen > 0 ? topGreen?.toFixed(2) : 0) : 0}
+          </MainTitle>
+          <Ticker>{topTickerMessage}</Ticker>
+          <SubTitle>{bottomMessage}</SubTitle>
+          <MainTitle ifSelectedDateIsCurrentMonth={true}>
+            <span style={{ fontSize: "2.25rem", transform: "translateY(3px)" }}>
+              <FaIndianRupeeSign />
+            </span>
+            {bottomGreen ? (bottomGreen > 0 ? bottomGreen?.toFixed(2) : 0) : 0}
+          </MainTitle>
+        </TimerInfo2>
+      )}
       <StartStopContainer>
-        {status === "stopped" && (
-          <Button
-            onClick={handleStart}
-            className="px-4 py-2 bg-green-500 text-white rounded"
-          >
+        {!(isRunning || elapsed > 0) && (
+          <Button onClick={start} disabled={isRunning || elapsed > 0}>
             Start
           </Button>
         )}
-        {status === "running" && (
-          <Button
-            onClick={handlePause}
-            className="px-4 py-2 bg-yellow-500 text-white rounded"
-          >
+        {isRunning && (
+          <Button onClick={pause} disabled={!isRunning}>
             Pause
           </Button>
         )}
-        {status === "paused" && (
-          <Button
-            onClick={handleResume}
-            className="px-4 py-2 bg-blue-500 text-white rounded"
-          >
+        {!(isRunning || elapsed === 0) && (
+          <Button onClick={resume} disabled={isRunning || elapsed === 0}>
             Resume
           </Button>
         )}
-        {(status === "running" || status === "paused") && (
-          <ButtonReset
-            onClick={handleStop}
-            className="px-4 py-2 bg-red-500 text-white rounded"
-          >
-            Reset
-          </ButtonReset>
-        )}
+        <ButtonReset onClick={reset}>Reset</ButtonReset>
       </StartStopContainer>
-    </ContainerA>
+    </Container>
   );
 }
 
