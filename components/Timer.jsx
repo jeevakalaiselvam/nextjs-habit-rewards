@@ -1,323 +1,264 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { getDaysInMonth } from "./helpers/dateHelper";
-import { FaIndianRupeeSign } from "react-icons/fa6";
 
-const STORAGE_KEYS = {
-  startTime: "timer-start-time",
-  elapsed: "timer-elapsed",
-  status: "timer-status",
-  presetTime: "preset-time",
+const ACTIVITY_KEYS = ["Tracking", "Analysis", "Build", "Bugfix", "Calls"];
+
+const getStoredData = () => {
+  const data = localStorage.getItem("activityData");
+  return data ? JSON.parse(data) : {};
 };
 
-export default function Timer({ totalCurrentMonthSalary }) {
-  const [elapsed, setElapsed] = useState(0);
-  const [status, setStatus] = useState("stopped"); // 'running', 'paused', 'stopped'
-  const intervalRef = useRef(null);
-  const [timeHours, setTimeHours] = useState("");
-  const [timeMinutes, setTimeMinutes] = useState("");
+const storeData = (data) => {
+  localStorage.setItem("activityData", JSON.stringify(data));
+};
 
-  // Load saved state from localStorage on mount
-  useEffect(() => {
-    const savedStatus = localStorage.getItem(STORAGE_KEYS.status);
-    const savedElapsed =
-      parseInt(localStorage.getItem(STORAGE_KEYS.elapsed), 10) || 0;
-    const savedStart = parseInt(
-      localStorage.getItem(STORAGE_KEYS.startTime),
-      10
+const formatTime = (ms) => {
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  return {
+    hours: hours.toString().padStart(2, "0"),
+    minutes: minutes.toString(),
+    seconds: seconds.toString().padStart(2, "0"),
+  };
+};
+
+function ActivityTracker() {
+  const [selectedKey, setSelectedKey] = useState(ACTIVITY_KEYS?.[0]);
+  const [activityData, setActivityData] = useState(() => getStoredData());
+  const [runningActivity, setRunningActivity] = useState(() => {
+    const stored = getStoredData();
+    return (
+      ACTIVITY_KEYS.find(
+        (key) =>
+          stored[key]?.lastStart !== null &&
+          stored[key]?.lastStart !== undefined
+      ) || null
     );
+  });
+  const [startInput, setStartInput] = useState({ hours: 0, minutes: 0 });
 
-    if (savedStatus === "running" && savedStart) {
-      const timePassed = Date.now() - savedStart;
-      setElapsed(savedElapsed + timePassed);
-      startInterval(savedStart, savedElapsed);
-    } else {
-      setElapsed(savedElapsed);
-    }
+  useEffect(() => {
+    storeData(activityData);
+  }, [activityData]);
 
-    setStatus(savedStatus || "stopped");
-    return () => clearInterval(intervalRef.current);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = Date.now();
+      setActivityData((prev) => {
+        const updated = { ...prev };
+        ACTIVITY_KEYS.forEach((key) => {
+          if (updated[key]?.lastStart) {
+            const elapsed = now - updated[key].lastStart;
+            updated[key] = {
+              ...updated[key],
+              time: (updated[key].time || 0) + elapsed,
+              lastStart: now,
+            };
+          }
+        });
+        return updated;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
-  const startInterval = (startTime, previousElapsed = 0) => {
-    clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(() => {
-      const savedElapsed =
-        parseInt(localStorage.getItem(STORAGE_KEYS.presetTime), 10) || 0;
-      setElapsed(previousElapsed + 0 + (Date.now() - startTime));
-    }, 1000);
-  };
-
-  const getElapsedSinceTodayTime = (hour, minute) => {
-    const now = new Date();
-
-    const startTime = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      hour,
-      minute,
-      0
-    );
-
-    const diffMs = now - startTime;
-    const elapsedSeconds = Math.floor(diffMs);
-
-    return elapsedSeconds;
-  };
-
-  const handleStart = () => {
-    const startTime = Date.now();
-    let preSetElapsed = getElapsedSinceTodayTime(timeHours, timeMinutes);
-    localStorage.setItem(STORAGE_KEYS.presetTime, preSetElapsed);
-    localStorage.setItem(STORAGE_KEYS.startTime, startTime);
-    localStorage.setItem(STORAGE_KEYS.elapsed, "0");
-    localStorage.setItem(STORAGE_KEYS.status, "running");
-    setElapsed(0);
-    setStatus("running");
-    startInterval(startTime, preSetElapsed);
-  };
-
-  const handlePause = () => {
-    clearInterval(intervalRef.current);
-    localStorage.setItem(STORAGE_KEYS.elapsed, elapsed.toString());
-    localStorage.setItem(STORAGE_KEYS.status, "paused");
-    setStatus("paused");
-  };
-
-  const handleResume = () => {
-    const resumeTime = Date.now();
-    localStorage.setItem(STORAGE_KEYS.startTime, resumeTime);
-    localStorage.setItem(STORAGE_KEYS.status, "running");
-    setStatus("running");
-    startInterval(resumeTime, elapsed);
+  const handleStart = (key) => {
+    setRunningActivity(key);
+    setActivityData((prev) => {
+      const updated = { ...prev };
+      ACTIVITY_KEYS.forEach((k) => {
+        if (updated[k]) updated[k].lastStart = null;
+      });
+      updated[key] = {
+        ...(prev[key] || { time: 0 }),
+        lastStart: Date.now(),
+      };
+      return updated;
+    });
   };
 
   const handleStop = () => {
-    clearInterval(intervalRef.current);
-    localStorage.removeItem(STORAGE_KEYS.startTime);
-    localStorage.removeItem(STORAGE_KEYS.elapsed);
-    localStorage.setItem(STORAGE_KEYS.status, "stopped");
-    setElapsed(0);
-    setStatus("stopped");
+    setRunningActivity(null);
+    setActivityData((prev) => {
+      const updated = { ...prev };
+      if (runningActivity && updated[runningActivity]?.lastStart) {
+        const now = Date.now();
+        updated[runningActivity].time +=
+          now - updated[runningActivity].lastStart;
+        updated[runningActivity].lastStart = null;
+      }
+      return updated;
+    });
   };
 
-  const getHMS = (elapsedSeconds) => {
-    const totalSeconds = Math.floor(elapsedSeconds / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    return {
-      hours: hours.toString().padStart(2, "0"),
-      minutes: minutes.toString(),
-      seconds: seconds.toString().padStart(2, "0"),
-    };
+  const handleReset = () => {
+    setRunningActivity(null);
+    setActivityData((prev) => {
+      const updated = { ...prev };
+      ACTIVITY_KEYS?.forEach((key) => {
+        if (updated?.[key]) {
+          updated[key].time = 0;
+          updated[key].lastStart = 0;
+        }
+      });
+      return updated;
+    });
   };
 
-  const getSecondsLeftToday = () => {
+  const handleSetInitialTime = () => {
+    const { hours, minutes } = startInput;
     const now = new Date();
-    const endOfDay = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      23,
-      59,
-      59,
-      999
-    );
-    const diffMs = endOfDay - now;
-    return Math.floor(diffMs / 1000);
+    const currentTimeMs =
+      now.getHours() * 3600 * 1000 +
+      now.getMinutes() * 60 * 1000 +
+      now.getSeconds() * 1000 +
+      now.getMilliseconds();
+    const inputTimeMs = (hours * 3600 + minutes * 60) * 1000;
+
+    let elapsedMs = currentTimeMs - inputTimeMs;
+    if (elapsedMs < 0) {
+      elapsedMs += 24 * 3600 * 1000; // adjust if time is from previous day
+    }
+
+    setActivityData((prev) => ({
+      ...prev,
+      [ACTIVITY_KEYS[0]]: {
+        time: (prev?.[ACTIVITY_KEYS?.[0]]?.time || 0) + elapsedMs,
+        lastStart: prev?.[ACTIVITY_KEYS?.[0]]?.lastStart || null,
+      },
+    }));
+    handleStart(ACTIVITY_KEYS?.[0]);
   };
 
-  let perSecond = (
-    totalCurrentMonthSalary /
-    getDaysInMonth(new Date()) /
-    (8 * 60 * 60)
-  )?.toFixed(10);
-
-  let secondsElapsed = elapsed / 1000;
-  let topGreen = secondsElapsed * perSecond;
-  let topTicker = Number(perSecond);
-  let topMessage = "Earned Today";
-  let bottomMessage = "Remaining Today";
-  let bottomGreen =
-    (8 * 60 * 60 - (secondsElapsed < 0 ? 0 : secondsElapsed)) * perSecond;
-  let topTickerMessage = Math.floor(Number(topGreen) / 500) + " Task Closed";
-
-  let totalTime = 8 * 60 * 60;
-  let timeLeftInToday = getSecondsLeftToday();
-  let timeAlreadyCompleted = secondsElapsed;
-  let timeNeeded = totalTime - timeAlreadyCompleted;
+  const totalTime = Object.values(activityData).reduce(
+    (acc, cur) => acc + (cur?.time || 0),
+    0
+  );
 
   return (
     <Container>
-      {status === "stopped" && (
+      {!runningActivity && !totalTime && (
         <TimerSelect>
           <input
             type="number"
-            inputMode="numeric"
-            value={timeHours}
-            placeholder="HOUR"
-            onChange={(e) => setTimeHours(e.target.value)}
+            placeholder="Hours"
+            value={startInput.hours}
+            onChange={(e) =>
+              setStartInput((prev) => ({
+                ...prev,
+                hours: Number(e.target.value),
+              }))
+            }
           />
           <input
             type="number"
-            inputMode="numeric"
-            value={timeMinutes}
-            placeholder="MINUTE"
-            onChange={(e) => setTimeMinutes(e.target.value)}
+            placeholder="Minutes"
+            value={startInput.minutes}
+            onChange={(e) =>
+              setStartInput((prev) => ({
+                ...prev,
+                minutes: Number(e.target.value),
+              }))
+            }
           />
         </TimerSelect>
       )}
-
-      <TimerInfo2>
-        <MoneyLeft>
-          {status === "running" && <SubTitle2>{topMessage}</SubTitle2>}
-          {status === "running" && (
-            <MainTitle ifSelectedDateIsCurrentMonth={true}>
-              <span style={{ fontSize: "1rem", transform: "translateY(3px)" }}>
-                <FaIndianRupeeSign />
-              </span>
-              {topGreen ? (topGreen > 0 ? topGreen?.toFixed(1) : 0) : 0}
-            </MainTitle>
-          )}
-        </MoneyLeft>
-        <MoneyRight>
-          <SubTitle2>{bottomMessage}</SubTitle2>
-          <MainTitle ifSelectedDateIsCurrentMonth={true}>
-            <span style={{ fontSize: "1rem", transform: "translateY(3px)" }}>
-              <FaIndianRupeeSign />
-            </span>
-            {bottomGreen ? (bottomGreen > 0 ? bottomGreen?.toFixed(1) : 0) : 0}
-          </MainTitle>
-        </MoneyRight>
-      </TimerInfo2>
-      <IndividualContainer>
-        <SingleEntry>
-          {status === "running" && <SubTitle>{"Analysis"}</SubTitle>}
-          {status === "running" && (
-            <TimerInfo marginHigh={!status === "running"}>
-              <Hour>{getHMS(elapsed)?.hours}h</Hour>
-              <Min>{getHMS(elapsed)?.minutes}m</Min>
-              <Sec>{getHMS(elapsed)?.seconds}s</Sec>
-            </TimerInfo>
-          )}
-          {status === "running" && <PAButton>START</PAButton>}
-        </SingleEntry>
-        <SingleEntry>
-          {status === "running" && <SubTitle>{"Tracking"}</SubTitle>}
-          {status === "running" && (
-            <TimerInfo marginHigh={!status === "running"}>
-              <Hour>{getHMS(elapsed)?.hours}h</Hour>
-              <Min>{getHMS(elapsed)?.minutes}m</Min>
-              <Sec>{getHMS(elapsed)?.seconds}s</Sec>
-            </TimerInfo>
-          )}
-          {status === "running" && <PAButton>START</PAButton>}
-        </SingleEntry>
-        <SingleEntry>
-          {status === "running" && <SubTitle>{"Calls"}</SubTitle>}
-          {status === "running" && (
-            <TimerInfo marginHigh={!status === "running"}>
-              <Hour>{getHMS(elapsed)?.hours}h</Hour>
-              <Min>{getHMS(elapsed)?.minutes}m</Min>
-              <Sec>{getHMS(elapsed)?.seconds}s</Sec>
-            </TimerInfo>
-          )}
-          {status === "running" && <PAButton>START</PAButton>}
-        </SingleEntry>
-        <SingleEntry>
-          {status === "running" && <SubTitle>{"Bugs"}</SubTitle>}
-          {status === "running" && (
-            <TimerInfo marginHigh={!status === "running"}>
-              <Hour>{getHMS(elapsed)?.hours}h</Hour>
-              <Min>{getHMS(elapsed)?.minutes}m</Min>
-              <Sec>{getHMS(elapsed)?.seconds}s</Sec>
-            </TimerInfo>
-          )}
-          {status === "running" && <PAButton>START</PAButton>}
-        </SingleEntry>
-        <SingleEntry>
-          {status === "running" && <SubTitle>{"Build"}</SubTitle>}
-          {status === "running" && (
-            <TimerInfo marginHigh={!status === "running"}>
-              <Hour>{getHMS(elapsed)?.hours}h</Hour>
-              <Min>{getHMS(elapsed)?.minutes}m</Min>
-              <Sec>{getHMS(elapsed)?.seconds}s</Sec>
-            </TimerInfo>
-          )}
-          {status === "running" && <PAButton>START</PAButton>}
-        </SingleEntry>
-        <SingleEntry>
-          {status === "running" && <SubTitle>{"Total Time"}</SubTitle>}
-          {status === "running" && (
-            <TimerInfo marginHigh={!status === "running"}>
-              <Hour>{getHMS(elapsed)?.hours}h</Hour>
-              <Min>{getHMS(elapsed)?.minutes}m</Min>
-              <Sec>{getHMS(elapsed)?.seconds}s</Sec>
-            </TimerInfo>
-          )}
-          {status === "running" && <PAButton>START</PAButton>}
-        </SingleEntry>
-      </IndividualContainer>
-
-      {status === "paused" && <SubTitle>{""}</SubTitle>}
-      {status === "paused" && (
-        <TimerInfo marginHigh={!status === "paused"}>
-          <Hour>{getHMS(timeNeeded * 1000)?.hours}h</Hour>
-          <Min>{getHMS(timeNeeded * 1000)?.minutes}m</Min>
-          <Sec>{getHMS(timeNeeded * 1000)?.seconds}s</Sec>
-        </TimerInfo>
+      {totalTime > 0 && (
+        <TimerInfo3 marginHigh={!status === "paused"}>
+          <Hour2>{formatTime(totalTime)?.hours}h</Hour2>
+          <Min2>{formatTime(totalTime)?.minutes}m</Min2>
+          <Sec2>{formatTime(totalTime)?.seconds}s</Sec2>
+        </TimerInfo3>
       )}
+      {totalTime > 0 &&
+        ACTIVITY_KEYS.map((key) => (
+          <SingleEntry key={key}>
+            <SubTitle
+              selected={key == selectedKey}
+              onClick={() => setSelectedKey(key)}
+            >
+              {key}
+            </SubTitle>
 
-      {status === "paused" && <SubTitle>{"Time Left"}</SubTitle>}
-      {status === "paused" && (
-        <TimerInfo marginHigh={!status === "paused"} danger={true}>
-          <Hour>{getHMS(timeLeftInToday * 1000)?.hours}h</Hour>
-          <Min>{getHMS(timeLeftInToday * 1000)?.minutes}m</Min>
-          <Sec>{getHMS(timeLeftInToday * 1000)?.seconds}s</Sec>
-        </TimerInfo>
-      )}
+            <TimerInfo active={runningActivity == key}>
+              <Hour>{formatTime(activityData[key]?.time || 0)?.hours}h</Hour>
+              <Min>{formatTime(activityData[key]?.time || 0)?.minutes}m</Min>
+              <Sec>{formatTime(activityData[key]?.time || 0)?.seconds}s</Sec>
+            </TimerInfo>
+          </SingleEntry>
+        ))}
 
-      <Ticker>{topTickerMessage}</Ticker>
-      <StartStopContainer>
-        {status === "stopped" && (
+      {totalTime > 0 && (
+        <StartStopContainer>
           <Button
-            onClick={handleStart}
-            className="px-4 py-2 bg-green-500 text-white rounded"
+            onClick={() => {
+              if (runningActivity == selectedKey) {
+                handleStop();
+              } else {
+                handleStart(selectedKey);
+              }
+            }}
+            disabled={runningActivity === selectedKey}
           >
-            Start
+            {runningActivity == selectedKey ? "PAUSE" : "START"}
           </Button>
-        )}
-        {status === "running" && (
-          <Button
-            onClick={handlePause}
-            className="px-4 py-2 bg-yellow-500 text-white rounded"
-          >
-            Pause
-          </Button>
-        )}
-        {status === "paused" && (
-          <Button
-            onClick={handleResume}
-            className="px-4 py-2 bg-blue-500 text-white rounded"
-          >
-            Resume
-          </Button>
-        )}
-        {(status === "running" || status === "paused") && (
           <ButtonReset
-            onClick={handleStop}
-            className="px-4 py-2 bg-red-500 text-white rounded"
+            onClick={handleReset}
+            disabled={runningActivity !== selectedKey}
           >
-            Reset
+            RESET
           </ButtonReset>
-        )}
-      </StartStopContainer>
+        </StartStopContainer>
+      )}
+      {!runningActivity && !totalTime && (
+        <Button
+          className="bg-blue-500 text-white px-3 py-1 rounded"
+          onClick={handleSetInitialTime}
+        >
+          START WORK
+        </Button>
+      )}
     </Container>
   );
 }
+
+export default ActivityTracker;
+
+const Hour2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  font-size: 2.25rem;
+`;
+
+const Min2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.25rem;
+  flex: 1;
+`;
+
+const Sec2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.25rem;
+  flex: 1;
+`;
+
+const TimerInfo3 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 2rem 1rem;
+  margin-bottom: ${(props) => (props?.marginHigh ? "1rem" : "")};
+  color: ${(props) => (props.danger ? "#fe6662" : "")};
+`;
 
 const MoneyLeft = styled.div`
   display: flex;
@@ -348,6 +289,7 @@ const SingleEntry = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  transform: translateX(-0.5rem);
 `;
 
 const Ticker = styled.div`
@@ -372,8 +314,8 @@ const SubTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #4f4f4f;
-  flex: 1;
+  color: ${(props) => (props.selected ? "#04b488" : "#383838")};
+  width: 100px;
   transform: translateX(6px);
   padding: 1rem;
   font-size: 1rem;
@@ -447,9 +389,9 @@ const TimerSelect = styled.div`
     width: 90%;
     margin-bottom: 1rem;
     background-color: #141414;
-    color: #fefefe;
+    color: #a2a2a2;
     border: none;
-    font-size: 1.25rem;
+    font-size: 2rem;
     text-align: center;
     padding: 0.5rem 1rem;
     outline: none;
@@ -481,9 +423,10 @@ const TimerInfo = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  flex: 1;
+  flex: 1.5;
   margin-bottom: ${(props) => (props?.marginHigh ? "1rem" : "")};
-  color: ${(props) => (props.danger ? "#fe6662" : "")};
+  color: ${(props) =>
+    props.danger ? "#fe6662" : props.active ? "#e3e3e3" : "#303030"};
 `;
 
 const StartStopContainer = styled.div`
@@ -520,6 +463,21 @@ const PAButton = styled.div`
   font-size: 1rem;
   padding: 0.5rem;
   background-color: #04b488;
+
+  &:active {
+    transform: translate(0px, 2px);
+  }
+`;
+
+const PAButtonReset = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 1rem;
+  border-radius: 4px;
+  font-size: 1rem;
+  padding: 0.5rem;
+  background-color: #fe6662;
 
   &:active {
     transform: translate(0px, 2px);
