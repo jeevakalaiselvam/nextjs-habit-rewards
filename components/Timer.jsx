@@ -126,12 +126,12 @@ function ActivityTracker({ totalCurrentMonthSalary }) {
 
     setActivityData((prev) => ({
       ...prev,
-      [ACTIVITY_KEYS[0]]: {
-        time: (prev?.[ACTIVITY_KEYS?.[0]]?.time || 0) + elapsedMs,
-        lastStart: prev?.[ACTIVITY_KEYS?.[0]]?.lastStart || null,
+      [selectedKey]: {
+        time: (prev?.[selectedKey]?.time || 0) + elapsedMs,
+        lastStart: prev?.[selectedKey]?.lastStart || null,
       },
     }));
-    handleStart(ACTIVITY_KEYS?.[0]);
+    handleStart(selectedKey);
   };
 
   const totalTime = Object.values(activityData).reduce(
@@ -231,23 +231,22 @@ function ActivityTracker({ totalCurrentMonthSalary }) {
           <Sec2>{formatTime(totalTime)?.seconds}s</Sec2>
         </TimerInfo3>
       )}
-      {totalTime > 0 &&
-        ACTIVITY_KEYS.map((key) => (
-          <SingleEntry key={key}>
-            <SubTitle
-              selected={key == selectedKey}
-              onClick={() => setSelectedKey(key)}
-            >
-              {key}
-            </SubTitle>
+      {ACTIVITY_KEYS.map((key) => (
+        <SingleEntry key={key}>
+          <SubTitle
+            selected={key == selectedKey}
+            onClick={() => setSelectedKey(key)}
+          >
+            {key}
+          </SubTitle>
 
-            <TimerInfo active={runningActivity == key}>
-              <Hour>{formatTime(activityData[key]?.time || 0)?.hours}h</Hour>
-              <Min>{formatTime(activityData[key]?.time || 0)?.minutes}m</Min>
-              <Sec>{formatTime(activityData[key]?.time || 0)?.seconds}s</Sec>
-            </TimerInfo>
-          </SingleEntry>
-        ))}
+          <TimerInfo active={runningActivity == key}>
+            <Hour>{formatTime(activityData[key]?.time || 0)?.hours}h</Hour>
+            <Min>{formatTime(activityData[key]?.time || 0)?.minutes}m</Min>
+            <Sec>{formatTime(activityData[key]?.time || 0)?.seconds}s</Sec>
+          </TimerInfo>
+        </SingleEntry>
+      ))}
 
       <TimerInfo2>
         <MoneyLeft>
@@ -420,7 +419,7 @@ const MainTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: ${(props) =>
     props.ifSelectedDateIsCurrentMonth ? "#04b488" : "#53B5D9"};
 `;
