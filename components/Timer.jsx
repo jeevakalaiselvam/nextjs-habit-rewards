@@ -6,12 +6,12 @@ import { FaIndianRupeeSign } from "react-icons/fa6";
 const ACTIVITY_KEYS = ["Tracking", "Analysis", "Build", "Bugfix", "Calls"];
 
 const getStoredData = () => {
-  const data = localStorage.getItem("ACTIVITY_DATA_TIMER");
+  const data = localStorage.getItem("JEEVA_TIMER");
   return data ? JSON.parse(data) : {};
 };
 
 const storeData = (data) => {
-  localStorage.setItem("ACTIVITY_DATA_TIMER", JSON.stringify(data));
+  localStorage.setItem("JEEVA_TIMER", JSON.stringify(data));
 };
 
 const formatTime = (ms) => {
