@@ -235,7 +235,10 @@ function ActivityTracker({ totalCurrentMonthSalary }) {
         <SingleEntry key={key}>
           <SubTitle
             selected={key == selectedKey}
-            onClick={() => setSelectedKey(key)}
+            onClick={() => {
+              setSelectedKey(key);
+              handleStart(key);
+            }}
           >
             {key}
           </SubTitle>
@@ -397,10 +400,12 @@ const SubTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${(props) => (props.selected ? "#52b8da" : "#5f5f5f")};
+  background-color: ${(props) =>
+    props.selected ? "#52b8da" : "rgb(31, 33, 37)"};
   width: 100px;
   transform: translateX(6px);
   padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
   font-size: 1rem;
 `;
 
@@ -509,6 +514,7 @@ const TimerInfo = styled.div`
   align-items: flex-start;
   justify-content: center;
   flex: 1.5;
+  margin-bottom: 1rem;
   color: ${(props) =>
     props.danger ? "#fe6662" : props.active ? "#e3e3e3" : "#303030"};
 `;

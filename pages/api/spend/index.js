@@ -23,18 +23,16 @@ export default async function handler(req, res) {
     try {
       const client = await clientPromise;
       const db = client.db("habittracker");
-      await db
-        .collection(getMongoCollectionForSpending())
-        .insertOne({
-          amount,
-          date,
-          category,
-          recurring,
-          type,
-          title,
-          startDate,
-          endDate,
-        });
+      await db.collection(getMongoCollectionForSpending()).insertOne({
+        amount,
+        date,
+        category,
+        recurring,
+        type,
+        title,
+        startDate,
+        endDate,
+      });
 
       res.status(201).json({ message: "Spend added successfully" });
     } catch (error) {
