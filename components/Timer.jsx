@@ -471,7 +471,6 @@ const TimerInfo2 = styled.div`
   justify-content: center;
   width: 100%;
   padding: 1rem;
-  margin-bottom: 1rem;
   transform: translateX(-0.5rem);
 `;
 
