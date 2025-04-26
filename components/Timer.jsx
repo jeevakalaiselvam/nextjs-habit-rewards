@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { getDaysInMonth } from "./helpers/dateHelper";
-import { FaIndianRupeeSign } from "react-icons/fa6";
+import { FaIndianRupeeSign, FaPlus } from "react-icons/fa6";
+import { HiPlusCircle } from "react-icons/hi";
 
 const ACTIVITY_KEYS = ["Tracking", "Analysis", "Build", "Bugfix", "Calls"];
 
@@ -107,6 +108,16 @@ function ActivityTracker({ totalCurrentMonthSalary }) {
       });
       return updated;
     });
+  };
+
+  const add15MinsTimer = (key) => {
+    setActivityData((prev) => ({
+      ...prev,
+      [key]: {
+        time: (prev?.[key]?.time || 0) + 15 * 60 * 1000,
+        lastStart: prev?.[key]?.lastStart || null,
+      },
+    }));
   };
 
   const handleSetInitialTime = () => {
@@ -243,11 +254,21 @@ function ActivityTracker({ totalCurrentMonthSalary }) {
             {key}
           </SubTitle>
 
-          <TimerInfo active={runningActivity == key}>
+          <TimerInfo
+            active={runningActivity == key}
+            selected={key == selectedKey}
+          >
             <Hour>{formatTime(activityData[key]?.time || 0)?.hours}h</Hour>
             <Min>{formatTime(activityData[key]?.time || 0)?.minutes}m</Min>
             <Sec>{formatTime(activityData[key]?.time || 0)?.seconds}s</Sec>
           </TimerInfo>
+          <Action
+            onClick={() => {
+              add15MinsTimer(key);
+            }}
+          >
+            ADD
+          </Action>
         </SingleEntry>
       ))}
 
@@ -401,12 +422,27 @@ const SubTitle = styled.div`
   align-items: center;
   justify-content: center;
   background-color: ${(props) =>
-    props.selected ? "#52b8da" : "rgb(31, 33, 37)"};
+    props.selected ? "#808080" : "rgb(31, 33, 37)"};
   width: 100px;
   transform: translateX(6px);
   padding: 0.5rem 1rem;
   margin-bottom: 1rem;
   font-size: 1rem;
+`;
+
+const Action = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  margin-left: 1rem;
+  margin-bottom: 1rem;
+  background-color: #53b5d9;
+
+  &:active {
+    color: #53b5d9;
+  }
 `;
 
 const SubTitle2 = styled.div`
@@ -517,7 +553,7 @@ const TimerInfo = styled.div`
   margin-bottom: 1rem;
   padding-left: 2rem;
   color: ${(props) =>
-    props.danger ? "#fe6662" : props.active ? "#e3e3e3" : "#303030"};
+    props.danger ? "#fe6662" : props.active ? "#04b488" : "#e3e3e3"};
 `;
 
 const StartStopContainer = styled.div`
