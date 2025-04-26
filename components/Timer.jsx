@@ -515,6 +515,7 @@ const TimerInfo = styled.div`
   justify-content: center;
   flex: 1.5;
   margin-bottom: 1rem;
+  padding-left: 2rem;
   color: ${(props) =>
     props.danger ? "#fe6662" : props.active ? "#e3e3e3" : "#303030"};
 `;
