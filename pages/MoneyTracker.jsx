@@ -69,7 +69,7 @@ export default function MoneyTracker() {
     title = "Wallets";
   }
 
-  if (activeTabGame == 0 && activeMode == 0) {
+  if (activeTabGame == 0 && activeMode == 1) {
     title = "New";
   }
 
@@ -77,11 +77,11 @@ export default function MoneyTracker() {
     title = "In Progress";
   }
 
-  if (activeTabGame == 1 && activeMode == 2) {
+  if (activeTabGame == 2 && activeMode == 1) {
     title = "Completed";
   }
 
-  if (activeTabGame == 1 && activeMode == 3) {
+  if (activeTabGame == 3 && activeMode == 1) {
     title = "Completed";
   }
 
