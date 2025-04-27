@@ -26,7 +26,7 @@ export default async function handler(req, res) {
       !title ||
       !platform ||
       !rating ||
-      completed
+      !completed
     ) {
       return res
         .status(400)
