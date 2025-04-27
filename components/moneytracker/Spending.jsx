@@ -692,6 +692,7 @@ export default function Spending({
                         <EMILeft>{spending?.left} EMI</EMILeft>
                       )}
                       <Popover
+                        trigger={"click"}
                         placement="left"
                         content={
                           <Amount>

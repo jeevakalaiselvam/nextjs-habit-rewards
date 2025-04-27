@@ -16,9 +16,18 @@ export default async function handler(req, res) {
       endDate,
       platform,
       rating,
+      completed,
     } = req.body;
 
-    if (!amount || !date || !category || !title || !platform || !rating) {
+    if (
+      !amount ||
+      !date ||
+      !category ||
+      !title ||
+      !platform ||
+      !rating ||
+      completed
+    ) {
       return res
         .status(400)
         .json({ error: "Amount, Date, Category, Recurring are required" });
@@ -36,6 +45,7 @@ export default async function handler(req, res) {
         endDate,
         platform,
         rating,
+        completed,
       });
 
       res.status(201).json({ message: "Spend added successfully" });

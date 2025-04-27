@@ -4,6 +4,7 @@ import {
   HiChartBar,
   HiChartPie,
   HiCurrencyRupee,
+  HiDotsVertical,
   HiFolderAdd,
   HiLibrary,
   HiLockClosed,
@@ -15,7 +16,7 @@ import {
   HiViewGrid,
   HiViewList,
 } from "react-icons/hi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Money from "../components/moneytracker/Money";
 import Salary from "../components/moneytracker/Salary";
 import Entry from "../components/moneytracker/Entry";
@@ -25,12 +26,18 @@ import Wallets from "../components/moneytracker/Wallets";
 import { getFirstDateOfCurrentMonth } from "../components/helpers/dateHelper";
 import { BiSolidWalletAlt } from "react-icons/bi";
 import { FaGamepad, FaGoogleWallet } from "react-icons/fa";
-import { DatePicker } from "antd";
+import { Button, DatePicker, Popover, Select } from "antd";
 import dayjs from "dayjs";
 import WalletEMI from "../components/moneytracker/WalletEMI";
 import { MdAccessTimeFilled } from "react-icons/md";
 import Wishlist from "../components/Wishlist";
 import EntryGame from "../components/moneytracker/EntryGame";
+import {
+  GAME_RATING_OPTIONS,
+  MULTI_OPTIONS,
+} from "../components/helpers/constantHelper";
+
+const defaultFilter = { rating: "0" };
 
 export default function MoneyTracker() {
   const [activeMode, setActiveMode] = useState(1);
@@ -40,6 +47,8 @@ export default function MoneyTracker() {
   const [forceRefreshExpense, setForceRefreshExpense] = useState(false);
   const [forceRefreshGame, setForceRefreshGame] = useState(false);
   const [date, setDate] = useState(getFirstDateOfCurrentMonth());
+  const [filterOption, setFilterOption] = useState(defaultFilter);
+  const [open, setOpen] = useState(false);
 
   let title = "";
 
@@ -71,6 +80,23 @@ export default function MoneyTracker() {
     setForceRefreshGame(true);
   };
 
+  const saveFilterInStorage = () => {
+    console.log(filterOption);
+    if (window) {
+      localStorage.setItem("PREFERENCE", JSON.stringify(filterOption));
+    }
+  };
+
+  useEffect(() => {
+    // saveFilterInStorage();
+  }, [filterOption]);
+
+  useEffect(() => {
+    if (window) {
+      setFilterOption(localStorage.getItem("PREFERENCE") ?? defaultFilter);
+    }
+  }, []);
+
   return (
     <Container>
       {showEntry && (activeTab == 1 || activeTab == 0) && activeMode == 0 && (
@@ -98,24 +124,58 @@ export default function MoneyTracker() {
       )}
       <Header>
         <Name>{title}</Name>
-        <Picker>
-          <DatePicker
-            allowClear={false}
-            style={{
-              width: "70%",
-              backgroundColor: "#1f2125",
-              outline: "none",
-              border: "none",
-            }}
-            defaultValue={dayjs(date)}
-            format="MMMM, YYYY"
-            value={dayjs(date)}
-            picker="month"
-            onChange={(e) => {
-              setDate(dayjs(e));
-            }}
-          />
-        </Picker>
+        {activeMode == 0 && (
+          <Picker>
+            <DatePicker
+              allowClear={false}
+              style={{
+                width: "70%",
+                backgroundColor: "#1f2125",
+                outline: "none",
+                border: "none",
+              }}
+              defaultValue={dayjs(date)}
+              format="MMMM, YYYY"
+              value={dayjs(date)}
+              picker="month"
+              onChange={(e) => {
+                setDate(dayjs(e));
+              }}
+            />
+          </Picker>
+        )}
+        {activeMode == 1 && (
+          <Picker>
+            <Popover
+              trigger={"click"}
+              placement="left"
+              content={
+                <FilterOption>
+                  <Title>Rating</Title>
+                  <Option>
+                    <Select
+                      value={filterOption?.rating}
+                      style={{
+                        width: "100%",
+                        height: "40px",
+                        marginTop: "1rem",
+                      }}
+                      onChange={(option) => {
+                        setFilterOption((old) => ({
+                          ...old,
+                          rating: option,
+                        }));
+                      }}
+                      options={GAME_RATING_OPTIONS}
+                    />
+                  </Option>
+                </FilterOption>
+              }
+            >
+              <HiDotsVertical />
+            </Popover>
+          </Picker>
+        )}
         {activeMode == 0 && (
           <ModeIcon onClick={() => setActiveMode(1)}>
             <FaGoogleWallet />
@@ -130,7 +190,12 @@ export default function MoneyTracker() {
       {activeMode == 1 && (
         <>
           <Content showEntry={showEntry}>
-            {activeTab == 0 && <Wishlist forceRefreshGame={forceRefreshGame} />}
+            {activeTab == 0 && (
+              <Wishlist
+                forceRefreshGame={forceRefreshGame}
+                filterOption={filterOption}
+              />
+            )}
           </Content>
           <Bottom>
             <Icon
@@ -236,6 +301,44 @@ export default function MoneyTracker() {
   );
 }
 
+const Apply = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #4872ea;
+  width: 100%;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  margin-top: 0.5rem;
+
+  &:active {
+    transform: translate(2px, 2px);
+  }
+`;
+
+const FilterOption = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 150px;
+`;
+
+const Title = styled.div`
+  width: 100%;
+  display: flex;
+  opacity: 0.7;
+  align-items: center;
+  justify-content: flex-start;
+`;
+
+const Option = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: flex-start;
+`;
+
 const ModeIcon = styled.div`
   display: flex;
   align-items: center;
@@ -243,8 +346,8 @@ const ModeIcon = styled.div`
   width: 30px;
   height: 30px;
   font-size: 1.5rem;
-  margin-left: 0.5rem;
-  color: #395ec3;
+  margin-left: 1rem;
+  color: #52b8da;
 `;
 
 const Picker = styled.div`

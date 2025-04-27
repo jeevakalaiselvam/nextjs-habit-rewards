@@ -116,6 +116,7 @@ export default function Wallets() {
               )}
 
               <Popover
+                trigger={"click"}
                 placement="rightBottom"
                 content={
                   <Amount color={wallet?.color}>

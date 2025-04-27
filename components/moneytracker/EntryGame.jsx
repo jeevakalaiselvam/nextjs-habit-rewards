@@ -298,6 +298,59 @@ export const itemsGamePlatform = [
   },
 ];
 
+export const itemsGameCompleted = [
+  {
+    key: "11",
+    label: <div style={{ width: "100%" }}>Game Status</div>,
+    disabled: true,
+  },
+  {
+    key: "New",
+    label: "New",
+    icon: (
+      <span
+        style={{
+          transform: "translateY(2px)",
+          color: GAME_COLORS["New"],
+        }}
+      >
+        {<MdVideogameAsset />}
+      </span>
+    ),
+    extra: "⌘N",
+  },
+  {
+    key: "In Progress",
+    label: "In Progress",
+    icon: (
+      <span
+        style={{
+          transform: "translateY(2px)",
+          color: GAME_COLORS["In Progress"],
+        }}
+      >
+        {<MdVideogameAsset />}
+      </span>
+    ),
+    extra: "⌘I",
+  },
+  {
+    key: "Completed",
+    label: "Completed",
+    icon: (
+      <span
+        style={{
+          transform: "translateY(2px)",
+          color: GAME_COLORS["Completed"],
+        }}
+      >
+        {<MdVideogameAsset />}
+      </span>
+    ),
+    extra: "⌘C",
+  },
+];
+
 export default function EntryGame({ setShowEntry, refreshGame, selectedDate }) {
   const [values, setValues] = useState({
     amount: "0",
@@ -308,6 +361,7 @@ export default function EntryGame({ setShowEntry, refreshGame, selectedDate }) {
     startDate: getFirstDateOfCurrentMonth(),
     endDate: getFirstDateOfCurrentMonth(),
     rating: 0,
+    completed: "New",
   });
 
   const saveGame = () => {
@@ -341,6 +395,10 @@ export default function EntryGame({ setShowEntry, refreshGame, selectedDate }) {
     setValues((old) => ({ ...old, platform: String(e.key) }));
   };
 
+  const handleGameCompletedChange = (e) => {
+    setValues((old) => ({ ...old, completed: String(e.key) }));
+  };
+
   const menu = {
     items: itemsToTarget,
     onClick: handleMenuClick,
@@ -354,6 +412,11 @@ export default function EntryGame({ setShowEntry, refreshGame, selectedDate }) {
   const menuGamePlatform = {
     items: itemsGamePlatform,
     onClick: handleGamePlatformChange,
+  };
+
+  const menuGameCompleted = {
+    items: itemsGameCompleted,
+    onClick: handleGameCompletedChange,
   };
 
   return (
@@ -401,6 +464,25 @@ export default function EntryGame({ setShowEntry, refreshGame, selectedDate }) {
                 </Space>
               </Dropdown>
             </AmountInputDropdown>
+            <AmountInputDropdown2>
+              <Dropdown
+                trigger={["click"]}
+                overlayStyle={{ minWidth: "80%" }}
+                menu={menuGameCompleted}
+                overlayClassName="full-width-dropdown"
+              >
+                <Space>
+                  <span style={{ fontSize: ".9rem", color: "#ACAEB2" }}>
+                    {values?.completed
+                      ? capitalizeFirstLetter(values?.completed)
+                      : "Select Type"}
+                  </span>
+                  <Caret>
+                    <FaCaretDown />
+                  </Caret>
+                </Space>
+              </Dropdown>
+            </AmountInputDropdown2>
             <AmountInput>
               <Rupees>
                 <FaIndianRupeeSign />

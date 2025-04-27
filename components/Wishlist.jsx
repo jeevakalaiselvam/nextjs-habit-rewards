@@ -15,7 +15,11 @@ import { MdDelete, MdVideogameAsset } from "react-icons/md";
 import styled from "styled-components";
 import { GAME_COLORS, ICON_COLORS } from "./helpers/iconHelper";
 import { HiFolder } from "react-icons/hi";
-import { itemsGamePlatform, itemsType } from "./moneytracker/EntryGame";
+import {
+  itemsGameCompleted,
+  itemsGamePlatform,
+  itemsType,
+} from "./moneytracker/EntryGame";
 import { FaCaretDown } from "react-icons/fa";
 import { FaIndianRupeeSign } from "react-icons/fa6";
 import dayjs from "dayjs";
@@ -23,7 +27,7 @@ import { capitalizeFirstLetter } from "./helpers/stringHelper";
 import { timeAgoFromZulu } from "./helpers/dateHelper";
 import { stringToColor } from "./helpers/colorHelper";
 
-export default function Wishlist({ forceRefreshGame }) {
+export default function Wishlist({ forceRefreshGame, filterOption }) {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newValues, setNewValues] = useState({});
@@ -62,6 +66,9 @@ export default function Wishlist({ forceRefreshGame }) {
   const handleGamePlatformChange = (e) => {
     setNewValues((old) => ({ ...old, platform: String(e.key) }));
   };
+  const handleGameCompletedChange = (e) => {
+    setNewValues((old) => ({ ...old, completed: String(e.key) }));
+  };
 
   const menu = {
     items: itemsToTarget,
@@ -78,6 +85,11 @@ export default function Wishlist({ forceRefreshGame }) {
     onClick: handleGamePlatformChange,
   };
 
+  const menuGameCompleted = {
+    items: itemsGameCompleted,
+    onClick: handleGameCompletedChange,
+  };
+
   const updateGameValue = () => {
     let values = { ...newValues };
     axios
@@ -91,6 +103,14 @@ export default function Wishlist({ forceRefreshGame }) {
       });
   };
 
+  let gamesToShow = [];
+
+  let ratingToFilter = filterOption?.rating ?? 5;
+
+  gamesToShow = games?.filter((game) => {
+    return game?.rating == ratingToFilter || ratingToFilter == "0";
+  });
+
   if (loading) {
     return (
       <Container>
@@ -100,9 +120,9 @@ export default function Wishlist({ forceRefreshGame }) {
   } else
     return (
       <Container>
-        {games?.length == 0 && <NoGames>No Games</NoGames>}
-        {games?.length > 0 &&
-          games?.map((game) => {
+        {gamesToShow?.length == 0 && <NoGames>No Results for Filter</NoGames>}
+        {gamesToShow?.length > 0 &&
+          gamesToShow?.map((game) => {
             return (
               <GameContainer>
                 <Icon color={stringToColor(game?.title)}>
@@ -110,146 +130,216 @@ export default function Wishlist({ forceRefreshGame }) {
                 </Icon>
                 <Title>
                   <MainTitle>{game?.title}</MainTitle>
-                  <MainGenre>{game?.category}</MainGenre>
-                  <MainGenre>{timeAgoFromZulu(game?.date)}</MainGenre>
+                  <MainGenre>
+                    {game?.category} - {timeAgoFromZulu(game?.date)}
+                  </MainGenre>
+                  <MainStatus color={GAME_COLORS[game?.completed ?? "New"]}>
+                    {game?.completed ?? "New"}
+                  </MainStatus>
                 </Title>
-                <Popover
-                  placement="left"
-                  content={
-                    <AddAmount>
-                      <TitleMain>Edit Game</TitleMain>
-                      <AmountInputDropdown2>
-                        <Dropdown
-                          trigger={["click"]}
-                          overlayStyle={{ minWidth: "80%" }}
-                          menu={menuGamePlatform}
-                          overlayClassName="full-width-dropdown"
-                        >
-                          <Space>
-                            <span
-                              style={{ fontSize: ".9rem", color: "#ACAEB2" }}
+                <Right>
+                  <RightTop>
+                    <Popover
+                      trigger={"click"}
+                      placement="left"
+                      content={
+                        <AddAmount>
+                          <TitleMain>Edit Game</TitleMain>
+                          <AmountInputDropdown2>
+                            <Dropdown
+                              trigger={["click"]}
+                              overlayStyle={{ minWidth: "80%" }}
+                              menu={menuGamePlatform}
+                              overlayClassName="full-width-dropdown"
                             >
-                              {newValues?.platform
-                                ? capitalizeFirstLetter(newValues?.platform)
-                                : "Select Type"}
-                            </span>
-                            <Caret>
-                              <FaCaretDown />
-                            </Caret>
-                          </Space>
-                        </Dropdown>
-                      </AmountInputDropdown2>
-                      <AmountInputDropdown>
-                        <Dropdown
-                          trigger={["click"]}
-                          overlayStyle={{ minWidth: "80%" }}
-                          menu={menu}
-                          overlayClassName="full-width-dropdown"
-                          on
-                        >
-                          <Space>
-                            <span
-                              style={{ fontSize: ".9rem", color: "#ACAEB2" }}
+                              <Space>
+                                <span
+                                  style={{
+                                    fontSize: ".9rem",
+                                    color: "#ACAEB2",
+                                  }}
+                                >
+                                  {newValues?.platform
+                                    ? capitalizeFirstLetter(newValues?.platform)
+                                    : "Select Type"}
+                                </span>
+                                <Caret>
+                                  <FaCaretDown />
+                                </Caret>
+                              </Space>
+                            </Dropdown>
+                          </AmountInputDropdown2>
+                          <AmountInputDropdown>
+                            <Dropdown
+                              trigger={["click"]}
+                              overlayStyle={{ minWidth: "80%" }}
+                              menu={menu}
+                              overlayClassName="full-width-dropdown"
+                              on
                             >
-                              {newValues?.category
-                                ? capitalizeFirstLetter(newValues?.category)
-                                : "Select Genre"}
-                            </span>
-                            <Caret>
-                              <FaCaretDown />
-                            </Caret>
-                          </Space>
-                        </Dropdown>
-                      </AmountInputDropdown>
-                      <AmountInput>
-                        <Rupees>
-                          <FaIndianRupeeSign />
-                        </Rupees>
-                        <input
-                          type="number"
-                          inputMode="numeric"
-                          value={newValues?.amount}
-                          onChange={(e) => {
-                            setNewValues((old) => ({
-                              ...old,
-                              amount: String(e.target.value),
-                            }));
-                          }}
-                        />
-                      </AmountInput>
-                      <AmountInputDropdown>
-                        <input
-                          type="text"
-                          value={newValues?.title}
-                          onChange={(e) => {
-                            setNewValues((old) => ({
-                              ...old,
-                              title: String(e.target.value),
-                            }));
-                          }}
-                        />
-                      </AmountInputDropdown>
-                      <MonthSelection>
-                        <DatePicker
-                          style={{
-                            width: "100%",
-                            backgroundColor: "#1f2125",
-                            padding: "0.5rem 1rem",
-                            outline: "none",
-                            border: "none",
-                          }}
-                          format="DD-MM-YYYY"
-                          inputReadOnly
-                          value={dayjs(newValues?.date)}
-                          picker="date"
-                          onChange={(e) => {
-                            setNewValues((old) => ({ ...old, date: dayjs(e) }));
-                          }}
-                          onFocus={(e) => e.preventDefault()}
-                        />
-                      </MonthSelection>
-                      <RatingItem>
-                        <Rate
-                          onChange={(e) => {
-                            setNewValues((old) => ({
-                              ...old,
-                              rating: String(e),
-                            }));
-                          }}
-                        />
-                      </RatingItem>
-                      <SaveButton onClick={() => updateGameValue()}>
-                        Save Game
-                      </SaveButton>
-                    </AddAmount>
-                  }
-                >
-                  <Genre
-                    onClick={() => {
-                      setNewValues(game);
-                    }}
-                  >
-                    {game?.platform}
-                  </Genre>
-                </Popover>
-                <Popconfirm
-                  placement="left"
-                  onConfirm={() => {
-                    deleteSpending(game?._id);
-                  }}
-                  content={<div>DELETE</div>}
-                  title={<Title>Delete Game</Title>}
-                >
-                  <Delete>
-                    <MdDelete />
-                  </Delete>
-                </Popconfirm>
+                              <Space>
+                                <span
+                                  style={{
+                                    fontSize: ".9rem",
+                                    color: "#ACAEB2",
+                                  }}
+                                >
+                                  {newValues?.category
+                                    ? capitalizeFirstLetter(newValues?.category)
+                                    : "Select Genre"}
+                                </span>
+                                <Caret>
+                                  <FaCaretDown />
+                                </Caret>
+                              </Space>
+                            </Dropdown>
+                          </AmountInputDropdown>
+                          <AmountInputDropdown2>
+                            <Dropdown
+                              trigger={["click"]}
+                              overlayStyle={{ minWidth: "80%" }}
+                              menu={menuGameCompleted}
+                              overlayClassName="full-width-dropdown"
+                            >
+                              <Space>
+                                <span
+                                  style={{
+                                    fontSize: ".9rem",
+                                    color: "#ACAEB2",
+                                  }}
+                                >
+                                  {newValues?.completed
+                                    ? capitalizeFirstLetter(
+                                        newValues?.completed
+                                      )
+                                    : "Select Type"}
+                                </span>
+                                <Caret>
+                                  <FaCaretDown />
+                                </Caret>
+                              </Space>
+                            </Dropdown>
+                          </AmountInputDropdown2>
+                          <AmountInput>
+                            <Rupees>
+                              <FaIndianRupeeSign />
+                            </Rupees>
+                            <input
+                              type="number"
+                              inputMode="numeric"
+                              value={newValues?.amount}
+                              onChange={(e) => {
+                                setNewValues((old) => ({
+                                  ...old,
+                                  amount: String(e.target.value),
+                                }));
+                              }}
+                            />
+                          </AmountInput>
+                          <AmountInputDropdown>
+                            <input
+                              type="text"
+                              value={newValues?.title}
+                              onChange={(e) => {
+                                setNewValues((old) => ({
+                                  ...old,
+                                  title: String(e.target.value),
+                                }));
+                              }}
+                            />
+                          </AmountInputDropdown>
+                          <MonthSelection>
+                            <DatePicker
+                              style={{
+                                width: "100%",
+                                backgroundColor: "#1f2125",
+                                padding: "0.5rem 1rem",
+                                outline: "none",
+                                border: "none",
+                              }}
+                              format="DD-MM-YYYY"
+                              inputReadOnly
+                              value={dayjs(newValues?.date)}
+                              picker="date"
+                              onChange={(e) => {
+                                setNewValues((old) => ({
+                                  ...old,
+                                  date: dayjs(e),
+                                }));
+                              }}
+                              onFocus={(e) => e.preventDefault()}
+                            />
+                          </MonthSelection>
+                          <RatingItem>
+                            <Rate
+                              value={newValues?.rating}
+                              onChange={(e) => {
+                                setNewValues((old) => ({
+                                  ...old,
+                                  rating: String(e),
+                                }));
+                              }}
+                            />
+                          </RatingItem>
+                          <SaveButton onClick={() => updateGameValue()}>
+                            Save Game
+                          </SaveButton>
+                        </AddAmount>
+                      }
+                    >
+                      <Genre
+                        onClick={() => {
+                          setNewValues(game);
+                        }}
+                      >
+                        {game?.platform ?? "New"}
+                      </Genre>
+                    </Popover>
+                    <Popconfirm
+                      placement="left"
+                      onConfirm={() => {
+                        deleteSpending(game?._id);
+                      }}
+                      content={<div>DELETE</div>}
+                      title={<Title>Delete Game</Title>}
+                    >
+                      <Delete>
+                        <MdDelete />
+                      </Delete>
+                    </Popconfirm>
+                  </RightTop>
+                  <RightBottom>
+                    <Rate value={game?.rating} style={{ fontSize: ".75rem" }} />
+                  </RightBottom>
+                </Right>
               </GameContainer>
             );
           })}
       </Container>
     );
 }
+
+const RightTop = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+`;
+
+const RightBottom = styled.div`
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Right = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 60px;
+`;
 
 const RatingItem = styled.div`
   display: flex;
@@ -304,15 +394,25 @@ const MainGenre = styled.div`
   opacity: 0.5;
 `;
 
+const MainStatus = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 0.8rem;
+  width: 100%;
+  margin-top: 0.25rem;
+  color: ${(props) => props.color};
+`;
+
 const Genre = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 8px;
-  background-color: #3c4247;
+  background-color: ${(props) => (props.color ? props.color : "#3c4247")};
   padding: 0.25rem 0.5rem;
   margin-right: 1rem;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 `;
 
 const Title = styled.div`
