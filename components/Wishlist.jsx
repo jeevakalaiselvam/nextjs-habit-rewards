@@ -105,7 +105,7 @@ export default function Wishlist({ forceRefreshGame, filterOption }) {
 
   let gamesToShow = [];
 
-  let ratingToFilter = filterOption?.rating ?? 5;
+  let ratingToFilter = filterOption?.rating ?? "0";
 
   gamesToShow = games?.filter((game) => {
     return game?.rating == ratingToFilter || ratingToFilter == "0";
@@ -465,7 +465,7 @@ const MonthSelection = styled.div`
   justify-content: center;
   width: 100%;
   margin-bottom: 1rem;
-  padding: 1rem 0rem 0rem 0rem;
+  padding: 0.5rem 0rem 0rem 0rem;
 `;
 
 const Caret = styled.div`
@@ -489,10 +489,10 @@ const SaveButton = styled.div`
   justify-content: center;
   color: #fefefe;
   background-color: #2a7af1;
-  margin: 1rem 1rem;
+  margin: 1rem 0rem;
   border-radius: 8px;
-  padding: 1rem 1rem;
-  min-width: 95%;
+  padding: 0.5rem 1rem;
+  min-width: 100%;
 
   &:active {
     transform: translate(-1px, 2px);

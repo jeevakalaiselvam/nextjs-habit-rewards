@@ -252,6 +252,21 @@ export const itemsGamePlatform = [
     extra: "⌘S",
   },
   {
+    key: "Game Pass",
+    label: "Game Pass",
+    icon: (
+      <span
+        style={{
+          transform: "translateY(2px)",
+          color: GAME_COLORS["Game Pass"],
+        }}
+      >
+        {<MdVideogameAsset />}
+      </span>
+    ),
+    extra: "⌘M",
+  },
+  {
     key: "Ubisoft",
     label: "Ubisoft",
     icon: (
