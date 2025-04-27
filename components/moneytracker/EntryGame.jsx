@@ -124,6 +124,21 @@ export const itemsType = [
     extra: "⌘S",
   },
   {
+    key: "Stealth",
+    label: "Stealth",
+    icon: (
+      <span
+        style={{
+          transform: "translateY(2px)",
+          color: ICON_COLORS["Stealth"],
+        }}
+      >
+        {<HiFolder />}
+      </span>
+    ),
+    extra: "⌘S",
+  },
+  {
     key: "Simulation",
     label: "Simulation",
     icon: (
@@ -647,6 +662,7 @@ const AmountInputDropdown = styled.div`
     color: #fefefe;
     border: none;
     outline: none;
+    width: 100%;
   }
 `;
 

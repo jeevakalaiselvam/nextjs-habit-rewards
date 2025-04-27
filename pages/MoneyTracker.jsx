@@ -3,17 +3,18 @@ import Welcome from "../components/moneytracker/Welcome";
 import {
   HiChartBar,
   HiChartPie,
+  HiCheckCircle,
   HiCurrencyRupee,
   HiDotsVertical,
   HiFolderAdd,
   HiLibrary,
   HiLockClosed,
+  HiMailOpen,
   HiPlus,
   HiPresentationChartLine,
   HiShieldCheck,
   HiUserCircle,
   HiViewBoards,
-  HiViewGrid,
   HiViewList,
 } from "react-icons/hi";
 import { useEffect, useState } from "react";
@@ -25,7 +26,7 @@ import Spending from "../components/moneytracker/Spending";
 import Wallets from "../components/moneytracker/Wallets";
 import { getFirstDateOfCurrentMonth } from "../components/helpers/dateHelper";
 import { BiSolidWalletAlt } from "react-icons/bi";
-import { FaGamepad, FaGoogleWallet } from "react-icons/fa";
+import { FaCheckCircle, FaGamepad } from "react-icons/fa";
 import { Button, DatePicker, Popover, Select } from "antd";
 import dayjs from "dayjs";
 import WalletEMI from "../components/moneytracker/WalletEMI";
@@ -68,8 +69,12 @@ export default function MoneyTracker() {
     title = "Wallets";
   }
 
-  if (activeTab == 0 && activeMode == 1) {
-    title = "Wishlist";
+  if (activeTabGame == 0 && activeMode == 1) {
+    title = "Games";
+  }
+
+  if (activeTabGame == 1 && activeMode == 1) {
+    title = "Completed";
   }
 
   const refreshExpense = () => {
@@ -178,7 +183,7 @@ export default function MoneyTracker() {
         )}
         {activeMode == 0 && (
           <ModeIcon onClick={() => setActiveMode(1)}>
-            <FaGoogleWallet />
+            <HiViewList />
           </ModeIcon>
         )}
         {activeMode == 1 && (
@@ -190,8 +195,15 @@ export default function MoneyTracker() {
       {activeMode == 1 && (
         <>
           <Content showEntry={showEntry}>
-            {activeTab == 0 && (
+            {activeTabGame == 0 && (
               <Wishlist
+                forceRefreshGame={forceRefreshGame}
+                filterOption={filterOption}
+              />
+            )}{" "}
+            {activeTabGame == 1 && (
+              <Wishlist
+                completedOnly
                 forceRefreshGame={forceRefreshGame}
                 filterOption={filterOption}
               />
@@ -202,13 +214,13 @@ export default function MoneyTracker() {
               onClick={() => setActiveTabGame(0)}
               data-active={activeTabGame == 0}
             >
-              <HiViewGrid />
+              <HiViewBoards />
             </Icon>
             <Icon
               onClick={() => setActiveTabGame(1)}
               data-active={activeTabGame == 1}
             >
-              <HiChartPie />
+              <HiCheckCircle />
             </Icon>
             <Icon>
               <Inner
@@ -227,13 +239,13 @@ export default function MoneyTracker() {
               onClick={() => setActiveTabGame(2)}
               data-active={activeTabGame == 2}
             >
-              <HiLibrary />
+              <HiFolderAdd />
             </Icon>
             <Icon
               onClick={() => setActiveTabGame(3)}
               data-active={activeTabGame == 3}
             >
-              <FaGoogleWallet />
+              <HiLibrary />
             </Icon>
           </Bottom>
         </>
@@ -270,7 +282,7 @@ export default function MoneyTracker() {
           </Content>
           <Bottom>
             <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
-              <HiViewGrid />
+              <HiViewBoards />
             </Icon>
             <Icon onClick={() => setActiveTab(1)} data-active={activeTab == 1}>
               <HiChartPie />
@@ -292,7 +304,7 @@ export default function MoneyTracker() {
               <HiLibrary />
             </Icon>
             <Icon onClick={() => setActiveTab(3)} data-active={activeTab == 3}>
-              <FaGoogleWallet />
+              <HiViewList />
             </Icon>
           </Bottom>
         </>

@@ -27,9 +27,14 @@ import { capitalizeFirstLetter } from "./helpers/stringHelper";
 import { timeAgoFromZulu } from "./helpers/dateHelper";
 import { stringToColor } from "./helpers/colorHelper";
 
-export default function Wishlist({ forceRefreshGame, filterOption }) {
+export default function Wishlist({
+  forceRefreshGame,
+  filterOption,
+  completedOnly,
+}) {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedRating, setSelectedRating] = useState(0);
   const [newValues, setNewValues] = useState({});
 
   const refreshGames = () => {
@@ -107,9 +112,21 @@ export default function Wishlist({ forceRefreshGame, filterOption }) {
 
   let ratingToFilter = filterOption?.rating ?? "0";
 
-  gamesToShow = games?.filter((game) => {
-    return game?.rating == ratingToFilter || ratingToFilter == "0";
-  });
+  if (completedOnly) {
+    gamesToShow = games
+      ?.filter((game) => {
+        return game?.rating == ratingToFilter || ratingToFilter == "0";
+      })
+      ?.filter((game) => {
+        return game?.completed == "Completed";
+      });
+  } else {
+    gamesToShow = games
+      ?.filter((game) => {
+        return game?.rating == ratingToFilter || ratingToFilter == "0";
+      })
+      ?.filter((game) => game?.completed != "Completed");
+  }
 
   if (loading) {
     return (
@@ -133,8 +150,8 @@ export default function Wishlist({ forceRefreshGame, filterOption }) {
                   <MainGenre>
                     {game?.category} - {timeAgoFromZulu(game?.date)}
                   </MainGenre>
-                  <MainStatus color={GAME_COLORS[game?.completed ?? "New"]}>
-                    {game?.completed ?? "New"}
+                  <MainStatus color={GAME_COLORS[game?.completed ?? "NEW"]}>
+                    {game?.completed?.toUpperCase() ?? "NEW"}
                   </MainStatus>
                 </Title>
                 <Right>
@@ -319,6 +336,24 @@ export default function Wishlist({ forceRefreshGame, filterOption }) {
     );
 }
 
+const OptionInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  font-size: 0.9rem;
+  color: ${(props) => (props?.selected ? "#53B5D9" : "#959595")};
+  position: relative;
+`;
+
+const Options2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1.5rem 1rem 1rem 1rem;
+`;
+
 const RightTop = styled.div`
   display: flex;
   align-items: center;
@@ -400,7 +435,7 @@ const MainStatus = styled.div`
   justify-content: flex-start;
   font-size: 0.8rem;
   width: 100%;
-  margin-top: 0.25rem;
+  margin-top: 0.5rem;
   color: ${(props) => props.color};
 `;
 

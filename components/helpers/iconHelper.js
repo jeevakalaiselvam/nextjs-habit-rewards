@@ -254,7 +254,7 @@ export const GAME_COLORS = {
   EA: "#26BBFF",
   Ubisoft: "#26BBFF",
   Epic: "#26BBFF",
-  New: "#ff5a5a",
-  "In Progress": "#ffef77",
-  Completed: "#79ff5e",
+  New: "#FE6662",
+  "In Progress": "#FDAC46",
+  Completed: "#3BD987",
 };
