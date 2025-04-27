@@ -147,7 +147,7 @@ export default function Wishlist({
   }
 
   gamesToShow = gamesToShow?.sort((game1, game2) =>
-    game1?.title?.toLowerCase()?.localeCompare(game2?.title?.toLowerCase())
+    game2?.name?.toLowerCase()?.localeCompare(game1?.name?.toLowerCase())
   );
 
   if (loading) {
@@ -164,19 +164,9 @@ export default function Wishlist({
           gamesToShow?.map((game) => {
             return (
               <GameContainer>
-                <Popconfirm
-                  placement="left"
-                  onConfirm={() => {
-                    deleteSpending(game?._id);
-                  }}
-                  content={<div>DELETE</div>}
-                  title={<Title>Delete Game</Title>}
-                >
-                  <Icon color={stringToColor(game?.title)}>
-                    <MdVideogameAsset />
-                  </Icon>
-                </Popconfirm>
-
+                <Icon color={stringToColor(game?.title)}>
+                  <MdVideogameAsset />
+                </Icon>
                 <Title>
                   <MainTitle>{game?.title}</MainTitle>
                   <MainGenre>
@@ -185,6 +175,9 @@ export default function Wishlist({
                   <RateContainer>
                     <Rate value={game?.rating} style={{ fontSize: ".75rem" }} />
                   </RateContainer>
+                  <MainStatus color={GAME_COLORS[game?.completed ?? "NEW"]}>
+                    {game?.completed?.toUpperCase() ?? "NEW"}
+                  </MainStatus>
                 </Title>
                 <Right>
                   <RightTop>
@@ -341,15 +334,24 @@ export default function Wishlist({
                           setNewValues(game);
                         }}
                       >
-                        {game?.platform ?? "N/A"}
+                        {game?.platform ?? "New"}
                       </Genre>
                     </Popover>
                   </RightTop>
                   <RightBottom></RightBottom>
                 </Right>
-                <MainStatus color={GAME_COLORS[game?.completed ?? "NEW"]}>
-                  {game?.completed?.toUpperCase() ?? "NEW"}
-                </MainStatus>
+                <Popconfirm
+                  placement="left"
+                  onConfirm={() => {
+                    deleteSpending(game?._id);
+                  }}
+                  content={<div>DELETE</div>}
+                  title={<Title>Delete Game</Title>}
+                >
+                  <Delete>
+                    <HiOutlineDotsVertical />
+                  </Delete>
+                </Popconfirm>
               </GameContainer>
             );
           })}
@@ -437,8 +439,8 @@ const Delete = styled.div`
   align-items: center;
   justify-content: center;
   position: absolute;
-  left: 0.5rem;
-  top: 0.5rem;
+  right: 0.5rem;
+  bottom: 1rem;
 
   &:active {
     color: #fe6662;
@@ -449,7 +451,7 @@ const MainTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 80%;
+  width: 100%;
 `;
 
 const MainGenre = styled.div`
@@ -465,12 +467,10 @@ const MainGenre = styled.div`
 const MainStatus = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   font-size: 0.8rem;
+  width: 100%;
   color: ${(props) => props.color};
-  position: absolute;
-  right: 1rem;
-  top: 0.75rem;
 `;
 
 const Genre = styled.div`
@@ -482,14 +482,11 @@ const Genre = styled.div`
   padding: 0.25rem 0.5rem;
   margin-right: 1rem;
   font-size: 0.8rem;
-  position: absolute;
-  right: 0rem;
-  bottom: 1rem;
 `;
 
 const Title = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   flex-direction: column;
   flex: 1;
