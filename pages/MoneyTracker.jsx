@@ -10,9 +10,11 @@ import {
   HiLibrary,
   HiLockClosed,
   HiMailOpen,
+  HiPlay,
   HiPlus,
   HiPresentationChartLine,
   HiShieldCheck,
+  HiSparkles,
   HiUserCircle,
   HiViewBoards,
   HiViewList,
@@ -220,7 +222,7 @@ export default function MoneyTracker() {
               onClick={() => setActiveTabGame(1)}
               data-active={activeTabGame == 1}
             >
-              <HiCheckCircle />
+              <HiPlay />
             </Icon>
             <Icon>
               <Inner
@@ -239,7 +241,7 @@ export default function MoneyTracker() {
               onClick={() => setActiveTabGame(2)}
               data-active={activeTabGame == 2}
             >
-              <HiFolderAdd />
+              <HiSparkles />
             </Icon>
             <Icon
               onClick={() => setActiveTabGame(3)}
