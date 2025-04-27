@@ -7,14 +7,16 @@ export const COLOR_ACCENT_DARK = "rgb(6, 42, 75)";
 export const COLOR_SUCCESS = "#15C2C2";
 export const COLOR_STREAK = "#15C2C2";
 
-export const stringToColor = (str) => {
+export const stringToLightColor = (str) => {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
   let color = "#";
   for (let i = 0; i < 3; i++) {
-    const value = (hash >> (i * 8)) & 0xff;
+    let value = (hash >> (i * 8)) & 0xff;
+    // Force the value to be in the light range (e.g., 127–255)
+    value = Math.floor((value + 255) / 2);
     color += value.toString(16).padStart(2, "0");
   }
   return color;
