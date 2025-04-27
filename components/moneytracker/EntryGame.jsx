@@ -384,7 +384,7 @@ export const itemsGameCompleted = [
 export default function EntryGame({ setShowEntry, refreshGame, selectedDate }) {
   const [values, setValues] = useState({
     amount: "0",
-    platform: "Steam",
+    platform: "None",
     date: getFifteenth(selectedDate),
     category: "Action",
     type: "",

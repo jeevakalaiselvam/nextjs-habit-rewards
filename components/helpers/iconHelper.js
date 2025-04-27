@@ -250,11 +250,13 @@ export const GROCERY_OPTIONS = [
 ];
 
 export const GAME_COLORS = {
-  Steam: "#26BBFF",
-  EA: "#26BBFF",
-  Ubisoft: "#26BBFF",
-  Epic: "#26BBFF",
+  Steam: "#60a5ff",
+  EA: "#b991ff",
+  Ubisoft: "#FDAC46",
+  Epic: "#FE6662",
   New: "#FE6662",
   "In Progress": "#FDAC46",
   Completed: "#3BD987",
+  None: "#b0e6f0",
+  "Game Pass": "#3BD987",
 };

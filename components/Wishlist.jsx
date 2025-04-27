@@ -25,7 +25,10 @@ import { FaIndianRupeeSign } from "react-icons/fa6";
 import dayjs from "dayjs";
 import { capitalizeFirstLetter } from "./helpers/stringHelper";
 import { timeAgoFromZulu } from "./helpers/dateHelper";
-import { stringToColor } from "./helpers/colorHelper";
+import {
+  generateDarkTextColorForLightBg,
+  stringToColor,
+} from "./helpers/colorHelper";
 
 export default function Wishlist({
   forceRefreshGame,
@@ -330,11 +333,12 @@ export default function Wishlist({
                       }
                     >
                       <Genre
+                        color={GAME_COLORS[game?.platform ?? "None"]}
                         onClick={() => {
                           setNewValues(game);
                         }}
                       >
-                        {game?.platform ?? "New"}
+                        {game?.platform?.toUpperCase() ?? "NONE"}
                       </Genre>
                     </Popover>
                   </RightTop>
@@ -477,8 +481,9 @@ const Genre = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 4px;
   background-color: ${(props) => (props.color ? props.color : "#3c4247")};
+  color: ${(props) => "#000"};
   padding: 0.25rem 0.5rem;
   margin-right: 1rem;
   font-size: 0.8rem;
