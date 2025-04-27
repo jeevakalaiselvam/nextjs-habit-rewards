@@ -252,6 +252,21 @@ export const itemsGamePlatform = [
     disabled: true,
   },
   {
+    key: "Unassigned",
+    label: "Unassigned",
+    icon: (
+      <span
+        style={{
+          transform: "translateY(2px)",
+          color: GAME_COLORS["Unassigned"],
+        }}
+      >
+        {<MdVideogameAsset />}
+      </span>
+    ),
+    extra: "⌘U",
+  },
+  {
     key: "Steam",
     label: "Steam",
     icon: (
