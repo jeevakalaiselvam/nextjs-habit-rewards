@@ -7,6 +7,19 @@ export const COLOR_ACCENT_DARK = "rgb(6, 42, 75)";
 export const COLOR_SUCCESS = "#15C2C2";
 export const COLOR_STREAK = "#15C2C2";
 
+export const stringToColor = (str) => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = str.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  let color = "#";
+  for (let i = 0; i < 3; i++) {
+    const value = (hash >> (i * 8)) & 0xff;
+    color += value.toString(16).padStart(2, "0");
+  }
+  return color;
+};
+
 const baseColors = [
   "#FDAC46", // food
   "#FE6662", // movies

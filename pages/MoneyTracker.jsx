@@ -24,43 +24,56 @@ import Spending from "../components/moneytracker/Spending";
 import Wallets from "../components/moneytracker/Wallets";
 import { getFirstDateOfCurrentMonth } from "../components/helpers/dateHelper";
 import { BiSolidWalletAlt } from "react-icons/bi";
-import { FaGoogleWallet } from "react-icons/fa";
+import { FaGamepad, FaGoogleWallet } from "react-icons/fa";
 import { DatePicker } from "antd";
 import dayjs from "dayjs";
 import WalletEMI from "../components/moneytracker/WalletEMI";
 import { MdAccessTimeFilled } from "react-icons/md";
+import Wishlist from "../components/Wishlist";
+import EntryGame from "../components/moneytracker/EntryGame";
 
 export default function MoneyTracker() {
+  const [activeMode, setActiveMode] = useState(1);
   const [activeTab, setActiveTab] = useState(0);
+  const [activeTabGame, setActiveTabGame] = useState(0);
   const [showEntry, setShowEntry] = useState(false);
   const [forceRefreshExpense, setForceRefreshExpense] = useState(false);
+  const [forceRefreshGame, setForceRefreshGame] = useState(false);
   const [date, setDate] = useState(getFirstDateOfCurrentMonth());
 
   let title = "";
 
-  if (activeTab == 0) {
+  if (activeTab == 0 && activeMode == 0) {
     title = "Income";
   }
 
-  if (activeTab == 1) {
+  if (activeTab == 1 && activeMode == 0) {
     title = "Expense";
   }
 
-  if (activeTab == 2) {
+  if (activeTab == 2 && activeMode == 0) {
     title = "Salaries";
   }
 
-  if (activeTab == 3) {
+  if (activeTab == 3 && activeMode == 0) {
     title = "Wallets";
+  }
+
+  if (activeTab == 0 && activeMode == 1) {
+    title = "Wishlist";
   }
 
   const refreshExpense = () => {
     setForceRefreshExpense(true);
   };
 
+  const refreshGame = () => {
+    setForceRefreshGame(true);
+  };
+
   return (
     <Container>
-      {showEntry && (activeTab == 1 || activeTab == 0) && (
+      {showEntry && (activeTab == 1 || activeTab == 0) && activeMode == 0 && (
         <EntryModal>
           <Entry
             setShowEntry={setShowEntry}
@@ -73,6 +86,15 @@ export default function MoneyTracker() {
         <WalletEMIModal>
           <WalletEMI />
         </WalletEMIModal>
+      )}
+      {showEntry && activeMode == 1 && (
+        <EntryModal>
+          <EntryGame
+            setShowEntry={setShowEntry}
+            refreshGame={refreshGame}
+            selectedDate={date}
+          />
+        </EntryModal>
       )}
       <Header>
         <Name>{title}</Name>
@@ -94,63 +116,136 @@ export default function MoneyTracker() {
             }}
           />
         </Picker>
+        {activeMode == 0 && (
+          <ModeIcon onClick={() => setActiveMode(1)}>
+            <FaGoogleWallet />
+          </ModeIcon>
+        )}
+        {activeMode == 1 && (
+          <ModeIcon onClick={() => setActiveMode(0)}>
+            <FaGamepad />
+          </ModeIcon>
+        )}
       </Header>
-      <Content showEntry={showEntry}>
-        {activeTab == 0 && (
-          <Money
-            showEntry={showEntry}
-            selectedDate={date}
-            forceRefreshExpense={forceRefreshExpense}
-          />
-        )}
-      </Content>
-      <Content>
-        {activeTab == 1 && (
-          <Spending
-            showEntry={showEntry}
-            selectedDate={date}
-            forceRefreshExpense={forceRefreshExpense}
-          />
-        )}
-      </Content>
-      <Content>
-        {activeTab == 2 && <Salary showEntry={showEntry} selectedDate={date} />}
-      </Content>
-      <Content>
-        {activeTab == 3 && (
-          <Wallets showEntry={showEntry} selectedDate={date} />
-        )}
-      </Content>
-      <Bottom>
-        <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
-          <HiViewGrid />
-        </Icon>
-        <Icon onClick={() => setActiveTab(1)} data-active={activeTab == 1}>
-          <HiChartPie />
-        </Icon>
-        <Icon>
-          <Inner
-            onClick={() => {
-              setShowEntry((old) => !old);
-            }}
-          >
-            {!showEntry && activeTab == 0 && <HiPlus />}
-            {!showEntry && activeTab == 1 && <HiPlus />}
-            {!showEntry && activeTab == 2 && <HiPlus />}
-            {!showEntry && activeTab == 3 && <MdAccessTimeFilled />}
-            {showEntry && <IoIosCloseCircle />}
-          </Inner>
-        </Icon>
-        <Icon onClick={() => setActiveTab(2)} data-active={activeTab == 2}>
-          <HiLibrary />
-        </Icon>
-        <Icon onClick={() => setActiveTab(3)} data-active={activeTab == 3}>
-          <FaGoogleWallet />
-        </Icon>
-      </Bottom>
+      {activeMode == 1 && (
+        <>
+          <Content showEntry={showEntry}>
+            {activeTab == 0 && <Wishlist forceRefreshGame={forceRefreshGame} />}
+          </Content>
+          <Bottom>
+            <Icon
+              onClick={() => setActiveTabGame(0)}
+              data-active={activeTabGame == 0}
+            >
+              <HiViewGrid />
+            </Icon>
+            <Icon
+              onClick={() => setActiveTabGame(1)}
+              data-active={activeTabGame == 1}
+            >
+              <HiChartPie />
+            </Icon>
+            <Icon>
+              <Inner
+                onClick={() => {
+                  setShowEntry((old) => !old);
+                }}
+              >
+                {!showEntry && activeTabGame == 0 && <HiPlus />}
+                {!showEntry && activeTabGame == 1 && <HiPlus />}
+                {!showEntry && activeTabGame == 2 && <HiPlus />}
+                {!showEntry && activeTabGame == 3 && <MdAccessTimeFilled />}
+                {showEntry && <IoIosCloseCircle />}
+              </Inner>
+            </Icon>
+            <Icon
+              onClick={() => setActiveTabGame(2)}
+              data-active={activeTabGame == 2}
+            >
+              <HiLibrary />
+            </Icon>
+            <Icon
+              onClick={() => setActiveTabGame(3)}
+              data-active={activeTabGame == 3}
+            >
+              <FaGoogleWallet />
+            </Icon>
+          </Bottom>
+        </>
+      )}
+      {activeMode == 0 && (
+        <>
+          <Content showEntry={showEntry}>
+            {activeTab == 0 && (
+              <Money
+                showEntry={showEntry}
+                selectedDate={date}
+                forceRefreshExpense={forceRefreshExpense}
+              />
+            )}
+          </Content>
+          <Content>
+            {activeTab == 1 && (
+              <Spending
+                showEntry={showEntry}
+                selectedDate={date}
+                forceRefreshExpense={forceRefreshExpense}
+              />
+            )}
+          </Content>
+          <Content>
+            {activeTab == 2 && (
+              <Salary showEntry={showEntry} selectedDate={date} />
+            )}
+          </Content>
+          <Content>
+            {activeTab == 3 && (
+              <Wallets showEntry={showEntry} selectedDate={date} />
+            )}
+          </Content>
+          <Bottom>
+            <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
+              <HiViewGrid />
+            </Icon>
+            <Icon onClick={() => setActiveTab(1)} data-active={activeTab == 1}>
+              <HiChartPie />
+            </Icon>
+            <Icon>
+              <Inner
+                onClick={() => {
+                  setShowEntry((old) => !old);
+                }}
+              >
+                {!showEntry && activeTab == 0 && <HiPlus />}
+                {!showEntry && activeTab == 1 && <HiPlus />}
+                {!showEntry && activeTab == 2 && <HiPlus />}
+                {!showEntry && activeTab == 3 && <MdAccessTimeFilled />}
+                {showEntry && <IoIosCloseCircle />}
+              </Inner>
+            </Icon>
+            <Icon onClick={() => setActiveTab(2)} data-active={activeTab == 2}>
+              <HiLibrary />
+            </Icon>
+            <Icon onClick={() => setActiveTab(3)} data-active={activeTab == 3}>
+              <FaGoogleWallet />
+            </Icon>
+          </Bottom>
+        </>
+      )}
     </Container>
   );
 }
+
+const ModeIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: 1.5rem;
+  margin-left: 0.5rem;
+  color: #395ec3;
+`;
 
 const Picker = styled.div`
   display: flex;

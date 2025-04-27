@@ -248,3 +248,10 @@ export const GROCERY_OPTIONS = [
     icon: <FaIndianRupeeSign />,
   },
 ];
+
+export const GAME_COLORS = {
+  Steam: "#26BBFF",
+  EA: "#26BBFF",
+  Ubisoft: "#26BBFF",
+  Epic: "#26BBFF",
+};

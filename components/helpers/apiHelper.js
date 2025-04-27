@@ -114,6 +114,10 @@ export const getMongoCollectionForSpending = (user) => {
   return "jeevaspendnew";
 };
 
+export const getMongoCollectionForGame = (user) => {
+  return "jeevagames";
+};
+
 export const getMongoHabitsForUser = (user) => {
   return "jeevahabit";
   if (user == "Jeeva") {
