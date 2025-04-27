@@ -449,7 +449,7 @@ const MainTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 100%;
+  width: 80%;
 `;
 
 const MainGenre = styled.div`
@@ -489,7 +489,7 @@ const Genre = styled.div`
 
 const Title = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   flex-direction: column;
   flex: 1;
