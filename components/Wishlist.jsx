@@ -14,7 +14,7 @@ import { useEffect, useState } from "react";
 import { MdDelete, MdVideogameAsset } from "react-icons/md";
 import styled from "styled-components";
 import { GAME_COLORS, ICON_COLORS } from "./helpers/iconHelper";
-import { HiFolder } from "react-icons/hi";
+import { HiFolder, HiOutlineDotsVertical } from "react-icons/hi";
 import {
   itemsGameCompleted,
   itemsGamePlatform,
@@ -168,6 +168,9 @@ export default function Wishlist({
                   <MainGenre>
                     {game?.category} - {timeAgoFromZulu(game?.date)}
                   </MainGenre>
+                  <RateContainer>
+                    <Rate value={game?.rating} style={{ fontSize: ".75rem" }} />
+                  </RateContainer>
                   <MainStatus color={GAME_COLORS[game?.completed ?? "NEW"]}>
                     {game?.completed?.toUpperCase() ?? "NEW"}
                   </MainStatus>
@@ -330,29 +333,35 @@ export default function Wishlist({
                         {game?.platform ?? "New"}
                       </Genre>
                     </Popover>
-                    <Popconfirm
-                      placement="left"
-                      onConfirm={() => {
-                        deleteSpending(game?._id);
-                      }}
-                      content={<div>DELETE</div>}
-                      title={<Title>Delete Game</Title>}
-                    >
-                      <Delete>
-                        <MdDelete />
-                      </Delete>
-                    </Popconfirm>
                   </RightTop>
-                  <RightBottom>
-                    <Rate value={game?.rating} style={{ fontSize: ".75rem" }} />
-                  </RightBottom>
+                  <RightBottom></RightBottom>
                 </Right>
+                <Popconfirm
+                  placement="left"
+                  onConfirm={() => {
+                    deleteSpending(game?._id);
+                  }}
+                  content={<div>DELETE</div>}
+                  title={<Title>Delete Game</Title>}
+                >
+                  <Delete>
+                    <HiOutlineDotsVertical />
+                  </Delete>
+                </Popconfirm>
               </GameContainer>
             );
           })}
       </Container>
     );
 }
+
+const RateContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.5rem 0rem;
+  width: 100%;
+`;
 
 const OptionInner = styled.div`
   display: flex;
@@ -376,6 +385,7 @@ const RightTop = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   flex: 1;
 `;
 
@@ -388,8 +398,8 @@ const RightBottom = styled.div`
 
 const Right = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
+  justify-content: flex-start;
   flex-direction: column;
   min-height: 60px;
 `;
@@ -424,8 +434,11 @@ const Delete = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
 
-  &:hover {
+  &:active {
     color: #fe6662;
   }
 `;
@@ -453,7 +466,6 @@ const MainStatus = styled.div`
   justify-content: flex-start;
   font-size: 0.8rem;
   width: 100%;
-  margin-top: 0.5rem;
   color: ${(props) => props.color};
 `;
 
@@ -485,6 +497,7 @@ const GameContainer = styled.div`
   background-color: #1f2125;
   border-radius: 0.5rem;
   margin-bottom: 1rem;
+  position: relative;
 `;
 
 const Container = styled.div`
@@ -493,8 +506,9 @@ const Container = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  min-height: 60vh;
-  max-height: 60vh;
+  min-height: 80vh;
+  max-height: 80vh;
+  overflow: scroll;
   padding: 1rem;
 `;
 
@@ -531,7 +545,7 @@ const Caret = styled.div`
 const AddAmount = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   min-width: 100%;
   flex-direction: column;
 `;

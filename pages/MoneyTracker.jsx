@@ -74,7 +74,7 @@ export default function MoneyTracker() {
   }
 
   if (activeTabGame == 1 && activeMode == 1) {
-    title = "In Progress";
+    title = "Progress";
   }
 
   if (activeTabGame == 2 && activeMode == 1) {
