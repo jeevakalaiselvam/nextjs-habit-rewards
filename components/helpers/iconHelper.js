@@ -250,6 +250,7 @@ export const GROCERY_OPTIONS = [
 ];
 
 export const GAME_COLORS = {
+  Unassigned: "#696969",
   Steam: "#60a5ff",
   EA: "#b991ff",
   Ubisoft: "#FDAC46",
