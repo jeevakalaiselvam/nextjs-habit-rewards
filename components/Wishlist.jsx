@@ -146,6 +146,10 @@ export default function Wishlist({
       });
   }
 
+  gamesToShow = gamesToShow?.sort((game1, game2) =>
+    game1?.title?.toLowerCase()?.localeCompare(game2?.title?.toLowerCase())
+  );
+
   if (loading) {
     return (
       <Container>
@@ -435,7 +439,7 @@ const Delete = styled.div`
   align-items: center;
   justify-content: center;
   position: absolute;
-  right: 1rem;
+  right: 0.5rem;
   bottom: 1rem;
 
   &:active {
