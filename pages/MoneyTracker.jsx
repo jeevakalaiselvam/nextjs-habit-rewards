@@ -195,19 +195,11 @@ export default function MoneyTracker() {
       {activeMode == 1 && (
         <>
           <Content showEntry={showEntry}>
-            {activeTabGame == 0 && (
-              <Wishlist
-                forceRefreshGame={forceRefreshGame}
-                filterOption={filterOption}
-              />
-            )}{" "}
-            {activeTabGame == 1 && (
-              <Wishlist
-                completedOnly
-                forceRefreshGame={forceRefreshGame}
-                filterOption={filterOption}
-              />
-            )}
+            <Wishlist
+              activeTabGame={activeTabGame}
+              forceRefreshGame={forceRefreshGame}
+              filterOption={filterOption}
+            />
           </Content>
           <Bottom>
             <Icon

@@ -29,8 +29,8 @@ import { stringToColor } from "./helpers/colorHelper";
 
 export default function Wishlist({
   forceRefreshGame,
+  activeTabGame,
   filterOption,
-  completedOnly,
 }) {
   const [games, setGames] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -112,7 +112,23 @@ export default function Wishlist({
 
   let ratingToFilter = filterOption?.rating ?? "0";
 
-  if (completedOnly) {
+  if (activeTabGame == 0) {
+    gamesToShow = games
+      ?.filter((game) => {
+        return game?.rating == ratingToFilter || ratingToFilter == "0";
+      })
+      ?.filter((game) => {
+        return game?.completed == "New";
+      });
+  } else if (activeTabGame == 1) {
+    gamesToShow = games
+      ?.filter((game) => {
+        return game?.rating == ratingToFilter || ratingToFilter == "0";
+      })
+      ?.filter((game) => {
+        return game?.completed == "In Progress";
+      });
+  } else if (activeTabGame == 2) {
     gamesToShow = games
       ?.filter((game) => {
         return game?.rating == ratingToFilter || ratingToFilter == "0";
@@ -120,12 +136,14 @@ export default function Wishlist({
       ?.filter((game) => {
         return game?.completed == "Completed";
       });
-  } else {
+  } else if (activeTabGame == 3) {
     gamesToShow = games
       ?.filter((game) => {
         return game?.rating == ratingToFilter || ratingToFilter == "0";
       })
-      ?.filter((game) => game?.completed != "Completed");
+      ?.filter((game) => {
+        return game?.completed == "Completed";
+      });
   }
 
   if (loading) {
