@@ -142,7 +142,7 @@ export default function Wishlist({
         return game?.RATING == ratingToFilter || ratingToFilter == "0";
       })
       ?.filter((game) => {
-        return game?.COMPLETED == "NEW";
+        return game?.COMPLETED == "NEW" || game?.COMPLETED == "REPLAY";
       });
   } else if (activeTabGame == 1) {
     gamesToShow = games

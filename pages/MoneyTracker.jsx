@@ -1,9 +1,13 @@
 import styled from "styled-components";
 import Welcome from "../components/moneytracker/Welcome";
 import {
+  HiArrowsExpand,
   HiChartBar,
   HiChartPie,
   HiCheckCircle,
+  HiClipboard,
+  HiClipboardCheck,
+  HiClipboardCopy,
   HiClipboardList,
   HiCurrencyRupee,
   HiDotsVertical,
@@ -228,13 +232,13 @@ export default function MoneyTracker() {
               onClick={() => setActiveTabGame(0)}
               data-active={activeTabGame == 0}
             >
-              <HiViewBoards />
+              <HiClipboard />
             </Icon>
             <Icon
               onClick={() => setActiveTabGame(1)}
               data-active={activeTabGame == 1}
             >
-              <HiPlay />
+              <HiClipboardCopy />
             </Icon>
             <Icon>
               <Inner
@@ -276,7 +280,7 @@ export default function MoneyTracker() {
               onClick={() => setActiveTabGame(2)}
               data-active={activeTabGame == 2}
             >
-              <HiSparkles />
+              <HiClipboardCheck />
             </Icon>
             <Icon
               onClick={() => setActiveTabGame(4)}
