@@ -139,43 +139,41 @@ export default function Wishlist({
   if (activeTabGame == 0) {
     gamesToShow = games
       ?.filter((game) => {
-        return game?.rating == ratingToFilter || ratingToFilter == "0";
+        return game?.RATING == ratingToFilter || ratingToFilter == "0";
       })
       ?.filter((game) => {
-        return game?.completed == "NEW";
+        return game?.COMPLETED == "NEW";
       });
   } else if (activeTabGame == 1) {
     gamesToShow = games
       ?.filter((game) => {
-        return game?.rating == ratingToFilter || ratingToFilter == "0";
+        return game?.RATING == ratingToFilter || ratingToFilter == "0";
       })
       ?.filter((game) => {
-        return game?.completed == "INPROG";
+        return game?.COMPLETED == "INPROG";
       });
   } else if (activeTabGame == 2) {
     gamesToShow = games
       ?.filter((game) => {
-        return game?.rating == ratingToFilter || ratingToFilter == "0";
+        return game?.RATING == ratingToFilter || ratingToFilter == "0";
       })
       ?.filter((game) => {
-        return game?.completed == "DONE";
+        return game?.COMPLETED == "DONE";
       });
   } else if (activeTabGame == 3) {
     gamesToShow = games
       ?.filter((game) => {
-        return game?.rating == ratingToFilter || ratingToFilter == "0";
+        return game?.RATING == ratingToFilter || ratingToFilter == "0";
       })
       ?.filter((game) => {
-        return game?.completed == "DONE";
+        return game?.COMPLETED == "DONE";
       });
   }
 
   console.log({ gamesToShow });
   gamesToShow = gamesToShow?.sort((game1, game2) =>
-    game2?.name?.toLowerCase()?.localeCompare(game1?.name?.toLowerCase())
+    game2?.NAME?.toLowerCase()?.localeCompare(game1?.NAME?.toLowerCase())
   );
-
-  gamesToShow = games;
 
   if (loading) {
     return (
@@ -209,7 +207,7 @@ export default function Wishlist({
                   <RateContainer>
                     <Rate value={game?.RATING} style={{ fontSize: ".75rem" }} />
                   </RateContainer>
-                  <MainStatus color={GAME_COLORS[game?.completed ?? "NEW"]}>
+                  <MainStatus color={GAME_COLORS[game?.COMPLETED ?? "NEW"]}>
                     {game?.COMPLETED?.toUpperCase() ?? "NEW"}
                   </MainStatus>
                 </Title>
