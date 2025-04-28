@@ -32,14 +32,13 @@ import {
 import GamesTrophies from "./GamesTrophies";
 
 const MAPPING_ORDER = {
-  0: "ID",
-  1: "PLATFORM",
-  2: "GENRE",
-  3: "NAME",
-  4: "COMPLETED",
-  5: "RELEASE",
-  6: "RATING",
-  7: "IMAGE",
+  0: "PLATFORM",
+  1: "GENRE",
+  2: "NAME",
+  3: "COMPLETED",
+  4: "RELEASE",
+  5: "RATING",
+  6: "IMAGE",
 };
 
 export default function Wishlist({
@@ -505,7 +504,7 @@ const Icon = styled.div`
   font-size: 1.5rem;
   margin-right: 1rem;
   background: ${(props) => `url(${props.image})`};
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   color: ${(props) => props.color};
   position: relative;
