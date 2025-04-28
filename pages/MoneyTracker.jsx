@@ -10,6 +10,13 @@ import {
   HiClipboardCopy,
   HiClipboardList,
   HiCurrencyRupee,
+  HiDocument,
+  HiDocumentAdd,
+  HiDocumentDownload,
+  HiDocumentRemove,
+  HiDocumentReport,
+  HiDocumentSearch,
+  HiDocumentText,
   HiDotsVertical,
   HiFolderAdd,
   HiLibrary,
@@ -85,14 +92,18 @@ export default function MoneyTracker() {
   }
 
   if (activeTabGame == 2 && activeMode == 1) {
-    title = "Completed";
+    title = "Replay";
   }
 
   if (activeTabGame == 3 && activeMode == 1) {
-    title = "Completed";
+    title = "Boring";
   }
 
   if (activeTabGame == 4 && activeMode == 1) {
+    title = "Completed";
+  }
+
+  if (activeTabGame == 5 && activeMode == 1) {
     title = "All Games";
   }
 
@@ -232,13 +243,19 @@ export default function MoneyTracker() {
               onClick={() => setActiveTabGame(0)}
               data-active={activeTabGame == 0}
             >
-              <HiClipboard />
+              <HiDocumentAdd />
             </Icon>
             <Icon
               onClick={() => setActiveTabGame(1)}
               data-active={activeTabGame == 1}
             >
-              <HiClipboardCopy />
+              <HiDocumentDownload />
+            </Icon>
+            <Icon
+              onClick={() => setActiveTabGame(2)}
+              data-active={activeTabGame == 2}
+            >
+              <HiDocumentSearch />
             </Icon>
             <Icon>
               <Inner
@@ -274,19 +291,31 @@ export default function MoneyTracker() {
                 {!showEntry && activeTabGame == 4 && activeMode == 1 && (
                   <HiPlus />
                 )}
+                {!showEntry && activeTabGame == 5 && activeMode == 1 && (
+                  <HiPlus />
+                )}
+                {!showEntry && activeTabGame == 6 && activeMode == 1 && (
+                  <HiPlus />
+                )}
               </Inner>
             </Icon>
             <Icon
-              onClick={() => setActiveTabGame(2)}
-              data-active={activeTabGame == 2}
+              onClick={() => setActiveTabGame(3)}
+              data-active={activeTabGame == 3}
             >
-              <HiClipboardCheck />
+              <HiDocumentRemove />
             </Icon>
             <Icon
               onClick={() => setActiveTabGame(4)}
               data-active={activeTabGame == 4}
             >
-              <HiClipboardList />
+              <HiDocumentReport />
+            </Icon>
+            <Icon
+              onClick={() => setActiveTabGame(5)}
+              data-active={activeTabGame == 5}
+            >
+              <HiDocumentText />
             </Icon>
           </Bottom>
         </>

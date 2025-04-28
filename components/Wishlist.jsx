@@ -141,7 +141,7 @@ export default function Wishlist({
         return game?.RATING == ratingToFilter || ratingToFilter == "0";
       })
       ?.filter((game) => {
-        return game?.COMPLETED == "NEW" || game?.COMPLETED == "REPLAY";
+        return game?.COMPLETED == "INPROG";
       });
   } else if (activeTabGame == 1) {
     gamesToShow = games
@@ -149,7 +149,7 @@ export default function Wishlist({
         return game?.RATING == ratingToFilter || ratingToFilter == "0";
       })
       ?.filter((game) => {
-        return game?.COMPLETED == "INPROG";
+        return game?.COMPLETED == "NEW";
       });
   } else if (activeTabGame == 2) {
     gamesToShow = games
@@ -157,7 +157,7 @@ export default function Wishlist({
         return game?.RATING == ratingToFilter || ratingToFilter == "0";
       })
       ?.filter((game) => {
-        return game?.COMPLETED == "DONE";
+        return game?.COMPLETED == "REPLAY";
       });
   } else if (activeTabGame == 3) {
     gamesToShow = games
@@ -165,21 +165,25 @@ export default function Wishlist({
         return game?.RATING == ratingToFilter || ratingToFilter == "0";
       })
       ?.filter((game) => {
-        return game?.COMPLETED == "DONE";
+        return game?.COMPLETED == "BORING";
       });
   } else if (activeTabGame == 4) {
-    gamesToShow = games?.filter((game) => {
-      return game?.RATING == ratingToFilter || ratingToFilter == "0";
-    });
+    gamesToShow = games
+      ?.filter((game) => {
+        return game?.RATING == ratingToFilter || ratingToFilter == "0";
+      })
+      ?.filter((game) => {
+        return game?.COMPLETED == "DONE";
+      });
+  } else if (activeTabGame == 5) {
+    gamesToShow = games
+      ?.filter((game) => {
+        return game?.RATING == ratingToFilter || ratingToFilter == "0";
+      })
+      ?.filter((game) => {
+        return game?.COMPLETED == "DONE";
+      });
   }
-
-  gamesToShow = gamesToShow?.sort((game1, game2) =>
-    game2?.NAME?.toLowerCase()?.localeCompare(game1?.NAME?.toLowerCase())
-  );
-
-  gamesToShow = gamesToShow?.sort((game1, game2) => {
-    return new Date(game2?.RELEASE) - new Date(game1?.RELEASE);
-  });
 
   if (loading) {
     return (

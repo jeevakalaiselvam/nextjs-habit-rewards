@@ -256,6 +256,7 @@ export const GAME_COLORS = {
   UBISOFT: "#FDAC46",
   EPIC: "#FE6662",
   NEW: "#FE6662",
+  BORING: "#FE6662",
   INPROG: "#FDAC46",
   DONE: "#3BD987",
   NONE: "#b0e6f0",
