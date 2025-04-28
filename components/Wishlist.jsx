@@ -176,13 +176,7 @@ export default function Wishlist({
         return game?.COMPLETED == "DONE";
       });
   } else if (activeTabGame == 5) {
-    gamesToShow = games
-      ?.filter((game) => {
-        return game?.RATING == ratingToFilter || ratingToFilter == "0";
-      })
-      ?.filter((game) => {
-        return game?.COMPLETED == "DONE";
-      });
+    gamesToShow = games;
   }
 
   if (loading) {
