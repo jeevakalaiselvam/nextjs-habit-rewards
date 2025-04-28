@@ -152,7 +152,8 @@ export default function Wishlist({
       })
       ?.filter((game) => {
         return game?.COMPLETED == "NEW";
-      });
+      })
+      ?.sort((game1, game2) => game2?.RATING - game1?.RATING);
   } else if (activeTabGame == 2) {
     gamesToShow = games
       ?.filter((game) => {
@@ -167,7 +168,7 @@ export default function Wishlist({
         return game?.RATING == ratingToFilter || ratingToFilter == "0";
       })
       ?.filter((game) => {
-        return game?.COMPLETED == "BORING";
+        return game?.COMPLETED == "TRIED";
       });
   } else if (activeTabGame == 4) {
     gamesToShow = games
@@ -594,8 +595,8 @@ const OtherContainer = styled.div`
   padding: 0.25rem 0.25rem;
   border-radius: 0.5rem;
   margin-bottom: 0.5rem;
-  min-height: 70vh;
-  max-height: 70vh;
+  min-height: 80vh;
+  max-height: 80vh;
   overflow: scroll;
   flex-direction: column;
 `;

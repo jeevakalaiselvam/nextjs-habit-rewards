@@ -40,7 +40,7 @@ import Spending from "../components/moneytracker/Spending";
 import Wallets from "../components/moneytracker/Wallets";
 import { getFirstDateOfCurrentMonth } from "../components/helpers/dateHelper";
 import { BiSolidWalletAlt } from "react-icons/bi";
-import { FaCheckCircle, FaGamepad } from "react-icons/fa";
+import { FaCheckCircle, FaGamepad, FaTrophy } from "react-icons/fa";
 import { Button, DatePicker, Popover, Select } from "antd";
 import dayjs from "dayjs";
 import WalletEMI from "../components/moneytracker/WalletEMI";
@@ -96,7 +96,7 @@ export default function MoneyTracker() {
   }
 
   if (activeTabGame == 3 && activeMode == 1) {
-    title = "Boring";
+    title = "Tried";
   }
 
   if (activeTabGame == 4 && activeMode == 1) {
@@ -239,98 +239,6 @@ export default function MoneyTracker() {
               filterOption={filterOption}
             />
           </Content>
-          <Bottom>
-            <Icon
-              onClick={() => setActiveTabGame(0)}
-              data-active={activeTabGame == 0}
-            >
-              <HiDocumentAdd />
-              <span
-                style={{
-                  fontSize: ".5rem",
-                  fontWeight: 800,
-                  marginTop: ".25rem",
-                }}
-              >
-                NEW
-              </span>
-            </Icon>
-            <Icon
-              onClick={() => setActiveTabGame(1)}
-              data-active={activeTabGame == 1}
-            >
-              <HiDocumentDownload />
-              <span
-                style={{
-                  fontSize: ".5rem",
-                  fontWeight: 800,
-                  marginTop: ".25rem",
-                }}
-              >
-                IN PROGRESS
-              </span>
-            </Icon>
-            <Icon
-              onClick={() => setActiveTabGame(2)}
-              data-active={activeTabGame == 2}
-            >
-              <HiDocumentSearch />
-              <span
-                style={{
-                  fontSize: ".5rem",
-                  fontWeight: 800,
-                  marginTop: ".25rem",
-                }}
-              >
-                REPLAY
-              </span>
-            </Icon>
-            <Icon
-              onClick={() => setActiveTabGame(3)}
-              data-active={activeTabGame == 3}
-            >
-              <HiDocumentRemove />
-              <span
-                style={{
-                  fontSize: ".5rem",
-                  fontWeight: 800,
-                  marginTop: ".25rem",
-                }}
-              >
-                BORING
-              </span>
-            </Icon>
-            <Icon
-              onClick={() => setActiveTabGame(4)}
-              data-active={activeTabGame == 4}
-            >
-              <HiDocumentReport />
-              <span
-                style={{
-                  fontSize: ".5rem",
-                  fontWeight: 800,
-                  marginTop: ".25rem",
-                }}
-              >
-                COMPLETED
-              </span>
-            </Icon>
-            <Icon
-              onClick={() => setActiveTabGame(5)}
-              data-active={activeTabGame == 5}
-            >
-              <HiDocumentText />
-              <span
-                style={{
-                  fontSize: ".5rem",
-                  fontWeight: 800,
-                  marginTop: ".25rem",
-                }}
-              >
-                ALL
-              </span>
-            </Icon>
-          </Bottom>
         </>
       )}
       {activeMode == 0 && (
