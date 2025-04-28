@@ -206,10 +206,11 @@ export default function Wishlist({
                     {game?.PLATFORM?.toUpperCase() ?? "NONE"}
                   </Genre>
                 </Icon>
-                <MainTime>{timeAgoFromZulu(game?.RELEASE)}</MainTime>
                 <Title>
                   <MainTitle>{game?.NAME}</MainTitle>
-                  <MainGenre>{game?.GENRE}</MainGenre>
+                  <MainGenre>
+                    {game?.GENRE} - {timeAgoFromZulu(game?.RELEASE)}
+                  </MainGenre>
                   <RateContainer>
                     <Rate value={game?.RATING} style={{ fontSize: ".75rem" }} />
                   </RateContainer>
@@ -516,6 +517,7 @@ const MainTitle = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100%;
+  font-size: 0.9rem;
 `;
 
 const MainGenre = styled.div`
