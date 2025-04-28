@@ -168,9 +168,12 @@ export default function Wishlist({
       ?.filter((game) => {
         return game?.COMPLETED == "DONE";
       });
+  } else if (activeTabGame == 4) {
+    gamesToShow = games?.filter((game) => {
+      return game?.RATING == ratingToFilter || ratingToFilter == "0";
+    });
   }
 
-  console.log({ gamesToShow });
   gamesToShow = gamesToShow?.sort((game1, game2) =>
     game2?.NAME?.toLowerCase()?.localeCompare(game1?.NAME?.toLowerCase())
   );
@@ -563,7 +566,7 @@ const GameContainer = styled.div`
   padding: 0.25rem 0.25rem;
   background-color: #1f2125;
   border-radius: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
   position: relative;
 `;
 
@@ -576,7 +579,7 @@ const Container = styled.div`
   min-height: 80vh;
   max-height: 80vh;
   overflow: scroll;
-  padding: 1rem;
+  padding: 0.5rem;
 `;
 
 const Picker1 = styled.div`

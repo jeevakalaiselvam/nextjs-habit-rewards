@@ -4,6 +4,7 @@ import {
   HiChartBar,
   HiChartPie,
   HiCheckCircle,
+  HiClipboardList,
   HiCurrencyRupee,
   HiDotsVertical,
   HiFolderAdd,
@@ -85,6 +86,10 @@ export default function MoneyTracker() {
 
   if (activeTabGame == 3 && activeMode == 1) {
     title = "Completed";
+  }
+
+  if (activeTabGame == 4 && activeMode == 1) {
+    title = "All Games";
   }
 
   const refreshExpense = () => {
@@ -184,6 +189,13 @@ export default function MoneyTracker() {
                       options={GAME_RATING_OPTIONS}
                     />
                   </Option>
+                  <Apply
+                    onClick={() => {
+                      refreshGame();
+                    }}
+                  >
+                    Refresh
+                  </Apply>
                 </FilterOption>
               }
             >
@@ -230,11 +242,34 @@ export default function MoneyTracker() {
                   setShowEntry((old) => !old);
                 }}
               >
-                {!showEntry && activeTabGame == 0 && <HiPlus />}
-                {!showEntry && activeTabGame == 1 && <HiPlus />}
-                {!showEntry && activeTabGame == 2 && <HiPlus />}
-                {!showEntry && activeTabGame == 3 && <MdAccessTimeFilled />}
+                {!showEntry && activeTabGame == 0 && activeMode == 0 && (
+                  <HiPlus />
+                )}
+                {!showEntry && activeTabGame == 1 && activeMode == 0 && (
+                  <HiPlus />
+                )}
+                {!showEntry && activeTabGame == 2 && activeMode == 0 && (
+                  <HiPlus />
+                )}
+                {!showEntry && activeTabGame == 3 && activeMode == 0 && (
+                  <MdAccessTimeFilled />
+                )}
                 {showEntry && <IoIosCloseCircle />}
+                {!showEntry && activeTabGame == 0 && activeMode == 1 && (
+                  <HiPlus />
+                )}
+                {!showEntry && activeTabGame == 1 && activeMode == 1 && (
+                  <HiPlus />
+                )}
+                {!showEntry && activeTabGame == 2 && activeMode == 1 && (
+                  <HiPlus />
+                )}
+                {!showEntry && activeTabGame == 3 && activeMode == 1 && (
+                  <HiPlus />
+                )}
+                {!showEntry && activeTabGame == 4 && activeMode == 1 && (
+                  <HiPlus />
+                )}
               </Inner>
             </Icon>
             <Icon
@@ -244,10 +279,10 @@ export default function MoneyTracker() {
               <HiSparkles />
             </Icon>
             <Icon
-              onClick={() => setActiveTabGame(3)}
-              data-active={activeTabGame == 3}
+              onClick={() => setActiveTabGame(4)}
+              data-active={activeTabGame == 4}
             >
-              <HiLibrary />
+              <HiClipboardList />
             </Icon>
           </Bottom>
         </>
@@ -374,7 +409,6 @@ const Picker = styled.div`
 const Name = styled.div`
   display: flex;
   align-items: center;
-  flex: 1;
   justify-content: flex-start;
   font-size: 2rem;
   transform: translateY(-2px);
