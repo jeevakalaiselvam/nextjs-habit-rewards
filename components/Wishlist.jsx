@@ -38,7 +38,6 @@ const MAPPING_ORDER = {
   4: "COMPLETED",
   5: "RELEASE",
   6: "RATING",
-  7: "PRICE",
   8: "IMAGE",
 };
 
