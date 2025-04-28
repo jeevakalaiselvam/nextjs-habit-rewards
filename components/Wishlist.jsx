@@ -199,11 +199,10 @@ export default function Wishlist({
                     {game?.PLATFORM?.toUpperCase() ?? "NONE"}
                   </Genre>
                 </Icon>
+                <MainTime>{timeAgoFromZulu(game?.RELEASE)}</MainTime>
                 <Title>
                   <MainTitle>{game?.NAME}</MainTitle>
-                  <MainGenre>
-                    {timeAgoFromZulu(game?.RELEASE)} - {game?.GENRE}
-                  </MainGenre>
+                  <MainGenre>{game?.GENRE}</MainGenre>
                   <RateContainer>
                     <Rate value={game?.RATING} style={{ fontSize: ".75rem" }} />
                   </RateContainer>
@@ -400,15 +399,17 @@ export default function Wishlist({
     );
 }
 
-const ExtraInfo = styled.div`
+const MainTime = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 0rem;
+  padding: 0.5rem 0.5rem;
   flex-direction: column;
   position: absolute;
   right: 0;
   top: 0;
+  opacity: 0.5;
+  font-size: 0.8rem;
 `;
 
 const RateContainer = styled.div`
@@ -480,7 +481,7 @@ const Icon = styled.div`
   align-items: center;
   justify-content: center;
   width: 150px;
-  height: 80px;
+  height: 70px;
   font-size: 1.5rem;
   margin-right: 1rem;
   background: ${(props) => `url(${props.image})`};
@@ -514,10 +515,10 @@ const MainGenre = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  font-size: 0.8rem;
   width: 100%;
   margin-top: 0.25rem;
   opacity: 0.5;
+  font-size: 0.8rem;
 `;
 
 const MainStatus = styled.div`
@@ -543,7 +544,7 @@ const Genre = styled.div`
   color: ${(props) => "#000"};
   padding: 0.25rem 0.5rem;
   margin-right: 1rem;
-  font-size: 0.8rem;
+  font-size: 0.6rem;
 `;
 
 const Title = styled.div`
