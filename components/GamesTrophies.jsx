@@ -2,7 +2,11 @@ import { FaTrophy } from "react-icons/fa";
 import styled from "styled-components";
 import { GAME_COLORS } from "./helpers/iconHelper";
 
-export default function GamesTrophies({ games }) {
+export default function GamesTrophies({
+  games,
+  activeTabGame,
+  setActiveTabGame,
+}) {
   let total = 0,
     inprog = 0,
     started = 0,
@@ -30,35 +34,60 @@ export default function GamesTrophies({ games }) {
 
   return (
     <Container>
-      <TrophySmall1 color={GAME_COLORS?.["NEW"]}>
+      <TrophySmall1
+        onClick={() => {
+          setActiveTabGame(0);
+        }}
+        color={activeTabGame == 0 ? GAME_COLORS?.["NEW"] : "#757575"}
+      >
         <Name>NEW</Name>
         <Trophy>
           <FaTrophy />
         </Trophy>
         <Count>{started}</Count>
       </TrophySmall1>
-      <TrophySmall2 color={GAME_COLORS?.["INPROG"]}>
+      <TrophySmall2
+        onClick={() => {
+          setActiveTabGame(1);
+        }}
+        color={activeTabGame == 1 ? GAME_COLORS?.["INPROG"] : "#757575"}
+      >
         <Name>INPROG</Name>
         <Trophy>
           <FaTrophy />
         </Trophy>
         <Count>{inprog}</Count>
       </TrophySmall2>
-      <TrophySmall3 color={GAME_COLORS?.["DONE"]}>
+      <TrophySmall3
+        onClick={() => {
+          setActiveTabGame(2);
+        }}
+        color={activeTabGame == 2 ? GAME_COLORS?.["DONE"] : "#757575"}
+      >
         <Name>COMPLETED</Name>
         <Trophy>
           <FaTrophy />
         </Trophy>
         <Count>{completed}</Count>
       </TrophySmall3>
-      <TrophySmall4 color={GAME_COLORS?.["REPLAY"]}>
+      <TrophySmall4
+        onClick={() => {
+          setActiveTabGame(3);
+        }}
+        color={activeTabGame == 3 ? GAME_COLORS?.["REPLAY"] : "#757575"}
+      >
         <Name>REPLAY</Name>
         <Trophy>
           <FaTrophy />
         </Trophy>
         <Count>{replay}</Count>
       </TrophySmall4>
-      <TrophySmall5 color={GAME_COLORS?.["BORING"]}>
+      <TrophySmall5
+        onClick={() => {
+          setActiveTabGame(4);
+        }}
+        color={activeTabGame == 4 ? GAME_COLORS?.["BORING"] : "#757575"}
+      >
         <Name>BORING</Name>
         <Trophy>
           <FaTrophy />

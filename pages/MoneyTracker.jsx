@@ -234,6 +234,7 @@ export default function MoneyTracker() {
           <Content showEntry={showEntry}>
             <Wishlist
               activeTabGame={activeTabGame}
+              setActiveTabGame={setActiveTabGame}
               forceRefreshGame={forceRefreshGame}
               filterOption={filterOption}
             />
