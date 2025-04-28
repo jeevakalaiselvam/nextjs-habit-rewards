@@ -178,6 +178,10 @@ export default function Wishlist({
     game2?.NAME?.toLowerCase()?.localeCompare(game1?.NAME?.toLowerCase())
   );
 
+  gamesToShow = gamesToShow?.sort((game1, game2) => {
+    return new Date(game2?.RELEASE) - new Date(game1?.RELEASE);
+  });
+
   if (loading) {
     return (
       <Container>

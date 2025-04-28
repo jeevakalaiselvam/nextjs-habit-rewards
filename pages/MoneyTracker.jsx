@@ -73,11 +73,11 @@ export default function MoneyTracker() {
   }
 
   if (activeTabGame == 0 && activeMode == 1) {
-    title = "New";
+    title = "New Games";
   }
 
   if (activeTabGame == 1 && activeMode == 1) {
-    title = "Progress";
+    title = "In Progress";
   }
 
   if (activeTabGame == 2 && activeMode == 1) {
@@ -411,7 +411,7 @@ const Name = styled.div`
   align-items: center;
   justify-content: flex-start;
   font-size: 2rem;
-  transform: translateY(-2px);
+  transform: translate(-10px, -0px);
   text-shadow: 0 0 1px white, 0 0 1px rgba(255, 255, 255.25),
     0 0 1px rgba(255, 255, 255.25);
 `;
