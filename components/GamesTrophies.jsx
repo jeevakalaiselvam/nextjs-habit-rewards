@@ -34,18 +34,6 @@ export default function GamesTrophies({
 
   return (
     <Container>
-      <TrophySmall1
-        onClick={() => {
-          setActiveTabGame(1);
-        }}
-        color={activeTabGame == 1 ? GAME_COLORS?.["NEW"] : "#757575"}
-      >
-        <Name>NEW</Name>
-        <Trophy>
-          <FaTrophy />
-        </Trophy>
-        <Count>{started}</Count>
-      </TrophySmall1>
       <TrophySmall2
         onClick={() => {
           setActiveTabGame(0);
@@ -58,6 +46,18 @@ export default function GamesTrophies({
         </Trophy>
         <Count>{inprog}</Count>
       </TrophySmall2>
+      <TrophySmall1
+        onClick={() => {
+          setActiveTabGame(1);
+        }}
+        color={activeTabGame == 1 ? GAME_COLORS?.["NEW"] : "#757575"}
+      >
+        <Name>NEW</Name>
+        <Trophy>
+          <FaTrophy />
+        </Trophy>
+        <Count>{started}</Count>
+      </TrophySmall1>
       <TrophySmall3
         onClick={() => {
           setActiveTabGame(4);
