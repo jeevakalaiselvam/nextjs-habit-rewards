@@ -29,6 +29,7 @@ import {
   generateDarkTextColorForLightBg,
   stringToColor,
 } from "./helpers/colorHelper";
+import GamesTrophies from "./GamesTrophies";
 
 const MAPPING_ORDER = {
   0: "ID",
@@ -188,6 +189,9 @@ export default function Wishlist({
   } else
     return (
       <Container>
+        <TotalContainer>
+          <GamesTrophies games={games} />
+        </TotalContainer>
         {gamesToShow?.length == 0 && <NoGames>No Results for Filter</NoGames>}
         {gamesToShow?.length > 0 &&
           gamesToShow?.map((game) => {
@@ -559,6 +563,17 @@ const Title = styled.div`
   justify-content: center;
   flex-direction: column;
   flex: 1;
+`;
+
+const TotalContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.25rem 0.25rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  position: relative;
 `;
 
 const GameContainer = styled.div`

@@ -244,78 +244,90 @@ export default function MoneyTracker() {
               data-active={activeTabGame == 0}
             >
               <HiDocumentAdd />
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                NEW
+              </span>
             </Icon>
             <Icon
               onClick={() => setActiveTabGame(1)}
               data-active={activeTabGame == 1}
             >
               <HiDocumentDownload />
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                IN PROGRESS
+              </span>
             </Icon>
             <Icon
               onClick={() => setActiveTabGame(2)}
               data-active={activeTabGame == 2}
             >
               <HiDocumentSearch />
-            </Icon>
-            <Icon>
-              <Inner
-                onClick={() => {
-                  setShowEntry((old) => !old);
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
                 }}
               >
-                {!showEntry && activeTabGame == 0 && activeMode == 0 && (
-                  <HiPlus />
-                )}
-                {!showEntry && activeTabGame == 1 && activeMode == 0 && (
-                  <HiPlus />
-                )}
-                {!showEntry && activeTabGame == 2 && activeMode == 0 && (
-                  <HiPlus />
-                )}
-                {!showEntry && activeTabGame == 3 && activeMode == 0 && (
-                  <MdAccessTimeFilled />
-                )}
-                {showEntry && <IoIosCloseCircle />}
-                {!showEntry && activeTabGame == 0 && activeMode == 1 && (
-                  <HiPlus />
-                )}
-                {!showEntry && activeTabGame == 1 && activeMode == 1 && (
-                  <HiPlus />
-                )}
-                {!showEntry && activeTabGame == 2 && activeMode == 1 && (
-                  <HiPlus />
-                )}
-                {!showEntry && activeTabGame == 3 && activeMode == 1 && (
-                  <HiPlus />
-                )}
-                {!showEntry && activeTabGame == 4 && activeMode == 1 && (
-                  <HiPlus />
-                )}
-                {!showEntry && activeTabGame == 5 && activeMode == 1 && (
-                  <HiPlus />
-                )}
-                {!showEntry && activeTabGame == 6 && activeMode == 1 && (
-                  <HiPlus />
-                )}
-              </Inner>
+                REPLAY
+              </span>
             </Icon>
             <Icon
               onClick={() => setActiveTabGame(3)}
               data-active={activeTabGame == 3}
             >
               <HiDocumentRemove />
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                BORING
+              </span>
             </Icon>
             <Icon
               onClick={() => setActiveTabGame(4)}
               data-active={activeTabGame == 4}
             >
               <HiDocumentReport />
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                COMPLETED
+              </span>
             </Icon>
             <Icon
               onClick={() => setActiveTabGame(5)}
               data-active={activeTabGame == 5}
             >
               <HiDocumentText />
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                ALL
+              </span>
             </Icon>
           </Bottom>
         </>
@@ -352,10 +364,28 @@ export default function MoneyTracker() {
           </Content>
           <Bottom>
             <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
-              <HiViewBoards />
+              <HiViewBoards />{" "}
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                INCOME
+              </span>
             </Icon>
             <Icon onClick={() => setActiveTab(1)} data-active={activeTab == 1}>
-              <HiChartPie />
+              <HiChartPie />{" "}
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                SPENDING
+              </span>
             </Icon>
             <Icon>
               <Inner
@@ -371,10 +401,28 @@ export default function MoneyTracker() {
               </Inner>
             </Icon>
             <Icon onClick={() => setActiveTab(2)} data-active={activeTab == 2}>
-              <HiLibrary />
+              <HiLibrary />{" "}
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                SALARY
+              </span>
             </Icon>
             <Icon onClick={() => setActiveTab(3)} data-active={activeTab == 3}>
-              <HiViewList />
+              <HiViewList />{" "}
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                WALLET
+              </span>
             </Icon>
           </Bottom>
         </>
@@ -515,6 +563,7 @@ const Icon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   font-size: 1.75rem;
   flex: 1;
   color: #717f8d;
