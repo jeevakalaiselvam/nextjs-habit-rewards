@@ -30,6 +30,18 @@ import {
   stringToColor,
 } from "./helpers/colorHelper";
 
+const MAPPING_ORDER = {
+  0: "ID",
+  1: "PLATFORM",
+  2: "GENRE",
+  3: "NAME",
+  4: "COMPLETED",
+  5: "RELEASE",
+  6: "RATING",
+  7: "PRICE",
+  8: "IMAGE",
+};
+
 export default function Wishlist({
   forceRefreshGame,
   activeTabGame,
@@ -42,8 +54,17 @@ export default function Wishlist({
 
   const refreshGames = () => {
     setLoading(true);
-    axios.get("/api/game").then((response) => {
-      setGames(response?.data);
+    axios.get("/api/sheet").then((response) => {
+      let gamesInner = response?.data?.rows?.slice(1) ?? [];
+      let gamesMorphed = gamesInner?.map((singleGame) => {
+        let mainGame = {};
+        Object.keys(MAPPING_ORDER).forEach((index) => {
+          mainGame[MAPPING_ORDER[index]] = singleGame?.[index];
+        });
+        return mainGame;
+      });
+      console.log({ gamesMorphed });
+      setGames(gamesMorphed);
       setLoading(false);
     });
   };
@@ -121,7 +142,7 @@ export default function Wishlist({
         return game?.rating == ratingToFilter || ratingToFilter == "0";
       })
       ?.filter((game) => {
-        return game?.completed == "New";
+        return game?.completed == "NEW";
       });
   } else if (activeTabGame == 1) {
     gamesToShow = games
@@ -129,7 +150,7 @@ export default function Wishlist({
         return game?.rating == ratingToFilter || ratingToFilter == "0";
       })
       ?.filter((game) => {
-        return game?.completed == "In Progress";
+        return game?.completed == "INPROG";
       });
   } else if (activeTabGame == 2) {
     gamesToShow = games
@@ -137,7 +158,7 @@ export default function Wishlist({
         return game?.rating == ratingToFilter || ratingToFilter == "0";
       })
       ?.filter((game) => {
-        return game?.completed == "Completed";
+        return game?.completed == "DONE";
       });
   } else if (activeTabGame == 3) {
     gamesToShow = games
@@ -145,13 +166,16 @@ export default function Wishlist({
         return game?.rating == ratingToFilter || ratingToFilter == "0";
       })
       ?.filter((game) => {
-        return game?.completed == "Completed";
+        return game?.completed == "DONE";
       });
   }
 
+  console.log({ gamesToShow });
   gamesToShow = gamesToShow?.sort((game1, game2) =>
     game2?.name?.toLowerCase()?.localeCompare(game1?.name?.toLowerCase())
   );
+
+  gamesToShow = games;
 
   if (loading) {
     return (
@@ -167,201 +191,227 @@ export default function Wishlist({
           gamesToShow?.map((game) => {
             return (
               <GameContainer>
-                <Icon color={stringToColor(game?.title)}>
-                  <MdVideogameAsset />
+                <Icon color={stringToColor(game?.NAME)} image={game?.IMAGE}>
+                  <Genre
+                    color={GAME_COLORS[game?.PLATFORM ?? "None"]}
+                    onClick={() => {
+                      setNewValues(game);
+                    }}
+                  >
+                    {game?.PLATFORM?.toUpperCase() ?? "NONE"}
+                  </Genre>
                 </Icon>
                 <Title>
-                  <MainTitle>{game?.title}</MainTitle>
+                  <MainTitle>{game?.NAME}</MainTitle>
                   <MainGenre>
-                    {game?.category} - {timeAgoFromZulu(game?.date)}
+                    {timeAgoFromZulu(game?.RELEASE)} - {game?.GENRE}
                   </MainGenre>
                   <RateContainer>
-                    <Rate value={game?.rating} style={{ fontSize: ".75rem" }} />
+                    <Rate value={game?.RATING} style={{ fontSize: ".75rem" }} />
                   </RateContainer>
                   <MainStatus color={GAME_COLORS[game?.completed ?? "NEW"]}>
-                    {game?.completed?.toUpperCase() ?? "NEW"}
+                    {game?.COMPLETED?.toUpperCase() ?? "NEW"}
                   </MainStatus>
                 </Title>
                 <Right>
                   <RightTop>
-                    <Popover
-                      trigger={"click"}
-                      placement="left"
-                      content={
-                        <AddAmount>
-                          <TitleMain>Edit Game</TitleMain>
-                          <AmountInputDropdown2>
-                            <Dropdown
-                              trigger={["click"]}
-                              overlayStyle={{ minWidth: "80%" }}
-                              menu={menuGamePlatform}
-                              overlayClassName="full-width-dropdown"
-                            >
-                              <Space>
-                                <span
-                                  style={{
-                                    fontSize: ".9rem",
-                                    color: "#ACAEB2",
-                                  }}
-                                >
-                                  {newValues?.platform
-                                    ? capitalizeFirstLetter(newValues?.platform)
-                                    : "Select Type"}
-                                </span>
-                                <Caret>
-                                  <FaCaretDown />
-                                </Caret>
-                              </Space>
-                            </Dropdown>
-                          </AmountInputDropdown2>
-                          <AmountInputDropdown>
-                            <Dropdown
-                              trigger={["click"]}
-                              overlayStyle={{ minWidth: "80%" }}
-                              menu={menu}
-                              overlayClassName="full-width-dropdown"
-                              on
-                            >
-                              <Space>
-                                <span
-                                  style={{
-                                    fontSize: ".9rem",
-                                    color: "#ACAEB2",
-                                  }}
-                                >
-                                  {newValues?.category
-                                    ? capitalizeFirstLetter(newValues?.category)
-                                    : "Select Genre"}
-                                </span>
-                                <Caret>
-                                  <FaCaretDown />
-                                </Caret>
-                              </Space>
-                            </Dropdown>
-                          </AmountInputDropdown>
-                          <AmountInputDropdown2>
-                            <Dropdown
-                              trigger={["click"]}
-                              overlayStyle={{ minWidth: "80%" }}
-                              menu={menuGameCompleted}
-                              overlayClassName="full-width-dropdown"
-                            >
-                              <Space>
-                                <span
-                                  style={{
-                                    fontSize: ".9rem",
-                                    color: "#ACAEB2",
-                                  }}
-                                >
-                                  {newValues?.completed
-                                    ? capitalizeFirstLetter(
-                                        newValues?.completed
-                                      )
-                                    : "Select Type"}
-                                </span>
-                                <Caret>
-                                  <FaCaretDown />
-                                </Caret>
-                              </Space>
-                            </Dropdown>
-                          </AmountInputDropdown2>
-                          <AmountInput>
-                            <Rupees>
-                              <FaIndianRupeeSign />
-                            </Rupees>
-                            <input
-                              type="number"
-                              inputMode="numeric"
-                              value={newValues?.amount}
-                              onChange={(e) => {
-                                setNewValues((old) => ({
-                                  ...old,
-                                  amount: String(e.target.value),
-                                }));
-                              }}
-                            />
-                          </AmountInput>
-                          <AmountInputDropdown>
-                            <input
-                              type="text"
-                              value={newValues?.title}
-                              onChange={(e) => {
-                                setNewValues((old) => ({
-                                  ...old,
-                                  title: String(e.target.value),
-                                }));
-                              }}
-                            />
-                          </AmountInputDropdown>
-                          <MonthSelection>
-                            <DatePicker
-                              style={{
-                                width: "100%",
-                                backgroundColor: "#1f2125",
-                                padding: "0.5rem 1rem",
-                                outline: "none",
-                                border: "none",
-                              }}
-                              format="DD-MM-YYYY"
-                              inputReadOnly
-                              value={dayjs(newValues?.date)}
-                              picker="date"
-                              onChange={(e) => {
-                                setNewValues((old) => ({
-                                  ...old,
-                                  date: dayjs(e),
-                                }));
-                              }}
-                              onFocus={(e) => e.preventDefault()}
-                            />
-                          </MonthSelection>
-                          <RatingItem>
-                            <Rate
-                              value={newValues?.rating}
-                              onChange={(e) => {
-                                setNewValues((old) => ({
-                                  ...old,
-                                  rating: String(e),
-                                }));
-                              }}
-                            />
-                          </RatingItem>
-                          <SaveButton onClick={() => updateGameValue()}>
-                            Save Game
-                          </SaveButton>
-                        </AddAmount>
-                      }
-                    >
-                      <Genre
-                        color={GAME_COLORS[game?.platform ?? "None"]}
-                        onClick={() => {
-                          setNewValues(game);
-                        }}
+                    {false && (
+                      <Popover
+                        trigger={"click"}
+                        placement="left"
+                        content={
+                          <AddAmount>
+                            <TitleMain>Edit Game</TitleMain>
+                            <AmountInputDropdown2>
+                              <Dropdown
+                                trigger={["click"]}
+                                overlayStyle={{ minWidth: "80%" }}
+                                menu={menuGamePlatform}
+                                overlayClassName="full-width-dropdown"
+                              >
+                                <Space>
+                                  <span
+                                    style={{
+                                      fontSize: ".9rem",
+                                      color: "#ACAEB2",
+                                    }}
+                                  >
+                                    {newValues?.platform
+                                      ? capitalizeFirstLetter(
+                                          newValues?.platform
+                                        )
+                                      : "Select Type"}
+                                  </span>
+                                  <Caret>
+                                    <FaCaretDown />
+                                  </Caret>
+                                </Space>
+                              </Dropdown>
+                            </AmountInputDropdown2>
+                            <AmountInputDropdown>
+                              <Dropdown
+                                trigger={["click"]}
+                                overlayStyle={{ minWidth: "80%" }}
+                                menu={menu}
+                                overlayClassName="full-width-dropdown"
+                                on
+                              >
+                                <Space>
+                                  <span
+                                    style={{
+                                      fontSize: ".9rem",
+                                      color: "#ACAEB2",
+                                    }}
+                                  >
+                                    {newValues?.category
+                                      ? capitalizeFirstLetter(
+                                          newValues?.category
+                                        )
+                                      : "Select Genre"}
+                                  </span>
+                                  <Caret>
+                                    <FaCaretDown />
+                                  </Caret>
+                                </Space>
+                              </Dropdown>
+                            </AmountInputDropdown>
+                            <AmountInputDropdown2>
+                              <Dropdown
+                                trigger={["click"]}
+                                overlayStyle={{ minWidth: "80%" }}
+                                menu={menuGameCompleted}
+                                overlayClassName="full-width-dropdown"
+                              >
+                                <Space>
+                                  <span
+                                    style={{
+                                      fontSize: ".9rem",
+                                      color: "#ACAEB2",
+                                    }}
+                                  >
+                                    {newValues?.completed
+                                      ? capitalizeFirstLetter(
+                                          newValues?.completed
+                                        )
+                                      : "Select Type"}
+                                  </span>
+                                  <Caret>
+                                    <FaCaretDown />
+                                  </Caret>
+                                </Space>
+                              </Dropdown>
+                            </AmountInputDropdown2>
+                            <AmountInput>
+                              <Rupees>
+                                <FaIndianRupeeSign />
+                              </Rupees>
+                              <input
+                                type="number"
+                                inputMode="numeric"
+                                value={newValues?.amount}
+                                onChange={(e) => {
+                                  setNewValues((old) => ({
+                                    ...old,
+                                    amount: String(e.target.value),
+                                  }));
+                                }}
+                              />
+                            </AmountInput>
+                            <AmountInputDropdown>
+                              <input
+                                type="text"
+                                value={newValues?.title}
+                                onChange={(e) => {
+                                  setNewValues((old) => ({
+                                    ...old,
+                                    title: String(e.target.value),
+                                  }));
+                                }}
+                              />
+                            </AmountInputDropdown>
+                            <MonthSelection>
+                              <DatePicker
+                                style={{
+                                  width: "100%",
+                                  backgroundColor: "#1f2125",
+                                  padding: "0.5rem 1rem",
+                                  outline: "none",
+                                  border: "none",
+                                }}
+                                format="DD-MM-YYYY"
+                                inputReadOnly
+                                value={dayjs(newValues?.date)}
+                                picker="date"
+                                onChange={(e) => {
+                                  setNewValues((old) => ({
+                                    ...old,
+                                    date: dayjs(e),
+                                  }));
+                                }}
+                                onFocus={(e) => e.preventDefault()}
+                              />
+                            </MonthSelection>
+                            <RatingItem>
+                              <Rate
+                                value={newValues?.rating}
+                                onChange={(e) => {
+                                  setNewValues((old) => ({
+                                    ...old,
+                                    rating: String(e),
+                                  }));
+                                }}
+                              />
+                            </RatingItem>
+                            <SaveButton onClick={() => updateGameValue()}>
+                              Save Game
+                            </SaveButton>
+                          </AddAmount>
+                        }
                       >
-                        {game?.platform?.toUpperCase() ?? "NONE"}
-                      </Genre>
-                    </Popover>
+                        <Genre
+                          color={GAME_COLORS[platform ?? "None"]}
+                          onClick={() => {
+                            setNewValues(game);
+                          }}
+                        >
+                          {platform?.toUpperCase() ?? "NONE"}
+                        </Genre>
+                      </Popover>
+                    )}
                   </RightTop>
                   <RightBottom></RightBottom>
                 </Right>
-                <Popconfirm
-                  placement="left"
-                  onConfirm={() => {
-                    deleteSpending(game?._id);
-                  }}
-                  content={<div>DELETE</div>}
-                  title={<Title>Delete Game</Title>}
-                >
-                  <Delete>
-                    <HiOutlineDotsVertical />
-                  </Delete>
-                </Popconfirm>
+                {false && (
+                  <Popconfirm
+                    placement="left"
+                    onConfirm={() => {
+                      deleteSpending(game?._id);
+                    }}
+                    content={<div>DELETE</div>}
+                    title={<Title>Delete Game</Title>}
+                  >
+                    <Delete>
+                      <HiOutlineDotsVertical />
+                    </Delete>
+                  </Popconfirm>
+                )}
               </GameContainer>
             );
           })}
       </Container>
     );
 }
+
+const ExtraInfo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0rem;
+  flex-direction: column;
+  position: absolute;
+  right: 0;
+  top: 0;
+`;
 
 const RateContainer = styled.div`
   display: flex;
@@ -431,11 +481,15 @@ const Icon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 150px;
+  height: 80px;
   font-size: 1.5rem;
   margin-right: 1rem;
+  background: ${(props) => `url(${props.image})`};
+  background-size: contain;
+  background-repeat: no-repeat;
   color: ${(props) => props.color};
+  position: relative;
 `;
 
 const Delete = styled.div`
@@ -469,15 +523,20 @@ const MainGenre = styled.div`
 `;
 
 const MainStatus = styled.div`
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   font-size: 0.8rem;
-  width: 100%;
   color: ${(props) => props.color};
 `;
 
 const Genre = styled.div`
+  position: absolute;
+  left: 4px;
+  bottom: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -500,9 +559,9 @@ const Title = styled.div`
 const GameContainer = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 0.25rem;
   background-color: #1f2125;
   border-radius: 0.5rem;
   margin-bottom: 1rem;
