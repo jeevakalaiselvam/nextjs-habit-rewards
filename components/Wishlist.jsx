@@ -38,7 +38,7 @@ const MAPPING_ORDER = {
   4: "COMPLETED",
   5: "RELEASE",
   6: "RATING",
-  8: "IMAGE",
+  7: "IMAGE",
 };
 
 export default function Wishlist({
