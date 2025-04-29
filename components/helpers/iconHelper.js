@@ -258,6 +258,7 @@ export const GAME_COLORS = {
   NEW: "#de5050",
   TRIED: "#FF6347",
   INPROG: "#FDAC46",
+  TARGET: "#FDAC46",
   DONE: "#3BD987",
   NONE: "#b0e6f0",
   GAMEPASS: "#3BD987",

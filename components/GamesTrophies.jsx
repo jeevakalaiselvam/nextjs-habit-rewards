@@ -18,7 +18,7 @@ export default function GamesTrophies({
     if (game?.COMPLETED == "NEW") {
       started++;
     }
-    if (game?.COMPLETED == "INPROG") {
+    if (game?.COMPLETED == "TARGET") {
       inprog++;
     }
     if (game?.COMPLETED == "TRIED") {
@@ -38,9 +38,9 @@ export default function GamesTrophies({
         onClick={() => {
           setActiveTabGame(0);
         }}
-        color={activeTabGame == 0 ? GAME_COLORS?.["INPROG"] : "#757575"}
+        color={activeTabGame == 0 ? GAME_COLORS?.["TARGET"] : "#757575"}
       >
-        <Name>INPROG</Name>
+        <Name>TARGET</Name>
         <Trophy>
           <FaTrophy />
         </Trophy>
