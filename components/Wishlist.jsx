@@ -30,6 +30,7 @@ import {
   stringToColor,
 } from "./helpers/colorHelper";
 import GamesTrophies from "./GamesTrophies";
+import MoneySaved from "./MoneySaved";
 
 const MAPPING_ORDER = {
   0: "PLATFORM",
@@ -38,7 +39,8 @@ const MAPPING_ORDER = {
   3: "COMPLETED",
   4: "RELEASE",
   5: "RATING",
-  6: "IMAGE",
+  6: "SAVED",
+  7: "IMAGE",
 };
 
 export default function Wishlist({
@@ -414,6 +416,9 @@ export default function Wishlist({
               );
             })}
         </OtherContainer>
+        <TotalContainer>
+          <MoneySaved games={games} />
+        </TotalContainer>
       </Container>
     );
 }
@@ -586,6 +591,17 @@ const TotalContainer = styled.div`
   position: relative;
 `;
 
+const MoneyContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.25rem 0.25rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+  position: relative;
+`;
+
 const OtherContainer = styled.div`
   display: flex;
   align-items: center;
@@ -594,8 +610,8 @@ const OtherContainer = styled.div`
   padding: 0.25rem 0.25rem;
   border-radius: 0.5rem;
   margin-bottom: 0.5rem;
-  min-height: 80vh;
-  max-height: 80vh;
+  min-height: 73vh;
+  max-height: 73vh;
   overflow: scroll;
   flex-direction: column;
 `;
