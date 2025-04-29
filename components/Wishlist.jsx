@@ -619,7 +619,7 @@ const MoneyContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 0.5rem 0.25rem;
+  padding: 0.5rem 0.25rem 2rem 0.25rem;
   border-radius: 0.5rem;
   margin-bottom: 0.5rem;
   position: relative;
@@ -632,8 +632,8 @@ const OtherContainer = styled.div`
   width: 100%;
   padding: 0.25rem 0.25rem;
   border-radius: 0.5rem;
-  min-height: 71vh;
-  max-height: 71vh;
+  min-height: 70vh;
+  max-height: 70vh;
   overflow: scroll;
   flex-direction: column;
 `;
