@@ -56,7 +56,7 @@ import Games from "../components/Games";
 const defaultFilter = { rating: "0" };
 
 export default function MoneyTracker() {
-  const [activeMode, setActiveMode] = useState(0);
+  const [activeMode, setActiveMode] = useState(1);
   const [activeTab, setActiveTab] = useState(0);
   const [activeTabGame, setActiveTabGame] = useState(0);
   const [showEntry, setShowEntry] = useState(false);

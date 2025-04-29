@@ -7,6 +7,9 @@ import {
   CARD_BACKGROUND,
   COLOR_BACKGROUND,
 } from "../components/helpers/colorHelper";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "../store/store";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -59,7 +62,12 @@ function MyApp({ Component, pageProps }) {
           },
         }}
       >
-        <Component {...pageProps} />
+        {" "}
+        <Provider store={store}>
+          <PersistGate loading={null} persistor={persistor}>
+            <Component {...pageProps} />{" "}
+          </PersistGate>
+        </Provider>
       </ConfigProvider>
     </>
   );
