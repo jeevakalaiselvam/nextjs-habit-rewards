@@ -264,4 +264,6 @@ export const GAME_COLORS = {
   NONE: "#b0e6f0",
   GAMEPASS: "#3BD987",
   REPLAY: "#b991ff",
+  RED: "#FE6662",
+  GREEN: "#3BD987",
 };

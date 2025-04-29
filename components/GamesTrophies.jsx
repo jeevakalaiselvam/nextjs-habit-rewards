@@ -21,7 +21,7 @@ export default function GamesTrophies({
     if (game?.COMPLETED == "TARGET") {
       inprog++;
     }
-    if (game?.COMPLETED == "BORING") {
+    if (game?.COMPLETED == "TRIED") {
       boring++;
     }
     if (game?.COMPLETED == "DONE") {
@@ -88,7 +88,7 @@ export default function GamesTrophies({
         }}
         color={activeTabGame == 3 ? GAME_COLORS?.["TRIED"] : "#757575"}
       >
-        <Name>TRIED</Name>
+        <Name>MEH</Name>
         <Trophy>
           <FaTrophy />
         </Trophy>

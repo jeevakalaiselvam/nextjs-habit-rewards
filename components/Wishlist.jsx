@@ -169,7 +169,7 @@ export default function Wishlist({
         return game?.RATING == ratingToFilter || ratingToFilter == "0";
       })
       ?.filter((game) => {
-        return game?.COMPLETED == "BORING";
+        return game?.COMPLETED == "TRIED";
       });
   } else if (activeTabGame == 4) {
     gamesToShow = games
@@ -214,6 +214,15 @@ export default function Wishlist({
                     >
                       {game?.PLATFORM?.toUpperCase() ?? "NONE"}
                     </Genre>
+                    <Price
+                      color={
+                        Number(game?.SAVED ?? 0) <= 0
+                          ? GAME_COLORS?.["GREEN"]
+                          : GAME_COLORS?.["RED"]
+                      }
+                    >
+                      {Math.abs(Number(game?.SAVED ?? 0))} Rs
+                    </Price>
                   </Icon>
                   <Title>
                     <MainTitle>{game?.NAME}</MainTitle>
@@ -569,6 +578,20 @@ const Genre = styled.div`
   color: ${(props) => "#000"};
   padding: 0.25rem 0.5rem;
   margin-right: 1rem;
+  font-size: 0.6rem;
+`;
+
+const Price = styled.div`
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background-color: ${(props) => (props.color ? props.color : "#3c4247")};
+  color: ${(props) => "#000"};
+  padding: 0.25rem 0.5rem;
   font-size: 0.6rem;
 `;
 

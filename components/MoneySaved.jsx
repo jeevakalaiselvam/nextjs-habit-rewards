@@ -4,19 +4,20 @@ import { FaIndianRupeeSign } from "react-icons/fa6";
 
 export default function MoneySaved({ games }) {
   const saved = games?.reduce((acc, game) => {
+    console.log("CHECKING", Number(game?.SAVED ?? 0), "<", 0, acc);
     if (Number(game?.SAVED ?? 0) < 0) {
       return acc + Number(game?.SAVED ?? 0);
     } else {
-      return 0;
+      return acc + 0;
     }
   }, 0);
 
   console.log(saved);
   const spent = games?.reduce((acc, game) => {
-    if (Number(game?.SAVED ?? 0) > 0) {
+    if (Number(game?.SAVED ?? 0) >= 0) {
       return acc + Number(game?.SAVED ?? 0);
     } else {
-      return 0;
+      return acc + 0;
     }
   }, 0);
 
@@ -28,7 +29,7 @@ export default function MoneySaved({ games }) {
           <span style={{ fontSize: "1.5rem", transform: "translateY(2px)" }}>
             <FaIndianRupeeSign />
           </span>
-          {saved}
+          {Math.abs(saved)}
         </MainTitle>
       </Left>
       <Right>
@@ -37,7 +38,7 @@ export default function MoneySaved({ games }) {
           <span style={{ fontSize: "1.5rem", transform: "translateY(2px)" }}>
             <FaIndianRupeeSign />
           </span>
-          {spent}
+          {Math.abs(spent)}
         </MainTitle>
       </Right>
     </Container>
@@ -73,6 +74,7 @@ const Left = styled.div`
   flex-direction: column;
   flex: 1;
   background-color: #04b488;
+  padding-bottom: 1rem;
 `;
 
 const SubTitleL = styled.div`
@@ -103,6 +105,7 @@ const Right = styled.div`
   flex-direction: column;
   flex: 1;
   background-color: #fe6662;
+  padding-bottom: 1rem;
 `;
 
 const Container = styled.div`
