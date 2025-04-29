@@ -1,71 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchAllGames } from "../store/gameSlice";
+import { fetchAllGames, selectGame } from "../store/gameSlice";
 import styled from "styled-components";
 import Select from "react-select";
 import { HEADER_IMAGE } from "./helpers/urlHelper";
-import { Progress } from "antd";
+import { Progress, Spin } from "antd";
 import { FaTrophy } from "react-icons/fa";
+import { LoadingOutlined } from "@ant-design/icons";
+import GameCompletion from "./GameCompletion";
 
-export default function Home() {
+export default function Games({ setActiveTab }) {
   const dispatch = useDispatch();
   const { habittracker } = useSelector((state) => state);
-  const { games } = habittracker;
-
-  const [selectedGame, setSelectedGame] = useState(games?.[0]?.id);
+  const { games, loading } = habittracker;
 
   const refreshGames = () => {
-    console.log("CALLING GAMES");
     dispatch(fetchAllGames());
-  };
-
-  const darkThemeStyles = {
-    control: (base) => ({
-      ...base,
-      backgroundColor: "#2c2f33",
-      borderColor: "#555",
-      color: "#fff",
-    }),
-    menu: (base) => ({
-      ...base,
-      backgroundColor: "#2c2f33",
-    }),
-    option: (base, state) => ({
-      ...base,
-      backgroundColor: state.isFocused ? "#444" : "#2c2f33",
-      color: "#fff",
-      cursor: "pointer",
-    }),
-    singleValue: (base) => ({
-      ...base,
-      color: "#fff",
-    }),
-    input: (base) => ({
-      ...base,
-      color: "#fff",
-    }),
-    placeholder: (base) => ({
-      ...base,
-      color: "#bbb",
-    }),
   };
 
   useEffect(() => {
     refreshGames();
   }, []);
 
-  const options = [
-    ...games?.map((game) => {
-      return {
-        ...game,
-        value: game?.id,
-        label: `${game?.name} ${game?.completed}/${game?.total}`,
-      };
-    }),
-  ];
-
   const returnGame = ({ name, id, completed, total }) => (
-    <GameContainer>
+    <GameContainer
+      onClick={() => {
+        dispatch(selectGame(id));
+        setActiveTab(1);
+      }}
+    >
       <ImageContainer image={HEADER_IMAGE(id)}></ImageContainer>
       <Data>
         <Name>{name}</Name>
@@ -81,13 +44,19 @@ export default function Home() {
     </GameContainer>
   );
 
-  const NoDropdownIndicator = () => null;
-
-  return (
-    <Container>
-      <TopContainer>{games?.map((game) => returnGame(game))}</TopContainer>
-    </Container>
-  );
+  if (loading)
+    return (
+      <Container>
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+      </Container>
+    );
+  else
+    return (
+      <Container>
+        <GameCompletion games={games} />
+        <TopContainer>{games?.map((game) => returnGame(game))}</TopContainer>
+      </Container>
+    );
 }
 
 const TrophyData = styled.div`
@@ -108,6 +77,7 @@ const Name = styled.div`
   flex-direction: center;
   width: 100%;
   flex: 1;
+  padding-left: 0.25rem;
 `;
 
 const Status = styled.div`
@@ -117,6 +87,7 @@ const Status = styled.div`
   flex-direction: center;
   transform: translateY(2px);
   flex: 1;
+  padding-left: 0.25rem;
 `;
 
 const GameContainer = styled.div`
@@ -125,6 +96,8 @@ const GameContainer = styled.div`
   flex-direction: center;
   background-color: #1f2125;
   padding: 0rem 0.25rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
 `;
 
 const ImageContainer = styled.div`
@@ -153,7 +126,8 @@ const TopContainer = styled.div`
   align-items: center;
   flex-direction: center;
   min-width: 100%;
-  padding: 1rem;
+  padding: 1rem 0.5rem;
+  flex-direction: column;
 `;
 
 const Container = styled.div`

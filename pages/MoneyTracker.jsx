@@ -25,6 +25,7 @@ import {
   HiPlay,
   HiPlus,
   HiPresentationChartLine,
+  HiRefresh,
   HiShieldCheck,
   HiSparkles,
   HiUserCircle,
@@ -52,10 +53,16 @@ import {
   MULTI_OPTIONS,
 } from "../components/helpers/constantHelper";
 import Games from "../components/Games";
+import Achievements from "../components/Achievements";
+import { useDispatch, useSelector } from "react-redux";
+import { RiRefreshLine } from "react-icons/ri";
+import { fetchAllGames } from "../store/gameSlice";
+import { TbRefreshDot } from "react-icons/tb";
 
 const defaultFilter = { rating: "0" };
 
 export default function MoneyTracker() {
+  const dispatch = useDispatch();
   const [activeMode, setActiveMode] = useState(1);
   const [activeTab, setActiveTab] = useState(0);
   const [activeTabGame, setActiveTabGame] = useState(0);
@@ -66,7 +73,12 @@ export default function MoneyTracker() {
   const [filterOption, setFilterOption] = useState(defaultFilter);
   const [open, setOpen] = useState(false);
 
+  const { habittracker } = useSelector((state) => state);
+  const { games, selectedGameId } = habittracker;
+  const game = games?.find((game) => game?.id == selectedGameId);
+
   let title = "";
+  let lowFont = false;
 
   if (activeTab == 0 && activeMode == 0) {
     title = "Income";
@@ -106,6 +118,15 @@ export default function MoneyTracker() {
 
   if (activeTabGame == 5 && activeMode == 1) {
     title = "All Games";
+  }
+
+  if (activeMode == 1 && activeTab == 0) {
+    title = "Games";
+  }
+
+  if (activeMode == 1 && activeTab == 1) {
+    title = game?.name;
+    lowFont = true;
   }
 
   const refreshExpense = () => {
@@ -159,7 +180,7 @@ export default function MoneyTracker() {
         </EntryModal>
       )}
       <Header>
-        <Name>{title}</Name>
+        <Name lowFont={lowFont}>{title}</Name>
         {activeMode == 0 && (
           <Picker>
             <DatePicker
@@ -180,7 +201,7 @@ export default function MoneyTracker() {
             />
           </Picker>
         )}
-        {activeMode == 1 && (
+        {activeMode == 1 && false && (
           <Picker>
             <Popover
               trigger={"click"}
@@ -224,22 +245,67 @@ export default function MoneyTracker() {
             <HiClipboardCheck />
           </ModeIcon>
         )}
-        {activeMode == 1 && false && (
+        {activeMode == 1 && (
           <ModeIcon onClick={() => setActiveMode(0)}>
             <FaGamepad />
           </ModeIcon>
+        )}
+        {activeMode == 1 && (
+          <ModeIcon1
+            onClick={() => {
+              dispatch(fetchAllGames());
+            }}
+          >
+            <TbRefreshDot />
+          </ModeIcon1>
         )}
       </Header>
       {activeMode == 1 && (
         <>
           <Content showEntry={showEntry}>
-            <Games
-              activeTabGame={activeTabGame}
-              setActiveTabGame={setActiveTabGame}
-              forceRefreshGame={forceRefreshGame}
-              filterOption={filterOption}
-            />
+            {activeTab == 0 && (
+              <Games
+                activeTabGame={activeTabGame}
+                setActiveTab={setActiveTab}
+                forceRefreshGame={forceRefreshGame}
+                filterOption={filterOption}
+              />
+            )}
+            {activeTab == 1 && (
+              <Achievements
+                activeTabGame={activeTabGame}
+                setActiveTab={setActiveTab}
+                forceRefreshGame={forceRefreshGame}
+                filterOption={filterOption}
+              />
+            )}
           </Content>
+          <Bottom>
+            <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
+              <HiViewBoards />{" "}
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                GAMES
+              </span>
+            </Icon>
+            <Icon onClick={() => setActiveTab(1)} data-active={activeTab == 1}>
+              <HiChartPie />{" "}
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                ACHIEVEMENTS
+              </span>
+            </Icon>
+          </Bottom>
         </>
       )}
       {activeMode == 0 && (
@@ -390,6 +456,17 @@ const ModeIcon = styled.div`
   color: #52b8da;
 `;
 
+const ModeIcon1 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  font-size: 1.5rem;
+  margin-left: 1rem;
+  color: #52b8da;
+`;
+
 const Picker = styled.div`
   display: flex;
   align-items: center;
@@ -400,8 +477,9 @@ const Picker = styled.div`
 const Name = styled.div`
   display: flex;
   align-items: center;
+  flex: 1;
   justify-content: flex-start;
-  font-size: 2rem;
+  font-size: ${(props) => (props.lowFont ? "1.25rem" : "2rem")};
   transform: translate(-10px, -0px);
   text-shadow: 0 0 1px white, 0 0 1px rgba(255, 255, 255.25),
     0 0 1px rgba(255, 255, 255.25);
@@ -486,7 +564,7 @@ const Header = styled.div`
   align-items: center;
   justify-content: center;
   height: 70px;
-  padding: 1rem 2rem;
+  padding: 1rem 1rem 1rem 2rem;
   background-color: #141414;
 `;
 

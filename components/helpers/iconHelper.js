@@ -266,4 +266,7 @@ export const GAME_COLORS = {
   REPLAY: "#b991ff",
   RED: "#FE6662",
   GREEN: "#3BD987",
+  PLATINUM: "#60a5ff",
+  GOLD: "#FDAC46",
+  EPIC: "#b991ff",
 };

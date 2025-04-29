@@ -17,10 +17,14 @@ const gamesSlice = createSlice({
     games: [],
     loading: false,
     error: null,
+    selectedGameId: "",
   },
   reducers: {
     resetGames: (state) => {
       state.games = [];
+    },
+    selectGame: (state, action) => {
+      state.selectedGameId = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -40,5 +44,5 @@ const gamesSlice = createSlice({
   },
 });
 
-export const { resetGames } = gamesSlice.actions;
+export const { resetGames, selectGame } = gamesSlice.actions;
 export default gamesSlice.reducer;
