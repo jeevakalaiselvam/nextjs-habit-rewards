@@ -169,7 +169,7 @@ export default function Wishlist({
         return game?.RATING == ratingToFilter || ratingToFilter == "0";
       })
       ?.filter((game) => {
-        return game?.COMPLETED == "TRIED";
+        return game?.COMPLETED == "BORING";
       });
   } else if (activeTabGame == 4) {
     gamesToShow = games
@@ -416,9 +416,9 @@ export default function Wishlist({
               );
             })}
         </OtherContainer>
-        <TotalContainer>
+        <MoneyContainer>
           <MoneySaved games={games} />
-        </TotalContainer>
+        </MoneyContainer>
       </Container>
     );
 }
@@ -596,7 +596,7 @@ const MoneyContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 0.25rem 0.25rem;
+  padding: 0.5rem 0.25rem;
   border-radius: 0.5rem;
   margin-bottom: 0.5rem;
   position: relative;
@@ -609,9 +609,8 @@ const OtherContainer = styled.div`
   width: 100%;
   padding: 0.25rem 0.25rem;
   border-radius: 0.5rem;
-  margin-bottom: 0.5rem;
-  min-height: 73vh;
-  max-height: 73vh;
+  min-height: 71vh;
+  max-height: 71vh;
   overflow: scroll;
   flex-direction: column;
 `;
@@ -636,7 +635,6 @@ const Container = styled.div`
   width: 100%;
   min-height: 80vh;
   max-height: 80vh;
-  padding: 0.5rem;
 `;
 
 const Picker1 = styled.div`

@@ -21,7 +21,7 @@ export default function GamesTrophies({
     if (game?.COMPLETED == "TARGET") {
       inprog++;
     }
-    if (game?.COMPLETED == "TRIED") {
+    if (game?.COMPLETED == "BORING") {
       boring++;
     }
     if (game?.COMPLETED == "DONE") {
