@@ -55,7 +55,7 @@ import {
 const defaultFilter = { rating: "0" };
 
 export default function MoneyTracker() {
-  const [activeMode, setActiveMode] = useState(1);
+  const [activeMode, setActiveMode] = useState(0);
   const [activeTab, setActiveTab] = useState(0);
   const [activeTabGame, setActiveTabGame] = useState(0);
   const [showEntry, setShowEntry] = useState(false);
@@ -219,11 +219,11 @@ export default function MoneyTracker() {
           </Picker>
         )}
         {activeMode == 0 && (
-          <ModeIcon onClick={() => setActiveMode(1)}>
-            <HiViewList />
+          <ModeIcon onClick={() => setActiveMode(0)}>
+            <HiClipboardCheck />
           </ModeIcon>
         )}
-        {activeMode == 1 && (
+        {activeMode == 1 && false && (
           <ModeIcon onClick={() => setActiveMode(0)}>
             <FaGamepad />
           </ModeIcon>
