@@ -51,6 +51,7 @@ import {
   GAME_RATING_OPTIONS,
   MULTI_OPTIONS,
 } from "../components/helpers/constantHelper";
+import Games from "../components/Games";
 
 const defaultFilter = { rating: "0" };
 
@@ -219,7 +220,7 @@ export default function MoneyTracker() {
           </Picker>
         )}
         {activeMode == 0 && (
-          <ModeIcon onClick={() => setActiveMode(0)}>
+          <ModeIcon onClick={() => setActiveMode(1)}>
             <HiClipboardCheck />
           </ModeIcon>
         )}
@@ -232,7 +233,7 @@ export default function MoneyTracker() {
       {activeMode == 1 && (
         <>
           <Content showEntry={showEntry}>
-            <Wishlist
+            <Games
               activeTabGame={activeTabGame}
               setActiveTabGame={setActiveTabGame}
               forceRefreshGame={forceRefreshGame}
