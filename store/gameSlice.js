@@ -11,12 +11,38 @@ export const fetchAllGames = createAsyncThunk(
   }
 );
 
+export const fetchAllGamesForIds = createAsyncThunk(
+  "games/fetchAllGamesForIds",
+  async (gameIds, { rejectWithValue }) => {
+    console.log("Calling for", gameIds);
+    try {
+      const res = await fetch("/api/steam", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ gameIds }),
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch games");
+
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  }
+);
+
 const gamesSlice = createSlice({
   name: "habittracker",
   initialState: {
     games: [],
     loading: false,
     error: null,
+    steamGames: [],
+    steamError: null,
+    steamLoading: false,
     selectedGameId: "",
   },
   reducers: {
@@ -29,17 +55,17 @@ const gamesSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAllGames.pending, (state) => {
+      .addCase(fetchAllGamesForIds.pending, (state) => {
         state.loading = true;
-        state.games = [];
+        state.steamGames = [];
       })
-      .addCase(fetchAllGames.fulfilled, (state, action) => {
+      .addCase(fetchAllGamesForIds.fulfilled, (state, action) => {
         state.loading = false;
-        state.games = action.payload?.data;
+        state.steamGames = action.payload?.data;
       })
-      .addCase(fetchAllGames.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message;
+      .addCase(fetchAllGamesForIds.rejected, (state, action) => {
+        state.steamLoading = false;
+        state.steamError = action.error.message;
       });
   },
 });

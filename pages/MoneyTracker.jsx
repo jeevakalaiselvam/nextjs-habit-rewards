@@ -48,7 +48,7 @@ import { Button, DatePicker, Popover, Select } from "antd";
 import dayjs from "dayjs";
 import WalletEMI from "../components/moneytracker/WalletEMI";
 import { MdAccessTimeFilled, MdVideogameAsset } from "react-icons/md";
-import Wishlist from "../components/Wishlist";
+import Wishlist, { MAPPING_ORDER } from "../components/Wishlist";
 import EntryGame from "../components/moneytracker/EntryGame";
 import {
   GAME_RATING_OPTIONS,
@@ -58,10 +58,12 @@ import Games from "../components/Games";
 import Achievements from "../components/Achievements";
 import { useDispatch, useSelector } from "react-redux";
 import { RiRefreshLine } from "react-icons/ri";
-import { fetchAllGames } from "../store/gameSlice";
+import { fetchAllGames, fetchAllGamesForIds } from "../store/gameSlice";
 import { TbRefreshDot } from "react-icons/tb";
 import MoneySaved from "../components/MoneySaved";
 import { IoGameControllerSharp } from "react-icons/io5";
+import AchievementsOffline from "../components/AchievementsOffline";
+import axios from "axios";
 
 const defaultFilter = { rating: "0" };
 
@@ -80,6 +82,10 @@ export default function MoneyTracker() {
   const { habittracker } = useSelector((state) => state);
   const { games, selectedGameId } = habittracker;
   const game = games?.find((game) => game?.id == selectedGameId);
+
+  const [excelGames, setExcelGames] = useState([]);
+  const [loading, setLoading] = useState([]);
+  const { steamGames, steamLoading } = habittracker;
 
   let title = "";
   let lowFont = false;
@@ -174,6 +180,39 @@ export default function MoneyTracker() {
     }
   }, []);
 
+  const refreshGames = () => {
+    setLoading(true);
+    axios.get("/api/sheet").then((response) => {
+      let gamesInner = response?.data?.rows?.slice(1) ?? [];
+      let gamesMorphed = gamesInner?.map((singleGame) => {
+        let mainGame = {};
+        Object.keys(MAPPING_ORDER).forEach((index) => {
+          mainGame[MAPPING_ORDER[index]] = singleGame?.[index];
+        });
+        return mainGame;
+      });
+      gamesMorphed = gamesMorphed?.map((game) => {
+        let newGame = { ...game };
+        if (
+          game?.IMAGE?.includes(
+            "https://shared.cloudflare.steamstatic.com/store_item_assets/steam/apps/"
+          )
+        ) {
+          const match = game?.IMAGE?.match(/\/apps\/(\d+)\//);
+          newGame.gameId = match ? match[1] : "";
+        }
+        return newGame;
+      });
+      console.log({ gamesMorphed });
+      setExcelGames(gamesMorphed);
+      setLoading(false);
+    });
+  };
+
+  useEffect(() => {
+    refreshGames();
+  }, []);
+
   return (
     <Container>
       {showEntry && (activeTab == 1 || activeTab == 0) && activeMode == 0 && (
@@ -230,45 +269,6 @@ export default function MoneyTracker() {
             />
           </Picker>
         )}
-        {activeMode == 1 && false && (
-          <Picker>
-            <Popover
-              trigger={"click"}
-              placement="left"
-              content={
-                <FilterOption>
-                  <Title>Rating</Title>
-                  <Option>
-                    <Select
-                      value={filterOption?.rating}
-                      style={{
-                        width: "100%",
-                        height: "40px",
-                        marginTop: "1rem",
-                      }}
-                      onChange={(option) => {
-                        setFilterOption((old) => ({
-                          ...old,
-                          rating: option,
-                        }));
-                      }}
-                      options={GAME_RATING_OPTIONS}
-                    />
-                  </Option>
-                  <Apply
-                    onClick={() => {
-                      refreshGame();
-                    }}
-                  >
-                    Refresh
-                  </Apply>
-                </FilterOption>
-              }
-            >
-              <HiDotsVertical />
-            </Popover>
-          </Picker>
-        )}
         {activeMode == 0 && (
           <ModeIcon onClick={() => setActiveMode(1)}>
             <HiTemplate />
@@ -287,7 +287,13 @@ export default function MoneyTracker() {
         {activeMode == 1 && (
           <ModeIcon1
             onClick={() => {
-              dispatch(fetchAllGames());
+              if (activeTab == 0) {
+                refreshGames();
+              } else {
+                dispatch(
+                  fetchAllGamesForIds(excelGames?.map((game) => game?.gameId))
+                );
+              }
             }}
           >
             <TbRefreshDot />
@@ -296,14 +302,78 @@ export default function MoneyTracker() {
       </Header>
       {activeMode == 1 && (
         <>
-          <Content showEntry={showEntry}>
-            <Wishlist
-              activeTabGame={activeTabGame}
-              setActiveTabGame={setActiveTabGame}
-              forceRefreshGame={forceRefreshGame}
-              filterOption={filterOption}
-            />
-          </Content>
+          {activeTab == 0 && (
+            <Content showEntry={showEntry}>
+              <Wishlist
+                activeTabGame={activeTabGame}
+                setActiveTabGame={setActiveTabGame}
+                setActiveTab={setActiveTab}
+                forceRefreshGame={forceRefreshGame}
+                filterOption={filterOption}
+                setForceRefreshGame={setForceRefreshGame}
+                excelGames={excelGames}
+                loading={loading}
+              />
+            </Content>
+          )}
+          {activeTab == 1 && (
+            <Content showEntry={showEntry}>
+              <AchievementsOffline
+                activeTabGame={activeTabGame}
+                setActiveTabGame={setActiveTabGame}
+                forceRefreshGame={forceRefreshGame}
+                filterOption={filterOption}
+              />
+            </Content>
+          )}
+          {activeTab == 2 && (
+            <Content showEntry={showEntry}>
+              <AchievementsOffline
+                activeTabGame={activeTabGame}
+                setActiveTabGame={setActiveTabGame}
+                forceRefreshGame={forceRefreshGame}
+                filterOption={filterOption}
+              />
+            </Content>
+          )}
+          <Bottom>
+            <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
+              <HiViewBoards />{" "}
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                GAMES
+              </span>
+            </Icon>
+            <Icon onClick={() => setActiveTab(1)} data-active={activeTab == 1}>
+              <HiChartPie />{" "}
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                ACHIEVEMENTS
+              </span>
+            </Icon>
+            <Icon onClick={() => setActiveTab(2)} data-active={activeTab == 2}>
+              <FaTrophy />{" "}
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                RECENT
+              </span>
+            </Icon>
+          </Bottom>
         </>
       )}
       {activeMode == 2 && (

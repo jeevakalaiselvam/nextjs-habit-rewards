@@ -31,8 +31,10 @@ import {
 } from "./helpers/colorHelper";
 import GamesTrophies from "./GamesTrophies";
 import MoneySaved from "./MoneySaved";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllGamesForIds, selectGame } from "../store/gameSlice";
 
-const MAPPING_ORDER = {
+export const MAPPING_ORDER = {
   0: "PLATFORM",
   1: "GENRE",
   2: "NAME",
@@ -48,32 +50,14 @@ export default function Wishlist({
   activeTabGame,
   filterOption,
   setActiveTabGame,
+  setActiveTab,
+  setForceRefreshGame,
+  excelGames,
+  loading,
 }) {
-  const [games, setGames] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
   const [selectedRating, setSelectedRating] = useState(0);
   const [newValues, setNewValues] = useState({});
-
-  const refreshGames = () => {
-    setLoading(true);
-    axios.get("/api/sheet").then((response) => {
-      let gamesInner = response?.data?.rows?.slice(1) ?? [];
-      let gamesMorphed = gamesInner?.map((singleGame) => {
-        let mainGame = {};
-        Object.keys(MAPPING_ORDER).forEach((index) => {
-          mainGame[MAPPING_ORDER[index]] = singleGame?.[index];
-        });
-        return mainGame;
-      });
-      console.log({ gamesMorphed });
-      setGames(gamesMorphed);
-      setLoading(false);
-    });
-  };
-
-  useEffect(() => {
-    refreshGames();
-  }, [forceRefreshGame]);
 
   const deleteSpending = (gameId) => {
     axios
@@ -135,6 +119,7 @@ export default function Wishlist({
   };
 
   let gamesToShow = [];
+  let games = excelGames;
 
   let ratingToFilter = filterOption?.rating ?? "0";
 
@@ -203,8 +188,14 @@ export default function Wishlist({
           {gamesToShow?.length == 0 && <NoGames>No Results for Filter</NoGames>}
           {gamesToShow?.length > 0 &&
             gamesToShow?.map((game) => {
+              console.log("GAME", { game });
               return (
-                <GameContainer>
+                <GameContainer
+                  onClick={() => {
+                    dispatch(selectGame(game?.gameId));
+                    setActiveTab(1);
+                  }}
+                >
                   <Icon color={stringToColor(game?.NAME)} image={game?.IMAGE}>
                     <Genre
                       color={GAME_COLORS[game?.PLATFORM ?? "None"]}
@@ -632,8 +623,8 @@ const OtherContainer = styled.div`
   width: 100%;
   padding: 0.25rem 0.25rem;
   border-radius: 0.5rem;
-  min-height: 70vh;
-  max-height: 70vh;
+  min-height: 64vh;
+  max-height: 64vh;
   overflow: scroll;
   flex-direction: column;
 `;
