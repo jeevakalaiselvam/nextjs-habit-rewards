@@ -12,7 +12,6 @@ export default function MoneySaved({ games }) {
     }
   }, 0);
 
-  console.log(saved);
   const spent = games?.reduce((acc, game) => {
     if (Number(game?.SAVED ?? 0) >= 0) {
       return acc + Number(game?.SAVED ?? 0);

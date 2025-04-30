@@ -68,7 +68,6 @@ export default function Atom() {
   }, []);
 
   useEffect(() => {
-    console.log("PIN CHANGED");
     if (pin?.length == 4 && !allValidPints?.includes(pin)) {
       error("Not a valid pin !");
     } else {

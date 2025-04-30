@@ -79,13 +79,6 @@ export default function Wallets() {
           let toAddWalletSpendings = allWalletsSpendings?.reduce(
             (acc, wSpending) => {
               if (wSpending?.category == wallet?.id) {
-                console.log({
-                  walletValueFromWeb,
-                  wallet: wallet?.id,
-                  category: wSpending?.category,
-                  acc,
-                  wSpending: wSpending?.amount,
-                });
                 return acc + Number(wSpending?.amount);
               } else {
                 return acc;
@@ -93,8 +86,6 @@ export default function Wallets() {
             },
             0
           );
-
-          console.log("FINAL: ", toAddWalletSpendings);
 
           let walletTotal = walletValueFromWeb + toAddWalletSpendings;
 

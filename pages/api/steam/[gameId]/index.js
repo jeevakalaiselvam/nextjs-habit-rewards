@@ -1,7 +1,6 @@
 import {
   FETCH_ALL_ACHIEVEMENTS_GLOBAL,
   FETCH_ALL_ACHIEVEMENTS_SCHEMA,
-  STEAM_ALL_ACHIEVEMENTS_PLAYER,
 } from "../../../../components/helpers/urlHelper";
 
 const axios = require("axios");
@@ -15,6 +14,9 @@ const handler = async (req, res) => {
       finalGamesResponse = {
         id: gameId,
       };
+
+      //Testing Limit
+      // finalGamesResponse = finalGamesResponse.slice(0, 5);
 
       //Get All Achievements Schema for All Games
       const schemeAchievement = await fetch(
@@ -53,28 +55,6 @@ const handler = async (req, res) => {
       finalGamesResponse = {
         ...finalGamesResponse,
         achievements: newAchievements,
-      };
-
-      const toGet =
-        (newAchievementsInner &&
-          newAchievementsInner.length > 0 &&
-          newAchievementsInner.filter(
-            (achievement) => achievement?.achieved != "1"
-          ).length) ||
-        0;
-      const completionPercentage =
-        (newAchievementsInner &&
-          newAchievementsInner.length > 0 &&
-          100 - Math.floor((toGet / newAchievementsInner.length) * 100)) ||
-        0;
-      finalGamesResponse = {
-        ...finalGamesResponse,
-        name: gameName,
-        achievements: newAchievementsInner,
-        completion: completionPercentage,
-        toGet: toGet,
-        total: newAchievementsInner.length,
-        completed: newAchievementsInner.length - toGet,
       };
       //Get all Games and Refresh data in File
       res.status(200).json({ status: "success", data: finalGamesResponse });

@@ -410,7 +410,6 @@ export default function EntryGame({ setShowEntry, refreshGame, selectedDate }) {
   });
 
   const saveGame = () => {
-    console.log({ values });
     axios
       .post("/api/game", { ...values })
       .then((response) => {

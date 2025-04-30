@@ -201,8 +201,6 @@ function ActivityTracker({ totalCurrentMonthSalary }) {
   let timeAlreadyCompleted = secondsElapsed;
   let timeNeeded = totalTimeInDay - timeAlreadyCompleted;
 
-  console.log({ startInput });
-
   const showStartButtons = !runningActivity && !totalTime;
 
   return (

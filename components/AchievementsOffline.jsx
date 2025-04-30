@@ -15,10 +15,9 @@ export default function AchievementsOffline({ recent }) {
   const dispatch = useDispatch();
   const { habittracker } = useSelector((state) => state);
   const { steamGames, selectedGameId, loading } = habittracker;
-  const game = steamGames?.find((game) => game?.id == selectedGameId);
+  const [game, setGame] = useState({});
   const [hiddenData, setHiddenData] = useState({});
-
-  console.log("SELECT", steamGames);
+  const [completed, setCompleted] = useState({});
 
   let achSorted = [];
 
@@ -41,6 +40,50 @@ export default function AchievementsOffline({ recent }) {
     getHidden();
   }, [selectedGameId]);
 
+  const markAchCompleted = async (achId) => {
+    try {
+      const res = await fetch("/api/achievement", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ gameId: selectedGameId, achievementId: achId }),
+      });
+
+      const data = await res.json();
+      getCompletedAchievements(selectedGameId);
+    } catch (err) {
+      console.error("Error:", err);
+    }
+  };
+
+  const getCompletedAchievements = async (gameId) => {
+    try {
+      const res = await fetch(`/api/achievement?gameId=${gameId}`);
+      const data = await res.json();
+      setCompleted(data);
+    } catch (err) {
+      console.error("Failed to fetch achievements:", err);
+    }
+  };
+
+  useEffect(() => {
+    if (selectedGameId) getCompletedAchievements(selectedGameId);
+  }, [selectedGameId]);
+
+  const getSteamData = (gameId) => {
+    axios
+      .get(`/api/steam/${gameId}`)
+      .then((res) => {
+        setGame(res?.data?.data ?? {});
+      })
+      .then((error) => {});
+  };
+
+  useEffect(() => {
+    getSteamData(selectedGameId);
+  }, [selectedGameId]);
+
   if (loading) {
     return (
       <Container>
@@ -54,17 +97,16 @@ export default function AchievementsOffline({ recent }) {
           <NoAchievements>No Achievements</NoAchievements>
         )}
         {achSorted?.map((ach) => {
-          console.log(ach, hiddenData);
           let hiddenDesc =
             hiddenData?.[ach?.displayName?.toLowerCase().trim()] ??
             ach?.description ??
             "HIDDEN";
 
           return (
-            <AchievementContainer>
+            <AchievementContainer onClick={() => {}}>
               <Icon
                 icon={ach?.icon}
-                onClick={() => {
+                onClick={(e) => {
                   if (true && window !== "undefined") {
                     const searchQuery = `${
                       ach?.displayName
@@ -76,7 +118,11 @@ export default function AchievementsOffline({ recent }) {
                   }
                 }}
               ></Icon>
-              <Data>
+              <Data
+                onClick={() => {
+                  markAchCompleted(ach?.name);
+                }}
+              >
                 <Inner
                   width={ach?.percentage}
                   color={ach?.achieved == 1 ? "#145935" : "#17435c"}

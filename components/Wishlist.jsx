@@ -188,7 +188,6 @@ export default function Wishlist({
           {gamesToShow?.length == 0 && <NoGames>No Results for Filter</NoGames>}
           {gamesToShow?.length > 0 &&
             gamesToShow?.map((game) => {
-              console.log("GAME", { game });
               return (
                 <GameContainer
                   onClick={() => {

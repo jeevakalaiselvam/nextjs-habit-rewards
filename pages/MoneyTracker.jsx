@@ -165,7 +165,6 @@ export default function MoneyTracker() {
   };
 
   const saveFilterInStorage = () => {
-    console.log(filterOption);
     if (window) {
       localStorage.setItem("PREFERENCE", JSON.stringify(filterOption));
     }
@@ -204,7 +203,6 @@ export default function MoneyTracker() {
         }
         return newGame;
       });
-      console.log({ gamesMorphed });
       setExcelGames(gamesMorphed);
       setLoading(false);
     });
@@ -291,9 +289,6 @@ export default function MoneyTracker() {
               if (activeTab == 0) {
                 refreshGames();
               } else {
-                dispatch(
-                  fetchAllGamesForIds(excelGames?.map((game) => game?.gameId))
-                );
               }
             }}
           >
