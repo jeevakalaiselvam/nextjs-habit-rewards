@@ -61,6 +61,7 @@ import { RiRefreshLine } from "react-icons/ri";
 import { fetchAllGames } from "../store/gameSlice";
 import { TbRefreshDot } from "react-icons/tb";
 import MoneySaved from "../components/MoneySaved";
+import { IoGameControllerSharp } from "react-icons/io5";
 
 const defaultFilter = { rating: "0" };
 
@@ -275,7 +276,7 @@ export default function MoneyTracker() {
         )}
         {activeMode == 0 && (
           <ModeIcon onClick={() => setActiveMode(2)}>
-            <MdVideogameAsset />
+            <IoGameControllerSharp />
           </ModeIcon>
         )}
         {(activeMode == 1 || activeMode == 2) && (

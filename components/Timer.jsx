@@ -237,9 +237,9 @@ function ActivityTracker({ totalCurrentMonthSalary }) {
       )}
       {totalTime > 0 && (
         <TimerInfo3 marginHigh={!status === "paused"}>
-          <Hour2>{formatTime(totalTime)?.hours}h</Hour2>
-          <Min2>{formatTime(totalTime)?.minutes}m</Min2>
-          <Sec2>{formatTime(totalTime)?.seconds}s</Sec2>
+          <Hour2>{formatTime(timeNeeded * 1000)?.hours}h</Hour2>
+          <Min2>{formatTime(timeNeeded * 1000)?.minutes}m</Min2>
+          <Sec2>{formatTime(timeNeeded * 1000)?.seconds}s</Sec2>
         </TimerInfo3>
       )}
       {ACTIVITY_KEYS.map((key) => (
