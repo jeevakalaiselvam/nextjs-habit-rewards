@@ -20,7 +20,6 @@ const handler = async (req, res) => {
       //Get All Achievements Schema for All Games
       finalGamesResponse = await Promise.all(
         finalGamesResponse?.map(async (game) => {
-          console.log("CALLING - ", FETCH_ALL_ACHIEVEMENTS_SCHEMA(game?.id));
           try {
             const schemeAchievement = await axios.get(
               FETCH_ALL_ACHIEVEMENTS_SCHEMA(game?.id)
