@@ -623,8 +623,8 @@ const OtherContainer = styled.div`
   width: 100%;
   padding: 0.25rem 0.25rem;
   border-radius: 0.5rem;
-  min-height: 64vh;
-  max-height: 64vh;
+  min-height: 61vh;
+  max-height: 61vh;
   overflow: scroll;
   flex-direction: column;
 `;
