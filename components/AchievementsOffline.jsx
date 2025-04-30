@@ -14,10 +14,13 @@ import axios from "axios";
 export default function AchievementsOffline({ recent }) {
   const dispatch = useDispatch();
   const { habittracker } = useSelector((state) => state);
-  const { steamGames, selectedGameId, loading } = habittracker;
+  const { steamGames, selectedGameId } = habittracker;
   const [game, setGame] = useState({});
   const [hiddenData, setHiddenData] = useState({});
   const [completed, setCompleted] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [hiddenLoading, setLoadingHidden] = useState(false);
+  const [completedLoading, setCompletedLoading] = useState(false);
 
   let achSorted = [];
 
@@ -28,11 +31,14 @@ export default function AchievementsOffline({ recent }) {
 
   const getHidden = async () => {
     try {
+      setHiddenData(true);
       const hiddenResponse = await axios.get(`/api/hidden/${selectedGameId}`);
       const hiddenData = hiddenResponse.data.hiddenMapper;
       setHiddenData(hiddenData);
+      setHiddenData(false);
     } catch (e) {
       console.error(e);
+      setHiddenData(false);
     }
   };
 
@@ -76,11 +82,14 @@ export default function AchievementsOffline({ recent }) {
 
   const getCompletedAchievements = async (gameId) => {
     try {
+      setCompletedLoading(true);
       const res = await fetch(`/api/achievement?gameId=${gameId}`);
       const data = await res.json();
       setCompleted(data);
+      setCompletedLoading(false);
     } catch (err) {
       console.error("Failed to fetch achievements:", err);
+      setCompletedLoading(false);
     }
   };
 
@@ -89,19 +98,23 @@ export default function AchievementsOffline({ recent }) {
   }, [selectedGameId]);
 
   const getSteamData = (gameId) => {
+    setLoading(true);
     axios
       .get(`/api/steam/${gameId}`)
       .then((res) => {
         setGame(res?.data?.data ?? {});
+        setLoading(false);
       })
-      .then((error) => {});
+      .then((error) => {
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
     getSteamData(selectedGameId);
   }, [selectedGameId]);
 
-  if (loading) {
+  if (loading || hiddenLoading) {
     return (
       <Container>
         <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
