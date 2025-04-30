@@ -9,12 +9,14 @@ import { FaTrophy } from "react-icons/fa";
 import { GAME_UNLOCK_TYPE_ALL } from "./helpers/constantHelper";
 import { getaUnlockedAchievementsByType } from "./helpers/gameHelper";
 import { LoadingOutlined } from "@ant-design/icons";
+import axios from "axios";
 
 export default function AchievementsOffline({ recent }) {
   const dispatch = useDispatch();
   const { habittracker } = useSelector((state) => state);
   const { steamGames, selectedGameId, loading } = habittracker;
   const game = steamGames?.find((game) => game?.id == selectedGameId);
+  const [hiddenData, setHiddenData] = useState({});
 
   console.log("SELECT", steamGames);
 
@@ -25,9 +27,19 @@ export default function AchievementsOffline({ recent }) {
     (ach1, ach2) => ach2?.percentage - ach1?.percentage
   );
 
-  if (recent) {
-    achSorted = getaUnlockedAchievementsByType(games, GAME_UNLOCK_TYPE_ALL);
-  }
+  const getHidden = async () => {
+    try {
+      const hiddenResponse = await axios.get(`/api/hidden/${selectedGameId}`);
+      const hiddenData = hiddenResponse.data.hiddenMapper;
+      setHiddenData(hiddenData);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  useEffect(() => {
+    getHidden();
+  }, [selectedGameId]);
 
   if (loading) {
     return (
@@ -42,6 +54,12 @@ export default function AchievementsOffline({ recent }) {
           <NoAchievements>No Achievements</NoAchievements>
         )}
         {achSorted?.map((ach) => {
+          console.log(ach, hiddenData);
+          let hiddenDesc =
+            hiddenData?.[ach?.displayName?.toLowerCase().trim()] ??
+            ach?.description ??
+            "HIDDEN";
+
           return (
             <AchievementContainer>
               <Icon
@@ -64,7 +82,7 @@ export default function AchievementsOffline({ recent }) {
                   color={ach?.achieved == 1 ? "#145935" : "#17435c"}
                 ></Inner>
                 <Title>{ach?.displayName}</Title>
-                <Description>{ach?.description}</Description>
+                <Description>{hiddenDesc}</Description>
                 <Percentage color={ach?.achieved == 1 ? "#3BD987" : "#66c0f4"}>
                   {ach?.percentage}%
                 </Percentage>

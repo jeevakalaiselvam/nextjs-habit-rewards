@@ -19,6 +19,7 @@ import {
   HiDocumentSearch,
   HiDocumentText,
   HiDotsVertical,
+  HiEye,
   HiFolderAdd,
   HiLibrary,
   HiLockClosed,
@@ -80,7 +81,7 @@ export default function MoneyTracker() {
   const [open, setOpen] = useState(false);
 
   const { habittracker } = useSelector((state) => state);
-  const { games, selectedGameId } = habittracker;
+  const { games, selectedGameId, hiddenDescriptions } = habittracker;
   const game = games?.find((game) => game?.id == selectedGameId);
 
   const [excelGames, setExcelGames] = useState([]);
@@ -242,7 +243,7 @@ export default function MoneyTracker() {
         {(activeMode == 1 || activeMode == 2) && (
           <BackIcon
             onClick={() => {
-              setActiveMode(0);
+              setActiveTab(0);
             }}
           >
             <HiArrowLeft />
@@ -297,6 +298,11 @@ export default function MoneyTracker() {
             }}
           >
             <TbRefreshDot />
+          </ModeIcon1>
+        )}
+        {activeMode == 1 && (
+          <ModeIcon1 onClick={() => {}}>
+            <HiEye />
           </ModeIcon1>
         )}
       </Header>

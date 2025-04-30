@@ -44,6 +44,7 @@ const gamesSlice = createSlice({
     steamError: null,
     steamLoading: false,
     selectedGameId: "",
+    hiddenDescriptions: {},
   },
   reducers: {
     resetGames: (state) => {
@@ -51,6 +52,9 @@ const gamesSlice = createSlice({
     },
     selectGame: (state, action) => {
       state.selectedGameId = action.payload;
+    },
+    updateHidden: (state, action) => {
+      state.hiddenDescriptions[action.payload.gameId] = action.payload.hidden;
     },
   },
   extraReducers: (builder) => {
@@ -70,5 +74,5 @@ const gamesSlice = createSlice({
   },
 });
 
-export const { resetGames, selectGame } = gamesSlice.actions;
+export const { resetGames, selectGame, updateHidden } = gamesSlice.actions;
 export default gamesSlice.reducer;
