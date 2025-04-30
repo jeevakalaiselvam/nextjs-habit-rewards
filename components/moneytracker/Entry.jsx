@@ -48,6 +48,18 @@ export const itemsPersonal = [
     type: "divider",
   },
   {
+    key: "Credit",
+    label: "Credit",
+    icon: (
+      <span
+        style={{ transform: "translateY(2px)", color: ICON_COLORS["Credit"] }}
+      >
+        {ICON_CATEGORY?.["Credit"]}
+      </span>
+    ),
+    extra: "⌘C",
+  },
+  {
     key: "Games",
     label: "Games",
     icon: (
