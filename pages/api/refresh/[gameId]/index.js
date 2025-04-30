@@ -2,7 +2,7 @@ import {
   FETCH_ALL_ACHIEVEMENTS_GLOBAL,
   FETCH_ALL_ACHIEVEMENTS_SCHEMA,
   STEAM_ALL_ACHIEVEMENTS_PLAYER,
-} from "../../../../helpers/urlHelper";
+} from "../../../../components/helpers/urlHelper";
 
 const axios = require("axios");
 
