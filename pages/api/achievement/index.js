@@ -47,5 +47,27 @@ export default async function handler(req, res) {
     }
   }
 
+  if (req.method === "DELETE") {
+    const { gameId, achievementId } = req.body;
+    if (!gameId || !achievementId) {
+      return res
+        .status(400)
+        .json({ message: "Missing gameId or achievementId" });
+    }
+
+    try {
+      await collection.updateOne(
+        { _id: "gameAchievements" },
+        { $pull: { [gameId]: achievementId } }
+      );
+      return res
+        .status(200)
+        .json({ message: "Achievement deleted successfully" });
+    } catch (error) {
+      console.error("MongoDB DELETE error:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
   return res.status(405).json({ message: "Method not allowed" });
 }

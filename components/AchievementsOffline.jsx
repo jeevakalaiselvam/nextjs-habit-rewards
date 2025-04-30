@@ -40,6 +40,23 @@ export default function AchievementsOffline({ recent }) {
     getHidden();
   }, [selectedGameId]);
 
+  const removeCompleted = async (achId) => {
+    try {
+      const res = await fetch("/api/achievement", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ gameId: selectedGameId, achievementId: achId }),
+      });
+
+      const data = await res.json();
+      getCompletedAchievements(selectedGameId);
+    } catch (err) {
+      console.error("Error deleting achievement:", err);
+    }
+  };
+
   const markAchCompleted = async (achId) => {
     try {
       const res = await fetch("/api/achievement", {
@@ -102,6 +119,8 @@ export default function AchievementsOffline({ recent }) {
             ach?.description ??
             "HIDDEN";
 
+          let achieved = completed?.achievements?.includes(ach?.name);
+
           return (
             <AchievementContainer onClick={() => {}}>
               <Icon
@@ -120,16 +139,17 @@ export default function AchievementsOffline({ recent }) {
               ></Icon>
               <Data
                 onClick={() => {
-                  markAchCompleted(ach?.name);
+                  if (achieved) removeCompleted(ach?.name);
+                  else markAchCompleted(ach?.name);
                 }}
               >
                 <Inner
                   width={ach?.percentage}
-                  color={ach?.achieved == 1 ? "#145935" : "#17435c"}
+                  color={achieved ? "#145935" : "#17435c"}
                 ></Inner>
                 <Title>{ach?.displayName}</Title>
                 <Description>{hiddenDesc}</Description>
-                <Percentage color={ach?.achieved == 1 ? "#3BD987" : "#66c0f4"}>
+                <Percentage color={achieved ? "#3BD987" : "#66c0f4"}>
                   {ach?.percentage}%
                 </Percentage>
               </Data>
