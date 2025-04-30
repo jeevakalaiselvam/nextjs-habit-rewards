@@ -85,7 +85,7 @@ const Status = styled.div`
   width: 100%;
   align-items: center;
   flex-direction: center;
-  transform: translateY(2px);
+  transform: translateY(-0.25rem);
   flex: 1;
   padding-left: 0.25rem;
 `;

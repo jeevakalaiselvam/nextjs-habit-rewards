@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import Welcome from "../components/moneytracker/Welcome";
 import {
+  HiArrowLeft,
   HiArrowsExpand,
   HiChartBar,
   HiChartPie,
@@ -28,6 +29,7 @@ import {
   HiRefresh,
   HiShieldCheck,
   HiSparkles,
+  HiTemplate,
   HiUserCircle,
   HiViewBoards,
   HiViewList,
@@ -45,7 +47,7 @@ import { FaCheckCircle, FaGamepad, FaTrophy } from "react-icons/fa";
 import { Button, DatePicker, Popover, Select } from "antd";
 import dayjs from "dayjs";
 import WalletEMI from "../components/moneytracker/WalletEMI";
-import { MdAccessTimeFilled } from "react-icons/md";
+import { MdAccessTimeFilled, MdVideogameAsset } from "react-icons/md";
 import Wishlist from "../components/Wishlist";
 import EntryGame from "../components/moneytracker/EntryGame";
 import {
@@ -58,6 +60,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RiRefreshLine } from "react-icons/ri";
 import { fetchAllGames } from "../store/gameSlice";
 import { TbRefreshDot } from "react-icons/tb";
+import MoneySaved from "../components/MoneySaved";
 
 const defaultFilter = { rating: "0" };
 
@@ -82,50 +85,66 @@ export default function MoneyTracker() {
 
   if (activeTab == 0 && activeMode == 0) {
     title = "Income";
+    lowFont = true;
   }
 
   if (activeTab == 1 && activeMode == 0) {
     title = "Expense";
+    lowFont = true;
   }
 
   if (activeTab == 2 && activeMode == 0) {
     title = "Salaries";
+    lowFont = true;
   }
 
   if (activeTab == 3 && activeMode == 0) {
     title = "Wallets";
+    lowFont = true;
   }
 
   if (activeTabGame == 0 && activeMode == 1) {
     title = "New Games";
+    lowFont = true;
   }
 
   if (activeTabGame == 1 && activeMode == 1) {
     title = "In Progress";
+    lowFont = true;
   }
 
   if (activeTabGame == 2 && activeMode == 1) {
     title = "Replay";
+    lowFont = true;
   }
 
   if (activeTabGame == 3 && activeMode == 1) {
     title = "Tried";
+    lowFont = true;
   }
 
   if (activeTabGame == 4 && activeMode == 1) {
     title = "Completed";
+    lowFont = true;
   }
 
   if (activeTabGame == 5 && activeMode == 1) {
     title = "All Games";
+    lowFont = true;
   }
 
-  if (activeMode == 1 && activeTab == 0) {
+  if (activeMode == 2 && activeTab == 0) {
     title = "Games";
+    lowFont = true;
   }
 
-  if (activeMode == 1 && activeTab == 1) {
+  if (activeMode == 2 && activeTab == 1) {
     title = game?.name;
+    lowFont = true;
+  }
+
+  if (activeMode == 2 && activeTab == 2) {
+    title = "Recent Achievements";
     lowFont = true;
   }
 
@@ -180,6 +199,15 @@ export default function MoneyTracker() {
         </EntryModal>
       )}
       <Header>
+        {(activeMode == 1 || activeMode == 2) && (
+          <BackIcon
+            onClick={() => {
+              setActiveMode(0);
+            }}
+          >
+            <HiArrowLeft />
+          </BackIcon>
+        )}
         <Name lowFont={lowFont}>{title}</Name>
         {activeMode == 0 && (
           <Picker>
@@ -242,12 +270,17 @@ export default function MoneyTracker() {
         )}
         {activeMode == 0 && (
           <ModeIcon onClick={() => setActiveMode(1)}>
-            <HiClipboardCheck />
+            <HiTemplate />
           </ModeIcon>
         )}
-        {activeMode == 1 && (
+        {activeMode == 0 && (
+          <ModeIcon onClick={() => setActiveMode(2)}>
+            <MdVideogameAsset />
+          </ModeIcon>
+        )}
+        {(activeMode == 1 || activeMode == 2) && (
           <ModeIcon onClick={() => setActiveMode(0)}>
-            <FaGamepad />
+            <HiClipboardCheck />
           </ModeIcon>
         )}
         {activeMode == 1 && (
@@ -263,6 +296,18 @@ export default function MoneyTracker() {
       {activeMode == 1 && (
         <>
           <Content showEntry={showEntry}>
+            <Wishlist
+              activeTabGame={activeTabGame}
+              setActiveTabGame={setActiveTabGame}
+              forceRefreshGame={forceRefreshGame}
+              filterOption={filterOption}
+            />
+          </Content>
+        </>
+      )}
+      {activeMode == 2 && (
+        <>
+          <Content showEntry={showEntry}>
             {activeTab == 0 && (
               <Games
                 activeTabGame={activeTabGame}
@@ -273,6 +318,15 @@ export default function MoneyTracker() {
             )}
             {activeTab == 1 && (
               <Achievements
+                activeTabGame={activeTabGame}
+                setActiveTab={setActiveTab}
+                forceRefreshGame={forceRefreshGame}
+                filterOption={filterOption}
+              />
+            )}
+            {activeTab == 2 && (
+              <Achievements
+                recent={true}
                 activeTabGame={activeTabGame}
                 setActiveTab={setActiveTab}
                 forceRefreshGame={forceRefreshGame}
@@ -303,6 +357,18 @@ export default function MoneyTracker() {
                 }}
               >
                 ACHIEVEMENTS
+              </span>
+            </Icon>
+            <Icon onClick={() => setActiveTab(2)} data-active={activeTab == 2}>
+              <FaTrophy />{" "}
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                RECENT
               </span>
             </Icon>
           </Bottom>
@@ -407,6 +473,18 @@ export default function MoneyTracker() {
   );
 }
 
+const BackIcon = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 1.5rem;
+  justify-content: flex-start;
+  transform: translateX(-1rem);
+
+  &:active {
+    color: #4872ea;
+  }
+`;
+
 const Apply = styled.div`
   display: flex;
   align-items: center;
@@ -480,7 +558,6 @@ const Name = styled.div`
   flex: 1;
   justify-content: flex-start;
   font-size: ${(props) => (props.lowFont ? "1.25rem" : "2rem")};
-  transform: translate(-10px, -0px);
   text-shadow: 0 0 1px white, 0 0 1px rgba(255, 255, 255.25),
     0 0 1px rgba(255, 255, 255.25);
 `;

@@ -49,3 +49,8 @@ export const GAME_RATING_OPTIONS = [
   { id: "4", value: "4" },
   { id: "5", value: "5" },
 ];
+
+export const GAME_UNLOCK_TYPE_TODAY = "GAME_UNLOCK_TYPE_TODAY";
+export const GAME_UNLOCK_TYPE_WEEK = "GAME_UNLOCK_TYPE_WEEK";
+export const GAME_UNLOCK_TYPE_MONTH = "GAME_UNLOCK_TYPE_MONTH";
+export const GAME_UNLOCK_TYPE_ALL = "GAME_UNLOCK_TYPE_ALL";
