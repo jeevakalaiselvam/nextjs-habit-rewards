@@ -36,64 +36,64 @@ export default function GamesTrophies({
     <Container>
       <TrophySmall5
         onClick={() => {
-          setActiveTabGame(1);
+          setActiveTabGame(0);
         }}
-        color={activeTabGame == 1 ? GAME_COLORS?.["REPLAY"] : "#757575"}
+        color={activeTabGame == 0 ? GAME_COLORS?.["REPLAY"] : "#757575"}
       >
         <Name>IN PROG</Name>
         <Trophy>
           <FaTrophy />
         </Trophy>
-        <Count>{five}</Count>
+        <Count>{one}</Count>
       </TrophySmall5>
       <TrophySmall3
         onClick={() => {
-          setActiveTabGame(2);
+          setActiveTabGame(1);
         }}
-        color={activeTabGame == 2 ? GAME_COLORS?.["DONE"] : "#757575"}
+        color={activeTabGame == 1 ? GAME_COLORS?.["DONE"] : "#757575"}
       >
         <Name>DONE</Name>
         <Trophy>
           <FaTrophy />
         </Trophy>
-        <Count>{three}</Count>
+        <Count>{two}</Count>
       </TrophySmall3>
       <TrophySmall2
         onClick={() => {
-          setActiveTabGame(3);
+          setActiveTabGame(2);
         }}
-        color={activeTabGame == 3 ? GAME_COLORS?.["DONE"] : "#757575"}
+        color={activeTabGame == 2 ? GAME_COLORS?.["DONE"] : "#757575"}
       >
         <Name>PRIORITY 5</Name>
         <Trophy>
           <FaTrophy />
         </Trophy>
-        <Count>{one}</Count>
+        <Count>{three}</Count>
       </TrophySmall2>
       <TrophySmall1
         onClick={() => {
-          setActiveTabGame(4);
+          setActiveTabGame(3);
         }}
-        color={activeTabGame == 4 ? GAME_COLORS?.["TARGET"] : "#757575"}
+        color={activeTabGame == 3 ? GAME_COLORS?.["TARGET"] : "#757575"}
       >
         <Name>PRIORITY 4</Name>
         <Trophy>
           <FaTrophy />
         </Trophy>
-        <Count>{two}</Count>
+        <Count>{four}</Count>
       </TrophySmall1>
 
       <TrophySmall4
         onClick={() => {
-          setActiveTabGame(5);
+          setActiveTabGame(4);
         }}
-        color={activeTabGame == 5 ? GAME_COLORS?.["REPLAY"] : "#757575"}
+        color={activeTabGame == 4 ? GAME_COLORS?.["REPLAY"] : "#757575"}
       >
         <Name>REPLAY</Name>
         <Trophy>
           <FaTrophy />
         </Trophy>
-        <Count>{four}</Count>
+        <Count>{five}</Count>
       </TrophySmall4>
     </Container>
   );
