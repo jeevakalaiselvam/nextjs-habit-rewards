@@ -15,12 +15,12 @@ export default function AchievementsOffline({ recent }) {
   const dispatch = useDispatch();
   const { habittracker } = useSelector((state) => state);
   const { steamGames, selectedGameId } = habittracker;
+  const [completedLoading, setCompletedLoading] = useState(false);
   const [game, setGame] = useState({});
   const [hiddenData, setHiddenData] = useState({});
   const [completed, setCompleted] = useState({});
   const [loading, setLoading] = useState(false);
   const [hiddenLoading, setLoadingHidden] = useState(false);
-  const [completedLoading, setCompletedLoading] = useState(false);
 
   let achSorted = [];
 
