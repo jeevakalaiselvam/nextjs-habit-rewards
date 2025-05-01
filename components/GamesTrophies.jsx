@@ -8,27 +8,27 @@ export default function GamesTrophies({
   setActiveTabGame,
 }) {
   let total = 0,
-    inprog = 0,
-    started = 0,
-    completed = 0,
-    replay = 0,
-    boring = 0;
+    two = 0,
+    one = 0,
+    four = 0,
+    five = 0,
+    three = 0;
 
   games?.forEach((game) => {
-    if (game?.COMPLETED == "NEW") {
-      started++;
+    if (game?.RATING == 5 && game?.COMPLETED == "NEW") {
+      one++;
     }
-    if (game?.COMPLETED == "TARGET") {
-      inprog++;
+    if (game?.RATING == 4 && game?.COMPLETED == "NEW") {
+      two++;
     }
-    if (game?.COMPLETED == "TRIED") {
-      boring++;
+    if (game?.RATING == 3 && game?.COMPLETED == "NEW") {
+      three++;
     }
     if (game?.COMPLETED == "DONE") {
-      completed++;
+      four++;
     }
-    if (game?.COMPLETED == "REPLAY") {
-      replay++;
+    if (game?.COMPLETED == "DONE") {
+      five++;
     }
   });
 
@@ -38,61 +38,61 @@ export default function GamesTrophies({
         onClick={() => {
           setActiveTabGame(0);
         }}
-        color={activeTabGame == 0 ? GAME_COLORS?.["TARGET"] : "#757575"}
+        color={activeTabGame == 0 ? GAME_COLORS?.["DONE"] : "#757575"}
       >
-        <Name>TARGET</Name>
+        <Name>RATING 5</Name>
         <Trophy>
           <FaTrophy />
         </Trophy>
-        <Count>{inprog}</Count>
+        <Count>{one}</Count>
       </TrophySmall2>
       <TrophySmall1
         onClick={() => {
           setActiveTabGame(1);
         }}
-        color={activeTabGame == 1 ? GAME_COLORS?.["NEW"] : "#757575"}
+        color={activeTabGame == 1 ? GAME_COLORS?.["TARGET"] : "#757575"}
       >
-        <Name>NEW</Name>
+        <Name>RATING 4</Name>
         <Trophy>
           <FaTrophy />
         </Trophy>
-        <Count>{started}</Count>
+        <Count>{two}</Count>
       </TrophySmall1>
       <TrophySmall3
         onClick={() => {
-          setActiveTabGame(4);
+          setActiveTabGame(2);
         }}
-        color={activeTabGame == 4 ? GAME_COLORS?.["DONE"] : "#757575"}
+        color={activeTabGame == 2 ? GAME_COLORS?.["NEW"] : "#757575"}
       >
-        <Name>COMPLETED</Name>
+        <Name>RATING 3</Name>
         <Trophy>
           <FaTrophy />
         </Trophy>
-        <Count>{completed}</Count>
+        <Count>{three}</Count>
       </TrophySmall3>
       <TrophySmall4
         onClick={() => {
-          setActiveTabGame(2);
+          setActiveTabGame(3);
         }}
-        color={activeTabGame == 2 ? GAME_COLORS?.["REPLAY"] : "#757575"}
+        color={activeTabGame == 3 ? GAME_COLORS?.["DONE"] : "#757575"}
       >
-        <Name>REPLAY</Name>
+        <Name>DONE</Name>
         <Trophy>
           <FaTrophy />
         </Trophy>
-        <Count>{replay}</Count>
+        <Count>{four}</Count>
       </TrophySmall4>
       <TrophySmall5
         onClick={() => {
-          setActiveTabGame(3);
+          setActiveTabGame(4);
         }}
-        color={activeTabGame == 3 ? GAME_COLORS?.["TRIED"] : "#757575"}
+        color={activeTabGame == 4 ? GAME_COLORS?.["NEW"] : "#757575"}
       >
         <Name>MEH</Name>
         <Trophy>
           <FaTrophy />
         </Trophy>
-        <Count>{boring}</Count>
+        <Count>{five}</Count>
       </TrophySmall5>
     </Container>
   );

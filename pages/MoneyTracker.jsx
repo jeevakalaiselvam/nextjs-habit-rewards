@@ -270,10 +270,10 @@ export default function MoneyTracker() {
         )}
         {activeMode == 0 && (
           <ModeIcon onClick={() => setActiveMode(1)}>
-            <HiTemplate />
+            <IoGameControllerSharp />
           </ModeIcon>
         )}
-        {activeMode == 0 && (
+        {activeMode == 0 && false && (
           <ModeIcon onClick={() => setActiveMode(2)}>
             <IoGameControllerSharp />
           </ModeIcon>
@@ -295,7 +295,7 @@ export default function MoneyTracker() {
             <TbRefreshDot />
           </ModeIcon1>
         )}
-        {activeMode == 1 && (
+        {activeMode == 1 && false && (
           <ModeIcon1 onClick={() => {}}>
             <HiEye />
           </ModeIcon1>

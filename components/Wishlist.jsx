@@ -38,9 +38,9 @@ export const MAPPING_ORDER = {
   0: "PLATFORM",
   1: "GENRE",
   2: "NAME",
-  3: "COMPLETED",
-  4: "RELEASE",
-  5: "RATING",
+  3: "RATING",
+  4: "COMPLETED",
+  5: "RELEASE",
   6: "SAVED",
   7: "IMAGE",
 };
@@ -124,46 +124,27 @@ export default function Wishlist({
   let ratingToFilter = filterOption?.rating ?? "0";
 
   if (activeTabGame == 0) {
-    gamesToShow = games
-      ?.filter((game) => {
-        return game?.RATING == ratingToFilter || ratingToFilter == "0";
-      })
-      ?.filter((game) => {
-        return game?.COMPLETED == "TARGET";
-      });
+    gamesToShow = games?.filter((game) => {
+      return game?.RATING == 5 && game?.COMPLETED == "NEW";
+    });
   } else if (activeTabGame == 1) {
-    gamesToShow = games
-      ?.filter((game) => {
-        return game?.RATING == ratingToFilter || ratingToFilter == "0";
-      })
-      ?.filter((game) => {
-        return game?.COMPLETED == "NEW";
-      })
-      ?.sort((game1, game2) => game2?.RATING - game1?.RATING);
+    gamesToShow = games?.filter((game) => {
+      return game?.RATING == 4 && game?.COMPLETED == "NEW";
+    });
   } else if (activeTabGame == 2) {
-    gamesToShow = games
-      ?.filter((game) => {
-        return game?.RATING == ratingToFilter || ratingToFilter == "0";
-      })
-      ?.filter((game) => {
-        return game?.COMPLETED == "REPLAY";
-      });
+    gamesToShow = games?.filter((game) => {
+      return game?.RATING == 3 && game?.COMPLETED == "NEW";
+    });
   } else if (activeTabGame == 3) {
     gamesToShow = games
       ?.filter((game) => {
-        return game?.RATING == ratingToFilter || ratingToFilter == "0";
-      })
-      ?.filter((game) => {
-        return game?.COMPLETED == "TRIED";
-      });
-  } else if (activeTabGame == 4) {
-    gamesToShow = games
-      ?.filter((game) => {
-        return game?.RATING == ratingToFilter || ratingToFilter == "0";
-      })
-      ?.filter((game) => {
         return game?.COMPLETED == "DONE";
-      });
+      })
+      ?.sort((g1, g2) => g2?.RATING - g1?.RATING);
+  } else if (activeTabGame == 4) {
+    gamesToShow = games?.filter((game) => {
+      return game?.COMPLETED == "DONE";
+    });
   } else if (activeTabGame == 5) {
     gamesToShow = games;
   }
