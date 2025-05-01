@@ -161,8 +161,6 @@ export default function Wishlist({
           {gamesToShow?.length == 0 && <NoGames>No Results for Filter</NoGames>}
           {gamesToShow?.length > 0 &&
             gamesToShow?.map((game) => {
-              let achieved = completed?.achievements?.includes(ach?.name);
-
               return (
                 <GameContainer
                   onClick={() => {
