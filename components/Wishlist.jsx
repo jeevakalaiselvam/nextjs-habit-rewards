@@ -125,28 +125,28 @@ export default function Wishlist({
 
   if (activeTabGame == 0) {
     gamesToShow = games?.filter((game) => {
-      return game?.RATING == 5 && game?.COMPLETED == "NEW";
+      return game?.COMPLETED == "INPROG";
     });
   } else if (activeTabGame == 1) {
     gamesToShow = games?.filter((game) => {
-      return game?.RATING == 4 && game?.COMPLETED == "NEW";
+      return game?.COMPLETED == "DONE";
     });
   } else if (activeTabGame == 2) {
-    gamesToShow = games?.filter((game) => {
-      return game?.RATING == 3 && game?.COMPLETED == "NEW";
-    });
+    gamesToShow = games
+      ?.filter((game) => {
+        return game?.RATING == 5 && game?.COMPLETED == "NEW";
+      })
+      ?.sort((g1, g2) => g2?.RATING - g1?.RATING);
   } else if (activeTabGame == 3) {
     gamesToShow = games
       ?.filter((game) => {
-        return game?.COMPLETED == "DONE";
+        return game?.RATING == 4 && game?.COMPLETED == "NEW";
       })
       ?.sort((g1, g2) => g2?.RATING - g1?.RATING);
   } else if (activeTabGame == 4) {
     gamesToShow = games?.filter((game) => {
-      return game?.COMPLETED == "DONE";
+      return game?.COMPLETED == "REPLAY";
     });
-  } else if (activeTabGame == 5) {
-    gamesToShow = games;
   }
 
   if (loading) {
