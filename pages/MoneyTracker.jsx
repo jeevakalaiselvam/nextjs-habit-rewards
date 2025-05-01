@@ -324,6 +324,7 @@ export default function MoneyTracker() {
                 setActiveTabGame={setActiveTabGame}
                 forceRefreshGame={forceRefreshGame}
                 filterOption={filterOption}
+                excelGames={excelGames}
               />
             </Content>
           )}
@@ -334,6 +335,7 @@ export default function MoneyTracker() {
                 setActiveTabGame={setActiveTabGame}
                 forceRefreshGame={forceRefreshGame}
                 filterOption={filterOption}
+                excelGames={excelGames}
               />
             </Content>
           )}

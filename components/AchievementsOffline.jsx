@@ -11,7 +11,7 @@ import { getaUnlockedAchievementsByType } from "./helpers/gameHelper";
 import { LoadingOutlined } from "@ant-design/icons";
 import axios from "axios";
 
-export default function AchievementsOffline({ recent }) {
+export default function AchievementsOffline({ excelGames }) {
   const dispatch = useDispatch();
   const { habittracker } = useSelector((state) => state);
   const { steamGames, selectedGameId } = habittracker;
@@ -114,7 +114,10 @@ export default function AchievementsOffline({ recent }) {
     getSteamData(selectedGameId);
   }, [selectedGameId]);
 
-  if (loading || hiddenLoading) {
+  let gameMain = excelGames?.find((game) => game?.gameId == selectedGameId);
+  console.log(excelGames, selectedGameId, gameMain);
+
+  if (loading || hiddenLoading || completedLoading) {
     return (
       <Container>
         <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
@@ -142,7 +145,7 @@ export default function AchievementsOffline({ recent }) {
                   if (true && window !== "undefined") {
                     const searchQuery = `${
                       ach?.displayName
-                    } ach ${encodeURIComponent(ach?.gameName)} `;
+                    } Achievement ${encodeURIComponent(gameMain?.NAME)} `;
                     window.open(
                       `https://www.google.com/search?q=${searchQuery}`
                     );
