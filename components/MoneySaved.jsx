@@ -4,8 +4,10 @@ import { FaIndianRupeeSign } from "react-icons/fa6";
 
 export default function MoneySaved({ games }) {
   const saved = games?.reduce((acc, game) => {
-    console.log("CHECKING", Number(game?.SAVED ?? 0), "<", 0, acc);
-    if (Number(game?.SAVED ?? 0) < 0) {
+    if (
+      Number(game?.SAVED ?? 0) < 0 &&
+      (game?.COMPLETED == "INPROG" || game?.COMPLETED == "DONE")
+    ) {
       return acc + Number(game?.SAVED ?? 0);
     } else {
       return acc + 0;
