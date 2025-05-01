@@ -204,6 +204,13 @@ export default function MoneyTracker() {
         return newGame;
       });
       setExcelGames(gamesMorphed);
+      let validGameIds = [];
+      gamesMorphed?.map((game) => {
+        if (game?.gameId) {
+          validGameIds?.push(game?.gameId);
+        }
+      });
+      dispatch(fetchAllGamesForIds(validGameIds));
       setLoading(false);
     });
   };

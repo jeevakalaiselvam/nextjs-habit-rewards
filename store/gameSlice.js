@@ -45,6 +45,7 @@ const gamesSlice = createSlice({
     steamLoading: false,
     selectedGameId: "",
     hiddenDescriptions: {},
+    completionStatus: {},
   },
   reducers: {
     resetGames: (state) => {
@@ -56,6 +57,7 @@ const gamesSlice = createSlice({
     updateHidden: (state, action) => {
       state.hiddenDescriptions[action.payload.gameId] = action.payload.hidden;
     },
+    updateGameProgress: (state) => {},
   },
   extraReducers: (builder) => {
     builder

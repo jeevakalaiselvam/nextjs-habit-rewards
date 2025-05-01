@@ -8,26 +8,16 @@ import {
 const axios = require("axios");
 
 const handler = async (req, res) => {
-  if (req.method === "GET") {
+  if (req.method === "POST") {
     try {
-      let finalGamesResponse = {};
+      let finalGamesResponse = [];
 
-      //Get All Games for the current User
-      console.log("CALLING- ", FETCH_ALL_GAMES);
-      const gamesResponse = await axios.get(FETCH_ALL_GAMES);
-      const gamesData = gamesResponse.data;
-      finalGamesResponse = gamesData?.response?.games?.map((game) => {
-        const newGame = {
-          id: game?.appid,
-          playtime: game?.playtime_forever,
-          lastPlayed: game?.rtime_last_played,
-        };
-        return newGame;
-      });
+      let gameIds = req.body?.gameIds;
+      finalGamesResponse = gameIds?.map((game) => ({ id: game }));
 
       //Get All Achievements Schema for All Games
       finalGamesResponse = await Promise.all(
-        finalGamesResponse?.map(async (game) => {
+        gameIds?.map(async (game) => {
           const schemeAchievement = await axios.get(
             FETCH_ALL_ACHIEVEMENTS_SCHEMA(game?.id)
           );

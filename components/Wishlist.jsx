@@ -34,6 +34,7 @@ import GamesTrophies from "./GamesTrophies";
 import MoneySaved from "./MoneySaved";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllGamesForIds, selectGame } from "../store/gameSlice";
+import { FETCH_ALL_ACHIEVEMENTS_SCHEMA } from "./helpers/urlHelper";
 
 export const MAPPING_ORDER = {
   0: "PLATFORM",
@@ -59,6 +60,9 @@ export default function Wishlist({
   const dispatch = useDispatch();
   const [newValues, setNewValues] = useState({});
   const { habittracker } = useSelector((state) => state);
+  const { steamGames, selectedGameId } = habittracker;
+  const [completed, setCompleted] = useState({});
+  const [completedLoading, setCompletedLoading] = useState(false);
 
   let itemsToTarget = itemsType;
 
@@ -141,6 +145,37 @@ export default function Wishlist({
     });
   }
 
+  useEffect(() => {
+    let validGameIds = [];
+    games?.map((game) => {
+      if (game?.gameId) {
+        validGameIds?.push(game?.gameId);
+      }
+    });
+    dispatch(fetchAllGamesForIds(validGameIds));
+  }, []);
+
+  const getAllCompleted = async (games) => {
+    setCompletedLoading(true);
+    let allCompleted = {};
+    let allGameIds = games?.map((game) => game?.gameId);
+    await Promise.all(
+      allGameIds?.map(async (game) => {
+        const completedForGame = await axios.get(
+          `/api/achievement?gameId=${game}`
+        );
+        const gameData = completedForGame.data;
+        allCompleted[game] = gameData?.achievements;
+      })
+    );
+    setCompletedLoading(false);
+    setCompleted(allCompleted);
+  };
+
+  useEffect(() => {
+    getAllCompleted(gamesToShow);
+  }, [activeTabGame]);
+
   if (loading) {
     return (
       <Container>
@@ -161,6 +196,37 @@ export default function Wishlist({
           {gamesToShow?.length == 0 && <NoGames>No Results for Filter</NoGames>}
           {gamesToShow?.length > 0 &&
             gamesToShow?.map((game) => {
+              let gameInSteam = steamGames?.find(
+                (gameInner) => game?.gameId == gameInner?.id
+              );
+              console.log({ gameInSteam, game });
+              let completedForGame = completed?.[game?.gameId] ?? [];
+
+              let total = gameInSteam?.achievements?.length ?? 0;
+              let completedCount =
+                gameInSteam?.achievements?.reduce((acc, ach) => {
+                  if (completedForGame?.includes(ach?.name)) {
+                    return acc + 1;
+                  } else {
+                    return acc;
+                  }
+                }, 0) ?? 0;
+
+              let completion = 0;
+
+              if (completedCount == 0) {
+                completion = 0;
+              } else {
+                completion = ((completedCount / total) * 100).toFixed(0);
+              }
+
+              console.log({
+                completedForGame,
+                gameInSteam,
+                completed,
+                selectedGameId: game?.gameId,
+              });
+
               return (
                 <GameContainer
                   onClick={() => {
@@ -207,7 +273,12 @@ export default function Wishlist({
                     </Title>
                   </TopGame>
                   <BottomGame>
-                    <Progress percent={50} size={["100%", 20]} />
+                    <Progress
+                      percent={completion}
+                      percentPosition={{ align: "center", type: "inner" }}
+                      size={["100%", 20]}
+                      status={completedLoading ? "active" : ""}
+                    />
                   </BottomGame>
                 </GameContainer>
               );
