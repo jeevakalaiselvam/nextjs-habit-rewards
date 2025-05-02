@@ -1,9 +1,9 @@
 import {
   FETCH_ALL_ACHIEVEMENTS_GLOBAL,
   FETCH_ALL_ACHIEVEMENTS_SCHEMA,
+  FETCH_ALL_GAMES,
   STEAM_ALL_ACHIEVEMENTS_PLAYER,
-} from "../../../../helpers/urlHelper";
-
+} from "../../../../components/helpers/urlHelper";
 const axios = require("axios");
 
 const handler = async (req, res) => {

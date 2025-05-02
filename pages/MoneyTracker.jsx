@@ -9,6 +9,7 @@ import {
   HiClipboardCheck,
   HiClipboardCopy,
   HiClipboardList,
+  HiClock,
   HiCurrencyRupee,
   HiDocument,
   HiDocumentAdd,
@@ -57,13 +58,14 @@ import Games from "../components/Games";
 import Achievements from "../components/Achievements";
 import { useDispatch, useSelector } from "react-redux";
 import { RiRefreshLine } from "react-icons/ri";
-import { fetchAllGames } from "../store/gameSlice";
+import { fetchAllGames, refreshGameSingle } from "../store/gameSlice";
 import { TbRefreshDot } from "react-icons/tb";
 import { HiTrophy } from "react-icons/hi2";
 import {
   GAME_UNLOCK_TYPE_ALL,
   getaUnlockedAchievementsByType,
 } from "../components/helpers/gameHelper";
+import AchievementsIcons from "../components/AchievementsIcons";
 
 const defaultFilter = { rating: "0" };
 
@@ -135,7 +137,7 @@ export default function MoneyTracker() {
     lowFont = true;
   }
 
-  if (activeMode == 1 && activeTab == 2) {
+  if (activeMode == 1 && (activeTab == 2 || activeTab == 3)) {
     let achSorted = getaUnlockedAchievementsByType(games, GAME_UNLOCK_TYPE_ALL);
     title = (
       <div
@@ -145,12 +147,11 @@ export default function MoneyTracker() {
           justifyContent: "center",
         }}
       >
-        {" "}
-        <div style={{ marginRight: ".25rem", fontSize: "1.35rem" }}>
-          {achSorted?.length}
-        </div>
         <div style={{ transform: "translateY(1px)" }}>
           <FaTrophy />
+        </div>
+        <div style={{ marginLeft: ".25rem", fontSize: "1.35rem" }}>
+          {achSorted?.length}
         </div>
       </div>
     );
@@ -239,10 +240,19 @@ export default function MoneyTracker() {
             <HiClipboardCheck />
           </ModeIcon>
         )}
-        {activeMode == 1 && activeTab == 1 && (
+        {activeMode == 1 && activeTab == 0 && (
           <ModeIcon1
             onClick={() => {
               dispatch(fetchAllGames());
+            }}
+          >
+            <TbRefreshDot />
+          </ModeIcon1>
+        )}
+        {activeMode == 1 && activeTab == 1 && (
+          <ModeIcon1
+            onClick={() => {
+              dispatch(refreshGameSingle(selectedGameId));
             }}
           >
             <TbRefreshDot />
@@ -266,10 +276,20 @@ export default function MoneyTracker() {
                 setActiveTab={setActiveTab}
                 forceRefreshGame={forceRefreshGame}
                 filterOption={filterOption}
+                singleGame
               />
             )}
             {activeTab == 2 && (
               <Achievements
+                recent
+                activeTabGame={activeTabGame}
+                setActiveTab={setActiveTab}
+                forceRefreshGame={forceRefreshGame}
+                filterOption={filterOption}
+              />
+            )}
+            {activeTab == 3 && (
+              <AchievementsIcons
                 recent
                 activeTabGame={activeTabGame}
                 setActiveTab={setActiveTab}
@@ -304,7 +324,7 @@ export default function MoneyTracker() {
               </span>
             </Icon>{" "}
             <Icon onClick={() => setActiveTab(2)} data-active={activeTab == 2}>
-              <HiTrophy />{" "}
+              <HiClock />{" "}
               <span
                 style={{
                   fontSize: ".5rem",
@@ -313,6 +333,18 @@ export default function MoneyTracker() {
                 }}
               >
                 RECENT
+              </span>
+            </Icon>{" "}
+            <Icon onClick={() => setActiveTab(3)} data-active={activeTab == 3}>
+              <FaTrophy />{" "}
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                ICONS
               </span>
             </Icon>
           </Bottom>

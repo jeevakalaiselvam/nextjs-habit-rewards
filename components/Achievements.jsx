@@ -11,7 +11,7 @@ import {
   getaUnlockedAchievementsByType,
 } from "./helpers/gameHelper";
 
-export default function Achievements({ recent }) {
+export default function Achievements({ recent, singleGame }) {
   const dispatch = useDispatch();
   const { habittracker } = useSelector((state) => state);
   const { games, selectedGameId } = habittracker;
@@ -30,48 +30,65 @@ export default function Achievements({ recent }) {
 
   return (
     <Container>
-      {achSorted?.map((ach, index) => {
-        return (
-          <AchievementContainer>
-            <Icon
-              icon={ach?.icon}
-              onClick={() => {
-                if (true && window !== "undefined") {
-                  const searchQuery = `${
-                    ach?.displayName
-                  } ach ${encodeURIComponent(ach?.gameName)} `;
-                  window.open(`https://www.google.com/search?q=${searchQuery}`);
-                  // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                }
-              }}
-            ></Icon>
-            <Data>
-              <Inner
-                width={ach?.percentage}
-                color={ach?.achieved == 1 ? "#145935" : "#17435c"}
-              ></Inner>
-              <Title>{ach?.displayName}</Title>
-              <Description>{ach?.description}</Description>
-              {
-                <Percentage
-                  color={
-                    ach?.achieved == 1
-                      ? "#3BD987"
-                      : ach?.percentage < 1
-                      ? "#ffe23b"
-                      : "#66c0f4"
+      <MainContainer singleGame={singleGame}>
+        {achSorted?.map((ach, index) => {
+          return (
+            <AchievementContainer>
+              <Icon
+                icon={ach?.icon}
+                onClick={() => {
+                  if (true && window !== "undefined") {
+                    const searchQuery = `${
+                      ach?.displayName
+                    } ach ${encodeURIComponent(ach?.gameName)} `;
+                    window.open(
+                      `https://www.google.com/search?q=${searchQuery}`
+                    );
+                    // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
                   }
-                >
-                  {ach?.percentage}%
-                </Percentage>
-              }
-            </Data>
-          </AchievementContainer>
-        );
-      })}
+                }}
+              ></Icon>
+              <Data>
+                <Inner
+                  width={ach?.percentage}
+                  color={ach?.achieved == 1 ? "#145935" : "#17435c"}
+                ></Inner>
+                <Title>{ach?.displayName}</Title>
+                <Description>{ach?.description}</Description>
+                {
+                  <Percentage
+                    color={
+                      ach?.achieved == 1
+                        ? "#3BD987"
+                        : ach?.percentage < 1
+                        ? "#ffe23b"
+                        : "#66c0f4"
+                    }
+                  >
+                    {ach?.percentage}%
+                  </Percentage>
+                }
+              </Data>
+            </AchievementContainer>
+          );
+        })}
+      </MainContainer>
+      {singleGame && (
+        <ProgressContainer>
+          <Progress percent={game?.completion} />
+        </ProgressContainer>
+      )}
     </Container>
   );
 }
+
+const ProgressContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100%;
+  padding: 0rem;
+`;
 
 const Percentage = styled.div`
   display: flex;
@@ -150,6 +167,18 @@ const AchievementContainer = styled.div`
   position: relative;
 `;
 
+const MainContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: 100%;
+  min-height: ${(props) => (props.singleGame ? "77vh" : "80vh")};
+  max-height: ${(props) => (props.singleGame ? "77vh" : "80vh")};
+  padding: 0rem 0.25rem;
+  overflow: scroll;
+`;
+
 const Container = styled.div`
   display: flex;
   align-items: center;
@@ -159,5 +188,4 @@ const Container = styled.div`
   min-height: 80vh;
   max-height: 80vh;
   padding: 0rem 0.25rem;
-  overflow: scroll;
 `;
