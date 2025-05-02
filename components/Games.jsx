@@ -22,7 +22,7 @@ export default function Games({ setActiveTab }) {
     refreshGames();
   }, []);
 
-  const returnGame = ({ name, id, completed, total }) => (
+  const returnGame = ({ name, id, completed, completion, total }) => (
     <GameContainer
       onClick={() => {
         dispatch(selectGame(id));
@@ -40,6 +40,7 @@ export default function Games({ setActiveTab }) {
             {completed} / {total}
           </TrophyData>
         </Status>
+        <Progress percent={completion} />
       </Data>
     </GameContainer>
   );

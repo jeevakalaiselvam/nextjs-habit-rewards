@@ -32,6 +32,7 @@ import {
   HiViewBoards,
   HiViewList,
 } from "react-icons/hi";
+import { SlRefresh } from "react-icons/sl";
 import { useEffect, useState } from "react";
 import Money from "../components/moneytracker/Money";
 import Salary from "../components/moneytracker/Salary";
@@ -250,7 +251,7 @@ export default function MoneyTracker() {
             <FaGamepad />
           </ModeIcon>
         )}
-        {activeMode == 1 && (
+        {activeMode == 1 && activeTab == 1 && (
           <ModeIcon1
             onClick={() => {
               dispatch(fetchAllGames());
@@ -462,7 +463,7 @@ const ModeIcon1 = styled.div`
   justify-content: center;
   width: 30px;
   height: 30px;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   margin-left: 1rem;
   color: #52b8da;
 `;
