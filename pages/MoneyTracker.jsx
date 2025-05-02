@@ -202,45 +202,6 @@ export default function MoneyTracker() {
             />
           </Picker>
         )}
-        {activeMode == 1 && false && (
-          <Picker>
-            <Popover
-              trigger={"click"}
-              placement="left"
-              content={
-                <FilterOption>
-                  <Title>Rating</Title>
-                  <Option>
-                    <Select
-                      value={filterOption?.rating}
-                      style={{
-                        width: "100%",
-                        height: "40px",
-                        marginTop: "1rem",
-                      }}
-                      onChange={(option) => {
-                        setFilterOption((old) => ({
-                          ...old,
-                          rating: option,
-                        }));
-                      }}
-                      options={GAME_RATING_OPTIONS}
-                    />
-                  </Option>
-                  <Apply
-                    onClick={() => {
-                      refreshGame();
-                    }}
-                  >
-                    Refresh
-                  </Apply>
-                </FilterOption>
-              }
-            >
-              <HiDotsVertical />
-            </Popover>
-          </Picker>
-        )}
         {activeMode == 0 && (
           <ModeIcon onClick={() => setActiveMode(1)}>
             <HiClipboardCheck />
