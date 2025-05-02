@@ -6,8 +6,12 @@ import Select from "react-select";
 import { HEADER_IMAGE } from "./helpers/urlHelper";
 import { Progress } from "antd";
 import { FaTrophy } from "react-icons/fa";
+import {
+  GAME_UNLOCK_TYPE_ALL,
+  getaUnlockedAchievementsByType,
+} from "./helpers/gameHelper";
 
-export default function Achievements() {
+export default function Achievements({ recent }) {
   const dispatch = useDispatch();
   const { habittracker } = useSelector((state) => state);
   const { games, selectedGameId } = habittracker;
@@ -15,14 +19,18 @@ export default function Achievements() {
 
   let achSorted = [];
 
-  achSorted = [...game?.achievements];
-  achSorted = achSorted?.sort(
-    (ach1, ach2) => ach2?.percentage - ach1?.percentage
-  );
+  if (!recent) {
+    achSorted = [...game?.achievements];
+    achSorted = achSorted?.sort(
+      (ach1, ach2) => ach2?.percentage - ach1?.percentage
+    );
+  } else {
+    achSorted = getaUnlockedAchievementsByType(games, GAME_UNLOCK_TYPE_ALL);
+  }
 
   return (
     <Container>
-      {achSorted?.map((ach) => {
+      {achSorted?.map((ach, index) => {
         return (
           <AchievementContainer>
             <Icon
@@ -44,17 +52,19 @@ export default function Achievements() {
               ></Inner>
               <Title>{ach?.displayName}</Title>
               <Description>{ach?.description}</Description>
-              <Percentage
-                color={
-                  ach?.achieved == 1
-                    ? "#3BD987"
-                    : ach?.percentage < 1
-                    ? "#ffe23b"
-                    : "#66c0f4"
-                }
-              >
-                {ach?.percentage}%
-              </Percentage>
+              {
+                <Percentage
+                  color={
+                    ach?.achieved == 1
+                      ? "#3BD987"
+                      : ach?.percentage < 1
+                      ? "#ffe23b"
+                      : "#66c0f4"
+                  }
+                >
+                  {ach?.percentage}%
+                </Percentage>
+              }
             </Data>
           </AchievementContainer>
         );

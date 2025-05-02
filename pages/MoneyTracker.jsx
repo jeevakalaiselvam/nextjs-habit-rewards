@@ -59,6 +59,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RiRefreshLine } from "react-icons/ri";
 import { fetchAllGames } from "../store/gameSlice";
 import { TbRefreshDot } from "react-icons/tb";
+import { HiTrophy } from "react-icons/hi2";
+import {
+  GAME_UNLOCK_TYPE_ALL,
+  getaUnlockedAchievementsByType,
+} from "../components/helpers/gameHelper";
 
 const defaultFilter = { rating: "0" };
 
@@ -127,6 +132,28 @@ export default function MoneyTracker() {
 
   if (activeMode == 1 && activeTab == 1) {
     title = game?.name;
+    lowFont = true;
+  }
+
+  if (activeMode == 1 && activeTab == 2) {
+    let achSorted = getaUnlockedAchievementsByType(games, GAME_UNLOCK_TYPE_ALL);
+    title = (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {" "}
+        <div style={{ marginRight: ".25rem", fontSize: "1.35rem" }}>
+          {achSorted?.length}
+        </div>
+        <div style={{ transform: "translateY(1px)" }}>
+          <FaTrophy />
+        </div>
+      </div>
+    );
     lowFont = true;
   }
 
@@ -241,6 +268,15 @@ export default function MoneyTracker() {
                 filterOption={filterOption}
               />
             )}
+            {activeTab == 2 && (
+              <Achievements
+                recent
+                activeTabGame={activeTabGame}
+                setActiveTab={setActiveTab}
+                forceRefreshGame={forceRefreshGame}
+                filterOption={filterOption}
+              />
+            )}
           </Content>
           <Bottom>
             <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
@@ -265,6 +301,18 @@ export default function MoneyTracker() {
                 }}
               >
                 ACHIEVEMENTS
+              </span>
+            </Icon>{" "}
+            <Icon onClick={() => setActiveTab(2)} data-active={activeTab == 2}>
+              <HiTrophy />{" "}
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                RECENT
               </span>
             </Icon>
           </Bottom>
@@ -424,7 +472,7 @@ const ModeIcon1 = styled.div`
   justify-content: center;
   width: 30px;
   height: 30px;
-  font-size: 1.25rem;
+  font-size: 1.3rem;
   margin-left: 1rem;
   color: #52b8da;
 `;
