@@ -231,12 +231,12 @@ export default function MoneyTracker() {
         )}
         {activeMode == 0 && (
           <ModeIcon onClick={() => setActiveMode(1)}>
-            <HiClipboardCheck />
+            <FaGamepad />
           </ModeIcon>
         )}
         {activeMode == 1 && (
           <ModeIcon onClick={() => setActiveMode(0)}>
-            <FaGamepad />
+            <HiClipboardCheck />
           </ModeIcon>
         )}
         {activeMode == 1 && activeTab == 1 && (
