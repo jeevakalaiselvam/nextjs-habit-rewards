@@ -54,7 +54,7 @@ export default function Games({ setActiveTab }) {
   else
     return (
       <Container>
-        <GameCompletion games={games} />
+        {/* <GameCompletion games={games} /> */}
         <TopContainer>{games?.map((game) => returnGame(game))}</TopContainer>
       </Container>
     );

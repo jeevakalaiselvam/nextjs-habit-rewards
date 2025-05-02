@@ -44,7 +44,15 @@ export default function Achievements() {
               ></Inner>
               <Title>{ach?.displayName}</Title>
               <Description>{ach?.description}</Description>
-              <Percentage color={ach?.achieved == 1 ? "#3BD987" : "#66c0f4"}>
+              <Percentage
+                color={
+                  ach?.achieved == 1
+                    ? "#3BD987"
+                    : ach?.percentage < 1
+                    ? "#ffe23b"
+                    : "#66c0f4"
+                }
+              >
                 {ach?.percentage}%
               </Percentage>
             </Data>
