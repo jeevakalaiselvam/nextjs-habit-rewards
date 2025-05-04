@@ -21,7 +21,9 @@ export default function Achievements({ recent, singleGame }) {
   let achSorted = [];
 
   if (!recent) {
-    achSorted = [...(game?.achievements ?? [])];
+    achSorted = [
+      ...(game?.achievements ?? [])?.filter((ach) => ach?.achieved == 0),
+    ];
     achSorted = achSorted?.sort(
       (ach1, ach2) => ach2?.percentage - ach1?.percentage
     );
@@ -80,12 +82,7 @@ export default function Achievements({ recent, singleGame }) {
       </MainContainer>
       {singleGame && (
         <ProgressContainer>
-          <Progress
-            percent={(
-              (game?.completed / (game?.total * COMPLETION_TARGET)) *
-              100
-            ).toFixed(0)}
-          />
+          <Progress percent={game?.completion} />
         </ProgressContainer>
       )}
     </Container>

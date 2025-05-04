@@ -330,7 +330,7 @@ export default function MoneyTracker() {
               />
             )}
             {activeTab == 2 && (
-              <Achievements
+              <AchievementsGameIcons
                 recent
                 activeTabGame={activeTabGame}
                 setActiveTab={setActiveTab}
@@ -370,21 +370,9 @@ export default function MoneyTracker() {
                   marginTop: ".25rem",
                 }}
               >
-                RECENT
+                UNLOCKED
               </span>
             </Icon>{" "}
-            <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
-              <HiViewBoards />{" "}
-              <span
-                style={{
-                  fontSize: ".5rem",
-                  fontWeight: 800,
-                  marginTop: ".25rem",
-                }}
-              >
-                GAMES
-              </span>
-            </Icon>
             <Icon
               onClick={() => {
                 if (!selectedGameId) {
@@ -403,9 +391,21 @@ export default function MoneyTracker() {
                   marginTop: ".25rem",
                 }}
               >
-                ACHIEVEMENTS
+                LOCKED
               </span>
             </Icon>{" "}
+            <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
+              <HiViewBoards />{" "}
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                GAMES
+              </span>
+            </Icon>
           </Bottom>
         </>
       )}

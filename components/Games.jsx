@@ -39,11 +39,7 @@ export default function Games({ setActiveTab }) {
           </TrophyIcon>
           <TrophyData>{completed}</TrophyData>
         </Status>
-        <Progress
-          percent={((completed / (total * COMPLETION_TARGET)) * 100)?.toFixed(
-            0
-          )}
-        />
+        <Progress percent={completion} />
       </Data>
     </GameContainer>
   );
