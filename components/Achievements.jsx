@@ -20,7 +20,7 @@ export default function Achievements({ recent, singleGame }) {
   let achSorted = [];
 
   if (!recent) {
-    achSorted = [...game?.achievements];
+    achSorted = [...(game?.achievements ?? [])];
     achSorted = achSorted?.sort(
       (ach1, ach2) => ach2?.percentage - ach1?.percentage
     );
@@ -31,47 +31,49 @@ export default function Achievements({ recent, singleGame }) {
   return (
     <Container>
       <MainContainer singleGame={singleGame}>
-        {achSorted?.map((ach, index) => {
-          return (
-            <AchievementContainer>
-              <Icon
-                icon={ach?.icon}
-                onClick={() => {
-                  if (true && window !== "undefined") {
-                    const searchQuery = `${
-                      ach?.displayName
-                    } ach ${encodeURIComponent(ach?.gameName)} `;
-                    window.open(
-                      `https://www.google.com/search?q=${searchQuery}`
-                    );
-                    // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                  }
-                }}
-              ></Icon>
-              <Data>
-                <Inner
-                  width={ach?.percentage}
-                  color={ach?.achieved == 1 ? "#145935" : "#17435c"}
-                ></Inner>
-                <Title>{ach?.displayName}</Title>
-                <Description>{ach?.description}</Description>
-                {
-                  <Percentage
-                    color={
-                      ach?.achieved == 1
-                        ? "#3BD987"
-                        : ach?.percentage < 1
-                        ? "#ffe23b"
-                        : "#66c0f4"
+        {achSorted?.length == 0 && <div>No Unlocks</div>}
+        {achSorted?.length > 0 &&
+          achSorted?.map((ach, index) => {
+            return (
+              <AchievementContainer>
+                <Icon
+                  icon={ach?.icon}
+                  onClick={() => {
+                    if (true && window !== "undefined") {
+                      const searchQuery = `${
+                        ach?.displayName
+                      } ach ${encodeURIComponent(ach?.gameName)} `;
+                      window.open(
+                        `https://www.google.com/search?q=${searchQuery}`
+                      );
+                      // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
                     }
-                  >
-                    {ach?.percentage}%
-                  </Percentage>
-                }
-              </Data>
-            </AchievementContainer>
-          );
-        })}
+                  }}
+                ></Icon>
+                <Data>
+                  <Inner
+                    width={ach?.percentage}
+                    color={ach?.achieved == 1 ? "#145935" : "#17435c"}
+                  ></Inner>
+                  <Title>{ach?.displayName}</Title>
+                  <Description>{ach?.description}</Description>
+                  {
+                    <Percentage
+                      color={
+                        ach?.achieved == 1
+                          ? "#3BD987"
+                          : ach?.percentage < 1
+                          ? "#ffe23b"
+                          : "#66c0f4"
+                      }
+                    >
+                      {ach?.percentage}%
+                    </Percentage>
+                  }
+                </Data>
+              </AchievementContainer>
+            );
+          })}
       </MainContainer>
       {singleGame && (
         <ProgressContainer>

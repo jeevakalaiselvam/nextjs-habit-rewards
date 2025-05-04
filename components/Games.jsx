@@ -139,6 +139,6 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
-  min-height: 60vh;
-  max-height: 60vh;
+  min-height: 80vh;
+  max-height: 80vh;
 `;

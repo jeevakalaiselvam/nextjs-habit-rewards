@@ -299,6 +299,18 @@ export default function MoneyTracker() {
             )}
           </Content>
           <Bottom>
+            <Icon onClick={() => setActiveTab(3)} data-active={activeTab == 3}>
+              <FaTrophy />{" "}
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                ICONS
+              </span>
+            </Icon>
             <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
               <HiViewBoards />{" "}
               <span
@@ -335,18 +347,6 @@ export default function MoneyTracker() {
                 RECENT
               </span>
             </Icon>{" "}
-            <Icon onClick={() => setActiveTab(3)} data-active={activeTab == 3}>
-              <FaTrophy />{" "}
-              <span
-                style={{
-                  fontSize: ".5rem",
-                  fontWeight: 800,
-                  marginTop: ".25rem",
-                }}
-              >
-                ICONS
-              </span>
-            </Icon>
           </Bottom>
         </>
       )}

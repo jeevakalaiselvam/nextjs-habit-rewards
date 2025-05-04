@@ -10,6 +10,7 @@ import {
   GAME_UNLOCK_TYPE_ALL,
   getaUnlockedAchievementsByType,
 } from "./helpers/gameHelper";
+import { generateDarkTextColorForLightBg } from "./helpers/colorHelper";
 
 export default function AchievementsIcons({ recent, singleGame }) {
   const dispatch = useDispatch();
@@ -21,7 +22,7 @@ export default function AchievementsIcons({ recent, singleGame }) {
   let achSorted = [];
 
   if (!recent) {
-    achSorted = [...game?.achievements];
+    achSorted = [...(game?.achievements ?? [])];
     achSorted = achSorted?.sort(
       (ach1, ach2) => ach2?.percentage - ach1?.percentage
     );
@@ -39,6 +40,7 @@ export default function AchievementsIcons({ recent, singleGame }) {
           {achSorted?.map((ach, index) => {
             return (
               <AchievementContainer>
+                <Trigger>{achSorted?.length - index}</Trigger>
                 <Icon
                   icon={ach?.icon}
                   onClick={() => {
@@ -107,6 +109,19 @@ const SingleAchContainer = styled.div`
   min-width: 100%;
   padding: 0rem;
   height: 70px;
+`;
+
+const Trigger = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: 200;
+  background-color: #3bd987;
+  color: ${generateDarkTextColorForLightBg("#3BD987", 50)};
 `;
 
 const Percentage = styled.div`
@@ -207,6 +222,7 @@ const AchievementContainer = styled.div`
   margin-bottom: 0.5rem;
   position: relative;
   margin: 0.25rem;
+  padding-bottom: 1rem;
 `;
 
 const MainContainer = styled.div`
