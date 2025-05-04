@@ -80,7 +80,7 @@ export default function Achievements({ recent, singleGame }) {
             );
           })}
       </MainContainer>
-      {singleGame && (
+      {singleGame && false && (
         <ProgressContainer>
           <Progress percent={game?.completion} />
         </ProgressContainer>

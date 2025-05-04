@@ -321,7 +321,7 @@ export default function MoneyTracker() {
               />
             )}
             {activeTab == 1 && (
-              <Achievements
+              <AchievementsGameIcons
                 activeTabGame={activeTabGame}
                 setActiveTab={setActiveTab}
                 forceRefreshGame={forceRefreshGame}
@@ -330,7 +330,7 @@ export default function MoneyTracker() {
               />
             )}
             {activeTab == 2 && (
-              <AchievementsGameIcons
+              <Achievements
                 recent
                 activeTabGame={activeTabGame}
                 setActiveTab={setActiveTab}
@@ -370,7 +370,7 @@ export default function MoneyTracker() {
                   marginTop: ".25rem",
                 }}
               >
-                UNLOCKED
+                RECENT
               </span>
             </Icon>{" "}
             <Icon
@@ -391,7 +391,7 @@ export default function MoneyTracker() {
                   marginTop: ".25rem",
                 }}
               >
-                LOCKED
+                GAME
               </span>
             </Icon>{" "}
             <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
@@ -403,7 +403,7 @@ export default function MoneyTracker() {
                   marginTop: ".25rem",
                 }}
               >
-                GAMES
+                ALL GAMES
               </span>
             </Icon>
           </Bottom>
