@@ -38,6 +38,7 @@ export default function Games({ setActiveTab }) {
             <FaTrophy />
           </TrophyIcon>
           <TrophyData>{completed}</TrophyData>
+          <Progress percent={completion} />
         </Status>
       </Data>
     </GameContainer>
@@ -61,6 +62,7 @@ export default function Games({ setActiveTab }) {
 const TrophyData = styled.div`
   font-size: 1rem;
   transform: translateY(1px);
+  margin-right: 1rem;
 `;
 
 const TrophyIcon = styled.div`

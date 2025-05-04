@@ -21,9 +21,7 @@ export default function Achievements({ recent, singleGame }) {
   let achSorted = [];
 
   if (!recent) {
-    achSorted = [
-      ...(game?.achievements ?? [])?.filter((ach) => ach?.achieved == 0),
-    ];
+    achSorted = [...(game?.achievements ?? [])];
     achSorted = achSorted?.sort(
       (ach1, ach2) => ach2?.percentage - ach1?.percentage
     );

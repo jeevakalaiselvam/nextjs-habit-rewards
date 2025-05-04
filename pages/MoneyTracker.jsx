@@ -321,7 +321,7 @@ export default function MoneyTracker() {
               />
             )}
             {activeTab == 1 && (
-              <AchievementsGameIcons
+              <Achievements
                 activeTabGame={activeTabGame}
                 setActiveTab={setActiveTab}
                 forceRefreshGame={forceRefreshGame}
