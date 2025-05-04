@@ -73,7 +73,7 @@ const defaultFilter = { rating: "0" };
 
 export default function MoneyTracker() {
   const dispatch = useDispatch();
-  const [activeMode, setActiveMode] = useState(1);
+  const [activeMode, setActiveMode] = useState(0);
   const [activeTab, setActiveTab] = useState(0);
   const [activeTabGame, setActiveTabGame] = useState(0);
   const [showEntry, setShowEntry] = useState(false);
