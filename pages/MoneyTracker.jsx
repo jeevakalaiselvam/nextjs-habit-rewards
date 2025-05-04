@@ -321,7 +321,7 @@ export default function MoneyTracker() {
               />
             )}
             {activeTab == 1 && (
-              <AchievementsGameIcons
+              <Achievements
                 activeTabGame={activeTabGame}
                 setActiveTab={setActiveTab}
                 forceRefreshGame={forceRefreshGame}
@@ -361,6 +361,18 @@ export default function MoneyTracker() {
                 PROFILE
               </span>
             </Icon>
+            <Icon onClick={() => setActiveTab(2)} data-active={activeTab == 2}>
+              <HiClock />{" "}
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                RECENT
+              </span>
+            </Icon>{" "}
             <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
               <HiViewBoards />{" "}
               <span
@@ -373,7 +385,16 @@ export default function MoneyTracker() {
                 GAMES
               </span>
             </Icon>
-            <Icon onClick={() => setActiveTab(1)} data-active={activeTab == 1}>
+            <Icon
+              onClick={() => {
+                if (!selectedGameId) {
+                  setActiveTab(0);
+                } else {
+                  setActiveTab(1);
+                }
+              }}
+              data-active={activeTab == 1}
+            >
               <HiChartPie />{" "}
               <span
                 style={{
@@ -383,18 +404,6 @@ export default function MoneyTracker() {
                 }}
               >
                 ACHIEVEMENTS
-              </span>
-            </Icon>{" "}
-            <Icon onClick={() => setActiveTab(2)} data-active={activeTab == 2}>
-              <HiClock />{" "}
-              <span
-                style={{
-                  fontSize: ".5rem",
-                  fontWeight: 800,
-                  marginTop: ".25rem",
-                }}
-              >
-                RECENT
               </span>
             </Icon>{" "}
           </Bottom>

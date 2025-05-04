@@ -10,6 +10,7 @@ import {
   GAME_UNLOCK_TYPE_ALL,
   getaUnlockedAchievementsByType,
 } from "./helpers/gameHelper";
+import { COMPLETION_TARGET } from "./helpers/constantHelper";
 
 export default function Achievements({ recent, singleGame }) {
   const dispatch = useDispatch();
@@ -79,7 +80,12 @@ export default function Achievements({ recent, singleGame }) {
       </MainContainer>
       {singleGame && (
         <ProgressContainer>
-          <Progress percent={game?.completion} />
+          <Progress
+            percent={(
+              (game?.completed / (game?.total * COMPLETION_TARGET)) *
+              100
+            ).toFixed(0)}
+          />
         </ProgressContainer>
       )}
     </Container>
@@ -91,7 +97,6 @@ const ProgressContainer = styled.div`
   align-items: center;
   justify-content: center;
   min-width: 100%;
-  padding: 0rem;
 `;
 
 const Percentage = styled.div`

@@ -8,6 +8,7 @@ import { Progress, Spin } from "antd";
 import { FaTrophy } from "react-icons/fa";
 import { LoadingOutlined } from "@ant-design/icons";
 import GameCompletion from "./GameCompletion";
+import { COMPLETION_TARGET } from "./helpers/constantHelper";
 
 export default function Games({ setActiveTab }) {
   const dispatch = useDispatch();
@@ -40,7 +41,11 @@ export default function Games({ setActiveTab }) {
           </TrophyIcon>
           <TrophyData>{completed}</TrophyData>
         </Status>
-        <Progress percent={completed >= 1 ? 100 : 0} />
+        <Progress
+          percent={((completed / (total * COMPLETION_TARGET)) * 100)?.toFixed(
+            0
+          )}
+        />
       </Data>
     </GameContainer>
   );

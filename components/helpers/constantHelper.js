@@ -49,3 +49,5 @@ export const GAME_RATING_OPTIONS = [
   { id: "4", value: "4" },
   { id: "5", value: "5" },
 ];
+
+export const COMPLETION_TARGET = 25 / 100;
