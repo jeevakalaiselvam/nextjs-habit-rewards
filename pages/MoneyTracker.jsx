@@ -47,7 +47,7 @@ import { FaCheckCircle, FaGamepad, FaTrophy } from "react-icons/fa";
 import { Button, DatePicker, Popover, Select } from "antd";
 import dayjs from "dayjs";
 import WalletEMI from "../components/moneytracker/WalletEMI";
-import { MdAccessTimeFilled } from "react-icons/md";
+import { MdAccessTimeFilled, MdGames, MdVideogameAsset } from "react-icons/md";
 import Wishlist from "../components/Wishlist";
 import EntryGame from "../components/moneytracker/EntryGame";
 import {
@@ -66,6 +66,8 @@ import {
   getaUnlockedAchievementsByType,
 } from "../components/helpers/gameHelper";
 import AchievementsIcons from "../components/AchievementsIcons";
+import { IoGameControllerSharp } from "react-icons/io5";
+import AchievementsGameIcons from "../components/AchievementsGameIcons";
 
 const defaultFilter = { rating: "0" };
 
@@ -129,7 +131,54 @@ export default function MoneyTracker() {
   }
 
   if (activeMode == 1 && activeTab == 0) {
-    title = "Games";
+    let achSorted = getaUnlockedAchievementsByType(games, GAME_UNLOCK_TYPE_ALL);
+    title = (
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            marginRight: "1rem",
+            color: "#3BD987",
+          }}
+        >
+          <div
+            style={{
+              transform: "translateY(2px)",
+              fontSize: "1.5rem",
+            }}
+          >
+            <IoGameControllerSharp />
+          </div>
+          <div style={{ marginLeft: ".25rem", fontSize: "1.35rem" }}>
+            {games?.length}
+          </div>
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#66c0f4",
+          }}
+        >
+          <div style={{ transform: "translateY(1px)" }}>
+            <FaTrophy />
+          </div>
+          <div style={{ marginLeft: ".25rem", fontSize: "1.35rem" }}>
+            {achSorted?.length}
+          </div>
+        </div>
+      </div>
+    );
+    lowFont = true;
   }
 
   if (activeMode == 1 && activeTab == 1) {
@@ -145,6 +194,7 @@ export default function MoneyTracker() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          color: "#66c0f4",
         }}
       >
         <div style={{ transform: "translateY(1px)" }}>
@@ -271,7 +321,7 @@ export default function MoneyTracker() {
               />
             )}
             {activeTab == 1 && (
-              <Achievements
+              <AchievementsGameIcons
                 activeTabGame={activeTabGame}
                 setActiveTab={setActiveTab}
                 forceRefreshGame={forceRefreshGame}
@@ -308,7 +358,7 @@ export default function MoneyTracker() {
                   marginTop: ".25rem",
                 }}
               >
-                ICONS
+                PROFILE
               </span>
             </Icon>
             <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
@@ -523,8 +573,6 @@ const Name = styled.div`
   justify-content: flex-start;
   font-size: ${(props) => (props.lowFont ? "1.25rem" : "2rem")};
   transform: translate(-10px, -0px);
-  text-shadow: 0 0 1px white, 0 0 1px rgba(255, 255, 255.25),
-    0 0 1px rgba(255, 255, 255.25);
 `;
 
 const Date = styled.div`

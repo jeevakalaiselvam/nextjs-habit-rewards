@@ -12,7 +12,7 @@ import {
 } from "./helpers/gameHelper";
 import { generateDarkTextColorForLightBg } from "./helpers/colorHelper";
 
-export default function AchievementsIcons({ recent, singleGame }) {
+export default function AchievementsGameIcons({ recent, singleGame }) {
   const dispatch = useDispatch();
   const { habittracker } = useSelector((state) => state);
   const { games, selectedGameId } = habittracker;
@@ -20,15 +20,19 @@ export default function AchievementsIcons({ recent, singleGame }) {
   const [selectedAch, setSelectedAch] = useState({});
 
   let achSorted = [];
+  let allAchsUnlocked = [];
 
-  if (!recent) {
-    achSorted = [...(game?.achievements ?? [])];
-    achSorted = achSorted?.sort(
-      (ach1, ach2) => ach2?.percentage - ach1?.percentage
-    );
-  } else {
-    achSorted = getaUnlockedAchievementsByType(games, GAME_UNLOCK_TYPE_ALL);
-  }
+  achSorted = [
+    ...(game?.achievements ?? [])?.filter((ach) => ach?.achieved == 1),
+  ];
+  achSorted = achSorted?.sort(
+    (ach1, ach2) => ach2?.unlocktime - ach1?.unlocktime
+  );
+  allAchsUnlocked = getaUnlockedAchievementsByType(games, GAME_UNLOCK_TYPE_ALL);
+  let unlockIndex = {};
+  allAchsUnlocked?.forEach((ach, index) => {
+    unlockIndex[ach?.name] = allAchsUnlocked?.length - index;
+  });
 
   let actoSHow =
     Object.keys(selectedAch)?.length > 0 ? selectedAch : achSorted?.[0];
@@ -44,7 +48,7 @@ export default function AchievementsIcons({ recent, singleGame }) {
             achSorted?.map((ach, index) => {
               return (
                 <AchievementContainer>
-                  <Trigger>{achSorted?.length - index}</Trigger>
+                  <Trigger>{unlockIndex?.[ach?.name]}</Trigger>
                   <Icon
                     icon={ach?.icon}
                     onClick={() => {

@@ -31,7 +31,9 @@ export default function Achievements({ recent, singleGame }) {
   return (
     <Container>
       <MainContainer singleGame={singleGame}>
-        {achSorted?.length == 0 && <div>No Unlocks</div>}
+        {achSorted?.length == 0 && (
+          <div style={{ width: "100%", textAlign: "center" }}>No Unlocks</div>
+        )}
         {achSorted?.length > 0 &&
           achSorted?.map((ach, index) => {
             return (
