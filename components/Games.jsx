@@ -19,8 +19,10 @@ export default function Games({ setActiveTab }) {
   };
 
   useEffect(() => {
-    refreshGames();
-  }, []);
+    if (!games) {
+      refreshGames();
+    }
+  }, [games]);
 
   const returnGame = ({ name, id, completed, completion, total }) => (
     <GameContainer
