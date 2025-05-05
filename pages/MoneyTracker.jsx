@@ -229,8 +229,16 @@ export default function MoneyTracker() {
 
   useEffect(() => {
     if (window) {
-      setFilterOption(localStorage.getItem("PREFERENCE") ?? defaultFilter);
+      setActiveMode(localStorage.getItem("DEFAULT_VIEW") ?? 0);
     }
+  }, []);
+
+  const refreshGames = () => {
+    dispatch(fetchAllGames());
+  };
+
+  useEffect(() => {
+    refreshGames();
   }, []);
 
   return (
@@ -281,12 +289,26 @@ export default function MoneyTracker() {
           </Picker>
         )}
         {activeMode == 0 && (
-          <ModeIcon onClick={() => setActiveMode(1)}>
+          <ModeIcon
+            onClick={() => {
+              if (window) {
+                localStorage.setItem("DEFAULT_VIEW", 1);
+              }
+              setActiveMode(1);
+            }}
+          >
             <FaGamepad />
           </ModeIcon>
         )}
         {activeMode == 1 && (
-          <ModeIcon onClick={() => setActiveMode(0)}>
+          <ModeIcon
+            onClick={() => {
+              if (window) {
+                localStorage.setItem("DEFAULT_VIEW", 0);
+              }
+              setActiveMode(0);
+            }}
+          >
             <HiClipboardCheck />
           </ModeIcon>
         )}
