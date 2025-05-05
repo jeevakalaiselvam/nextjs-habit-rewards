@@ -145,27 +145,6 @@ export default function MoneyTracker() {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            marginRight: "1rem",
-            color: "#3BD987",
-          }}
-        >
-          <div
-            style={{
-              transform: "translateY(2px)",
-              fontSize: "1.5rem",
-            }}
-          >
-            <IoGameControllerSharp />
-          </div>
-          <div style={{ marginLeft: ".25rem", fontSize: "1.35rem" }}>
-            {games?.length}
-          </div>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
             color: "#66c0f4",
           }}
         >
