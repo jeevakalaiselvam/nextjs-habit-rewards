@@ -290,7 +290,7 @@ export default function MoneyTracker() {
             <HiClipboardCheck />
           </ModeIcon>
         )}
-        {activeMode == 1 && activeTab == 0 && (
+        {activeMode == 1 && (
           <ModeIcon1
             onClick={() => {
               dispatch(fetchAllGames());
@@ -299,7 +299,7 @@ export default function MoneyTracker() {
             <TbRefreshDot />
           </ModeIcon1>
         )}
-        {activeMode == 1 && activeTab == 1 && (
+        {activeMode == 1 && false && (
           <ModeIcon1
             onClick={() => {
               dispatch(refreshGameSingle(selectedGameId));
@@ -313,7 +313,8 @@ export default function MoneyTracker() {
         <>
           <Content showEntry={showEntry}>
             {activeTab == 0 && (
-              <Games
+              <AchievementsIcons
+                recent
                 activeTabGame={activeTabGame}
                 setActiveTab={setActiveTab}
                 forceRefreshGame={forceRefreshGame}
@@ -358,7 +359,7 @@ export default function MoneyTracker() {
                   marginTop: ".25rem",
                 }}
               >
-                PROFILE
+                ICONS
               </span>
             </Icon>
             <Icon onClick={() => setActiveTab(2)} data-active={activeTab == 2}>
@@ -370,10 +371,10 @@ export default function MoneyTracker() {
                   marginTop: ".25rem",
                 }}
               >
-                RECENT
+                DESCRIPTION
               </span>
             </Icon>{" "}
-            <Icon
+            {/* <Icon
               onClick={() => {
                 if (!selectedGameId) {
                   setActiveTab(0);
@@ -405,7 +406,7 @@ export default function MoneyTracker() {
               >
                 ALL GAMES
               </span>
-            </Icon>
+            </Icon> */}
           </Bottom>
         </>
       )}

@@ -4,18 +4,19 @@ import { fetchAllGames } from "../store/gameSlice";
 import styled from "styled-components";
 import Select from "react-select";
 import { HEADER_IMAGE } from "./helpers/urlHelper";
-import { Progress } from "antd";
+import { Progress, Spin } from "antd";
 import { FaTrophy } from "react-icons/fa";
 import {
   GAME_UNLOCK_TYPE_ALL,
   getaUnlockedAchievementsByType,
 } from "./helpers/gameHelper";
 import { COMPLETION_TARGET } from "./helpers/constantHelper";
+import { LoadingOutlined } from "@ant-design/icons";
 
 export default function Achievements({ recent, singleGame }) {
   const dispatch = useDispatch();
   const { habittracker } = useSelector((state) => state);
-  const { games, selectedGameId } = habittracker;
+  const { games, selectedGameId, loading } = habittracker;
   const game = games?.find((game) => game?.id == selectedGameId);
 
   let achSorted = [];
@@ -29,62 +30,70 @@ export default function Achievements({ recent, singleGame }) {
     achSorted = getaUnlockedAchievementsByType(games, GAME_UNLOCK_TYPE_ALL);
   }
 
-  return (
-    <Container>
-      <MainContainer singleGame={singleGame}>
-        {achSorted?.length == 0 && (
-          <div style={{ width: "100%", textAlign: "center" }}>No Unlocks</div>
-        )}
-        {achSorted?.length > 0 &&
-          achSorted?.map((ach, index) => {
-            return (
-              <AchievementContainer>
-                <Icon
-                  icon={ach?.icon}
-                  onClick={() => {
-                    if (true && window !== "undefined") {
-                      const searchQuery = `${
-                        ach?.displayName
-                      } ach ${encodeURIComponent(ach?.gameName)} `;
-                      window.open(
-                        `https://www.google.com/search?q=${searchQuery}`
-                      );
-                      // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                    }
-                  }}
-                ></Icon>
-                <Data>
-                  <Inner
-                    width={ach?.percentage}
-                    color={ach?.achieved == 1 ? "#145935" : "#17435c"}
-                  ></Inner>
-                  <Title>{ach?.displayName}</Title>
-                  <Description>{ach?.description}</Description>
-                  {
-                    <Percentage
-                      color={
-                        ach?.achieved == 1
-                          ? "#3BD987"
-                          : ach?.percentage < 1
-                          ? "#ffe23b"
-                          : "#66c0f4"
+  if (loading) {
+    return (
+      <Container>
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+      </Container>
+    );
+  } else {
+    return (
+      <Container>
+        <MainContainer singleGame={singleGame}>
+          {achSorted?.length == 0 && (
+            <div style={{ width: "100%", textAlign: "center" }}>No Unlocks</div>
+          )}
+          {achSorted?.length > 0 &&
+            achSorted?.map((ach, index) => {
+              return (
+                <AchievementContainer>
+                  <Icon
+                    icon={ach?.icon}
+                    onClick={() => {
+                      if (true && window !== "undefined") {
+                        const searchQuery = `${
+                          ach?.displayName
+                        } ach ${encodeURIComponent(ach?.gameName)} `;
+                        window.open(
+                          `https://www.google.com/search?q=${searchQuery}`
+                        );
+                        // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
                       }
-                    >
-                      {ach?.percentage}%
-                    </Percentage>
-                  }
-                </Data>
-              </AchievementContainer>
-            );
-          })}
-      </MainContainer>
-      {singleGame && false && (
-        <ProgressContainer>
-          <Progress percent={game?.completion} />
-        </ProgressContainer>
-      )}
-    </Container>
-  );
+                    }}
+                  ></Icon>
+                  <Data>
+                    <Inner
+                      width={ach?.percentage}
+                      color={ach?.achieved == 1 ? "#145935" : "#17435c"}
+                    ></Inner>
+                    <Title>{ach?.displayName}</Title>
+                    <Description>{ach?.description}</Description>
+                    {
+                      <Percentage
+                        color={
+                          ach?.achieved == 1
+                            ? "#3BD987"
+                            : ach?.percentage < 1
+                            ? "#ffe23b"
+                            : "#66c0f4"
+                        }
+                      >
+                        {ach?.percentage}%
+                      </Percentage>
+                    }
+                  </Data>
+                </AchievementContainer>
+              );
+            })}
+        </MainContainer>
+        {singleGame && false && (
+          <ProgressContainer>
+            <Progress percent={game?.completion} />
+          </ProgressContainer>
+        )}
+      </Container>
+    );
+  }
 }
 
 const ProgressContainer = styled.div`
