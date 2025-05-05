@@ -25,7 +25,6 @@ const handler = async (req, res) => {
         return newGame;
       });
 
-      console.log("GAME", FETCH_ALL_ACHIEVEMENTS_SCHEMA(11111));
       //Get All Achievements Schema for All Games
       finalGamesResponse = await Promise.all(
         finalGamesResponse?.map(async (game) => {
