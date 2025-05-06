@@ -314,7 +314,7 @@ export default function MoneyTracker() {
         <>
           <Content showEntry={showEntry}>
             {activeTab == 0 && (
-              <AchievementsIcons
+              <Games
                 recent
                 activeTabGame={activeTabGame}
                 setActiveTab={setActiveTab}
@@ -375,7 +375,7 @@ export default function MoneyTracker() {
                 DESCRIPTION
               </span>
             </Icon>{" "}
-            {/* <Icon
+            <Icon
               onClick={() => {
                 if (!selectedGameId) {
                   setActiveTab(0);
@@ -407,7 +407,7 @@ export default function MoneyTracker() {
               >
                 ALL GAMES
               </span>
-            </Icon> */}
+            </Icon>
           </Bottom>
         </>
       )}

@@ -38,8 +38,8 @@ export default function Games({ setActiveTab }) {
             <FaTrophy />
           </TrophyIcon>
           <TrophyData>{completed}</TrophyData>
-          <Progress percent={completion} />
         </Status>
+        <Progress percent={completion} />
       </Data>
     </GameContainer>
   );
