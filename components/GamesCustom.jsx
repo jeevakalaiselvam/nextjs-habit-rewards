@@ -56,7 +56,6 @@ export default function Atom({
         });
         return mainGame;
       });
-      console.log({ gamesMorphed });
       setValues((old) => ({
         ...old,
         gamesSheetData: gamesMorphed ?? [],

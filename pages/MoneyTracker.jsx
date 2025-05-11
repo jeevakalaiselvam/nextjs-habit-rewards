@@ -168,7 +168,7 @@ export default function MoneyTracker() {
     lowFont = true;
   }
 
-  if (activeMode == 1 && (activeTab == 1 || activeTab == 2 || activeTab == 3)) {
+  if (activeMode == 1 && (activeTab == 0 || activeTab == 1 || activeTab == 2)) {
     let achSorted = getaUnlockedAchievementsByType(games, GAME_UNLOCK_TYPE_ALL);
     title = (
       <div
@@ -176,9 +176,10 @@ export default function MoneyTracker() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: "#66c0f4",
+          color: "#3BD987",
         }}
       >
+        <div style={{ marginRight: "1rem" }}>PlatinumSeeker</div>
         <div style={{ transform: "translateY(1px)" }}>
           <FaTrophy />
         </div>
