@@ -141,7 +141,13 @@ export default function Atom({
     (ach1, ach2) => ach2?.createdAt - ach1?.createdAt
   );
 
-  console.log({ sortedAchs });
+  sortedAchs = sortedAchs?.reverse();
+
+  let sortedIndexMapper = {};
+  sortedAchs?.forEach((ach, index) => {
+    sortedIndexMapper[`${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`] =
+      sortedAchs?.length - index;
+  });
 
   return (
     <Container>
@@ -236,7 +242,19 @@ export default function Atom({
                           );
                         }}
                       >
-                        DONE
+                        {
+                          sortedIndexMapper?.[
+                            `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
+                          ]
+                        }
+                        <span
+                          style={{
+                            fontSize: ".8rem",
+                            transform: "translateY(1px)",
+                          }}
+                        >
+                          <FaTrophy />
+                        </span>
                       </Complete>
                     )}
                     {!isCompleted && (
