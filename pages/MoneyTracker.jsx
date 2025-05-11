@@ -539,7 +539,7 @@ const Name = styled.div`
   flex: 1;
   justify-content: flex-start;
   font-size: ${(props) => (props.lowFont ? "1.25rem" : "2rem")};
-  transform: translate(-10px, 2px);
+  transform: translate(-10px, 4px);
 `;
 
 const Date = styled.div`
