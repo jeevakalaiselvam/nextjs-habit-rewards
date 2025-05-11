@@ -486,50 +486,52 @@ const AchDataContainer = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  height: 50px;
+  height: 70px;
   padding: 0rem 0.5rem;
 `;
 
 const AchTitle = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   width: 200px;
-  font-size: 0.95rem;
-  height: 20px;
-  padding: 0rem 1rem 0rem 0.25rem;
+  font-size: 0.9rem;
+  min-height: 35px;
+  padding: 0.5rem 1rem 0.5rem 0.25rem;
 `;
 
 const AchDetails = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   flex: 1;
   opacity: 0.5;
   width: 200px;
-  padding: 0rem 1rem 0rem 0.25rem;
+  min-height: 35px;
+  padding: 0.5rem 1rem 0rem 0.25rem;
 `;
 
 const AchTitle2 = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   width: 220px;
-  font-size: 0.95rem;
-  height: 20px;
-  padding: 0rem 1rem 0rem 0.25rem;
+  font-size: 0.9rem;
+  min-height: 35px;
+  padding: 0.5rem 1rem 0.5rem 0.25rem;
 `;
 
 const AchDetails2 = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   flex: 1;
   opacity: 0.5;
   width: 220px;
-  padding: 0rem 1rem 0rem 0.25rem;
+  min-height: 35px;
+  padding: 0.5rem 1rem 0rem 0.25rem;
 `;
 
 const AchievementForGameSingle = styled.div`
@@ -595,8 +597,8 @@ const GamesContainer = styled.div`
   width: 100%;
   justify-content: flex-start;
   flex-direction: column;
-  min-height: 75vh;
-  max-height: 75vh;
+  min-height: 77vh;
+  max-height: 77vh;
   overflow: scroll;
 `;
 
