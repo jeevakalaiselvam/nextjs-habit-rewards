@@ -189,7 +189,7 @@ export default function Atom({
                           style={{
                             marginRight: ".25rem",
                             fontSize: ".9rem",
-                            transform: "translateY(2px)",
+                            transform: "translate(3px,1px)",
                           }}
                         >
                           <FaTrophy />
@@ -250,7 +250,7 @@ export default function Atom({
                         <span
                           style={{
                             fontSize: ".8rem",
-                            transform: "translateY(1px)",
+                            transform: "translate(3px,1px)",
                           }}
                         >
                           <FaTrophy />
@@ -328,8 +328,9 @@ export default function Atom({
                       {sortedAchs?.length - index}{" "}
                       <span
                         style={{
+                          marginRight: ".15rem",
                           fontSize: ".8rem",
-                          transform: "translateY(1px)",
+                          transform: "translate(3px,1px)",
                         }}
                       >
                         <FaTrophy />
