@@ -578,6 +578,7 @@ const GameTitle = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  padding: 0.25rem 0rem;
   background-color: rgba(0, 0, 0, 0.8);
 `;
 
