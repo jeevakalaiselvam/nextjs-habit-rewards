@@ -543,6 +543,7 @@ const AchievementForGameSingle = styled.div`
   background: ${(props) => `url("${props.image}")`};
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center;
   cursor: pointer;
 `;
 
@@ -581,6 +582,7 @@ const GameItem = styled.div`
   background: ${(props) => `url("${props?.image}")`};
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center;
   position: relative;
   cursor: pointer;
   border: ${`1px solid #000000`};
