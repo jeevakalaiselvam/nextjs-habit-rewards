@@ -27,6 +27,8 @@ export default function Atom({
   setActiveTab,
   setTitleMain,
   forceRefreshGame,
+  setForceRefreshGame,
+  setTotalCount,
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -66,6 +68,7 @@ export default function Atom({
   const refreshCompletedGames = () => {
     setValues((old) => ({ ...old, achsCompletedLoading: true }));
     axios.get("/api/completed").then((response) => {
+      setTotalCount(response?.data?.achievements?.length);
       setValues((old) => ({
         ...old,
         completedAchs: response?.data?.achievements ?? [],
@@ -77,6 +80,7 @@ export default function Atom({
   const refreshGamesAndAchs = () => {
     refreshGames();
     refreshCompletedGames();
+    setForceRefreshGame(false);
   };
 
   const markAchComplete = (achId) => {
@@ -98,6 +102,10 @@ export default function Atom({
       refreshGamesAndAchs();
     }
   }, [forceRefreshGame]);
+
+  useEffect(() => {
+    refreshGamesAndAchs();
+  }, []);
 
   const selectedGameDefault =
     values?.selectedGame ?? values?.gamesSheetData?.[0]?.["GAME NAME"];
@@ -283,7 +291,7 @@ export default function Atom({
         <MainLeftContainer>
           {!values?.gamesSheetDataLoading && (
             <GameSelectedData>
-              {sortedAchs?.map((ach) => {
+              {sortedAchs?.map((ach, index) => {
                 let isCompleted = values?.completedAchs
                   ?.map((ach) => ach?.title)
                   ?.includes(`${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`);
@@ -293,115 +301,30 @@ export default function Atom({
 
                 return (
                   <AchSingleContainer>
-                    {isCompleted && (
-                      <Complete
-                        onClick={() => {
-                          removeAchComplete(
-                            `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
-                          );
+                    <CompleteLocked
+                      onClick={() => {
+                        removeAchComplete(
+                          `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
+                        );
+                      }}
+                    >
+                      {sortedAchs?.length - index}{" "}
+                      <span
+                        style={{
+                          fontSize: ".8rem",
+                          transform: "translateY(1px)",
                         }}
                       >
-                        DONE
-                      </Complete>
-                    )}
-                    {!isCompleted && (
-                      <InCompleted
-                        onClick={() => {
-                          markAchComplete(
-                            `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
-                          );
-                        }}
-                        onMouseEnter={() => {
-                          setValues((old) => ({
-                            ...old,
-                            hoveredAch: `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`,
-                          }));
-                        }}
-                        onMouseLeave={() => {
-                          setValues((old) => ({ ...old, hoveredAch: `` }));
-                        }}
-                      >
-                        ACTIVE
-                      </InCompleted>
-                    )}
+                        <FaTrophy />
+                      </span>
+                    </CompleteLocked>
+                    <Name>{ach?.["GAME NAME"]}</Name>
                     <AchievementForGameSingle
                       image={ach?.["ACH IMAGE"]}
                     ></AchievementForGameSingle>
                     <AchDataContainer>
-                      <AchTitle>{ach?.["ACH NAME"]}</AchTitle>
-                      <AchDetails>{ach?.["ACH DESC"]}</AchDetails>
-                    </AchDataContainer>
-                  </AchSingleContainer>
-                );
-              })}
-            </GameSelectedData>
-          )}
-          {values?.gamesSheetDataLoading && (
-            <Spin
-              indicator={
-                <LoadingOutlined
-                  style={{
-                    fontSize: 48,
-                    marginTop: "2rem",
-                  }}
-                  spin
-                />
-              }
-            />
-          )}
-        </MainLeftContainer>
-      )}
-      {activeTab == 3 && (
-        <MainLeftContainer>
-          {!values?.gamesSheetDataLoading && (
-            <GameSelectedData>
-              {sortedAchs?.map((ach) => {
-                let isCompleted = values?.completedAchs
-                  ?.map((ach) => ach?.title)
-                  ?.includes(`${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`);
-                let isHovered =
-                  values?.hoveredAch ==
-                  `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`;
-
-                return (
-                  <AchSingleContainer>
-                    {isCompleted && (
-                      <Complete
-                        onClick={() => {
-                          removeAchComplete(
-                            `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
-                          );
-                        }}
-                      >
-                        DONE
-                      </Complete>
-                    )}
-                    {!isCompleted && (
-                      <InCompleted
-                        onClick={() => {
-                          markAchComplete(
-                            `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
-                          );
-                        }}
-                        onMouseEnter={() => {
-                          setValues((old) => ({
-                            ...old,
-                            hoveredAch: `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`,
-                          }));
-                        }}
-                        onMouseLeave={() => {
-                          setValues((old) => ({ ...old, hoveredAch: `` }));
-                        }}
-                      >
-                        ACTIVE
-                      </InCompleted>
-                    )}
-                    <AchievementForGameSingle
-                      image={ach?.["ACH IMAGE"]}
-                    ></AchievementForGameSingle>
-                    <AchDataContainer>
-                      <AchTitle>{ach?.["ACH NAME"]}</AchTitle>
-                      <AchDetails>{ach?.["ACH DESC"]}</AchDetails>
+                      <AchTitle2>{ach?.["ACH NAME"]}</AchTitle2>
+                      <AchDetails2>{ach?.["ACH DESC"]}</AchDetails2>
                     </AchDataContainer>
                   </AchSingleContainer>
                 );
@@ -462,8 +385,8 @@ const InCompleted = styled.div`
   right: -1.9rem;
   top: 51%;
   padding: 0;
-  height: 40px;
-  width: 65px;
+  height: 30px;
+  width: 70px;
 `;
 
 const Complete = styled.div`
@@ -474,13 +397,13 @@ const Complete = styled.div`
   background-color: #3bd987;
   color: ${generateDarkTextColorForLightBg("#3bd987")};
   position: absolute;
-  transform: translateY(-50%) rotate(-90deg);
+  transform: translateY(-52%) rotate(-90deg);
   right: -1.9rem;
   top: 51%;
   padding: 0;
   font-weight: bolder;
-  height: 40px;
-  width: 65px;
+  height: 30px;
+  width: 70px;
 `;
 
 const CompleteLocked = styled.div`
@@ -498,6 +421,22 @@ const CompleteLocked = styled.div`
   padding: 0;
   font-weight: bolder;
   width: 70px;
+`;
+
+const Name = styled.div`
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  color: #fefefe;
+  font-size: 0.7rem;
+  opacity: 0.2;
+  text-align: right;
+  position: absolute;
+  right: 8px;
+  top: 2px;
+  padding: 0;
+  width: 50px;
 `;
 
 const AchSingleContainer = styled.div`
@@ -530,16 +469,17 @@ const AchDataContainer = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   height: 50px;
+  padding: 0rem 0.5rem;
 `;
 
 const AchTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 225px;
+  width: 200px;
   font-size: 0.95rem;
   height: 20px;
-  padding: 0rem 1rem 0rem 0rem;
+  padding: 0rem 1rem 0rem 0.25rem;
 `;
 
 const AchDetails = styled.div`
@@ -549,8 +489,29 @@ const AchDetails = styled.div`
   font-size: 0.85rem;
   flex: 1;
   opacity: 0.5;
-  width: 225px;
-  padding: 0rem 1rem 0rem 0rem;
+  width: 200px;
+  padding: 0rem 1rem 0rem 0.25rem;
+`;
+
+const AchTitle2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 220px;
+  font-size: 0.95rem;
+  height: 20px;
+  padding: 0rem 1rem 0rem 0.25rem;
+`;
+
+const AchDetails2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 0.85rem;
+  flex: 1;
+  opacity: 0.5;
+  width: 220px;
+  padding: 0rem 1rem 0rem 0.25rem;
 `;
 
 const AchievementForGameSingle = styled.div`
@@ -560,7 +521,7 @@ const AchievementForGameSingle = styled.div`
   width: 140px;
   height: 70px;
   background: ${(props) => `url("${props.image}")`};
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   cursor: pointer;
 `;

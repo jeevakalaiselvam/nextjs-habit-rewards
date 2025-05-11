@@ -59,7 +59,7 @@ import Achievements from "../components/Achievements";
 import { useDispatch, useSelector } from "react-redux";
 import { RiRefreshLine } from "react-icons/ri";
 import { fetchAllGames, refreshGameSingle } from "../store/gameSlice";
-import { TbRefreshDot } from "react-icons/tb";
+import { TbRefresh, TbRefreshDot } from "react-icons/tb";
 import { HiTrophy } from "react-icons/hi2";
 import {
   GAME_UNLOCK_TYPE_ALL,
@@ -84,6 +84,7 @@ export default function MoneyTracker() {
   const [filterOption, setFilterOption] = useState(defaultFilter);
   const [open, setOpen] = useState(false);
   const [titleMain, setTitleMain] = useState("Games");
+  const [totalCount, setTotalCount] = useState(0);
   const [lowFontMain, setLowFontMain] = useState(true);
 
   const { habittracker } = useSelector((state) => state);
@@ -134,7 +135,6 @@ export default function MoneyTracker() {
   }
 
   if (activeMode == 1 && activeTab == 0) {
-    let achSorted = getaUnlockedAchievementsByType(games, GAME_UNLOCK_TYPE_ALL);
     title = (
       <div
         style={{
@@ -155,7 +155,7 @@ export default function MoneyTracker() {
             <FaTrophy />
           </div>
           <div style={{ marginLeft: ".25rem", fontSize: "1.35rem" }}>
-            {achSorted?.length}
+            {totalCount}
           </div>
         </div>
       </div>
@@ -168,7 +168,7 @@ export default function MoneyTracker() {
     lowFont = true;
   }
 
-  if (activeMode == 1 && (activeTab == 2 || activeTab == 3)) {
+  if (activeMode == 1 && (activeTab == 1 || activeTab == 2 || activeTab == 3)) {
     let achSorted = getaUnlockedAchievementsByType(games, GAME_UNLOCK_TYPE_ALL);
     title = (
       <div
@@ -183,7 +183,7 @@ export default function MoneyTracker() {
           <FaTrophy />
         </div>
         <div style={{ marginLeft: ".25rem", fontSize: "1.35rem" }}>
-          {achSorted?.length}
+          {totalCount}
         </div>
       </div>
     );
@@ -216,7 +216,8 @@ export default function MoneyTracker() {
   }, []);
 
   const refreshGames = () => {
-    dispatch(fetchAllGames());
+    refreshGame();
+    // dispatch(fetchAllGames());
   };
 
   useEffect(() => {
@@ -249,7 +250,7 @@ export default function MoneyTracker() {
         </EntryModal>
       )}
       <Header>
-        <Name lowFont={lowFontMain}>{titleMain}</Name>
+        <Name lowFont={lowFontMain}>{title}</Name>
         {activeMode == 0 && (
           <Picker>
             <DatePicker
@@ -294,49 +295,28 @@ export default function MoneyTracker() {
             <HiClipboardCheck />
           </ModeIcon>
         )}
-        {activeMode == 1 && (
-          <ModeIcon1
-            onClick={() => {
-              // dispatch(fetchAllGames());
-              setForceRefreshGame(true);
-            }}
-          >
-            <TbRefreshDot />
-          </ModeIcon1>
-        )}
-        {activeMode == 1 && false && (
-          <ModeIcon1
-            onClick={() => {
-              dispatch(refreshGameSingle(selectedGameId));
-            }}
-          >
-            <TbRefreshDot />
-          </ModeIcon1>
-        )}
+        <ModeIcon1
+          onClick={() => {
+            setForceRefreshGame(false);
+            setForceRefreshGame(true);
+          }}
+        >
+          <TbRefresh />
+        </ModeIcon1>
       </Header>
       {activeMode == 1 && (
         <>
           <Content showEntry={showEntry}>
             <GamesCustom
               forceRefreshGame={forceRefreshGame}
+              setForceRefreshGame={setForceRefreshGame}
               activeTab={activeTab}
               setActiveTab={setActiveTab}
               setTitleMain={setTitleMain}
+              setTotalCount={setTotalCount}
             />
           </Content>
           <Bottom>
-            <Icon onClick={() => setActiveTab(3)} data-active={activeTab == 3}>
-              <FaTrophy />{" "}
-              <span
-                style={{
-                  fontSize: ".5rem",
-                  fontWeight: 800,
-                  marginTop: ".25rem",
-                }}
-              >
-                ICONS
-              </span>
-            </Icon>
             <Icon onClick={() => setActiveTab(2)} data-active={activeTab == 2}>
               <HiClock />{" "}
               <span
@@ -346,7 +326,7 @@ export default function MoneyTracker() {
                   marginTop: ".25rem",
                 }}
               >
-                DESCRIPTION
+                RECENT
               </span>
             </Icon>{" "}
             <Icon
