@@ -44,7 +44,7 @@ import Wallets from "../components/moneytracker/Wallets";
 import { getFirstDateOfCurrentMonth } from "../components/helpers/dateHelper";
 import { BiSolidWalletAlt } from "react-icons/bi";
 import { FaCheckCircle, FaGamepad, FaTrophy } from "react-icons/fa";
-import { Button, DatePicker, Popover, Select } from "antd";
+import { Button, DatePicker, message, Popover, Select } from "antd";
 import dayjs from "dayjs";
 import WalletEMI from "../components/moneytracker/WalletEMI";
 import { MdAccessTimeFilled, MdGames, MdVideogameAsset } from "react-icons/md";
@@ -68,6 +68,7 @@ import {
 import AchievementsIcons from "../components/AchievementsIcons";
 import { IoGameControllerSharp } from "react-icons/io5";
 import AchievementsGameIcons from "../components/AchievementsGameIcons";
+import GamesCustom from "../components/GamesCustom";
 
 const defaultFilter = { rating: "0" };
 
@@ -82,6 +83,8 @@ export default function MoneyTracker() {
   const [date, setDate] = useState(getFirstDateOfCurrentMonth());
   const [filterOption, setFilterOption] = useState(defaultFilter);
   const [open, setOpen] = useState(false);
+  const [titleMain, setTitleMain] = useState("Games");
+  const [lowFontMain, setLowFontMain] = useState(true);
 
   const { habittracker } = useSelector((state) => state);
   const { games, selectedGameId } = habittracker;
@@ -246,7 +249,7 @@ export default function MoneyTracker() {
         </EntryModal>
       )}
       <Header>
-        <Name lowFont={lowFont}>{title}</Name>
+        <Name lowFont={lowFontMain}>{titleMain}</Name>
         {activeMode == 0 && (
           <Picker>
             <DatePicker
@@ -294,7 +297,8 @@ export default function MoneyTracker() {
         {activeMode == 1 && (
           <ModeIcon1
             onClick={() => {
-              dispatch(fetchAllGames());
+              // dispatch(fetchAllGames());
+              setForceRefreshGame(true);
             }}
           >
             <TbRefreshDot />
@@ -313,42 +317,12 @@ export default function MoneyTracker() {
       {activeMode == 1 && (
         <>
           <Content showEntry={showEntry}>
-            {activeTab == 0 && (
-              <Games
-                recent
-                activeTabGame={activeTabGame}
-                setActiveTab={setActiveTab}
-                forceRefreshGame={forceRefreshGame}
-                filterOption={filterOption}
-              />
-            )}
-            {activeTab == 1 && (
-              <Achievements
-                activeTabGame={activeTabGame}
-                setActiveTab={setActiveTab}
-                forceRefreshGame={forceRefreshGame}
-                filterOption={filterOption}
-                singleGame
-              />
-            )}
-            {activeTab == 2 && (
-              <Achievements
-                recent
-                activeTabGame={activeTabGame}
-                setActiveTab={setActiveTab}
-                forceRefreshGame={forceRefreshGame}
-                filterOption={filterOption}
-              />
-            )}
-            {activeTab == 3 && (
-              <AchievementsIcons
-                recent
-                activeTabGame={activeTabGame}
-                setActiveTab={setActiveTab}
-                forceRefreshGame={forceRefreshGame}
-                filterOption={filterOption}
-              />
-            )}
+            <GamesCustom
+              forceRefreshGame={forceRefreshGame}
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              setTitleMain={setTitleMain}
+            />
           </Content>
           <Bottom>
             <Icon onClick={() => setActiveTab(3)} data-active={activeTab == 3}>
@@ -378,6 +352,7 @@ export default function MoneyTracker() {
             <Icon
               onClick={() => {
                 if (!selectedGameId) {
+                  message.info("Select from Games..");
                   setActiveTab(0);
                 } else {
                   setActiveTab(1);
