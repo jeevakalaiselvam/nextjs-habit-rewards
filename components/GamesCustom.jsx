@@ -166,10 +166,20 @@ export default function Atom({
       sortedAchs?.length - index;
   });
 
+  const playSound = (link) => {
+    const audio = new Audio(link);
+    audio.play();
+  };
+
   useEffect(() => {
+    if (values?.toShow) {
+      playSound("/effect.mp3");
+    } else {
+      playSound("/lock.mp3");
+    }
     let timer = setTimeout(() => {
       setValues((old) => ({ ...old, toShow: false, toShowAch: {} }));
-    }, 1000);
+    }, 3000);
     return () => {
       clearTimeout(timer);
     };
@@ -432,6 +442,18 @@ const ToShowWrapper = styled.div`
   width: 100%;
   bottom: -1rem;
   left: 0;
+  animation: slideUp 0.25s linear forwards;
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
 `;
 
 const Trophies = styled.div`
