@@ -377,13 +377,13 @@ export default function Atom({
                     <FaTrophy />
                   </span>{" "}
                   <span style={{ marginRight: ".5rem" }}>
-                    {sortedAchs?.length}/{selectedGameAchs?.length}
+                    {orderAchs?.length}/{selectedGameAchs?.length}
                   </span>
                 </Trophies>
                 <ProgressInner>
                   <Progress
                     percent={(
-                      (sortedAchs?.length / selectedGameAchs?.length) *
+                      (orderAchs?.length / selectedGameAchs?.length) *
                       100
                     )?.toFixed(0)}
                   />
@@ -473,13 +473,13 @@ export default function Atom({
                     <FaTrophy />
                   </span>{" "}
                   <span style={{ marginRight: ".5rem" }}>
-                    {sortedAchs?.length}/{selectedGameAchs?.length}
+                    {orderAchs?.length}/{selectedGameAchs?.length}
                   </span>
                 </Trophies>
                 <ProgressInner>
                   <Progress
                     percent={(
-                      (sortedAchs?.length / selectedGameAchs?.length) *
+                      (orderAchs?.length / selectedGameAchs?.length) *
                       100
                     )?.toFixed(0)}
                   />
