@@ -362,32 +362,34 @@ export default function Atom({
               }
             />
           )}
-          {values?.selectedGame && (
-            <ProgressInfo2>
-              <Trophies>
-                <span
-                  style={{
-                    marginRight: ".5rem",
-                    fontSize: ".9rem",
-                    transform: "translate(3px,1px)",
-                  }}
-                >
-                  <FaTrophy />
-                </span>{" "}
-                <span style={{ marginRight: ".5rem" }}>
-                  {sortedAchs?.length}/{selectedGameAchs?.length}
-                </span>
-              </Trophies>
-              <ProgressInner>
-                <Progress
-                  percent={(
-                    (sortedAchs?.length / selectedGameAchs?.length) *
-                    100
-                  )?.toFixed(0)}
-                />
-              </ProgressInner>
-            </ProgressInfo2>
-          )}
+          {values?.selectedGame &&
+            !achsCompletedLoading &&
+            !gamesSheetDataLoading && (
+              <ProgressInfo2>
+                <Trophies>
+                  <span
+                    style={{
+                      marginRight: ".5rem",
+                      fontSize: ".9rem",
+                      transform: "translate(3px,1px)",
+                    }}
+                  >
+                    <FaTrophy />
+                  </span>{" "}
+                  <span style={{ marginRight: ".5rem" }}>
+                    {sortedAchs?.length}/{selectedGameAchs?.length}
+                  </span>
+                </Trophies>
+                <ProgressInner>
+                  <Progress
+                    percent={(
+                      (sortedAchs?.length / selectedGameAchs?.length) *
+                      100
+                    )?.toFixed(0)}
+                  />
+                </ProgressInner>
+              </ProgressInfo2>
+            )}
         </MainLeftContainer>
       )}
       {activeTab == 2 && (
@@ -456,32 +458,34 @@ export default function Atom({
               }
             />
           )}
-          {values?.selectedGame && (
-            <ProgressInfo2>
-              <Trophies>
-                <span
-                  style={{
-                    marginRight: ".5rem",
-                    fontSize: ".9rem",
-                    transform: "translate(3px,1px)",
-                  }}
-                >
-                  <FaTrophy />
-                </span>{" "}
-                <span style={{ marginRight: ".5rem" }}>
-                  {sortedAchs?.length}/{selectedGameAchs?.length}
-                </span>
-              </Trophies>
-              <ProgressInner>
-                <Progress
-                  percent={(
-                    (sortedAchs?.length / selectedGameAchs?.length) *
-                    100
-                  )?.toFixed(0)}
-                />
-              </ProgressInner>
-            </ProgressInfo2>
-          )}
+          {values?.selectedGame &&
+            !achsCompletedLoading &&
+            !gamesSheetDataLoading && (
+              <ProgressInfo2>
+                <Trophies>
+                  <span
+                    style={{
+                      marginRight: ".5rem",
+                      fontSize: ".9rem",
+                      transform: "translate(3px,1px)",
+                    }}
+                  >
+                    <FaTrophy />
+                  </span>{" "}
+                  <span style={{ marginRight: ".5rem" }}>
+                    {sortedAchs?.length}/{selectedGameAchs?.length}
+                  </span>
+                </Trophies>
+                <ProgressInner>
+                  <Progress
+                    percent={(
+                      (sortedAchs?.length / selectedGameAchs?.length) *
+                      100
+                    )?.toFixed(0)}
+                  />
+                </ProgressInner>
+              </ProgressInfo2>
+            )}
         </MainLeftContainer>
       )}
       {activeTab == 3 && (
