@@ -470,11 +470,11 @@ const InCompleted = styled.div`
   transform: translate(30%, -50%) rotate(-90deg);
   background-color: #5474fd;
   color: ${generateDarkTextColorForLightBg("#5474FD")};
-  right: 0rem;
+  right: -0.25rem;
   top: 51%;
   padding: 0;
   height: 30px;
-  width: 70px;
+  width: 100px;
 `;
 
 const Complete = styled.div`
@@ -486,12 +486,12 @@ const Complete = styled.div`
   color: ${generateDarkTextColorForLightBg("#3bd987")};
   position: absolute;
   transform: translate(30%, -50%) rotate(-90deg);
-  right: 0rem;
+  right: -0.25rem;
   top: 51%;
   padding: 0;
   font-weight: bolder;
   height: 30px;
-  width: 70px;
+  width: 100px;
 `;
 
 const CompleteLocked = styled.div`
@@ -508,7 +508,7 @@ const CompleteLocked = styled.div`
   top: 51%;
   padding: 0;
   font-weight: bolder;
-  width: 70px;
+  width: 100px;
 `;
 
 const CompleteLockedToShow = styled.div`
@@ -521,11 +521,11 @@ const CompleteLockedToShow = styled.div`
   font-size: 1rem;
   position: absolute;
   transform: translate(30%, -50%) rotate(-90deg);
-  right: 0rem;
+  right: -0.25rem;
   top: 51%;
   padding: 0;
   font-weight: bolder;
-  width: 70px;
+  width: 100px;
   height: 30px;
 `;
 
@@ -539,10 +539,10 @@ const Name = styled.div`
   font-size: 0.75rem;
   position: absolute;
   transform: translateY(-50%) rotate(-90deg);
-  right: 0rem;
+  right: -0.25rem;
   top: 51%;
   padding: 0;
-  width: 70px;
+  width: 100px;
 `;
 
 const AchSingleContainer = styled.div`
@@ -606,8 +606,8 @@ const AchTitle = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  font-size: 0.9rem;
-  min-height: 35px;
+  font-size: 1rem;
+  min-height: 50px;
   width: 100%;
   padding: 0.5rem 1rem 0.5rem 0.25rem;
 `;
@@ -616,11 +616,11 @@ const AchDetails = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   flex: 1;
   opacity: 0.5;
   width: 100%;
-  min-height: 35px;
+  min-height: 50px;
   padding: 0.5rem 1rem 0rem 0.25rem;
 `;
 
@@ -628,9 +628,10 @@ const AchTitle2 = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  font-size: 0.9rem;
+  font-size: 1rem;
   width: 100%;
-  min-height: 35px;
+  flex: 1;
+  min-height: 50px;
   padding: 0.5rem 1rem 0.5rem 0.25rem;
 `;
 
@@ -638,12 +639,12 @@ const AchDetails2 = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   flex: 1;
   opacity: 0.5;
   width: 100%;
   width: 100%;
-  min-height: 35px;
+  min-height: 50px;
   padding: 0.5rem 1rem 0rem 0.25rem;
 `;
 
@@ -651,8 +652,8 @@ const AchievementForGameSingle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 70px;
-  height: 70px;
+  width: 100px;
+  height: 100px;
   background: ${(props) => `url("${props.image}")`};
   background-size: cover;
   background-repeat: no-repeat;
@@ -665,7 +666,7 @@ const GameSelectedData = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  flex-wrap: wrap;
+  flex-direction: column;
   min-height: 80vh;
   max-height: 80vh;
   overflow: scroll;
