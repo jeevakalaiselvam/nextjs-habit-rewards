@@ -182,10 +182,10 @@ export default function MoneyTracker() {
         }}
       >
         <div style={{ marginRight: "1rem" }}>PlatinumSeeker</div>
-        <div style={{ transform: "translateY(1px)" }}>
+        <div style={{ transform: "translateY(2px)", fontSize: "1.1rem" }}>
           <FaTrophy />
         </div>
-        <div style={{ marginLeft: ".25rem", fontSize: "1.35rem" }}>
+        <div style={{ marginLeft: ".25rem", fontSize: "1.25rem" }}>
           {totalCount}
         </div>
       </div>
@@ -553,7 +553,7 @@ const Name = styled.div`
   flex: 1;
   justify-content: flex-start;
   font-size: ${(props) => (props.lowFont ? "1.25rem" : "2rem")};
-  transform: translate(-10px, 3px);
+  transform: translate(-10px, 1px);
 `;
 
 const Date = styled.div`

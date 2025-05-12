@@ -21,9 +21,9 @@ const MAPPING_ORDER = {
   3: "ACH DESC",
   4: "ACH IMAGE",
 };
-const HEIGHT_ACHIEVEMENT = 100;
+const HEIGHT_ACHIEVEMENT = 80;
 const HEIGHT_ACHIEVEMENT_TITLE = 40;
-const HEIGHT_ACHIEVEMENT_DESC = 60;
+const HEIGHT_ACHIEVEMENT_DESC = 40;
 
 export default function Atom({
   activeTab,
@@ -635,8 +635,9 @@ const CompleteLocked = styled.div`
   font-size: 1rem;
   position: absolute;
   transform: translateY(-50%) rotate(-90deg);
-  left: -1.9rem;
-  top: 51%;
+  left: -2.5rem;
+  top: 50%;
+  height: 20px;
   padding: 0;
   font-weight: bolder;
 
@@ -667,12 +668,11 @@ const Name = styled.div`
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  background-color: #57575783;
-  color: #989898;
+  color: #57575783;
   font-size: 0.75rem;
   position: absolute;
   transform: translateY(-50%) rotate(-90deg);
-  right: -1.75rem;
+  right: -2.5rem;
   top: 51%;
   padding: 0;
   height: 20px;
@@ -695,7 +695,7 @@ const AchSingleContainer1 = styled.div`
   justify-content: center;
   background-color: #171b2a;
   margin: 0rem 0.25rem 0.5rem 0.25rem;
-  padding-left: 0.85rem;
+  padding-left: 1rem;
   width: 100%;
   position: relative;
 `;
