@@ -21,6 +21,9 @@ const MAPPING_ORDER = {
   3: "ACH DESC",
   4: "ACH IMAGE",
 };
+const HEIGHT_ACHIEVEMENT = 80;
+const HEIGHT_ACHIEVEMENT_TITLE = 35;
+const HEIGHT_ACHIEVEMENT_DESC = 45;
 
 export default function Atom({
   activeTab,
@@ -467,14 +470,15 @@ const InCompleted = styled.div`
   color: #b4b4b4;
   cursor: pointer;
   position: absolute;
-  transform: translate(30%, -50%) rotate(-90deg);
+  transform: translate(30%, -55%) rotate(-90deg);
   background-color: #5474fd;
   color: ${generateDarkTextColorForLightBg("#5474FD")};
-  right: -0.25rem;
+  right: 0rem;
   top: 51%;
   padding: 0;
   height: 30px;
-  width: 100px;
+
+  width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
 `;
 
 const Complete = styled.div`
@@ -485,13 +489,14 @@ const Complete = styled.div`
   background-color: #3bd987;
   color: ${generateDarkTextColorForLightBg("#3bd987")};
   position: absolute;
-  transform: translate(30%, -50%) rotate(-90deg);
-  right: -0.25rem;
+  transform: translate(30%, -55%) rotate(-90deg);
+  right: 0rem;
   top: 51%;
   padding: 0;
   font-weight: bolder;
   height: 30px;
-  width: 100px;
+
+  width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
 `;
 
 const CompleteLocked = styled.div`
@@ -508,7 +513,8 @@ const CompleteLocked = styled.div`
   top: 51%;
   padding: 0;
   font-weight: bolder;
-  width: 100px;
+
+  width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
 `;
 
 const CompleteLockedToShow = styled.div`
@@ -520,12 +526,13 @@ const CompleteLockedToShow = styled.div`
   color: ${generateDarkTextColorForLightBg("#3bd987")};
   font-size: 1rem;
   position: absolute;
-  transform: translate(30%, -50%) rotate(-90deg);
-  right: -0.25rem;
+  transform: translate(30%, -55%) rotate(-90deg);
+  right: 0rem;
   top: 51%;
   padding: 0;
   font-weight: bolder;
-  width: 100px;
+
+  width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
   height: 30px;
 `;
 
@@ -539,10 +546,11 @@ const Name = styled.div`
   font-size: 0.75rem;
   position: absolute;
   transform: translateY(-50%) rotate(-90deg);
-  right: -0.25rem;
+  right: 0rem;
   top: 51%;
   padding: 0;
-  width: 100px;
+
+  width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
 `;
 
 const AchSingleContainer = styled.div`
@@ -550,7 +558,7 @@ const AchSingleContainer = styled.div`
   align-items: center;
   justify-content: center;
   background-color: #17435c;
-  margin: 0rem 0.25rem 1rem 0.25rem;
+  margin: 0rem 0.25rem 0.5rem 0.25rem;
   width: 100%;
   position: relative;
 `;
@@ -561,7 +569,6 @@ const AchSingleContainer1 = styled.div`
   justify-content: center;
   background-color: #17435c;
   margin: 0rem 0.25rem 1rem 0.25rem;
-  width: 100%;
   padding-left: 0.85rem;
   position: relative;
 `;
@@ -606,8 +613,8 @@ const AchTitle = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  font-size: 1rem;
-  min-height: 50px;
+  font-size: 0.9rem;
+  min-height: ${(props) => `${HEIGHT_ACHIEVEMENT_TITLE}px`};
   width: 100%;
   padding: 0.5rem 1rem 0.5rem 0.25rem;
 `;
@@ -616,11 +623,11 @@ const AchDetails = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   flex: 1;
   opacity: 0.5;
   width: 100%;
-  min-height: 50px;
+  min-height: ${(props) => `${HEIGHT_ACHIEVEMENT_DESC}px`};
   padding: 0.5rem 1rem 0rem 0.25rem;
 `;
 
@@ -628,10 +635,10 @@ const AchTitle2 = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  font-size: 1rem;
+  font-size: 0.9rem;
   width: 100%;
   flex: 1;
-  min-height: 50px;
+  min-height: ${(props) => `${HEIGHT_ACHIEVEMENT_TITLE}px`};
   padding: 0.5rem 1rem 0.5rem 0.25rem;
 `;
 
@@ -639,12 +646,12 @@ const AchDetails2 = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   flex: 1;
   opacity: 0.5;
   width: 100%;
   width: 100%;
-  min-height: 50px;
+  min-height: ${(props) => `${HEIGHT_ACHIEVEMENT_DESC}px`};
   padding: 0.5rem 1rem 0rem 0.25rem;
 `;
 
@@ -652,8 +659,8 @@ const AchievementForGameSingle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 100px;
+  width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
+  height: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
   background: ${(props) => `url("${props.image}")`};
   background-size: cover;
   background-repeat: no-repeat;
@@ -694,7 +701,7 @@ const GameItem = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
-  height: 100px;
+  height: 80px;
   justify-content: center;
   background: ${(props) => `url("${props?.image}")`};
   background-size: cover;
