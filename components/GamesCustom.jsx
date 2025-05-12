@@ -317,7 +317,7 @@ export default function Atom({
                   `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`;
 
                 return (
-                  <AchSingleContainer>
+                  <AchSingleContainer1>
                     <CompleteLocked
                       onClick={() => {
                         removeAchComplete(
@@ -336,7 +336,7 @@ export default function Atom({
                         <FaTrophy />
                       </span>
                     </CompleteLocked>
-                    <Name>{ach?.["GAME NAME"]}</Name>
+                    <Name>{ach?.["GAME NAME"]?.slice(0, 10)}</Name>
                     <AchievementForGameSingle
                       image={ach?.["ACH IMAGE"]}
                     ></AchievementForGameSingle>
@@ -344,7 +344,7 @@ export default function Atom({
                       <AchTitle2>{ach?.["ACH NAME"]}</AchTitle2>
                       <AchDetails2>{ach?.["ACH DESC"]}</AchDetails2>
                     </AchDataContainer>
-                  </AchSingleContainer>
+                  </AchSingleContainer1>
                 );
               })}
             </GameSelectedData>
@@ -446,15 +446,15 @@ const Name = styled.div`
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  color: #fefefe;
-  font-size: 0.7rem;
-  opacity: 0.2;
-  text-align: right;
+  background-color: #575757;
+  color: ${generateDarkTextColorForLightBg("#575757")};
+  font-size: 0.75rem;
   position: absolute;
-  right: 8px;
-  top: 2px;
+  transform: translateY(-50%) rotate(-90deg);
+  right: -1.9rem;
+  top: 51%;
   padding: 0;
-  width: 50px;
+  width: 70px;
 `;
 
 const AchSingleContainer = styled.div`
@@ -463,6 +463,18 @@ const AchSingleContainer = styled.div`
   justify-content: center;
   background-color: #292929;
   margin: 0rem 0.25rem 1rem 0.25rem;
+  width: 100%;
+  position: relative;
+`;
+
+const AchSingleContainer1 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #292929;
+  margin: 0rem 0.25rem 1rem 0.25rem;
+  width: 100%;
+  padding-left: 0.85rem;
   position: relative;
 `;
 
@@ -486,6 +498,7 @@ const AchDataContainer = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
+  flex: 1;
   height: 70px;
   padding: 0rem 0.5rem;
 `;
@@ -494,9 +507,9 @@ const AchTitle = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  width: 200px;
   font-size: 0.9rem;
   min-height: 35px;
+  width: 100%;
   padding: 0.5rem 1rem 0.5rem 0.25rem;
 `;
 
@@ -504,10 +517,10 @@ const AchDetails = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   flex: 1;
   opacity: 0.5;
-  width: 200px;
+  width: 100%;
   min-height: 35px;
   padding: 0.5rem 1rem 0rem 0.25rem;
 `;
@@ -516,9 +529,9 @@ const AchTitle2 = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  width: 220px;
   font-size: 0.9rem;
   min-height: 35px;
+  width: 100%;
   padding: 0.5rem 1rem 0.5rem 0.25rem;
 `;
 
@@ -526,10 +539,10 @@ const AchDetails2 = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   flex: 1;
   opacity: 0.5;
-  width: 220px;
+  width: 100%;
   min-height: 35px;
   padding: 0.5rem 1rem 0rem 0.25rem;
 `;
@@ -538,7 +551,7 @@ const AchievementForGameSingle = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 140px;
+  width: 70px;
   height: 70px;
   background: ${(props) => `url("${props.image}")`};
   background-size: cover;
