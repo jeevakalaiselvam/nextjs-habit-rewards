@@ -4,7 +4,7 @@ import {
   THEME_BG_COLOR,
 } from "../components/helpers/colorHelper";
 import { LoadingOutlined } from "@ant-design/icons";
-import { Button, message, Progress, Space, Spin } from "antd";
+import { Button, message, notification, Progress, Space, Spin } from "antd";
 import Search from "antd/es/input/Search";
 import axios from "axios";
 import { useRouter } from "next/router";
@@ -33,6 +33,7 @@ export default function Atom({
   const router = useRouter();
   const dispatch = useDispatch();
   const steamtracker = useSelector((state) => state.steamtracker);
+  const [messageApi, contextHolder] = message.useMessage();
 
   const [values, setValues] = useState({
     selectedLeftTab: 0,
@@ -43,7 +44,20 @@ export default function Atom({
     completedAchs: [],
     achsCompletedLoading: false,
     hoveredAch: "",
+    toShowAch: {},
+    toShow: false,
   });
+
+  const openNotification = () => {
+    notification.open({
+      message: "Notification Title",
+      description:
+        "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
+      onClick: () => {
+        console.log("Notification Clicked!");
+      },
+    });
+  };
 
   const refreshGames = () => {
     setValues((old) => ({ ...old, gamesSheetDataLoading: true }));
@@ -82,13 +96,16 @@ export default function Atom({
     setForceRefreshGame(false);
   };
 
-  const markAchComplete = (achId) => {
+  const markAchComplete = (ach) => {
+    setValues((old) => ({ ...old, toShow: true, toShowAch: ach }));
+    let achId = `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`;
     axios.post("/api/completed", { title: achId }).then((response) => {
       refreshCompletedGames();
     });
   };
 
-  const removeAchComplete = (achId) => {
+  const removeAchComplete = (ach) => {
+    let achId = `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`;
     axios
       .delete("/api/completed", { data: { title: achId } })
       .then((response) => {
@@ -149,8 +166,18 @@ export default function Atom({
       sortedAchs?.length - index;
   });
 
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      setValues((old) => ({ ...old, toShow: false, toShowAch: {} }));
+    }, 1000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [values?.toShow]);
+
   return (
     <Container>
+      {contextHolder}
       {activeTab == 0 && (
         <MainLeftContainer>
           {!values?.gamesSheetDataLoading && (
@@ -187,14 +214,16 @@ export default function Atom({
                       <Trophies>
                         <span
                           style={{
-                            marginRight: ".25rem",
+                            marginRight: ".5rem",
                             fontSize: ".9rem",
                             transform: "translate(3px,1px)",
                           }}
                         >
                           <FaTrophy />
                         </span>{" "}
-                        {completedAchs?.length}/{allAchs?.length}
+                        <span style={{ marginRight: ".5rem" }}>
+                          {completedAchs?.length}/{allAchs?.length}
+                        </span>
                       </Trophies>
                       <ProgressInner>
                         <Progress percent={completion?.toFixed(0)} />
@@ -237,9 +266,7 @@ export default function Atom({
                     {isCompleted && (
                       <Complete
                         onClick={() => {
-                          removeAchComplete(
-                            `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
-                          );
+                          removeAchComplete(ach);
                         }}
                       >
                         {
@@ -260,9 +287,7 @@ export default function Atom({
                     {!isCompleted && (
                       <InCompleted
                         onClick={() => {
-                          markAchComplete(
-                            `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
-                          );
+                          markAchComplete(ach);
                         }}
                         onMouseEnter={() => {
                           setValues((old) => ({
@@ -364,15 +389,56 @@ export default function Atom({
           )}
         </MainLeftContainer>
       )}
+      {values?.toShow && (
+        <ToShowWrapper>
+          <AchSingleContainer3>
+            <CompleteLockedToShow
+              onClick={() => {
+                removeAchComplete(
+                  `${values?.toShowAch?.["GAME NAME"]}-${values?.toShowAch?.["ACH NAME"]}`
+                );
+              }}
+            >
+              DONE
+              <span
+                style={{
+                  marginRight: ".15rem",
+                  fontSize: ".8rem",
+                  transform: "translate(3px,1px)",
+                }}
+              >
+                <FaTrophy />
+              </span>
+            </CompleteLockedToShow>
+            <AchievementForGameSingle
+              image={values?.toShowAch?.["ACH IMAGE"]}
+            ></AchievementForGameSingle>
+            <AchDataContainer>
+              <AchTitle2>{values?.toShowAch?.["ACH NAME"]}</AchTitle2>
+              <AchDetails2>{values?.toShowAch?.["ACH DESC"]}</AchDetails2>
+            </AchDataContainer>
+          </AchSingleContainer3>
+        </ToShowWrapper>
+      )}
     </Container>
   );
 }
+
+const ToShowWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 100%;
+  bottom: -1rem;
+  left: 0;
+`;
 
 const Trophies = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 55px;
+  width: 60px;
 `;
 
 const ProgressInner = styled.div`
@@ -443,6 +509,24 @@ const CompleteLocked = styled.div`
   width: 70px;
 `;
 
+const CompleteLockedToShow = styled.div`
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  background-color: #3bd987;
+  color: ${generateDarkTextColorForLightBg("#3bd987")};
+  font-size: 1rem;
+  position: absolute;
+  transform: translate(30%, -50%) rotate(-90deg);
+  right: 0rem;
+  top: 51%;
+  padding: 0;
+  font-weight: bolder;
+  width: 70px;
+  height: 30px;
+`;
+
 const Name = styled.div`
   display: flex;
   cursor: pointer;
@@ -463,7 +547,7 @@ const AchSingleContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #292929;
+  background-color: #17435c;
   margin: 0rem 0.25rem 1rem 0.25rem;
   width: 100%;
   position: relative;
@@ -473,10 +557,20 @@ const AchSingleContainer1 = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #292929;
+  background-color: #17435c;
   margin: 0rem 0.25rem 1rem 0.25rem;
   width: 100%;
   padding-left: 0.85rem;
+  position: relative;
+`;
+
+const AchSingleContainer3 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #111923;
+  margin: 0rem 0.25rem 1rem 0.25rem;
+  width: 100%;
   position: relative;
 `;
 
@@ -484,7 +578,7 @@ const Refresh = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #292929;
+  background-color: #111923;
   margin-right: 0.25rem;
   font-size: 1rem;
   padding: 0.25rem;
@@ -638,4 +732,5 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  position: relative;
 `;

@@ -114,3 +114,17 @@ body {
 .ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
   background-color: #126cd6 !important;
 }
+.custom-notification .ant-notification-notice-content {
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+* {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+*::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, and Opera */
+}
