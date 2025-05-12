@@ -197,7 +197,7 @@ export default function Atom({
                         {completedAchs?.length}/{allAchs?.length}
                       </Trophies>
                       <ProgressInner>
-                        <Progress percent={completion} />
+                        <Progress percent={completion?.toFixed(0)} />
                       </ProgressInner>
                     </ProgressInfo>
                   </GameItemContainer>
