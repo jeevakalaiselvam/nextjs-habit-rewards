@@ -168,8 +168,10 @@ export default function MoneyTracker() {
     lowFont = true;
   }
 
-  if (activeMode == 1 && (activeTab == 0 || activeTab == 1 || activeTab == 2)) {
-    let achSorted = getaUnlockedAchievementsByType(games, GAME_UNLOCK_TYPE_ALL);
+  if (
+    activeMode == 1 &&
+    (activeTab == 0 || activeTab == 1 || activeTab == 2 || activeTab == 3)
+  ) {
     title = (
       <div
         style={{
@@ -318,7 +320,7 @@ export default function MoneyTracker() {
             />
           </Content>
           <Bottom>
-            <Icon onClick={() => setActiveTab(2)} data-active={activeTab == 2}>
+            <Icon onClick={() => setActiveTab(3)} data-active={activeTab == 3}>
               <HiClock />{" "}
               <span
                 style={{
@@ -332,12 +334,7 @@ export default function MoneyTracker() {
             </Icon>{" "}
             <Icon
               onClick={() => {
-                if (!selectedGameId) {
-                  message.info("Select from Games..");
-                  setActiveTab(0);
-                } else {
-                  setActiveTab(1);
-                }
+                setActiveTab(1);
               }}
               data-active={activeTab == 1}
             >
@@ -349,7 +346,24 @@ export default function MoneyTracker() {
                   marginTop: ".25rem",
                 }}
               >
-                GAME
+                GAME LOCKED
+              </span>
+            </Icon>{" "}
+            <Icon
+              onClick={() => {
+                setActiveTab(2);
+              }}
+              data-active={activeTab == 2}
+            >
+              <HiChartPie />{" "}
+              <span
+                style={{
+                  fontSize: ".5rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                GAME UNLOCKED
               </span>
             </Icon>{" "}
             <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
