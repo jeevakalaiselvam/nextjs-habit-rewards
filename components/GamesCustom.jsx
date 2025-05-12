@@ -250,7 +250,7 @@ export default function Atom({
                     <GameItem
                       image={game?.["GAME IMAGE"]}
                       onClick={() => {
-                        setActiveTab(2);
+                        setActiveTab(1);
                         setTitleMain("Achievements");
                         setValues((old) => ({
                           ...old,
