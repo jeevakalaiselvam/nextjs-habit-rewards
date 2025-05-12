@@ -366,7 +366,7 @@ export default function Atom({
                         <FaTrophy />
                       </span>
                     </CompleteLocked>
-                    <Name>{ach?.["GAME NAME"]?.slice(0, 10)}</Name>
+                    <Name>{ach?.["GAME NAME"]?.slice(0, 10) + "..."}</Name>
                     <AchievementForGameSingle
                       image={ach?.["ACH IMAGE"]}
                     ></AchievementForGameSingle>
@@ -456,6 +456,7 @@ const Trophies = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 60px;
+  margin-right: 1rem;
 `;
 
 const ProgressInner = styled.div`
@@ -553,15 +554,15 @@ const Name = styled.div`
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  background-color: #575757;
-  color: ${generateDarkTextColorForLightBg("#575757")};
+  background-color: #57575783;
+  color: #989898;
   font-size: 0.75rem;
   position: absolute;
   transform: translateY(-50%) rotate(-90deg);
-  right: 0rem;
+  right: -1.75rem;
   top: 51%;
   padding: 0;
-
+  height: 20px;
   width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
 `;
 
@@ -569,7 +570,7 @@ const AchSingleContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #17435c;
+  background-color: #171b2a;
   margin: 0rem 0.25rem 0.5rem 0.25rem;
   width: 100%;
   position: relative;
@@ -579,9 +580,10 @@ const AchSingleContainer1 = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #17435c;
+  background-color: #171b2a;
   margin: 0rem 0.25rem 1rem 0.25rem;
   padding-left: 0.85rem;
+  width: 100%;
   position: relative;
 `;
 
@@ -661,7 +663,6 @@ const AchDetails2 = styled.div`
   font-size: 0.8rem;
   flex: 1;
   opacity: 0.5;
-  width: 100%;
   width: 100%;
   min-height: ${(props) => `${HEIGHT_ACHIEVEMENT_DESC}px`};
   padding: 0.5rem 1rem 0rem 0.25rem;
