@@ -400,6 +400,8 @@ const InCompleted = styled.div`
   cursor: pointer;
   position: absolute;
   transform: translateY(-50%) rotate(-90deg);
+  background-color: #5474fd;
+  color: ${generateDarkTextColorForLightBg("#5474FD")};
   right: -1.9rem;
   top: 51%;
   padding: 0;
