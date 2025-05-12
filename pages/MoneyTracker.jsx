@@ -180,6 +180,7 @@ export default function MoneyTracker() {
           alignItems: "center",
           justifyContent: "center",
           color: "#3BD987",
+          transform: "translateX(-.75rem)",
         }}
       >
         <input

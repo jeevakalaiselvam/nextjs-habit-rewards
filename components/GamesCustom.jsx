@@ -186,7 +186,7 @@ export default function Atom({
   };
 
   useEffect(() => {
-    if (values?.toShowAch) {
+    if (values?.toShow) {
       playSound("/effect.mp3");
     } else {
     }
@@ -196,7 +196,7 @@ export default function Atom({
     return () => {
       clearTimeout(timer);
     };
-  }, [values?.toShow, values?.toShowAch]);
+  }, [values?.toShow]);
 
   let orderAchs = selectedGameAchs?.filter(
     (ach) =>
@@ -204,6 +204,8 @@ export default function Atom({
         `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
       )
   );
+
+  let completed = selectedGameAchs?.length - orderAchs?.length;
 
   let achToShowForGame = [];
 
@@ -363,8 +365,8 @@ export default function Atom({
             />
           )}
           {values?.selectedGame &&
-            !achsCompletedLoading &&
-            !gamesSheetDataLoading && (
+            !values?.achsCompletedLoading &&
+            !values?.gamesSheetDataLoading && (
               <ProgressInfo2>
                 <Trophies>
                   <span
@@ -377,13 +379,13 @@ export default function Atom({
                     <FaTrophy />
                   </span>{" "}
                   <span style={{ marginRight: ".5rem" }}>
-                    {orderAchs?.length}/{selectedGameAchs?.length}
+                    {completed}/{selectedGameAchs?.length}
                   </span>
                 </Trophies>
                 <ProgressInner>
                   <Progress
                     percent={(
-                      (orderAchs?.length / selectedGameAchs?.length) *
+                      (completed / selectedGameAchs?.length) *
                       100
                     )?.toFixed(0)}
                   />
@@ -459,8 +461,8 @@ export default function Atom({
             />
           )}
           {values?.selectedGame &&
-            !achsCompletedLoading &&
-            !gamesSheetDataLoading && (
+            !values?.achsCompletedLoading &&
+            !values?.gamesSheetDataLoading && (
               <ProgressInfo2>
                 <Trophies>
                   <span
@@ -473,13 +475,13 @@ export default function Atom({
                     <FaTrophy />
                   </span>{" "}
                   <span style={{ marginRight: ".5rem" }}>
-                    {orderAchs?.length}/{selectedGameAchs?.length}
+                    {completed}/{selectedGameAchs?.length}
                   </span>
                 </Trophies>
                 <ProgressInner>
                   <Progress
                     percent={(
-                      (orderAchs?.length / selectedGameAchs?.length) *
+                      (completed / selectedGameAchs?.length) *
                       100
                     )?.toFixed(0)}
                   />
