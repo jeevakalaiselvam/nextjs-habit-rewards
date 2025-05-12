@@ -581,7 +581,7 @@ const AchSingleContainer1 = styled.div`
   align-items: center;
   justify-content: center;
   background-color: #171b2a;
-  margin: 0rem 0.25rem 1rem 0.25rem;
+  margin: 0rem 0.25rem 0.5rem 0.25rem;
   padding-left: 0.85rem;
   width: 100%;
   position: relative;
@@ -592,7 +592,7 @@ const AchSingleContainer3 = styled.div`
   align-items: center;
   justify-content: center;
   background-color: #111923;
-  margin: 0rem 0.25rem 1rem 0.25rem;
+  margin: 0rem 0.25rem 0.5rem 0.25rem;
   width: 100%;
   position: relative;
 `;
