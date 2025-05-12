@@ -267,9 +267,6 @@ export default function Atom({
                 let isCompleted = values?.completedAchs
                   ?.map((ach) => ach?.title)
                   ?.includes(`${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`);
-                let isHovered =
-                  values?.hoveredAch ==
-                  `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`;
 
                 return (
                   <AchSingleContainer>
@@ -298,15 +295,6 @@ export default function Atom({
                       <InCompleted
                         onClick={() => {
                           markAchComplete(ach);
-                        }}
-                        onMouseEnter={() => {
-                          setValues((old) => ({
-                            ...old,
-                            hoveredAch: `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`,
-                          }));
-                        }}
-                        onMouseLeave={() => {
-                          setValues((old) => ({ ...old, hoveredAch: `` }));
                         }}
                       >
                         ACTIVE
@@ -344,13 +332,6 @@ export default function Atom({
           {!values?.gamesSheetDataLoading && (
             <GameSelectedData>
               {sortedAchs?.map((ach, index) => {
-                let isCompleted = values?.completedAchs
-                  ?.map((ach) => ach?.title)
-                  ?.includes(`${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`);
-                let isHovered =
-                  values?.hoveredAch ==
-                  `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`;
-
                 return (
                   <AchSingleContainer1>
                     <CompleteLocked
