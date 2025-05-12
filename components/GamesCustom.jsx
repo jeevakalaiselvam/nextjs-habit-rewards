@@ -85,7 +85,6 @@ export default function Atom({
   const refreshCompletedGames = () => {
     setValues((old) => ({ ...old, achsCompletedLoading: true }));
     axios.get("/api/completed").then((response) => {
-      setTotalCount(response?.data?.achievements?.length);
       setValues((old) => ({
         ...old,
         completedAchs: response?.data?.achievements ?? [],
@@ -93,6 +92,16 @@ export default function Atom({
       }));
     });
   };
+
+  useEffect(() => {
+    let allCompletedTitles = values?.completedAchs?.map((ach) => ach?.title);
+    let realCompleted = values?.gamesSheetData?.filter((ach) => {
+      return allCompletedTitles?.includes(
+        `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
+      );
+    });
+    setTotalCount(realCompleted?.length);
+  }, [values?.gamesSheetData, values?.completedAchs]);
 
   const refreshGamesAndAchs = () => {
     refreshGames();
