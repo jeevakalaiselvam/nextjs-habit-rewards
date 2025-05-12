@@ -187,6 +187,13 @@ export default function Atom({
     };
   }, [values?.toShow]);
 
+  let orderAchs = selectedGameAchs?.filter(
+    (ach) =>
+      !allCompletedTitles?.includes(
+        `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
+      )
+  );
+
   return (
     <Container>
       {contextHolder}
@@ -265,7 +272,7 @@ export default function Atom({
         <MainLeftContainer>
           {!values?.gamesSheetDataLoading && (
             <GameSelectedData>
-              {selectedGameAchs?.map((ach) => {
+              {[...orderAchs, ...sortedAchs]?.map((ach) => {
                 let isCompleted = values?.completedAchs
                   ?.map((ach) => ach?.title)
                   ?.includes(`${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`);
