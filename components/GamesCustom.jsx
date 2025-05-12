@@ -354,6 +354,30 @@ export default function Atom({
               }
             />
           )}
+          <ProgressInfo2>
+            <Trophies>
+              <span
+                style={{
+                  marginRight: ".5rem",
+                  fontSize: ".9rem",
+                  transform: "translate(3px,1px)",
+                }}
+              >
+                <FaTrophy />
+              </span>{" "}
+              <span style={{ marginRight: ".5rem" }}>
+                {sortedAchs?.length}/{selectedGameAchs?.length}
+              </span>
+            </Trophies>
+            <ProgressInner>
+              <Progress
+                percent={(
+                  (sortedAchs?.length / selectedGameAchs?.length) *
+                  100
+                )?.toFixed(0)}
+              />
+            </ProgressInner>
+          </ProgressInfo2>
         </MainLeftContainer>
       )}
       {activeTab == 2 && (
@@ -422,6 +446,30 @@ export default function Atom({
               }
             />
           )}
+          <ProgressInfo2>
+            <Trophies>
+              <span
+                style={{
+                  marginRight: ".5rem",
+                  fontSize: ".9rem",
+                  transform: "translate(3px,1px)",
+                }}
+              >
+                <FaTrophy />
+              </span>{" "}
+              <span style={{ marginRight: ".5rem" }}>
+                {sortedAchs?.length}/{selectedGameAchs?.length}
+              </span>
+            </Trophies>
+            <ProgressInner>
+              <Progress
+                percent={(
+                  (sortedAchs?.length / selectedGameAchs?.length) *
+                  100
+                )?.toFixed(0)}
+              />
+            </ProgressInner>
+          </ProgressInfo2>
         </MainLeftContainer>
       )}
       {activeTab == 3 && (
@@ -431,7 +479,7 @@ export default function Atom({
               {sortedAchs?.map((ach, index) => {
                 return (
                   <AchSingleContainer1>
-                    <CompleteLocked
+                    <Complete
                       onClick={() => {
                         removeAchComplete(
                           `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
@@ -448,8 +496,8 @@ export default function Atom({
                       >
                         <FaTrophy />
                       </span>
-                    </CompleteLocked>
-                    <Name>{ach?.["GAME NAME"]?.slice(0, 10) + "..."}</Name>
+                    </Complete>
+                    {/* <Name>{ach?.["GAME NAME"]?.slice(0, 10) + "..."}</Name> */}
                     <AchievementForGameSingle
                       image={ach?.["ACH IMAGE"]}
                     ></AchievementForGameSingle>
@@ -704,7 +752,6 @@ const AchSingleContainer1 = styled.div`
   justify-content: center;
   background-color: #171b2a;
   margin: 0rem 0.25rem 0.5rem 0.25rem;
-  padding-left: 1rem;
   width: 100%;
   position: relative;
 `;
@@ -809,8 +856,8 @@ const GameSelectedData = styled.div`
   justify-content: flex-start;
   width: 100%;
   flex-direction: column;
-  min-height: 80vh;
-  max-height: 80vh;
+  min-height: 76vh;
+  max-height: 76vh;
   overflow: scroll;
 `;
 
@@ -830,6 +877,15 @@ const ProgressInfo = styled.div`
   width: 100%;
   background-color: rgba(0, 0, 0, 0.8);
   padding: 0rem 0.25rem;
+`;
+
+const ProgressInfo2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 104%;
+  background-color: rgba(0, 0, 0, 0.8);
+  padding: 0rem 0rem;
 `;
 
 const GameItem = styled.div`
