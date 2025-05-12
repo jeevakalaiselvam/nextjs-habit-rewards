@@ -86,6 +86,7 @@ export default function MoneyTracker() {
   const [titleMain, setTitleMain] = useState("Games");
   const [totalCount, setTotalCount] = useState(0);
   const [lowFontMain, setLowFontMain] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { habittracker } = useSelector((state) => state);
   const { games, selectedGameId } = habittracker;
@@ -173,7 +174,7 @@ export default function MoneyTracker() {
     (activeTab == 0 || activeTab == 1 || activeTab == 2 || activeTab == 3)
   ) {
     title = (
-      <div
+      <SearchInput
         style={{
           display: "flex",
           alignItems: "center",
@@ -181,14 +182,13 @@ export default function MoneyTracker() {
           color: "#3BD987",
         }}
       >
-        <div style={{ marginRight: "1rem" }}>PlatinumSeeker</div>
-        <div style={{ transform: "translateY(2px)", fontSize: "1.1rem" }}>
-          <FaTrophy />
-        </div>
-        <div style={{ marginLeft: ".25rem", fontSize: "1.25rem" }}>
-          {totalCount}
-        </div>
-      </div>
+        <input
+          type="text"
+          placeholder="Search.."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+      </SearchInput>
     );
     lowFont = true;
   }
@@ -311,6 +311,7 @@ export default function MoneyTracker() {
         <>
           <Content showEntry={showEntry}>
             <GamesCustom
+              searchTerm={searchTerm}
               forceRefreshGame={forceRefreshGame}
               setForceRefreshGame={setForceRefreshGame}
               activeTab={activeTab}
@@ -321,15 +322,15 @@ export default function MoneyTracker() {
           </Content>
           <Bottom>
             <Icon onClick={() => setActiveTab(3)} data-active={activeTab == 3}>
-              <HiClock />{" "}
+              <FaTrophy />{" "}
               <span
                 style={{
-                  fontSize: ".5rem",
+                  fontSize: ".65rem",
                   fontWeight: 800,
                   marginTop: ".25rem",
                 }}
               >
-                RECENT
+                TOTAL - {totalCount}
               </span>
             </Icon>{" "}
             <Icon
@@ -341,12 +342,12 @@ export default function MoneyTracker() {
               <HiChartPie />{" "}
               <span
                 style={{
-                  fontSize: ".5rem",
+                  fontSize: ".65rem",
                   fontWeight: 800,
                   marginTop: ".25rem",
                 }}
               >
-                GAME LOCKED
+                LOCKED
               </span>
             </Icon>{" "}
             <Icon
@@ -358,19 +359,19 @@ export default function MoneyTracker() {
               <HiChartPie />{" "}
               <span
                 style={{
-                  fontSize: ".5rem",
+                  fontSize: ".65rem",
                   fontWeight: 800,
                   marginTop: ".25rem",
                 }}
               >
-                GAME UNLOCKED
+                UNLOCKED
               </span>
             </Icon>{" "}
             <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
               <HiViewBoards />{" "}
               <span
                 style={{
-                  fontSize: ".5rem",
+                  fontSize: ".65rem",
                   fontWeight: 800,
                   marginTop: ".25rem",
                 }}
@@ -480,18 +481,19 @@ export default function MoneyTracker() {
   );
 }
 
-const Apply = styled.div`
+const SearchInput = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #4872ea;
-  width: 100%;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  margin-top: 0.5rem;
 
-  &:active {
-    transform: translate(2px, 2px);
+  & input {
+    outline: none;
+    border: none;
+    border-radius: 0px;
+    background-color: #171b2a;
+    color: #fefefe;
+    opacity: 0.5;
+    font-size: 1rem;
   }
 `;
 

@@ -32,6 +32,7 @@ export default function Atom({
   forceRefreshGame,
   setForceRefreshGame,
   setTotalCount,
+  searchTerm,
 }) {
   const router = useRouter();
   const dispatch = useDispatch();
@@ -214,6 +215,13 @@ export default function Atom({
     );
   }
 
+  achToShowForGame = achToShowForGame?.filter((ach) => {
+    return (
+      ach?.["ACH NAME"]?.toLowerCase()?.includes(searchTerm?.toLowerCase()) ||
+      ach?.["ACH DESC"]?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+    );
+  });
+
   return (
     <Container>
       {contextHolder}
@@ -354,30 +362,32 @@ export default function Atom({
               }
             />
           )}
-          <ProgressInfo2>
-            <Trophies>
-              <span
-                style={{
-                  marginRight: ".5rem",
-                  fontSize: ".9rem",
-                  transform: "translate(3px,1px)",
-                }}
-              >
-                <FaTrophy />
-              </span>{" "}
-              <span style={{ marginRight: ".5rem" }}>
-                {sortedAchs?.length}/{selectedGameAchs?.length}
-              </span>
-            </Trophies>
-            <ProgressInner>
-              <Progress
-                percent={(
-                  (sortedAchs?.length / selectedGameAchs?.length) *
-                  100
-                )?.toFixed(0)}
-              />
-            </ProgressInner>
-          </ProgressInfo2>
+          {values?.selectedGame && (
+            <ProgressInfo2>
+              <Trophies>
+                <span
+                  style={{
+                    marginRight: ".5rem",
+                    fontSize: ".9rem",
+                    transform: "translate(3px,1px)",
+                  }}
+                >
+                  <FaTrophy />
+                </span>{" "}
+                <span style={{ marginRight: ".5rem" }}>
+                  {sortedAchs?.length}/{selectedGameAchs?.length}
+                </span>
+              </Trophies>
+              <ProgressInner>
+                <Progress
+                  percent={(
+                    (sortedAchs?.length / selectedGameAchs?.length) *
+                    100
+                  )?.toFixed(0)}
+                />
+              </ProgressInner>
+            </ProgressInfo2>
+          )}
         </MainLeftContainer>
       )}
       {activeTab == 2 && (
@@ -446,30 +456,32 @@ export default function Atom({
               }
             />
           )}
-          <ProgressInfo2>
-            <Trophies>
-              <span
-                style={{
-                  marginRight: ".5rem",
-                  fontSize: ".9rem",
-                  transform: "translate(3px,1px)",
-                }}
-              >
-                <FaTrophy />
-              </span>{" "}
-              <span style={{ marginRight: ".5rem" }}>
-                {sortedAchs?.length}/{selectedGameAchs?.length}
-              </span>
-            </Trophies>
-            <ProgressInner>
-              <Progress
-                percent={(
-                  (sortedAchs?.length / selectedGameAchs?.length) *
-                  100
-                )?.toFixed(0)}
-              />
-            </ProgressInner>
-          </ProgressInfo2>
+          {values?.selectedGame && (
+            <ProgressInfo2>
+              <Trophies>
+                <span
+                  style={{
+                    marginRight: ".5rem",
+                    fontSize: ".9rem",
+                    transform: "translate(3px,1px)",
+                  }}
+                >
+                  <FaTrophy />
+                </span>{" "}
+                <span style={{ marginRight: ".5rem" }}>
+                  {sortedAchs?.length}/{selectedGameAchs?.length}
+                </span>
+              </Trophies>
+              <ProgressInner>
+                <Progress
+                  percent={(
+                    (sortedAchs?.length / selectedGameAchs?.length) *
+                    100
+                  )?.toFixed(0)}
+                />
+              </ProgressInner>
+            </ProgressInfo2>
+          )}
         </MainLeftContainer>
       )}
       {activeTab == 3 && (
