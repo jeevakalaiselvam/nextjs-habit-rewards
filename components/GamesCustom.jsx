@@ -175,7 +175,6 @@ export default function Atom({
     if (values?.toShow) {
       playSound("/effect.mp3");
     } else {
-      playSound("/lock.mp3");
     }
     let timer = setTimeout(() => {
       setValues((old) => ({ ...old, toShow: false, toShowAch: {} }));
