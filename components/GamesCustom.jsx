@@ -186,7 +186,7 @@ export default function Atom({
   };
 
   useEffect(() => {
-    if (values?.toShow) {
+    if (values?.toShowAch) {
       playSound("/effect.mp3");
     } else {
     }
@@ -196,7 +196,7 @@ export default function Atom({
     return () => {
       clearTimeout(timer);
     };
-  }, [values?.toShow]);
+  }, [values?.toShow, values?.toShowAch]);
 
   let orderAchs = selectedGameAchs?.filter(
     (ach) =>
