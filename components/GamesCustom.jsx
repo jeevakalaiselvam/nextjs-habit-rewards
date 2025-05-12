@@ -272,7 +272,12 @@ export default function Atom({
         <MainLeftContainer>
           {!values?.gamesSheetDataLoading && (
             <GameSelectedData>
-              {[...orderAchs, ...sortedAchs]?.map((ach) => {
+              {[
+                ...orderAchs,
+                ...sortedAchs?.filter(
+                  (ach) => ach?.["GAME NAME"] == values?.selectedGame
+                ),
+              ]?.map((ach) => {
                 let isCompleted = values?.completedAchs
                   ?.map((ach) => ach?.title)
                   ?.includes(`${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`);
