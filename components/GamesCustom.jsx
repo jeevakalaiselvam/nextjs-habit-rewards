@@ -399,10 +399,10 @@ const InCompleted = styled.div`
   color: #b4b4b4;
   cursor: pointer;
   position: absolute;
-  transform: translateY(-50%) rotate(-90deg);
+  transform: translate(30%, -50%) rotate(-90deg);
   background-color: #5474fd;
   color: ${generateDarkTextColorForLightBg("#5474FD")};
-  right: -1.9rem;
+  right: 0rem;
   top: 51%;
   padding: 0;
   height: 30px;
@@ -417,8 +417,8 @@ const Complete = styled.div`
   background-color: #3bd987;
   color: ${generateDarkTextColorForLightBg("#3bd987")};
   position: absolute;
-  transform: translateY(-52%) rotate(-90deg);
-  right: -1.9rem;
+  transform: translate(30%, -50%) rotate(-90deg);
+  right: 0rem;
   top: 51%;
   padding: 0;
   font-weight: bolder;
@@ -453,7 +453,7 @@ const Name = styled.div`
   font-size: 0.75rem;
   position: absolute;
   transform: translateY(-50%) rotate(-90deg);
-  right: -1.9rem;
+  right: 0rem;
   top: 51%;
   padding: 0;
   width: 70px;
@@ -502,6 +502,7 @@ const AchDataContainer = styled.div`
   flex-direction: column;
   flex: 1;
   height: 70px;
+  width: 100%;
   padding: 0rem 0.5rem;
 `;
 
@@ -532,8 +533,8 @@ const AchTitle2 = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   font-size: 0.9rem;
-  min-height: 35px;
   width: 100%;
+  min-height: 35px;
   padding: 0.5rem 1rem 0.5rem 0.25rem;
 `;
 
@@ -544,6 +545,7 @@ const AchDetails2 = styled.div`
   font-size: 0.85rem;
   flex: 1;
   opacity: 0.5;
+  width: 100%;
   width: 100%;
   min-height: 35px;
   padding: 0.5rem 1rem 0rem 0.25rem;
@@ -568,6 +570,9 @@ const GameSelectedData = styled.div`
   justify-content: flex-start;
   width: 100%;
   flex-wrap: wrap;
+  min-height: 80vh;
+  max-height: 80vh;
+  overflow: scroll;
 `;
 
 const GameTitle = styled.div`
