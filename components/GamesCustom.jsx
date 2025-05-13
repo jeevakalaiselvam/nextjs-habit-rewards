@@ -715,7 +715,7 @@ const CompleteLockedToShow = styled.div`
   transform-origin: center;
   right: 0;
   top: 50%;
-  transform: translate(25%, -50%) rotate(-90deg);
+  transform: translate(30%, -50%) rotate(-90deg);
   padding: 0;
   font-weight: bolder;
 
