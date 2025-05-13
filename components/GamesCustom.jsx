@@ -165,10 +165,8 @@ export default function Atom({
   });
 
   sortedAchs = sortedAchs?.sort(
-    (ach1, ach2) => ach2?.createdAt - ach1?.createdAt
+    (ach1, ach2) => new Date(ach2?.createdAt) - new Date(ach1?.createdAt)
   );
-
-  sortedAchs = sortedAchs?.reverse();
 
   let sortedIndexMapper = {};
   sortedAchs?.forEach((ach, index) => {
