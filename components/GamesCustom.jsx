@@ -51,18 +51,8 @@ export default function Atom({
     toShowAch: {},
     toShow: false,
     gameView: 0,
+    toCheckAch: {},
   });
-
-  const openNotification = () => {
-    notification.open({
-      message: "Notification Title",
-      description:
-        "This is the content of the notification. This is the content of the notification. This is the content of the notification.",
-      onClick: () => {
-        console.log("Notification Clicked!");
-      },
-    });
-  };
 
   const refreshGames = () => {
     setValues((old) => ({ ...old, gamesSheetDataLoading: true }));
@@ -113,13 +103,10 @@ export default function Atom({
   const markAchComplete = (ach) => {
     setValues((old) => ({ ...old, toShow: true, toShowAch: ach }));
     let achId = `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`;
-    axios.post("/api/completed", { title: achId }).then((response) => {
-      refreshCompletedGames();
-    });
+    axios.post("/api/completed", { title: achId }).then((response) => {});
   };
 
   const removeAchComplete = (ach) => {
-    console.log({ ach });
     let achId = `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`;
     axios
       .delete("/api/completed", { data: { title: achId } })
@@ -127,6 +114,14 @@ export default function Atom({
         refreshCompletedGames();
       });
   };
+
+  useEffect(() => {
+    if (!values?.toShow) {
+      setTimeout(() => {
+        refreshCompletedGames();
+      }, [1000]);
+    }
+  }, [values?.toShow]);
 
   useEffect(() => {
     if (forceRefreshGame) {
@@ -224,6 +219,12 @@ export default function Atom({
       ach?.["ACH DESC"]?.toLowerCase()?.includes(searchTerm?.toLowerCase())
     );
   });
+
+  let toShowSmall = {};
+  toShowSmall =
+    Object.keys(values?.toCheckAch)?.length > 0
+      ? values?.toCheckAch
+      : sortedAchs?.[0];
 
   return (
     <Container>
@@ -448,8 +449,35 @@ export default function Atom({
       )}
       {activeTab == 3 && (
         <MainLeftContainer2>
+          <AchSingleContainer11>
+            <CompleteLockedToShow
+              onClick={() => {
+                removeAchComplete(
+                  `${toShowSmall?.["GAME NAME"]}-${toShowSmall?.["ACH NAME"]}`
+                );
+              }}
+            >
+              LAST
+              <span
+                style={{
+                  marginRight: ".15rem",
+                  fontSize: ".8rem",
+                  transform: "translate(3px,1px)",
+                }}
+              >
+                <FaTrophy />
+              </span>
+            </CompleteLockedToShow>
+            <AchievementForGameSingle
+              image={toShowSmall?.["ACH IMAGE"]}
+            ></AchievementForGameSingle>
+            <AchDataContainer>
+              <AchTitle2>{toShowSmall?.["ACH NAME"]}</AchTitle2>
+              <AchDetails2>{toShowSmall?.["ACH DESC"]}</AchDetails2>
+            </AchDataContainer>
+          </AchSingleContainer11>
           {!values?.gamesSheetDataLoading && (
-            <GameSelectedData>
+            <GameSelectedData2>
               {sortedAchs?.map((ach, index) => {
                 return (
                   <AchievementForGameSingle2 image={ach?.["ACH IMAGE"]}>
@@ -475,7 +503,7 @@ export default function Atom({
                   </AchievementForGameSingle2>
                 );
               })}
-            </GameSelectedData>
+            </GameSelectedData2>
           )}
           {values?.gamesSheetDataLoading && (
             <Spin
@@ -493,7 +521,7 @@ export default function Atom({
         </MainLeftContainer2>
       )}
       {values?.toShow && (
-        <ToShowWrapper>
+        <ToShowWrapper onClick={() => {}}>
           <AchSingleContainer3>
             <CompleteLockedToShow
               onClick={() => {
@@ -572,8 +600,22 @@ const ToShowWrapper = styled.div`
   justify-content: center;
   position: absolute;
   width: 100%;
-  top: 1rem;
+  bottom: 1rem;
   left: 0;
+  animation: slideUp 0.25s linear forwards;
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+
+    to {
+      transform: translateY(0);
+
+      opacity: 1;
+    }
+  }
 `;
 
 const Trophies = styled.div`
@@ -608,11 +650,12 @@ const InCompleted = styled.div`
   color: #b4b4b4;
   cursor: pointer;
   position: absolute;
-  transform: translate(30%, -55%) rotate(-90deg);
   background-color: #5474fd;
   color: ${generateDarkTextColorForLightBg("#5474FD")};
-  right: 0rem;
-  top: 51%;
+  transform-origin: center;
+  right: 0;
+  top: 50%;
+  transform: translate(25%, -50%) rotate(-90deg);
   padding: 0;
   height: 30px;
 
@@ -627,9 +670,10 @@ const Complete = styled.div`
   background-color: #3bd987;
   color: ${generateDarkTextColorForLightBg("#3bd987")};
   position: absolute;
-  transform: translate(30%, -55%) rotate(-90deg);
-  right: 0rem;
-  top: 51%;
+  transform-origin: center;
+  right: 0;
+  top: 50%;
+  transform: translate(25%, -50%) rotate(-90deg);
   padding: 0;
   font-weight: bolder;
   height: 30px;
@@ -644,31 +688,14 @@ const Complete2 = styled.div`
   justify-content: center;
   background-color: #3bd987;
   color: ${generateDarkTextColorForLightBg("#3bd987")};
-  position: absolute;
-  right: 0rem;
+  transform-origin: center;
+  right: 0;
   bottom: 0;
-  padding: 0;
-  font-weight: bolder;
-  height: 10px;
-
-  width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
-`;
-
-const CompleteLocked = styled.div`
-  display: flex;
-  cursor: pointer;
-  align-items: center;
-  justify-content: center;
-  background-color: #3bd987;
-  color: ${generateDarkTextColorForLightBg("#3bd987")};
-  font-size: 1rem;
   position: absolute;
-  transform: translateY(-50%) rotate(-90deg);
-  left: -2.5rem;
-  top: 50%;
-  height: 20px;
+  transform: translate(0, 0%);
   padding: 0;
   font-weight: bolder;
+  height: 20px;
 
   width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
 `;
@@ -682,9 +709,10 @@ const CompleteLockedToShow = styled.div`
   color: ${generateDarkTextColorForLightBg("#3bd987")};
   font-size: 1rem;
   position: absolute;
-  transform: translate(30%, -55%) rotate(-90deg);
-  right: 0rem;
-  top: 51%;
+  transform-origin: center;
+  right: 0;
+  top: 50%;
+  transform: translate(25%, -50%) rotate(-90deg);
   padding: 0;
   font-weight: bolder;
 
@@ -728,11 +756,24 @@ const AchSingleContainer1 = styled.div`
   position: relative;
 `;
 
+const AchSingleContainer11 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #171b2a;
+  margin: 0rem 0.25rem 0.5rem 0.25rem;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+`;
+
 const AchSingleContainer3 = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #5164e1;
+  background-color: #3bd987;
   margin: 0rem 0.25rem 0.5rem 0.25rem;
   width: 100%;
   position: relative;
@@ -837,6 +878,23 @@ const AchievementForGameSingle2 = styled.div`
   position: relative;
 `;
 
+const AchievementForGameSingle22 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
+  height: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
+  background: ${(props) => `url("${props.image}")`};
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin: 0.4rem;
+  cursor: pointer;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+`;
+
 const GameSelectedData = styled.div`
   display: flex;
   align-items: flex-start;
@@ -845,7 +903,20 @@ const GameSelectedData = styled.div`
   min-height: 76vh;
   flex-direction: column;
   max-height: 76vh;
-  overflow: scroll;
+  overflow-x: hidden;
+  overflow-y: scroll;
+`;
+
+const GameSelectedData2 = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  flex-wrap: wrap;
+  max-height: 78vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  position: relative;
 `;
 
 const GameTitle = styled.div`
@@ -943,11 +1014,13 @@ const MainLeftContainer = styled.div`
 
 const MainLeftContainer2 = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   width: 100%;
   flex-wrap: wrap;
   padding: 0rem 0.5rem;
+  position: relative;
+  min-height: 80vh;
 `;
 
 const Container = styled.div`
