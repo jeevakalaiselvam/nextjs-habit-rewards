@@ -764,7 +764,6 @@ const AchSingleContainer11 = styled.div`
   align-items: center;
   justify-content: center;
   background-color: #171b2a;
-  margin: 0rem 0.25rem 0.5rem 0.25rem;
   width: 100%;
   position: absolute;
   bottom: 0;
