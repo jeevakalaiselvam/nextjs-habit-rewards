@@ -1026,7 +1026,7 @@ const MainLeftContainer2 = styled.div`
   padding: 0rem 0.5rem;
   position: relative;
   overflow-x: hidden;
-  min-height: 80vh;
+  min-height: 78vh;
 `;
 
 const Container = styled.div`
