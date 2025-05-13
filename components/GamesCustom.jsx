@@ -448,13 +448,7 @@ export default function Atom({
       {activeTab == 3 && (
         <MainLeftContainer2>
           <AchSingleContainer11>
-            <CompleteLockedToShow
-              onClick={() => {
-                removeAchComplete(
-                  `${toShowSmall?.["GAME NAME"]}-${toShowSmall?.["ACH NAME"]}`
-                );
-              }}
-            >
+            <CompleteLockedToShow onClick={() => {}}>
               LAST
               <span
                 style={{
