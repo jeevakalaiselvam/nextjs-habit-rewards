@@ -119,6 +119,7 @@ export default function Atom({
   };
 
   const removeAchComplete = (ach) => {
+    console.log({ ach });
     let achId = `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`;
     axios
       .delete("/api/completed", { data: { title: achId } })
@@ -398,110 +399,12 @@ export default function Atom({
         <MainLeftContainer>
           {!values?.gamesSheetDataLoading && (
             <GameSelectedData>
-              {achToShowForGame?.map((ach) => {
-                let isCompleted = values?.completedAchs
-                  ?.map((ach) => ach?.title)
-                  ?.includes(`${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`);
-
-                return (
-                  <AchSingleContainer>
-                    {isCompleted && (
-                      <Complete
-                        onClick={() => {
-                          removeAchComplete(ach);
-                        }}
-                      >
-                        {
-                          sortedIndexMapper?.[
-                            `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
-                          ]
-                        }
-                        <span
-                          style={{
-                            fontSize: ".8rem",
-                            transform: "translate(3px,1px)",
-                          }}
-                        >
-                          <FaTrophy />
-                        </span>
-                      </Complete>
-                    )}
-                    {!isCompleted && (
-                      <InCompleted
-                        onClick={() => {
-                          markAchComplete(ach);
-                        }}
-                      >
-                        ACTIVE
-                      </InCompleted>
-                    )}
-                    <AchievementForGameSingle
-                      image={ach?.["ACH IMAGE"]}
-                    ></AchievementForGameSingle>
-                    <AchDataContainer>
-                      <AchTitle>{ach?.["ACH NAME"]}</AchTitle>
-                      <AchDetails>{ach?.["ACH DESC"]}</AchDetails>
-                    </AchDataContainer>
-                  </AchSingleContainer>
-                );
-              })}
-            </GameSelectedData>
-          )}
-          {values?.gamesSheetDataLoading && (
-            <Spin
-              indicator={
-                <LoadingOutlined
-                  style={{
-                    fontSize: 48,
-                    marginTop: "2rem",
-                  }}
-                  spin
-                />
-              }
-            />
-          )}
-          {values?.selectedGame &&
-            !values?.achsCompletedLoading &&
-            !values?.gamesSheetDataLoading && (
-              <ProgressInfo2>
-                <Trophies>
-                  <span
-                    style={{
-                      marginRight: ".5rem",
-                      fontSize: ".9rem",
-                      transform: "translate(3px,1px)",
-                    }}
-                  >
-                    <FaTrophy />
-                  </span>{" "}
-                  <span style={{ marginRight: ".5rem" }}>
-                    {completed}/{selectedGameAchs?.length}
-                  </span>
-                </Trophies>
-                <ProgressInner>
-                  <Progress
-                    percent={(
-                      (completed / selectedGameAchs?.length) *
-                      100
-                    )?.toFixed(0)}
-                  />
-                </ProgressInner>
-              </ProgressInfo2>
-            )}
-        </MainLeftContainer>
-      )}
-      {activeTab == 3 && (
-        <MainLeftContainer>
-          {!values?.gamesSheetDataLoading && (
-            <GameSelectedData>
               {sortedAchs?.map((ach, index) => {
                 return (
                   <AchSingleContainer1>
                     <Complete
                       onClick={() => {
-                        removeAchComplete(
-                          `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
-                        );
+                        removeAchComplete(ach);
                       }}
                     >
                       {sortedAchs?.length - index}{" "}
@@ -542,6 +445,52 @@ export default function Atom({
             />
           )}
         </MainLeftContainer>
+      )}
+      {activeTab == 3 && (
+        <MainLeftContainer2>
+          {!values?.gamesSheetDataLoading && (
+            <GameSelectedData>
+              {sortedAchs?.map((ach, index) => {
+                return (
+                  <AchievementForGameSingle2 image={ach?.["ACH IMAGE"]}>
+                    <Complete2
+                      onClick={() => {
+                        removeAchComplete(ach);
+                      }}
+                    >
+                      {
+                        sortedIndexMapper?.[
+                          `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
+                        ]
+                      }
+                      <span
+                        style={{
+                          fontSize: ".8rem",
+                          transform: "translate(3px,1px)",
+                        }}
+                      >
+                        <FaTrophy />
+                      </span>
+                    </Complete2>
+                  </AchievementForGameSingle2>
+                );
+              })}
+            </GameSelectedData>
+          )}
+          {values?.gamesSheetDataLoading && (
+            <Spin
+              indicator={
+                <LoadingOutlined
+                  style={{
+                    fontSize: 48,
+                    marginTop: "2rem",
+                  }}
+                  spin
+                />
+              }
+            />
+          )}
+        </MainLeftContainer2>
       )}
       {values?.toShow && (
         <ToShowWrapper>
@@ -623,20 +572,8 @@ const ToShowWrapper = styled.div`
   justify-content: center;
   position: absolute;
   width: 100%;
-  bottom: -1rem;
+  top: 1rem;
   left: 0;
-  animation: slideUp 0.25s linear forwards;
-
-  @keyframes slideUp {
-    from {
-      transform: translateY(20px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
 `;
 
 const Trophies = styled.div`
@@ -696,6 +633,23 @@ const Complete = styled.div`
   padding: 0;
   font-weight: bolder;
   height: 30px;
+
+  width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
+`;
+
+const Complete2 = styled.div`
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  background-color: #3bd987;
+  color: ${generateDarkTextColorForLightBg("#3bd987")};
+  position: absolute;
+  right: 0rem;
+  bottom: 0;
+  padding: 0;
+  font-weight: bolder;
+  height: 10px;
 
   width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
 `;
@@ -778,7 +732,7 @@ const AchSingleContainer3 = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #1d2033;
+  background-color: #5164e1;
   margin: 0rem 0.25rem 0.5rem 0.25rem;
   width: 100%;
   position: relative;
@@ -868,13 +822,28 @@ const AchievementForGameSingle = styled.div`
   cursor: pointer;
 `;
 
-const GameSelectedData = styled.div`
+const AchievementForGameSingle2 = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
+  height: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
+  background: ${(props) => `url("${props.image}")`};
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  margin: 0.4rem;
+  cursor: pointer;
+  position: relative;
+`;
+
+const GameSelectedData = styled.div`
+  display: flex;
+  align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
-  flex-direction: column;
   min-height: 76vh;
+  flex-direction: column;
   max-height: 76vh;
   overflow: scroll;
 `;
@@ -969,6 +938,15 @@ const MainLeftContainer = styled.div`
   justify-content: center;
   width: 100%;
   flex-direction: column;
+  padding: 0rem 0.5rem;
+`;
+
+const MainLeftContainer2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-wrap: wrap;
   padding: 0rem 0.5rem;
 `;
 

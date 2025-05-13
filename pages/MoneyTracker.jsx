@@ -336,6 +336,23 @@ export default function MoneyTracker() {
             </Icon>{" "}
             <Icon
               onClick={() => {
+                setActiveTab(2);
+              }}
+              data-active={activeTab == 2}
+            >
+              <HiChartPie />{" "}
+              <span
+                style={{
+                  fontSize: ".65rem",
+                  fontWeight: 800,
+                  marginTop: ".25rem",
+                }}
+              >
+                DETAILS
+              </span>
+            </Icon>{" "}
+            <Icon
+              onClick={() => {
                 setActiveTab(1);
               }}
               data-active={activeTab == 1}
@@ -349,23 +366,6 @@ export default function MoneyTracker() {
                 }}
               >
                 LOCKED
-              </span>
-            </Icon>{" "}
-            <Icon
-              onClick={() => {
-                setActiveTab(2);
-              }}
-              data-active={activeTab == 2}
-            >
-              <HiChartPie />{" "}
-              <span
-                style={{
-                  fontSize: ".65rem",
-                  fontWeight: 800,
-                  marginTop: ".25rem",
-                }}
-              >
-                UNLOCKED
               </span>
             </Icon>{" "}
             <Icon onClick={() => setActiveTab(0)} data-active={activeTab == 0}>
