@@ -348,7 +348,7 @@ export default function MoneyTracker() {
                   marginTop: ".25rem",
                 }}
               >
-                DETAILS
+                UNLOCKED
               </span>
             </Icon>{" "}
             <Icon

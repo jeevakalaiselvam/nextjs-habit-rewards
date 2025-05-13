@@ -398,7 +398,7 @@ export default function Atom({
         <MainLeftContainer>
           {!values?.gamesSheetDataLoading && (
             <GameSelectedData>
-              {sortedAchs?.map((ach, index) => {
+              {achToShowForGame?.map((ach, index) => {
                 return (
                   <AchSingleContainer1>
                     <Complete
@@ -406,7 +406,7 @@ export default function Atom({
                         removeAchComplete(ach);
                       }}
                     >
-                      {sortedAchs?.length - index}{" "}
+                      {achToShowForGame?.length - index}{" "}
                       <span
                         style={{
                           marginRight: ".15rem",
