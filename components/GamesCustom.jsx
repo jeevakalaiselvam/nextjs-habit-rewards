@@ -480,7 +480,12 @@ export default function Atom({
             <GameSelectedData2>
               {sortedAchs?.map((ach, index) => {
                 return (
-                  <AchievementForGameSingle2 image={ach?.["ACH IMAGE"]}>
+                  <AchievementForGameSingle2
+                    image={ach?.["ACH IMAGE"]}
+                    onClick={() =>
+                      setValues((old) => ({ ...old, toCheckAch: ach }))
+                    }
+                  >
                     <Complete2
                       onClick={() => {
                         removeAchComplete(ach);
@@ -1020,6 +1025,7 @@ const MainLeftContainer2 = styled.div`
   flex-wrap: wrap;
   padding: 0rem 0.5rem;
   position: relative;
+  overflow-x: hidden;
   min-height: 80vh;
 `;
 
