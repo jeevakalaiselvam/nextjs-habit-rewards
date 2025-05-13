@@ -12,6 +12,9 @@ import {
 } from "./helpers/gameHelper";
 import { COMPLETION_TARGET } from "./helpers/constantHelper";
 import { LoadingOutlined } from "@ant-design/icons";
+import { generateDarkTextColorForLightBg } from "./helpers/colorHelper";
+
+const HEIGHT_ACHIEVEMENT = 70;
 
 export default function Achievements({ recent, singleGame }) {
   const dispatch = useDispatch();
@@ -68,24 +71,35 @@ export default function Achievements({ recent, singleGame }) {
                     ></Inner>
                     <Title>{ach?.displayName}</Title>
                     <Description>{ach?.description}</Description>
-                    {
-                      <Percentage
-                        color={
-                          ach?.achieved == 1
-                            ? "#3BD987"
-                            : ach?.percentage < 1
-                            ? "#ffe23b"
-                            : "#66c0f4"
-                        }
-                      >
-                        {ach?.percentage}%
-                      </Percentage>
-                    }
+                    <Inner
+                      width={ach?.percentage}
+                      color={ach?.achieved == 1 ? "#145935" : "#17435c"}
+                    ></Inner>
+                    <Title>{ach?.displayName}</Title>
+                    <Description>{ach?.description}</Description>
+                    {!ach?.achieved == 1 && (
+                      <InCompleted onClick={() => {}}>ACTIVE</InCompleted>
+                    )}
+
+                    {ach?.achieved == 1 && (
+                      <Complete onClick={() => {}}>
+                        DONE
+                        <span
+                          style={{
+                            fontSize: ".8rem",
+                            transform: "translate(3px,1px)",
+                          }}
+                        >
+                          <FaTrophy />
+                        </span>
+                      </Complete>
+                    )}
                   </Data>
                 </AchievementContainer>
               );
             })}
         </MainContainer>
+
         {singleGame && false && (
           <ProgressContainer>
             <Progress percent={game?.completion} />
@@ -95,6 +109,45 @@ export default function Achievements({ recent, singleGame }) {
     );
   }
 }
+
+const InCompleted = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #575757;
+  color: #b4b4b4;
+  cursor: pointer;
+  position: absolute;
+  background-color: #5474fd;
+  color: ${generateDarkTextColorForLightBg("#5474FD")};
+  transform-origin: center;
+  right: 0;
+  top: 50%;
+  transform: translate(25%, -50%) rotate(-90deg);
+  padding: 0;
+  height: 30px;
+  font-weight: bolder;
+  width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
+`;
+
+const Complete = styled.div`
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  background-color: #3bd987;
+  color: ${generateDarkTextColorForLightBg("#3bd987")};
+  position: absolute;
+  transform-origin: center;
+  right: 0;
+  top: 50%;
+  transform: translate(25%, -50%) rotate(-90deg);
+  padding: 0;
+  font-weight: bolder;
+  height: 30px;
+
+  width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
+`;
 
 const ProgressContainer = styled.div`
   display: flex;
@@ -175,7 +228,7 @@ const AchievementContainer = styled.div`
   align-items: center;
   width: 100%;
   justify-content: center;
-  background-color: #080c11;
+  background-color: #171b2a;
   margin-bottom: 0.5rem;
   position: relative;
 `;

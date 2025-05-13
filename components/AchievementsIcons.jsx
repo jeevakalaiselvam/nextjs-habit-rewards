@@ -13,6 +13,10 @@ import {
 import { generateDarkTextColorForLightBg } from "./helpers/colorHelper";
 import { LoadingOutlined } from "@ant-design/icons";
 
+const HEIGHT_ACHIEVEMENT = 70;
+const HEIGHT_ACHIEVEMENT_TITLE = 40;
+const HEIGHT_ACHIEVEMENT_DESC = 40;
+
 export default function AchievementsIcons({ recent, singleGame }) {
   const dispatch = useDispatch();
   const { habittracker } = useSelector((state) => state);
@@ -54,7 +58,7 @@ export default function AchievementsIcons({ recent, singleGame }) {
               achSorted?.map((ach, index) => {
                 return (
                   <AchievementContainer>
-                    <Trigger>{achSorted?.length - index}</Trigger>
+                    <Trigger achieved={ach?.achieved}>{index + 1}</Trigger>
                     <Icon
                       icon={ach?.icon}
                       onClick={() => {
@@ -99,19 +103,23 @@ export default function AchievementsIcons({ recent, singleGame }) {
                 ></Inner>
                 <Title>{actoSHow?.displayName}</Title>
                 <Description>{actoSHow?.description}</Description>
-                {
-                  <Percentage
-                    color={
-                      actoSHow?.achieved == 1
-                        ? "#3BD987"
-                        : actoSHow?.percentage < 1
-                        ? "#ffe23b"
-                        : "#66c0f4"
-                    }
-                  >
-                    {actoSHow?.percentage}%
-                  </Percentage>
-                }
+                {!actoSHow?.achieved == 1 && (
+                  <InCompleted onClick={() => {}}>ACTIVE</InCompleted>
+                )}
+
+                {actoSHow?.achieved == 1 && (
+                  <Complete onClick={() => {}}>
+                    DONE
+                    <span
+                      style={{
+                        fontSize: ".8rem",
+                        transform: "translate(3px,1px)",
+                      }}
+                    >
+                      <FaTrophy />
+                    </span>
+                  </Complete>
+                )}
               </Data>
             </AchievementContainer2>
           </SingleAchContainer>
@@ -120,6 +128,45 @@ export default function AchievementsIcons({ recent, singleGame }) {
     );
   }
 }
+
+const InCompleted = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #575757;
+  color: #b4b4b4;
+  cursor: pointer;
+  position: absolute;
+  background-color: #5474fd;
+  color: ${generateDarkTextColorForLightBg("#5474FD")};
+  transform-origin: center;
+  right: 0;
+  top: 50%;
+  transform: translate(25%, -50%) rotate(-90deg);
+  padding: 0;
+  height: 30px;
+  font-weight: bolder;
+  width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
+`;
+
+const Complete = styled.div`
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  background-color: #3bd987;
+  color: ${generateDarkTextColorForLightBg("#3bd987")};
+  position: absolute;
+  transform-origin: center;
+  right: 0;
+  top: 50%;
+  transform: translate(25%, -50%) rotate(-90deg);
+  padding: 0;
+  font-weight: bolder;
+  height: 30px;
+
+  width: ${(props) => `${HEIGHT_ACHIEVEMENT}px`};
+`;
 
 const SingleAchContainer = styled.div`
   display: flex;
@@ -139,8 +186,10 @@ const Trigger = styled.div`
   bottom: 0;
   width: 100%;
   z-index: 200;
-  background-color: #3bd987;
-  color: ${generateDarkTextColorForLightBg("#3BD987", 50)};
+  font-size: 0.9rem;
+  background-color: ${(props) => (props.achieved ? "#3BD987" : "#17435c")};
+  color: ${(props) =>
+    props.achieved ? generateDarkTextColorForLightBg("#3BD987", 50) : "#aaa"};
 `;
 
 const Percentage = styled.div`
@@ -198,6 +247,7 @@ const Data = styled.div`
   flex-direction: column;
   flex: 1;
   min-height: 70px;
+  z-index: 2;
   position: relative;
 `;
 
@@ -226,7 +276,7 @@ const AchievementContainer2 = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #080c11;
+  background-color: #171b2a;
   margin-bottom: 0.5rem;
   position: relative;
   margin: 0.25rem;

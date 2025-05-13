@@ -27,7 +27,7 @@ export default function Games({ setActiveTab }) {
     <GameContainer
       onClick={() => {
         dispatch(selectGame(id));
-        setActiveTab(1);
+        setActiveTab(2);
       }}
     >
       <ImageContainer image={HEADER_IMAGE(id)}></ImageContainer>
