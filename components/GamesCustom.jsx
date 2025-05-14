@@ -1042,9 +1042,9 @@ const GameSelectedData = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
-  min-height: 71vh;
+  min-height: 66vh;
   flex-direction: column;
-  max-height: 71vh;
+  max-height: 66vh;
   overflow-x: hidden;
   overflow-y: scroll;
 `;
