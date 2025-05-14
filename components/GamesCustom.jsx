@@ -2,24 +2,25 @@ import {
   generateDarkTextColorForLightBg,
   THEME_ACCENT_COLOR,
   THEME_BG_COLOR,
-} from "../components/helpers/colorHelper";
-import { LoadingOutlined } from "@ant-design/icons";
-import { Button, message, notification, Progress, Space, Spin } from "antd";
-import Search from "antd/es/input/Search";
-import axios from "axios";
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import { FaTrophy } from "react-icons/fa";
-import { TbRefresh, TbRefreshDot } from "react-icons/tb";
-import { useDispatch, useSelector } from "react-redux";
-import styled from "styled-components";
+} from '../components/helpers/colorHelper';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Button, message, notification, Progress, Space, Spin } from 'antd';
+import Search from 'antd/es/input/Search';
+import axios from 'axios';
+import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
+import { FaTrophy } from 'react-icons/fa';
+import { IoMedal } from 'react-icons/io5';
+import { TbRefresh, TbRefreshDot } from 'react-icons/tb';
+import { useDispatch, useSelector } from 'react-redux';
+import styled from 'styled-components';
 
 const MAPPING_ORDER = {
-  0: "GAME IMAGE",
-  1: "GAME NAME",
-  2: "ACH NAME",
-  3: "ACH DESC",
-  4: "ACH IMAGE",
+  0: 'GAME IMAGE',
+  1: 'GAME NAME',
+  2: 'ACH NAME',
+  3: 'ACH DESC',
+  4: 'ACH IMAGE',
 };
 const HEIGHT_ACHIEVEMENT = 80;
 const HEIGHT_ACHIEVEMENT_TITLE = 40;
@@ -44,10 +45,10 @@ export default function Atom({
     selectedMiddleTab: 0,
     gamesSheetData: [],
     gamesSheetDataLoading: false,
-    selectedGame: "",
+    selectedGame: '',
     completedAchs: [],
     achsCompletedLoading: false,
-    hoveredAch: "",
+    hoveredAch: '',
     toShowAch: {},
     toShow: false,
     gameView: 0,
@@ -56,7 +57,7 @@ export default function Atom({
 
   const refreshGames = () => {
     setValues((old) => ({ ...old, gamesSheetDataLoading: true }));
-    axios.get("/api/sheet").then((response) => {
+    axios.get('/api/sheet').then((response) => {
       let gamesInner = response?.data?.rows?.slice(1) ?? [];
       let gamesMorphed = gamesInner?.map((singleGame) => {
         let mainGame = {};
@@ -75,7 +76,7 @@ export default function Atom({
 
   const refreshCompletedGames = () => {
     setValues((old) => ({ ...old, achsCompletedLoading: true }));
-    axios.get("/api/completed").then((response) => {
+    axios.get('/api/completed').then((response) => {
       setValues((old) => ({
         ...old,
         completedAchs: response?.data?.achievements ?? [],
@@ -88,7 +89,7 @@ export default function Atom({
     let allCompletedTitles = values?.completedAchs?.map((ach) => ach?.title);
     let realCompleted = values?.gamesSheetData?.filter((ach) => {
       return allCompletedTitles?.includes(
-        `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
+        `${ach?.['GAME NAME']}-${ach?.['ACH NAME']}`
       );
     });
     setTotalCount(realCompleted?.length);
@@ -102,14 +103,14 @@ export default function Atom({
 
   const markAchComplete = (ach) => {
     setValues((old) => ({ ...old, toShow: true, toShowAch: ach }));
-    let achId = `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`;
-    axios.post("/api/completed", { title: achId }).then((response) => {});
+    let achId = `${ach?.['GAME NAME']}-${ach?.['ACH NAME']}`;
+    axios.post('/api/completed', { title: achId }).then((response) => {});
   };
 
   const removeAchComplete = (ach) => {
-    let achId = `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`;
+    let achId = `${ach?.['GAME NAME']}-${ach?.['ACH NAME']}`;
     axios
-      .delete("/api/completed", { data: { title: achId } })
+      .delete('/api/completed', { data: { title: achId } })
       .then((response) => {
         refreshCompletedGames();
       });
@@ -134,16 +135,16 @@ export default function Atom({
   }, []);
 
   const selectedGameDefault =
-    values?.selectedGame ?? values?.gamesSheetData?.[0]?.["GAME NAME"];
+    values?.selectedGame ?? values?.gamesSheetData?.[0]?.['GAME NAME'];
 
   const gamesMapped = {};
 
   values?.gamesSheetData?.forEach((ach) => {
-    if (!gamesMapped[ach?.["GAME NAME"]]) {
-      gamesMapped[ach?.["GAME NAME"]] = [];
-      gamesMapped[ach?.["GAME NAME"]].push(ach);
+    if (!gamesMapped[ach?.['GAME NAME']]) {
+      gamesMapped[ach?.['GAME NAME']] = [];
+      gamesMapped[ach?.['GAME NAME']].push(ach);
     } else {
-      gamesMapped[ach?.["GAME NAME"]].push(ach);
+      gamesMapped[ach?.['GAME NAME']].push(ach);
     }
   });
 
@@ -152,13 +153,13 @@ export default function Atom({
   let sortedAchs = [];
   let allAchsCompleted = values?.gamesSheetData?.forEach((ach) => {
     if (
-      allCompletedTitles?.includes(`${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`)
+      allCompletedTitles?.includes(`${ach?.['GAME NAME']}-${ach?.['ACH NAME']}`)
     ) {
       sortedAchs.push({
         ...ach,
         ...(values?.completedAchs?.find(
           (achInner) =>
-            achInner?.title == `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
+            achInner?.title == `${ach?.['GAME NAME']}-${ach?.['ACH NAME']}`
         ) ?? {}),
       });
     }
@@ -170,7 +171,7 @@ export default function Atom({
 
   let sortedIndexMapper = {};
   sortedAchs?.forEach((ach, index) => {
-    sortedIndexMapper[`${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`] =
+    sortedIndexMapper[`${ach?.['GAME NAME']}-${ach?.['ACH NAME']}`] =
       sortedAchs?.length - index;
   });
 
@@ -181,7 +182,7 @@ export default function Atom({
 
   useEffect(() => {
     if (values?.toShow) {
-      playSound("/effect.mp3");
+      playSound('/effect.mp3');
     } else {
     }
     let timer = setTimeout(() => {
@@ -195,7 +196,7 @@ export default function Atom({
   let orderAchs = selectedGameAchs?.filter(
     (ach) =>
       !allCompletedTitles?.includes(
-        `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
+        `${ach?.['GAME NAME']}-${ach?.['ACH NAME']}`
       )
   );
 
@@ -207,14 +208,14 @@ export default function Atom({
     achToShowForGame = orderAchs;
   } else if (activeTab == 2) {
     achToShowForGame = sortedAchs?.filter(
-      (ach) => ach?.["GAME NAME"] == values?.selectedGame
+      (ach) => ach?.['GAME NAME'] == values?.selectedGame
     );
   }
 
   achToShowForGame = achToShowForGame?.filter((ach) => {
     return (
-      ach?.["ACH NAME"]?.toLowerCase()?.includes(searchTerm?.toLowerCase()) ||
-      ach?.["ACH DESC"]?.toLowerCase()?.includes(searchTerm?.toLowerCase())
+      ach?.['ACH NAME']?.toLowerCase()?.includes(searchTerm?.toLowerCase()) ||
+      ach?.['ACH DESC']?.toLowerCase()?.includes(searchTerm?.toLowerCase())
     );
   });
 
@@ -224,8 +225,56 @@ export default function Atom({
       ? values?.toCheckAch
       : sortedAchs?.[0];
 
+  const totalXP = values?.completedAchs?.reduce((acc, ach) => {
+    return acc + 50;
+  }, 0);
+
+  const LEVEL_UP = 1000;
+  const currentLevel = totalXP / LEVEL_UP;
+  const toNextProgress = ((totalXP % LEVEL_UP) / LEVEL_UP) * 100;
+
   return (
     <Container>
+      <ProgressInfo3>
+        <Trophies>
+          <span
+            style={{
+              marginRight: '.25rem',
+              fontSize: '.9rem',
+              transform: 'translate(3px,3px)',
+            }}
+          >
+            <IoMedal />
+          </span>{' '}
+          <span style={{ transform: 'translate(3px,1px)' }}>
+            {currentLevel.toFixed(0)}
+          </span>
+        </Trophies>
+        <ProgressInner>
+          <XPInfo>{LEVEL_UP - (totalXP % LEVEL_UP)} XP</XPInfo>
+          <Progress
+            percent={toNextProgress}
+            strokeColor={'#3BD987'}
+            showInfo={false}
+          />
+        </ProgressInner>
+        <Trophies>
+          <span
+            style={{
+              marginLeft: '.5rem',
+              fontSize: '.9rem',
+              transform: 'translate(3px,3px)',
+            }}
+          >
+            <IoMedal />
+          </span>{' '}
+          <span
+            style={{ marginLeft: '.25rem', transform: 'translate(3px,1px)' }}
+          >
+            {(currentLevel + 1).toFixed(0)}
+          </span>
+        </Trophies>
+      </ProgressInfo3>
       {contextHolder}
       {activeTab == 0 && (
         <MainLeftContainer>
@@ -237,7 +286,7 @@ export default function Atom({
                 let completedAchs = gamesMapped[key]?.filter((ach) =>
                   values?.completedAchs
                     ?.map((ach) => ach?.title)
-                    ?.includes(`${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`)
+                    ?.includes(`${ach?.['GAME NAME']}-${ach?.['ACH NAME']}`)
                 );
                 let completion = 0;
 
@@ -246,15 +295,15 @@ export default function Atom({
                 }
                 return (
                   <GameItemContainer>
-                    <GameTitle>{game?.["GAME NAME"]}</GameTitle>
+                    <GameTitle>{game?.['GAME NAME']}</GameTitle>
                     <GameItem
-                      image={game?.["GAME IMAGE"]}
+                      image={game?.['GAME IMAGE']}
                       onClick={() => {
                         setActiveTab(1);
-                        setTitleMain("Achievements");
+                        setTitleMain('Achievements');
                         setValues((old) => ({
                           ...old,
-                          selectedGame: game?.["GAME NAME"],
+                          selectedGame: game?.['GAME NAME'],
                           selectedMiddleTab: 0,
                         }));
                       }}
@@ -263,14 +312,14 @@ export default function Atom({
                       <Trophies>
                         <span
                           style={{
-                            marginRight: ".5rem",
-                            fontSize: ".9rem",
-                            transform: "translate(3px,1px)",
+                            marginRight: '.5rem',
+                            fontSize: '.9rem',
+                            transform: 'translate(3px,1px)',
                           }}
                         >
                           <FaTrophy />
-                        </span>{" "}
-                        <span style={{ marginRight: ".5rem" }}>
+                        </span>{' '}
+                        <span style={{ marginRight: '.5rem' }}>
                           {completedAchs?.length}/{allAchs?.length}
                         </span>
                       </Trophies>
@@ -289,7 +338,7 @@ export default function Atom({
                 <LoadingOutlined
                   style={{
                     fontSize: 48,
-                    marginTop: "2rem",
+                    marginTop: '2rem',
                   }}
                   spin
                 />
@@ -305,7 +354,7 @@ export default function Atom({
               {achToShowForGame?.map((ach) => {
                 let isCompleted = values?.completedAchs
                   ?.map((ach) => ach?.title)
-                  ?.includes(`${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`);
+                  ?.includes(`${ach?.['GAME NAME']}-${ach?.['ACH NAME']}`);
 
                 return (
                   <AchSingleContainer>
@@ -317,13 +366,13 @@ export default function Atom({
                       >
                         {
                           sortedIndexMapper?.[
-                            `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
+                            `${ach?.['GAME NAME']}-${ach?.['ACH NAME']}`
                           ]
                         }
                         <span
                           style={{
-                            fontSize: ".8rem",
-                            transform: "translate(3px,1px)",
+                            fontSize: '.8rem',
+                            transform: 'translate(3px,1px)',
                           }}
                         >
                           <FaTrophy />
@@ -340,11 +389,11 @@ export default function Atom({
                       </InCompleted>
                     )}
                     <AchievementForGameSingle
-                      image={ach?.["ACH IMAGE"]}
+                      image={ach?.['ACH IMAGE']}
                     ></AchievementForGameSingle>
                     <AchDataContainer>
-                      <AchTitle>{ach?.["ACH NAME"]}</AchTitle>
-                      <AchDetails>{ach?.["ACH DESC"]}</AchDetails>
+                      <AchTitle>{ach?.['ACH NAME']}</AchTitle>
+                      <AchDetails>{ach?.['ACH DESC']}</AchDetails>
                     </AchDataContainer>
                   </AchSingleContainer>
                 );
@@ -357,7 +406,7 @@ export default function Atom({
                 <LoadingOutlined
                   style={{
                     fontSize: 48,
-                    marginTop: "2rem",
+                    marginTop: '2rem',
                   }}
                   spin
                 />
@@ -371,14 +420,14 @@ export default function Atom({
                 <Trophies>
                   <span
                     style={{
-                      marginRight: ".5rem",
-                      fontSize: ".9rem",
-                      transform: "translate(3px,1px)",
+                      marginRight: '.5rem',
+                      fontSize: '.9rem',
+                      transform: 'translate(3px,1px)',
                     }}
                   >
                     <FaTrophy />
-                  </span>{" "}
-                  <span style={{ marginRight: ".5rem" }}>
+                  </span>{' '}
+                  <span style={{ marginRight: '.5rem' }}>
                     {completed}/{selectedGameAchs?.length}
                   </span>
                 </Trophies>
@@ -406,12 +455,12 @@ export default function Atom({
                         removeAchComplete(ach);
                       }}
                     >
-                      {achToShowForGame?.length - index}{" "}
+                      {achToShowForGame?.length - index}{' '}
                       <span
                         style={{
-                          marginRight: ".15rem",
-                          fontSize: ".8rem",
-                          transform: "translate(3px,1px)",
+                          marginRight: '.15rem',
+                          fontSize: '.8rem',
+                          transform: 'translate(3px,1px)',
                         }}
                       >
                         <FaTrophy />
@@ -419,11 +468,11 @@ export default function Atom({
                     </Complete>
                     {/* <Name>{ach?.["GAME NAME"]?.slice(0, 10) + "..."}</Name> */}
                     <AchievementForGameSingle
-                      image={ach?.["ACH IMAGE"]}
+                      image={ach?.['ACH IMAGE']}
                     ></AchievementForGameSingle>
                     <AchDataContainer>
-                      <AchTitle2>{ach?.["ACH NAME"]}</AchTitle2>
-                      <AchDetails2>{ach?.["ACH DESC"]}</AchDetails2>
+                      <AchTitle2>{ach?.['ACH NAME']}</AchTitle2>
+                      <AchDetails2>{ach?.['ACH DESC']}</AchDetails2>
                     </AchDataContainer>
                   </AchSingleContainer1>
                 );
@@ -436,7 +485,7 @@ export default function Atom({
                 <LoadingOutlined
                   style={{
                     fontSize: 48,
-                    marginTop: "2rem",
+                    marginTop: '2rem',
                   }}
                   spin
                 />
@@ -452,20 +501,20 @@ export default function Atom({
               LAST
               <span
                 style={{
-                  marginRight: ".15rem",
-                  fontSize: ".8rem",
-                  transform: "translate(3px,1px)",
+                  marginRight: '.15rem',
+                  fontSize: '.8rem',
+                  transform: 'translate(3px,1px)',
                 }}
               >
                 <FaTrophy />
               </span>
             </CompleteLockedToShow>
             <AchievementForGameSingle
-              image={toShowSmall?.["ACH IMAGE"]}
+              image={toShowSmall?.['ACH IMAGE']}
             ></AchievementForGameSingle>
             <AchDataContainer>
-              <AchTitle2>{toShowSmall?.["ACH NAME"]}</AchTitle2>
-              <AchDetails2>{toShowSmall?.["ACH DESC"]}</AchDetails2>
+              <AchTitle2>{toShowSmall?.['ACH NAME']}</AchTitle2>
+              <AchDetails2>{toShowSmall?.['ACH DESC']}</AchDetails2>
             </AchDataContainer>
           </AchSingleContainer11>
           {!values?.gamesSheetDataLoading && (
@@ -473,7 +522,7 @@ export default function Atom({
               {sortedAchs?.map((ach, index) => {
                 return (
                   <AchievementForGameSingle2
-                    image={ach?.["ACH IMAGE"]}
+                    image={ach?.['ACH IMAGE']}
                     onClick={() =>
                       setValues((old) => ({ ...old, toCheckAch: ach }))
                     }
@@ -485,13 +534,13 @@ export default function Atom({
                     >
                       {
                         sortedIndexMapper?.[
-                          `${ach?.["GAME NAME"]}-${ach?.["ACH NAME"]}`
+                          `${ach?.['GAME NAME']}-${ach?.['ACH NAME']}`
                         ]
                       }
                       <span
                         style={{
-                          fontSize: ".8rem",
-                          transform: "translate(3px,1px)",
+                          fontSize: '.8rem',
+                          transform: 'translate(3px,1px)',
                         }}
                       >
                         <FaTrophy />
@@ -508,7 +557,7 @@ export default function Atom({
                 <LoadingOutlined
                   style={{
                     fontSize: 48,
-                    marginTop: "2rem",
+                    marginTop: '2rem',
                   }}
                   spin
                 />
@@ -523,27 +572,27 @@ export default function Atom({
             <CompleteLockedToShow
               onClick={() => {
                 removeAchComplete(
-                  `${values?.toShowAch?.["GAME NAME"]}-${values?.toShowAch?.["ACH NAME"]}`
+                  `${values?.toShowAch?.['GAME NAME']}-${values?.toShowAch?.['ACH NAME']}`
                 );
               }}
             >
               DONE
               <span
                 style={{
-                  marginRight: ".15rem",
-                  fontSize: ".8rem",
-                  transform: "translate(3px,1px)",
+                  marginRight: '.15rem',
+                  fontSize: '.8rem',
+                  transform: 'translate(3px,1px)',
                 }}
               >
                 <FaTrophy />
               </span>
             </CompleteLockedToShow>
             <AchievementForGameSingle
-              image={values?.toShowAch?.["ACH IMAGE"]}
+              image={values?.toShowAch?.['ACH IMAGE']}
             ></AchievementForGameSingle>
             <AchDataContainer>
-              <AchTitle2>{values?.toShowAch?.["ACH NAME"]}</AchTitle2>
-              <AchDetails2>{values?.toShowAch?.["ACH DESC"]}</AchDetails2>
+              <AchTitle2>{values?.toShowAch?.['ACH NAME']}</AchTitle2>
+              <AchDetails2>{values?.toShowAch?.['ACH DESC']}</AchDetails2>
             </AchDataContainer>
           </AchSingleContainer3>
         </ToShowWrapper>
@@ -587,7 +636,7 @@ const Option = styled.div`
   justify-content: center;
   flex: 1;
   font-size: 0.9rem;
-  color: ${(props) => (props?.selected ? "#53B5D9" : "#959595")};
+  color: ${(props) => (props?.selected ? '#53B5D9' : '#959595')};
   position: relative;
 `;
 
@@ -619,7 +668,6 @@ const Trophies = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 60px;
   margin-right: 1rem;
 `;
 
@@ -628,6 +676,16 @@ const ProgressInner = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
+  position: relative;
+`;
+
+const XPInfo = styled.div`
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%);
+  top: -0.5rem;
+  font-size: 0.8rem;
+  opacity: 0.5;
 `;
 
 const GameItemContainer = styled.div`
@@ -648,7 +706,7 @@ const InCompleted = styled.div`
   cursor: pointer;
   position: absolute;
   background-color: #5474fd;
-  color: ${generateDarkTextColorForLightBg("#5474FD")};
+  color: ${generateDarkTextColorForLightBg('#5474FD')};
   transform-origin: center;
   right: 0;
   top: 50%;
@@ -665,7 +723,7 @@ const Complete = styled.div`
   align-items: center;
   justify-content: center;
   background-color: #3bd987;
-  color: ${generateDarkTextColorForLightBg("#3bd987")};
+  color: ${generateDarkTextColorForLightBg('#3bd987')};
   position: absolute;
   transform-origin: center;
   right: 0;
@@ -684,7 +742,7 @@ const Complete2 = styled.div`
   align-items: center;
   justify-content: center;
   background-color: #3bd987;
-  color: ${generateDarkTextColorForLightBg("#3bd987")};
+  color: ${generateDarkTextColorForLightBg('#3bd987')};
   transform-origin: center;
   right: 0;
   bottom: 0;
@@ -703,7 +761,7 @@ const CompleteLockedToShow = styled.div`
   align-items: center;
   justify-content: center;
   background-color: #3bd987;
-  color: ${generateDarkTextColorForLightBg("#3bd987")};
+  color: ${generateDarkTextColorForLightBg('#3bd987')};
   font-size: 1rem;
   position: absolute;
   transform-origin: center;
@@ -896,9 +954,9 @@ const GameSelectedData = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
-  min-height: 76vh;
+  min-height: 71vh;
   flex-direction: column;
-  max-height: 76vh;
+  max-height: 71vh;
   overflow-x: hidden;
   overflow-y: scroll;
 `;
@@ -909,7 +967,7 @@ const GameSelectedData2 = styled.div`
   justify-content: flex-start;
   width: 100%;
   flex-wrap: wrap;
-  max-height: 78vh;
+  max-height: 71vh;
   overflow-x: hidden;
   overflow-y: scroll;
   position: relative;
@@ -942,6 +1000,14 @@ const ProgressInfo2 = styled.div`
   padding: 0rem 0rem;
 `;
 
+const ProgressInfo3 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 98%;
+  padding: 0rem 0rem;
+`;
+
 const GameItem = styled.div`
   display: flex;
   align-items: center;
@@ -968,35 +1034,9 @@ const GamesContainer = styled.div`
   width: 100%;
   justify-content: flex-start;
   flex-direction: column;
-  min-height: 77vh;
-  max-height: 77vh;
+  min-height: 73.5vh;
+  max-height: 73.5vh;
   overflow: scroll;
-`;
-
-const TopFilter = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const FilterLeft = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  font-size: 0.9rem;
-  color: ${(props) => (props?.selected ? "#53B5D9" : "#959595")};
-  position: relative;
-`;
-
-const FilterRight = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  font-size: 0.9rem;
-  color: ${(props) => (props?.selected ? "#53B5D9" : "#959595")};
-  position: relative;
 `;
 
 const MainLeftContainer = styled.div`
@@ -1005,7 +1045,7 @@ const MainLeftContainer = styled.div`
   justify-content: center;
   width: 100%;
   flex-direction: column;
-  padding: 0rem 0.5rem;
+  padding: 1rem 0.5rem 0rem 0.5rem;
 `;
 
 const MainLeftContainer2 = styled.div`
@@ -1017,7 +1057,7 @@ const MainLeftContainer2 = styled.div`
   padding: 0rem 0.5rem;
   position: relative;
   overflow-x: hidden;
-  min-height: 78vh;
+  min-height: 76vh;
 `;
 
 const Container = styled.div`
@@ -1026,4 +1066,5 @@ const Container = styled.div`
   justify-content: center;
   width: 100%;
   position: relative;
+  flex-direction: column;
 `;
