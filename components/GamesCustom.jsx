@@ -49,7 +49,7 @@ export default function Atom({
     completedAchs: [],
     achsCompletedLoading: false,
     hoveredAch: '',
-    toShowAch: {},
+    toShowAch: [],
     toShow: false,
     gameView: 0,
     toCheckAch: {},
@@ -102,7 +102,11 @@ export default function Atom({
   };
 
   const markAchComplete = (ach) => {
-    setValues((old) => ({ ...old, toShow: true, toShowAch: ach }));
+    setValues((old) => ({
+      ...old,
+      toShow: new Date()?.toString(),
+      toShowAch: [...old?.toShowAch, ach],
+    }));
     let achId = `${ach?.['GAME NAME']}-${ach?.['ACH NAME']}`;
     axios.post('/api/completed', { title: achId }).then((response) => {});
   };
@@ -186,8 +190,8 @@ export default function Atom({
     } else {
     }
     let timer = setTimeout(() => {
-      setValues((old) => ({ ...old, toShow: false, toShowAch: {} }));
-    }, 3000);
+      setValues((old) => ({ ...old, toShow: false, toShowAch: [] }));
+    }, 2000);
     return () => {
       clearTimeout(timer);
     };
@@ -574,33 +578,37 @@ export default function Atom({
       )}
       {values?.toShow && (
         <ToShowWrapper onClick={() => {}}>
-          <AchSingleContainer3>
-            <CompleteLockedToShow
-              onClick={() => {
-                removeAchComplete(
-                  `${values?.toShowAch?.['GAME NAME']}-${values?.toShowAch?.['ACH NAME']}`
-                );
-              }}
-            >
-              DONE
-              <span
-                style={{
-                  marginRight: '.15rem',
-                  fontSize: '.8rem',
-                  transform: 'translate(3px,1px)',
-                }}
-              >
-                <FaTrophy />
-              </span>
-            </CompleteLockedToShow>
-            <AchievementForGameSingle
-              image={values?.toShowAch?.['ACH IMAGE']}
-            ></AchievementForGameSingle>
-            <AchDataContainer>
-              <AchTitle2>{values?.toShowAch?.['ACH NAME']}</AchTitle2>
-              <AchDetails2>{values?.toShowAch?.['ACH DESC']}</AchDetails2>
-            </AchDataContainer>
-          </AchSingleContainer3>
+          {values?.toShowAch?.map((innerAch) => {
+            return (
+              <AchSingleContainer3>
+                <CompleteLockedToShow
+                  onClick={() => {
+                    removeAchComplete(
+                      `${innerAch?.['GAME NAME']}-${innerAch?.['ACH NAME']}`
+                    );
+                  }}
+                >
+                  DONE
+                  <span
+                    style={{
+                      marginRight: '.15rem',
+                      fontSize: '.8rem',
+                      transform: 'translate(3px,1px)',
+                    }}
+                  >
+                    <FaTrophy />
+                  </span>
+                </CompleteLockedToShow>
+                <AchievementForGameSingle
+                  image={innerAch?.['ACH IMAGE']}
+                ></AchievementForGameSingle>
+                <AchDataContainer>
+                  <AchTitle2>{innerAch?.['ACH NAME']}</AchTitle2>
+                  <AchDetails2>{innerAch?.['ACH DESC']}</AchDetails2>
+                </AchDataContainer>
+              </AchSingleContainer3>
+            );
+          })}
         </ToShowWrapper>
       )}
     </Container>
@@ -651,6 +659,7 @@ const ToShowWrapper = styled.div`
   align-items: center;
   justify-content: center;
   position: absolute;
+  flex-direction: column;
   width: 100%;
   bottom: 1rem;
   left: 0;
@@ -689,7 +698,7 @@ const XPInfo = styled.div`
   position: absolute;
   left: 50%;
   transform: translate(-50%);
-  top: -0.5rem;
+  top: -0.65rem;
   font-size: 0.8rem;
   opacity: 0.5;
 `;
