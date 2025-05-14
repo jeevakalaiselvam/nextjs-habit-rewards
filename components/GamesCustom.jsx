@@ -243,14 +243,26 @@ export default function Atom({
   const currentLevel = totalXP / LEVEL_UP;
   const toNextProgress = ((totalXP % LEVEL_UP) / LEVEL_UP) * 100;
 
-  const allTypeTitles = ['Feature', 'Issue', 'Bug', 'Task', 'Call', 'Team'];
+  const allTypeTitles = [
+    'All',
+    'Feature',
+    'Issue',
+    'Bug',
+    'Task',
+    'Call',
+    'Team',
+  ];
 
   let isWorkRelated = values?.selectedGame == 'Work Simulator';
 
   if (isWorkRelated) {
-    achToShowForGame = achToShowForGame?.filter(
-      (ach) => ach?.['ACH NAME']?.split(' - ')?.[0] == selectedType
-    );
+    achToShowForGame = achToShowForGame?.filter((ach) => {
+      if (selectedType == 'All') {
+        return ach;
+      } else {
+        return ach?.['ACH NAME']?.split(' - ')?.[0] == selectedType;
+      }
+    });
   }
 
   return (
