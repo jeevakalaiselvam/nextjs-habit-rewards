@@ -24,7 +24,11 @@ const MAPPING_ORDER = {
 };
 const HEIGHT_ACHIEVEMENT = 80;
 const HEIGHT_ACHIEVEMENT_TITLE = 40;
+const HEIGHT_ACHIEVEMENT_TITLE_OTHER = 20;
 const HEIGHT_ACHIEVEMENT_DESC = 40;
+const HEIGHT_ACHIEVEMENT_DESC_OTHER = 60;
+
+const CHAR_LIMIT = 37;
 
 export default function Atom({
   activeTab,
@@ -402,8 +406,14 @@ export default function Atom({
                       image={ach?.['ACH IMAGE']}
                     ></AchievementForGameSingle>
                     <AchDataContainer>
-                      <AchTitle>{ach?.['ACH NAME']}</AchTitle>
-                      <AchDetails>{ach?.['ACH DESC']}</AchDetails>
+                      <AchTitle other={ach?.['ACH NAME']?.length <= CHAR_LIMIT}>
+                        {ach?.['ACH NAME']}
+                      </AchTitle>
+                      <AchDetails
+                        other={ach?.['ACH NAME']?.length <= CHAR_LIMIT}
+                      >
+                        {ach?.['ACH DESC']}
+                      </AchDetails>
                     </AchDataContainer>
                   </AchSingleContainer>
                 );
@@ -481,8 +491,16 @@ export default function Atom({
                       image={ach?.['ACH IMAGE']}
                     ></AchievementForGameSingle>
                     <AchDataContainer>
-                      <AchTitle2>{ach?.['ACH NAME']}</AchTitle2>
-                      <AchDetails2>{ach?.['ACH DESC']}</AchDetails2>
+                      <AchTitle2
+                        other={ach?.['ACH NAME']?.length <= CHAR_LIMIT}
+                      >
+                        {ach?.['ACH NAME']}
+                      </AchTitle2>
+                      <AchDetails2
+                        other={ach?.['ACH NAME']?.length <= CHAR_LIMIT}
+                      >
+                        {ach?.['ACH DESC']}
+                      </AchDetails2>
                     </AchDataContainer>
                   </AchSingleContainer1>
                 );
@@ -523,8 +541,16 @@ export default function Atom({
               image={toShowSmall?.['ACH IMAGE']}
             ></AchievementForGameSingle>
             <AchDataContainer>
-              <AchTitle2>{toShowSmall?.['ACH NAME']}</AchTitle2>
-              <AchDetails2>{toShowSmall?.['ACH DESC']}</AchDetails2>
+              <AchTitle2
+                other={toShowSmall?.['ACH NAME']?.length <= CHAR_LIMIT}
+              >
+                {toShowSmall?.['ACH NAME']}
+              </AchTitle2>
+              <AchDetails2
+                other={toShowSmall?.['ACH NAME']?.length <= CHAR_LIMIT}
+              >
+                {toShowSmall?.['ACH DESC']}
+              </AchDetails2>
             </AchDataContainer>
           </AchSingleContainer11>
           {!values?.gamesSheetDataLoading && (
@@ -879,7 +905,10 @@ const AchTitle = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   font-size: 0.9rem;
-  min-height: ${(props) => `${HEIGHT_ACHIEVEMENT_TITLE}px`};
+  min-height: ${(props) =>
+    props.other
+      ? `${HEIGHT_ACHIEVEMENT_TITLE_OTHER}px`
+      : `${HEIGHT_ACHIEVEMENT_TITLE}px`};
   width: 100%;
   padding: 0.5rem 2rem 0.5rem 0.25rem;
 `;
@@ -892,7 +921,10 @@ const AchDetails = styled.div`
   flex: 1;
   opacity: 0.5;
   width: 100%;
-  min-height: ${(props) => `${HEIGHT_ACHIEVEMENT_DESC}px`};
+  min-height: ${(props) =>
+    props.other
+      ? `${HEIGHT_ACHIEVEMENT_DESC_OTHER}px`
+      : `${HEIGHT_ACHIEVEMENT_DESC}px`};
   padding: 0.5rem 2rem 0rem 0.25rem;
 `;
 
@@ -903,7 +935,10 @@ const AchTitle2 = styled.div`
   font-size: 0.9rem;
   width: 100%;
   flex: 1;
-  min-height: ${(props) => `${HEIGHT_ACHIEVEMENT_TITLE}px`};
+  min-height: ${(props) =>
+    props.other
+      ? `${HEIGHT_ACHIEVEMENT_TITLE_OTHER}px`
+      : `${HEIGHT_ACHIEVEMENT_TITLE}px`};
   padding: 0.5rem 2rem 0.5rem 0.25rem;
 `;
 
@@ -915,7 +950,10 @@ const AchDetails2 = styled.div`
   flex: 1;
   opacity: 0.5;
   width: 100%;
-  min-height: ${(props) => `${HEIGHT_ACHIEVEMENT_DESC}px`};
+  min-height: ${(props) =>
+    props.other
+      ? `${HEIGHT_ACHIEVEMENT_DESC_OTHER}px`
+      : `${HEIGHT_ACHIEVEMENT_DESC}px`};
   padding: 0.5rem 2rem 0rem 0.25rem;
 `;
 
