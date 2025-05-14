@@ -563,11 +563,7 @@ export default function Atom({
                       setValues((old) => ({ ...old, toCheckAch: ach }))
                     }
                   >
-                    <Complete2
-                      onClick={() => {
-                        removeAchComplete(ach);
-                      }}
-                    >
+                    <Complete2 onClick={() => {}}>
                       {
                         sortedIndexMapper?.[
                           `${ach?.['GAME NAME']}-${ach?.['ACH NAME']}`
