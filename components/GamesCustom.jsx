@@ -14,6 +14,7 @@ import { IoMedal } from 'react-icons/io5';
 import { TbRefresh, TbRefreshDot } from 'react-icons/tb';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import { selectGame } from '../store/gameSlice';
 
 const MAPPING_ORDER = {
   0: 'GAME IMAGE',
@@ -43,6 +44,7 @@ export default function Atom({
   const dispatch = useDispatch();
   const steamtracker = useSelector((state) => state.steamtracker);
   const [messageApi, contextHolder] = message.useMessage();
+  const [selectedType, setSelectedType] = useState('Feature');
 
   const [values, setValues] = useState({
     selectedLeftTab: 0,
@@ -240,6 +242,16 @@ export default function Atom({
   const LEVEL_UP = 1000;
   const currentLevel = totalXP / LEVEL_UP;
   const toNextProgress = ((totalXP % LEVEL_UP) / LEVEL_UP) * 100;
+
+  const allTypeTitles = ['Feature', 'Issue', 'Bug', 'Task', 'Call', 'Team'];
+
+  let isWorkRelated = values?.selectedGame == 'Work Simulator';
+
+  if (isWorkRelated) {
+    achToShowForGame = achToShowForGame?.filter(
+      (ach) => ach?.['ACH NAME']?.split(' - ')?.[0] == selectedType
+    );
+  }
 
   return (
     <Container>
@@ -461,6 +473,20 @@ export default function Atom({
                 </ProgressInner>
               </ProgressInfo2>
             )}
+          {isWorkRelated && (
+            <Types>
+              {allTypeTitles?.map((type) => {
+                return (
+                  <Type
+                    onClick={() => setSelectedType(type)}
+                    active={selectedType == type}
+                  >
+                    {type}
+                  </Type>
+                );
+              })}
+            </Types>
+          )}
         </MainLeftContainer>
       )}
       {activeTab == 2 && (
@@ -1086,6 +1112,27 @@ const GamesContainer = styled.div`
   min-height: 73.5vh;
   max-height: 73.5vh;
   overflow: scroll;
+`;
+
+const Types = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 105%;
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  background-color: rgba(0, 0, 0, 0.8);
+`;
+
+const Type = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 0rem 0.25rem;
+  justify-content: center;
+  font-size: 0.9rem;
+  border-radius: 4px 4px 0px 0px;
+  padding: 0.25rem 0.5rem;
+  background-color: ${(props) => (props.active ? '#5474FD' : '#333')};
 `;
 
 const MainLeftContainer = styled.div`
