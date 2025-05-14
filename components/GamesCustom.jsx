@@ -259,6 +259,7 @@ export default function Atom({
         <Trophies>
           <span
             style={{
+              marginLeft: '.5rem',
               marginRight: '.25rem',
               fontSize: '.9rem',
               transform: 'translate(3px,3px)',
@@ -745,7 +746,7 @@ const ProgressInner = styled.div`
 const XPInfo = styled.div`
   position: absolute;
   left: 50%;
-  transform: translate(-50%);
+  transform: translate(-25%);
   top: -0.65rem;
   font-size: 0.8rem;
   opacity: 0.5;
@@ -1072,14 +1073,14 @@ const ProgressInfo2 = styled.div`
   justify-content: center;
   width: 104%;
   background-color: rgba(0, 0, 0, 0.8);
-  padding: 0rem 0rem;
+  padding: 0.25rem 0rem;
 `;
 
 const ProgressInfo3 = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 98%;
+  width: 100%;
   padding: 0rem 0rem;
 `;
 
