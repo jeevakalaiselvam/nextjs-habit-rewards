@@ -389,7 +389,7 @@ export default function Atom({
       {activeTab == 1 && (
         <MainLeftContainer>
           {!values?.gamesSheetDataLoading && (
-            <GameSelectedData>
+            <GameSelectedData isWorkRelated={isWorkRelated}>
               {achToShowForGame?.map((ach) => {
                 let isCompleted = values?.completedAchs
                   ?.map((ach) => ach?.title)
@@ -1042,9 +1042,9 @@ const GameSelectedData = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
-  min-height: 66vh;
+  min-height: ${(props) => (props.isWorkRelated ? '66vh' : '70vh')};
   flex-direction: column;
-  max-height: 66vh;
+  max-height: ${(props) => (props.isWorkRelated ? '66vh' : '70vh')};
   overflow-x: hidden;
   overflow-y: scroll;
 `;
