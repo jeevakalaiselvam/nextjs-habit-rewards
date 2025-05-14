@@ -1057,6 +1057,7 @@ const GameSelectedData2 = styled.div`
   width: 100%;
   flex-wrap: wrap;
   max-height: 71vh;
+  padding-bottom: 3rem;
   overflow-x: hidden;
   overflow-y: scroll;
   position: relative;
