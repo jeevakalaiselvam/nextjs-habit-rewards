@@ -473,7 +473,7 @@ export default function Atom({
                 </ProgressInner>
               </ProgressInfo2>
             )}
-          {isWorkRelated && (
+          {isWorkRelated && !values?.gamesSheetDataLoading && (
             <Types>
               {allTypeTitles?.map((type) => {
                 return (
