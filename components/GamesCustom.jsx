@@ -242,11 +242,12 @@ export default function Atom({
               marginRight: '.25rem',
               fontSize: '.9rem',
               transform: 'translate(3px,3px)',
+              color: '#3BD987',
             }}
           >
             <IoMedal />
           </span>{' '}
-          <span style={{ transform: 'translate(3px,1px)' }}>
+          <span style={{ transform: 'translate(3px,1px)', color: '#3BD987' }}>
             {currentLevel.toFixed(0)}
           </span>
         </Trophies>
@@ -264,12 +265,17 @@ export default function Atom({
               marginLeft: '.5rem',
               fontSize: '.9rem',
               transform: 'translate(3px,3px)',
+              color: '#3BD987',
             }}
           >
             <IoMedal />
           </span>{' '}
           <span
-            style={{ marginLeft: '.25rem', transform: 'translate(3px,1px)' }}
+            style={{
+              marginLeft: '.25rem',
+              transform: 'translate(3px,1px)',
+              color: '#3BD987',
+            }}
           >
             {(currentLevel + 1).toFixed(0)}
           </span>
