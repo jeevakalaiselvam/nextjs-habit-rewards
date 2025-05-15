@@ -250,7 +250,6 @@ export default function Atom({
     'Feature',
     'Analysis',
     'Issue',
-    'Bug',
     'Task',
     'Call',
     'Team',
