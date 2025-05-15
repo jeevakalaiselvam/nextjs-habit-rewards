@@ -46,7 +46,7 @@ export default function Atom({
   const dispatch = useDispatch();
   const steamtracker = useSelector((state) => state.steamtracker);
   const [messageApi, contextHolder] = message.useMessage();
-  const [selectedType, setSelectedType] = useState('All');
+  const [selectedType, setSelectedType] = useState('Feature');
   const [selectedCategory, setSelectedCategory] = useState('Game');
 
   const [values, setValues] = useState({
@@ -247,8 +247,8 @@ export default function Atom({
   const toNextProgress = ((totalXP % LEVEL_UP) / LEVEL_UP) * 100;
 
   const allTypeTitles = [
-    'All',
     'Feature',
+    'Analysis',
     'Issue',
     'Bug',
     'Task',
@@ -281,7 +281,8 @@ export default function Atom({
     }
   });
 
-  console.log(filteredgamesMapped);
+  sortedAchs = sortedAchs?.filter((ach) => ach?.['TYPE'] == selectedCategory);
+  console.log(sortedAchs, selectedCategory);
 
   return (
     <Container>
@@ -595,6 +596,20 @@ export default function Atom({
       )}
       {activeTab == 3 && (
         <MainLeftContainer2>
+          {!values?.gamesSheetDataLoading && (
+            <Types>
+              {allCategories?.map((type) => {
+                return (
+                  <Type2
+                    onClick={() => setSelectedCategory(type)}
+                    active={selectedCategory == type}
+                  >
+                    {type}
+                  </Type2>
+                );
+              })}
+            </Types>
+          )}
           <AchSingleContainer11>
             <CompleteLockedToShow onClick={() => {}}>
               LAST
@@ -1089,7 +1104,7 @@ const GameSelectedData2 = styled.div`
   width: 100%;
   flex-wrap: wrap;
   max-height: 71vh;
-  padding-bottom: 3rem;
+  padding-bottom: 5rem;
   overflow-x: hidden;
   overflow-y: scroll;
   position: relative;
@@ -1165,7 +1180,7 @@ const Types = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 105%;
+  width: 100%;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
   background-color: rgba(0, 0, 0, 0.8);
@@ -1205,14 +1220,16 @@ const MainLeftContainer = styled.div`
 
 const MainLeftContainer2 = styled.div`
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
   width: 100%;
   flex-wrap: wrap;
   padding: 0rem 0.5rem;
   position: relative;
   overflow-x: hidden;
   min-height: 76vh;
+  max-height: 76vh;
 `;
 
 const Container = styled.div`
