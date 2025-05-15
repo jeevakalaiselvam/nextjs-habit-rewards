@@ -11,7 +11,7 @@ import {
 } from '../helpers/colorHelper';
 import { Dropdown, Space } from 'antd';
 import { FaCaretDown, FaGlobe, FaRupeeSign } from 'react-icons/fa';
-import { GAMES_ARRAY } from '../helpers/gameHelper';
+import { GAMES_ARRAY, HABIT_ARRAY, WORK_ARRAY } from '../helpers/gameHelper';
 import axios from 'axios';
 
 const SECTION_MONEY = 'SECTION_MONEY';
@@ -58,11 +58,6 @@ export default function Main() {
       label: <div style={{ width: '100%' }}>All Games</div>,
       disabled: true,
     },
-    {
-      key: 'Battlefield 2042',
-      label: 'Battlefield 2042',
-      extra: '⌘B',
-    },
     ...GAMES_ARRAY?.map((game) => {
       return {
         key: game,
@@ -72,12 +67,53 @@ export default function Main() {
     }),
   ];
 
+  const itemsWork = [
+    {
+      key: '33',
+      label: <div style={{ width: '100%' }}>All Activity</div>,
+      disabled: true,
+    },
+    ...WORK_ARRAY?.map((game) => {
+      return {
+        key: game,
+        label: game,
+        extra: `⌘${game?.[0]?.toUpperCase()}`,
+      };
+    }),
+  ];
+
+  const itemsHabit = [
+    {
+      key: '33',
+      label: <div style={{ width: '100%' }}>All Habit</div>,
+      disabled: true,
+    },
+    ...HABIT_ARRAY?.map((game) => {
+      return {
+        key: game,
+        label: game,
+        extra: `⌘${game?.[0]?.toUpperCase()}`,
+      };
+    }),
+  ];
+
   const handleItemClickType = (e) => {
-    setFormValues((old) => ({ ...old, type: String(e.key) }));
+    setFormValues((old) => ({
+      ...old,
+      type: String(e.key),
+      name: '',
+      title: '',
+      description: '',
+    }));
   };
 
   const handleItemClickName = (e) => {
     setFormValues((old) => ({ ...old, name: String(e.key) }));
+
+    console.log(formValues);
+    if (formValues?.type == 'Habit') {
+      setFormValues((old) => ({ ...old, title: String(e.key) }));
+    }
   };
 
   const menuTypeType = {
@@ -87,6 +123,16 @@ export default function Main() {
 
   const menuTypeGame = {
     items: itemsGame,
+    onClick: handleItemClickName,
+  };
+
+  const menuTypeWork = {
+    items: itemsWork,
+    onClick: handleItemClickName,
+  };
+
+  const menuTypeHabit = {
+    items: itemsHabit,
     onClick: handleItemClickName,
   };
 
@@ -134,7 +180,7 @@ export default function Main() {
                         color: '#ACAEB2',
                       }}
                     >
-                      {formValues?.name ? formValues?.name : 'Select Type'}
+                      {formValues?.type ? formValues?.type : 'Select Type'}
                     </span>
                     <Caret>
                       <FaCaretDown />
@@ -142,35 +188,88 @@ export default function Main() {
                   </Space>
                 </Dropdown>
               </Row>
-              <Row>
-                <SubTitle>Game</SubTitle>
-                <Dropdown
-                  trigger={['click']}
-                  overlayStyle={{ minWidth: '60%' }}
-                  menu={menuTypeGame}
-                  overlayClassName="full-width-dropdown"
-                >
-                  <Space>
-                    <span
-                      style={{
-                        fontSize: '1rem',
-                        color: '#ACAEB2',
-                      }}
-                    >
-                      {formValues?.name ? formValues?.name : 'Select Game'}
-                    </span>
-                    <Caret>
-                      <FaCaretDown />
-                    </Caret>
-                  </Space>
-                </Dropdown>
-              </Row>
+              {formValues?.type == 'Games' && (
+                <Row>
+                  <SubTitle>Game</SubTitle>
+                  <Dropdown
+                    trigger={['click']}
+                    overlayStyle={{ minWidth: '60%' }}
+                    menu={menuTypeGame}
+                    overlayClassName="full-width-dropdown"
+                  >
+                    <Space>
+                      <span
+                        style={{
+                          fontSize: '1rem',
+                          color: '#ACAEB2',
+                        }}
+                      >
+                        {formValues?.name ? formValues?.name : 'Select Game'}
+                      </span>
+                      <Caret>
+                        <FaCaretDown />
+                      </Caret>
+                    </Space>
+                  </Dropdown>
+                </Row>
+              )}
+              {formValues?.type == 'Work' && (
+                <Row>
+                  <SubTitle>Work</SubTitle>
+                  <Dropdown
+                    trigger={['click']}
+                    overlayStyle={{ minWidth: '60%' }}
+                    menu={menuTypeWork}
+                    overlayClassName="full-width-dropdown"
+                  >
+                    <Space>
+                      <span
+                        style={{
+                          fontSize: '1rem',
+                          color: '#ACAEB2',
+                        }}
+                      >
+                        {formValues?.name ? formValues?.name : 'Select Work'}
+                      </span>
+                      <Caret>
+                        <FaCaretDown />
+                      </Caret>
+                    </Space>
+                  </Dropdown>
+                </Row>
+              )}
+              {formValues?.type == 'Habit' && (
+                <Row>
+                  <SubTitle>Habit</SubTitle>
+                  <Dropdown
+                    trigger={['click']}
+                    overlayStyle={{ minWidth: '60%' }}
+                    menu={menuTypeHabit}
+                    overlayClassName="full-width-dropdown"
+                  >
+                    <Space>
+                      <span
+                        style={{
+                          fontSize: '1rem',
+                          color: '#ACAEB2',
+                        }}
+                      >
+                        {formValues?.name ? formValues?.name : 'Select Habit'}
+                      </span>
+                      <Caret>
+                        <FaCaretDown />
+                      </Caret>
+                    </Space>
+                  </Dropdown>
+                </Row>
+              )}
               <Row>
                 <SubTitle>Name</SubTitle>
               </Row>
               <RowInput>
                 <input
                   type="text"
+                  value={formValues?.title}
                   onChange={(e) => {
                     setFormValues((old) => ({
                       ...old,
@@ -184,6 +283,7 @@ export default function Main() {
               </Row>
               <RowInputDescription>
                 <textarea
+                  value={formValues?.description}
                   type="text"
                   onChange={(e) => {
                     setFormValues((old) => ({
@@ -298,6 +398,8 @@ const Title = styled.div`
   align-items: center;
   justify-content: flex-start;
   color: ${COLOR_BLUE};
+  padding: 1rem 0rem;
+  font-size: 1.15rem;
 `;
 
 const Form = styled.div`
@@ -307,8 +409,6 @@ const Form = styled.div`
   align-items: center;
   padding: 0.5rem 1rem;
   justify-content: flex-start;
-  min-height: 70vh;
-  max-height: 70vh;
   overflow: scroll;
 `;
 
@@ -317,18 +417,6 @@ const Caret = styled.div`
   align-items: center;
   justify-content: center;
   transform: translateY(-1px);
-`;
-
-const MoneyForm = styled.div`
-  width: 100%;
-  flex-direction: column;
-  display: flex;
-  padding: 0.5rem 1rem;
-  align-items: center;
-  justify-content: flex-start;
-  min-height: 70vh;
-  max-height: 70vh;
-  overflow: scroll;
 `;
 
 const ModalContent = styled.div`
@@ -356,8 +444,6 @@ const ModalContainer = styled.div`
   top: 45%;
   z-index: 2;
   transform: translate(-50%, -50%);
-  min-height: 80vh;
-  max-height: 80vh;
   background-color: ${COLOR_BLACK1};
 `;
 
