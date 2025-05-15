@@ -5,15 +5,17 @@ import {
   COLOR_BLACK1,
   COLOR_BLACK2,
   COLOR_BLUE,
+  COLOR_BLUE_DARK,
   COLOR_BLUE_LIGHT,
   COLOR_GREEN,
   COLOR_GREY,
+  COLOR_PURPLE,
   COLOR_RED,
   COLOR_WHITE,
   generateDarkTextColorForLightBg,
 } from '../helpers/colorHelper';
 import { Dropdown, message, Popconfirm, Space, Spin } from 'antd';
-import { FaCaretDown, FaGlobe, FaRupeeSign } from 'react-icons/fa';
+import { FaCaretDown, FaGlobe, FaRupeeSign, FaTrophy } from 'react-icons/fa';
 import {
   Battlefield2042,
   GAMES_ARRAY,
@@ -21,13 +23,18 @@ import {
   ICON_MAPPER,
   WORK_ARRAY,
 } from '../helpers/gameHelper';
+import { TbRefresh } from 'react-icons/tb';
+import { MdVideogameAsset } from 'react-icons/md';
 import axios from 'axios';
+import { HiPlusCircle, HiRefresh } from 'react-icons/hi';
+import { FaIndianRupeeSign } from 'react-icons/fa6';
 
 const SECTION_MONEY = 'SECTION_MONEY';
 const SECTION_GAMES = 'SECTION_GAMES';
 const SECTION_HABIT = 'SECTION_HABIT';
 
 export default function Main() {
+  const [showLastAch, setShowLastAch] = useState(false);
   const [loading, setLoading] = useState(false);
   const [achievements, setAchievements] = useState([]);
   const [selected, setSelected] = useState(SECTION_MONEY);
@@ -157,10 +164,12 @@ export default function Main() {
       axios.get('/api/jeevaachievement').then((response) => {
         setAchievements(response?.data);
         setLoading(false);
+        setShowLastAch(false);
       });
     } catch (e) {
       message.info('Error refreshing Achievement !');
       setLoading(false);
+      setShowLastAch(false);
     }
   };
 
@@ -171,6 +180,7 @@ export default function Main() {
         .post('/api/jeevaachievement', { ...formValues })
         .then((response) => {
           setShowModal(false);
+          setShowLastAch(true);
           refreshAchievements();
         });
     } catch (e) {
@@ -195,10 +205,51 @@ export default function Main() {
     refreshAchievements();
   }, []);
 
+  useEffect(() => {
+    let timer = setTimeout(() => {
+      setShowLastAch(false);
+    }, 1000);
+  }, [achievements]);
+
   let achToShow = achievements;
+  let lastAch = achToShow?.[achToShow?.length - 1];
 
   return (
     <Container>
+      <Header>
+        <HLeft>
+          <soan
+            style={{
+              fontSize: '1.25rem',
+              transform: 'translateY(-2px)',
+              marginRight: '.25rem',
+            }}
+          >
+            {achievements?.length}
+          </soan>
+          <span style={{ fontSize: '1.1rem' }}>
+            <FaTrophy />
+          </span>
+        </HLeft>
+        <HRight>
+          <AddIcon
+            onClick={() => {
+              setShowModal(true);
+            }}
+          >
+            <HiPlusCircle />
+          </AddIcon>
+        </HRight>{' '}
+        <HRight>
+          <AddIcon
+            onClick={() => {
+              setShowModal(true);
+            }}
+          >
+            <TbRefresh />
+          </AddIcon>
+        </HRight>
+      </Header>
       {showModal && (
         <ModalContainer>
           <ModalContent>
@@ -345,24 +396,6 @@ export default function Main() {
         </ModalContainer>
       )}
       <Middle showModal={showModal}>
-        <Sections>
-          <Section
-            color={selected == SECTION_MONEY ? COLOR_BLUE : COLOR_GREY}
-            onClick={() => {
-              setSelected(SECTION_MONEY);
-            }}
-          >
-            Money
-          </Section>
-          <Section
-            color={selected == SECTION_GAMES ? COLOR_BLUE : COLOR_GREY}
-            onClick={() => {
-              setSelected(SECTION_GAMES);
-            }}
-          >
-            Games
-          </Section>
-        </Sections>
         {!loading && (
           <MiddleTopContainer>
             {achToShow?.length == 0 && <NoData>No Achievements</NoData>}
@@ -387,6 +420,9 @@ export default function Main() {
                       <A1Title>{ach?.title}</A1Title>
                       <A1Desc>{ach?.description}</A1Desc>
                     </A1Right>
+                    <Tag>
+                      <InnerTag>DONE</InnerTag>
+                    </Tag>
                   </A1Container>
                 );
               })}
@@ -397,19 +433,92 @@ export default function Main() {
             <Spin></Spin>
           </MiddleTopContainer>
         )}
+        {achToShow && (
+          <A1Container>
+            <Popconfirm
+              title="Delete Achievement"
+              description="Are you sure to delete this task?"
+              onConfirm={() => {}}
+              onCancel={() => {}}
+              okText="Yes"
+              cancelText="No"
+            >
+              <A1Icon icon={ICON_MAPPER[lastAch?.name]}></A1Icon>
+            </Popconfirm>
+
+            <A1Right>
+              <A1Title>{lastAch?.title}</A1Title>
+              <A1Desc>{lastAch?.description}</A1Desc>
+            </A1Right>
+            <Tag>
+              <InnerTag>DONE</InnerTag>
+            </Tag>
+          </A1Container>
+        )}
+
+        <Sections>
+          <Section
+            selected={selected == SECTION_MONEY}
+            onClick={() => {
+              setSelected(SECTION_MONEY);
+            }}
+          >
+            <span style={{ fontSize: '1.5rem', marginLeft: '.5rem' }}>
+              <FaIndianRupeeSign />
+            </span>
+            <span
+              style={{
+                fontSize: '.75rem',
+                transform: 'translateY(-1px)',
+                marginLeft: '.5rem',
+              }}
+            >
+              MONEY
+            </span>
+          </Section>
+          <Section
+            selected={selected == SECTION_GAMES}
+            onClick={() => {
+              setSelected(SECTION_GAMES);
+            }}
+          >
+            <span style={{ fontSize: '1.5rem', marginLeft: '.5rem' }}>
+              <MdVideogameAsset />
+            </span>
+            <span
+              style={{
+                fontSize: '.75rem',
+                transform: 'translateY(-1px)',
+                marginLeft: '.5rem',
+              }}
+            >
+              GAMES
+            </span>
+          </Section>
+        </Sections>
       </Middle>
-      <Bottom>
-        <Button
-          onClick={() => {
-            setShowModal(true);
-          }}
-        >
-          Add Achievement
-        </Button>
-      </Bottom>
     </Container>
   );
 }
+
+const InnerTag = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  transform: rotate(-90deg);
+  width: 20px;
+  font-weight: bolder;
+`;
+
+const Tag = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${COLOR_GREEN};
+  color: ${(props) => generateDarkTextColorForLightBg(COLOR_GREEN)};
+  height: 70px;
+`;
 
 const NoData = styled.div`
   display: flex;
@@ -626,7 +735,9 @@ const Sections = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 1rem;
+  padding: 1rem 0rem 2rem 0rem;
+  margin-top: 0.5rem;
+  background-color: ${(props) => COLOR_BLUE_DARK};
 `;
 
 const Section = styled.div`
@@ -634,12 +745,12 @@ const Section = styled.div`
   flex: 1;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   position: relative;
   margin: 0rem 0.25rem;
   padding: 0.25rem 1rem;
   border-radius: 4px 4px 0px 0px;
-  background-color: ${(props) => props.color};
-  color: ${(props) => generateDarkTextColorForLightBg(props.color)};
+  color: ${(props) => (props.selected ? COLOR_BLUE_LIGHT : COLOR_GREY)};
 `;
 
 const Top = styled.div`
@@ -680,6 +791,41 @@ const Bottom = styled.div`
   justify-content: flex-start;
   width: 100%;
   height: 100px;
+`;
+
+const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 80px;
+  padding: 1rem;
+`;
+
+const HLeft = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+  color: ${COLOR_GREEN};
+`;
+
+const HRight = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+  justify-content: flex-end;
+`;
+
+const AddIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+
+  &:active {
+    color: ${COLOR_BLUE};
+  }
 `;
 
 const Container = styled.div`

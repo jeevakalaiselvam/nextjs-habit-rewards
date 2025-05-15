@@ -105,12 +105,13 @@ export const generateDarkTextColorForLightBg = (hex, darkenPercent = 40) => {
   return `#${[R, G, B].map((x) => x.toString(16).padStart(2, '0')).join('')}`;
 };
 
-export const COLOR_GREY = '#333';
+export const COLOR_GREY = '#717f8d';
 export const COLOR_WHITE = '#FEFEFE';
 export const COLOR_GOLD = '#FDAC46';
 export const COLOR_RED = '#FE6662';
 export const COLOR_GREEN = '#3BD987';
 export const COLOR_BLUE = '#5474FD';
+export const COLOR_BLUE_DARK = '#0d1a28';
 export const COLOR_BLUE_LIGHT = '#52b8da';
 export const COLOR_PURPLE = '#8854FC';
 export const COLOR_BLACK1 = '#1b1b1b';
