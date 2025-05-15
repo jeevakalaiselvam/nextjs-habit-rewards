@@ -42,7 +42,7 @@ const SECTION_HABIT = 'Habit';
 const SECTION_GAMES = 'Games';
 
 export default function Main() {
-  const [showLastAch, setShowLastAch] = useState(false);
+  const [showRecentAchUnlock, setShowRecentAchUnlock] = useState(false);
   const [loading, setLoading] = useState(false);
   const [achievements, setAchievements] = useState([]);
   const [selected, setSelected] = useState(SECTION_MONEY);
@@ -186,7 +186,7 @@ export default function Main() {
         .post('/api/jeevaachievement', { ...formValues })
         .then((response) => {
           setShowModal(false);
-          setShowLastAch(true);
+          setShowRecentAchUnlock(true);
           refreshAchievements();
         });
     } catch (e) {
@@ -213,7 +213,7 @@ export default function Main() {
 
   useEffect(() => {
     let timer = setTimeout(() => {
-      setShowLastAch(false);
+      setShowRecentAchUnlock(false);
     }, 5000);
     return () => {
       clearTimeout(timer);
@@ -221,11 +221,11 @@ export default function Main() {
   }, [achievements]);
 
   useEffect(() => {
-    if (showLastAch) {
+    if (showRecentAchUnlock) {
       const audio = new Audio('/effect.mp3');
       audio.play();
     }
-  }, [showLastAch]);
+  }, [showRecentAchUnlock]);
 
   let achToShow = achievements?.map((ach, index) => ({
     ...ach,
@@ -265,7 +265,7 @@ export default function Main() {
         <HRight>
           <AddIcon
             onClick={() => {
-              setShowLastAch(true);
+              setShowRecentAchUnlock(true);
               refreshAchievements();
             }}
           >
@@ -458,7 +458,7 @@ export default function Main() {
             <Spin></Spin>
           </MiddleTopContainer>
         )}
-        {true && (
+        {showRecentAchUnlock && (
           <UnlockTrigger>
             <A1Container>
               <Popconfirm
