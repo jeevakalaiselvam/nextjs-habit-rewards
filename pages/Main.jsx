@@ -13,7 +13,6 @@ import { Dropdown, Space } from 'antd';
 import { FaCaretDown, FaGlobe, FaRupeeSign } from 'react-icons/fa';
 import { GAMES_ARRAY } from '../helpers/gameHelper';
 import axios from 'axios';
-import { response } from 'express';
 
 const SECTION_MONEY = 'SECTION_MONEY';
 const SECTION_GAMES = 'SECTION_GAMES';
