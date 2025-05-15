@@ -1,26 +1,37 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
+  COLOR_ACH,
   COLOR_BLACK1,
   COLOR_BLACK2,
   COLOR_BLUE,
+  COLOR_BLUE_LIGHT,
   COLOR_GREEN,
   COLOR_GREY,
+  COLOR_RED,
   COLOR_WHITE,
   generateDarkTextColorForLightBg,
 } from '../helpers/colorHelper';
-import { Dropdown, Space } from 'antd';
+import { Dropdown, message, Popconfirm, Space, Spin } from 'antd';
 import { FaCaretDown, FaGlobe, FaRupeeSign } from 'react-icons/fa';
-import { GAMES_ARRAY, HABIT_ARRAY, WORK_ARRAY } from '../helpers/gameHelper';
+import {
+  Battlefield2042,
+  GAMES_ARRAY,
+  HABIT_ARRAY,
+  ICON_MAPPER,
+  WORK_ARRAY,
+} from '../helpers/gameHelper';
 import axios from 'axios';
 
 const SECTION_MONEY = 'SECTION_MONEY';
 const SECTION_GAMES = 'SECTION_GAMES';
+const SECTION_HABIT = 'SECTION_HABIT';
 
 export default function Main() {
+  const [loading, setLoading] = useState(false);
   const [achievements, setAchievements] = useState([]);
   const [selected, setSelected] = useState(SECTION_MONEY);
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
   const [formValues, setFormValues] = useState({
     type: '',
     name: '',
@@ -108,9 +119,13 @@ export default function Main() {
   };
 
   const handleItemClickName = (e) => {
-    setFormValues((old) => ({ ...old, name: String(e.key) }));
+    setFormValues((old) => ({
+      ...old,
+      name: String(e.key),
+      title: '',
+      description: '',
+    }));
 
-    console.log(formValues);
     if (formValues?.type == 'Habit') {
       setFormValues((old) => ({ ...old, title: String(e.key) }));
     }
@@ -137,26 +152,50 @@ export default function Main() {
   };
 
   const refreshAchievements = () => {
+    setLoading(true);
     try {
       axios.get('/api/jeevaachievement').then((response) => {
         setAchievements(response?.data);
+        setLoading(false);
       });
-    } catch (e) {}
+    } catch (e) {
+      message.info('Error refreshing Achievement !');
+      setLoading(false);
+    }
   };
 
-  const saveData = () => {
+  const saveAchievement = () => {
+    setLoading(true);
     try {
       axios
         .post('/api/jeevaachievement', { ...formValues })
         .then((response) => {
+          setShowModal(false);
           refreshAchievements();
         });
-    } catch (e) {}
+    } catch (e) {
+      message.info('Error saving Achievement !');
+      setLoading(false);
+    }
+  };
+
+  const deleteAchievement = (ach) => {
+    setLoading(true);
+    try {
+      axios.delete(`/api/jeevaachievement/${ach?._id}`).then((response) => {
+        refreshAchievements();
+      });
+    } catch (e) {
+      message.info('Error deleting Achievement !');
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     refreshAchievements();
   }, []);
+
+  let achToShow = achievements;
 
   return (
     <Container>
@@ -296,34 +335,68 @@ export default function Main() {
             </Form>
           </ModalContent>
           <ModalBottom>
-            <ButtonSmall onClick={() => setShowModal(false)}>
+            <ButtonSmall onClick={() => setShowModal(false)} color={COLOR_RED}>
               CANCEL
             </ButtonSmall>
-            <ButtonSmall onClick={() => saveData()}>SAVE</ButtonSmall>
+            <ButtonSmall onClick={() => saveAchievement()} color={COLOR_GREEN}>
+              SAVE
+            </ButtonSmall>
           </ModalBottom>
         </ModalContainer>
       )}
       <Middle showModal={showModal}>
         <Sections>
           <Section
-            color={selected == SECTION_MONEY ? COLOR_BLUE : COLOR_WHITE}
+            color={selected == SECTION_MONEY ? COLOR_BLUE : COLOR_GREY}
             onClick={() => {
               setSelected(SECTION_MONEY);
             }}
           >
-            {selected == SECTION_MONEY && <Dot></Dot>}
             Money
           </Section>
           <Section
-            color={selected == SECTION_GAMES ? COLOR_BLUE : COLOR_WHITE}
+            color={selected == SECTION_GAMES ? COLOR_BLUE : COLOR_GREY}
             onClick={() => {
               setSelected(SECTION_GAMES);
             }}
           >
-            {selected == SECTION_GAMES && <Dot></Dot>}
             Games
           </Section>
         </Sections>
+        {!loading && (
+          <MiddleTopContainer>
+            {achToShow?.length == 0 && <NoData>No Achievements</NoData>}
+            {achToShow?.length > 0 &&
+              achToShow?.map((ach) => {
+                return (
+                  <A1Container>
+                    <Popconfirm
+                      title="Delete Achievement"
+                      description="Are you sure to delete this task?"
+                      onConfirm={() => {
+                        deleteAchievement(ach);
+                      }}
+                      onCancel={() => {}}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <A1Icon icon={ICON_MAPPER[ach?.name]}></A1Icon>
+                    </Popconfirm>
+
+                    <A1Right>
+                      <A1Title>{ach?.title}</A1Title>
+                      <A1Desc>{ach?.description}</A1Desc>
+                    </A1Right>
+                  </A1Container>
+                );
+              })}
+          </MiddleTopContainer>
+        )}
+        {loading && (
+          <MiddleTopContainer>
+            <Spin></Spin>
+          </MiddleTopContainer>
+        )}
       </Middle>
       <Bottom>
         <Button
@@ -337,6 +410,60 @@ export default function Main() {
     </Container>
   );
 }
+
+const NoData = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const A1Container = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 1rem 0.25rem 0rem 0.25rem;
+  background-color: ${COLOR_ACH};
+`;
+
+const A1Icon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  background: ${(props) => `url('${props.icon}')`};
+  background-size: cover;
+  background-repeat: no-repeat;
+`;
+
+const A1Title = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 1rem;
+  font-size: 0.9rem;
+  flex: 1;
+`;
+
+const A1Desc = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0rem 1rem;
+  opacity: 0.5;
+  font-size: 0.8rem;
+  flex: 2;
+`;
+
+const A1Right = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  height: 70px;
+  flex: 1;
+`;
 
 const Row = styled.div`
   display: flex;
@@ -390,6 +517,7 @@ const SubTitle = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex: 1;
+  color: ${COLOR_BLUE};
 `;
 
 const Title = styled.div`
@@ -397,7 +525,7 @@ const Title = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  color: ${COLOR_BLUE};
+  color: ${COLOR_WHITE};
   padding: 1rem 0rem;
   font-size: 1.15rem;
 `;
@@ -454,7 +582,7 @@ const Button = styled.div`
   padding: 1rem;
   width: 90%;
   border-radius: 4px;
-  margin: 1rem;
+  margin: 0rem 1rem;
   background-color: ${COLOR_BLUE};
   color: ${generateDarkTextColorForLightBg(COLOR_BLUE)};
 
@@ -471,8 +599,8 @@ const ButtonSmall = styled.div`
   width: 90%;
   border-radius: 4px;
   margin: 0.5rem;
-  background-color: ${COLOR_GREEN};
-  color: ${generateDarkTextColorForLightBg(COLOR_GREEN)};
+  background-color: ${(props) => props.color};
+  color: ${(props) => generateDarkTextColorForLightBg(props.color)};
 
   &:active {
     transform: translate(-2px, 2px);
@@ -507,8 +635,11 @@ const Section = styled.div`
   align-items: center;
   justify-content: center;
   position: relative;
-  padding: 1rem;
-  color: ${(props) => props.color};
+  margin: 0rem 0.25rem;
+  padding: 0.25rem 1rem;
+  border-radius: 4px 4px 0px 0px;
+  background-color: ${(props) => props.color};
+  color: ${(props) => generateDarkTextColorForLightBg(props.color)};
 `;
 
 const Top = styled.div`
@@ -527,6 +658,17 @@ const Middle = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
+  flex: 1;
+  opacity: ${(props) => (props.showModal ? '0' : '1')};
+`;
+
+const MiddleTopContainer = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 1rem;
   flex: 1;
   opacity: ${(props) => (props.showModal ? '0' : '1')};
 `;
