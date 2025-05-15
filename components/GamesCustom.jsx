@@ -754,7 +754,7 @@ const ToShowWrapper = styled.div`
   position: absolute;
   flex-direction: column;
   width: 100%;
-  bottom: 1rem;
+  bottom: -0.5rem;
   left: 0;
   animation: slideUp 0.25s linear forwards;
 
