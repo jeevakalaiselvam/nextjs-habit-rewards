@@ -1,33 +1,33 @@
-export const COLOR_BACKGROUND = "#010A19";
-export const COLOR_BACKGROUND_HEADER = "#121723";
+export const COLOR_BACKGROUND = '#010A19';
+export const COLOR_BACKGROUND_HEADER = '#121723';
 
-export const CARD_BACKGROUND = "#121723";
-export const COLOR_ACCENT = "#1890ff";
-export const COLOR_ACCENT_DARK = "rgb(6, 42, 75)";
-export const COLOR_SUCCESS = "#15C2C2";
-export const COLOR_STREAK = "#15C2C2";
+export const CARD_BACKGROUND = '#121723';
+export const COLOR_ACCENT = '#1890ff';
+export const COLOR_ACCENT_DARK = 'rgb(6, 42, 75)';
+export const COLOR_SUCCESS = '#15C2C2';
+export const COLOR_STREAK = '#15C2C2';
 
 export const stringToColor = (str) => {
   let hash = 0;
   for (let i = 0; i < str.length; i++) {
     hash = str.charCodeAt(i) + ((hash << 5) - hash);
   }
-  let color = "#";
+  let color = '#';
   for (let i = 0; i < 3; i++) {
     let value = (hash >> (i * 8)) & 0xff;
     // Force the value to be in the light range (e.g., 127–255)
     value = Math.floor((value + 255) / 2);
-    color += value.toString(16).padStart(2, "0");
+    color += value.toString(16).padStart(2, '0');
   }
   return color;
 };
 
 const baseColors = [
-  "#FDAC46", // food
-  "#FE6662", // movies
-  "#3BD987", // clothing
-  "#5474FD", // gadget
-  "#8854FC", // games
+  '#FDAC46', // food
+  '#FE6662', // movies
+  '#3BD987', // clothing
+  '#5474FD', // gadget
+  '#8854FC', // games
 ];
 
 // Utility to convert HEX to HSL
@@ -76,7 +76,7 @@ function hslToHex(h, s, l) {
       l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)));
     return Math.round(255 * color)
       .toString(16)
-      .padStart(2, "0");
+      .padStart(2, '0');
   };
 
   return `#${f(0)}${f(8)}${f(4)}`;
@@ -95,12 +95,22 @@ export const generateSimilarColor = () => {
 };
 
 export const generateDarkTextColorForLightBg = (hex, darkenPercent = 40) => {
-  let newHex = hex ? hex : "#333333";
+  let newHex = hex ? hex : '#333333';
   const amt = Math.round(2.55 * darkenPercent);
 
   const R = Math.max(0, parseInt(newHex?.slice(1, 3), 16) - amt);
   const G = Math.max(0, parseInt(newHex?.slice(3, 5), 16) - amt);
   const B = Math.max(0, parseInt(newHex?.slice(5, 7), 16) - amt);
 
-  return `#${[R, G, B].map((x) => x.toString(16).padStart(2, "0")).join("")}`;
+  return `#${[R, G, B].map((x) => x.toString(16).padStart(2, '0')).join('')}`;
 };
+
+export const COLOR_GREY = '#333';
+export const COLOR_WHITE = '#FEFEFE';
+export const COLOR_GOLD = '#FDAC46';
+export const COLOR_RED = '#FE6662';
+export const COLOR_GREEN = '#3BD987';
+export const COLOR_BLUE = '#5474FD';
+export const COLOR_PURPLE = '#8854FC';
+export const COLOR_BLACK1 = '#1b1b1b';
+export const COLOR_BLACK2 = '#252525';

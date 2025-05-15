@@ -1,236 +1,458 @@
-import styled from "styled-components";
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import {
-  CARD_BACKGROUND,
-  COLOR_ACCENT,
-  COLOR_BACKGROUND,
-  COLOR_BACKGROUND_HEADER,
-  COLOR_SUCCESS,
-} from "../components/helpers/colorHelper";
-import UserDropdown from "../components/UserDropdown";
-import { useEffect, useRef, useState } from "react";
-import User from "../components/User";
-import { FacebookFilled, SettingOutlined } from "@ant-design/icons";
-import {
-  HiLogout,
-  HiPlusCircle,
-  HiQuestionMarkCircle,
-  HiViewBoards,
-} from "react-icons/hi";
-import Title from "antd/es/skeleton/Title";
-import { Input, message } from "antd";
+  COLOR_BLACK1,
+  COLOR_BLACK2,
+  COLOR_BLUE,
+  COLOR_GREEN,
+  COLOR_GREY,
+  COLOR_WHITE,
+  generateDarkTextColorForLightBg,
+} from '../helpers/colorHelper';
+import { Dropdown, Space } from 'antd';
+import { FaCaretDown, FaGlobe, FaRupeeSign } from 'react-icons/fa';
+import { GAMES_ARRAY } from '../helpers/gameHelper';
+import axios from 'axios';
+import { response } from 'express';
 
-export default function Atom() {
-  const [selected, setSelected] = useState("");
-  const [userOptions, setUserOptions] = useState([]);
-  const [createMode, setCreateMode] = useState(false);
-  const [todayAmount, setTodayAmount] = useState("");
-  const [pin, setPin] = useState("4104");
-  const [messageApi, contextHolder] = message.useMessage();
-  const innerRef = useRef();
+const SECTION_MONEY = 'SECTION_MONEY';
+const SECTION_GAMES = 'SECTION_GAMES';
 
-  const allValidPints = ["4104", "3333", "0000"];
+export default function Main() {
+  const [achievements, setAchievements] = useState([]);
+  const [selected, setSelected] = useState(SECTION_MONEY);
+  const [showModal, setShowModal] = useState(true);
+  const [formValues, setFormValues] = useState({
+    type: '',
+    name: '',
+    title: '',
+    description: '',
+    date: new Date(),
+  });
 
-  const jeevaOptions = [
+  const itemsType = [
     {
-      value: "Jeeva",
-      label: "Jeeva",
+      key: '11',
+      label: <div style={{ width: '100%' }}>All Types</div>,
+      disabled: true,
+    },
+    {
+      key: 'Games',
+      label: 'Games',
+      extra: '⌘G',
+    },
+    {
+      key: 'Work',
+      label: 'Work',
+      extra: '⌘G',
+    },
+    {
+      key: 'Habit',
+      label: 'Habit',
+      extra: '⌘H',
     },
   ];
 
-  const vikramOptions = [
+  const itemsGame = [
     {
-      value: "Vikram",
-      label: "Vikram",
+      key: '22',
+      label: <div style={{ width: '100%' }}>All Games</div>,
+      disabled: true,
     },
+    {
+      key: 'Battlefield 2042',
+      label: 'Battlefield 2042',
+      extra: '⌘B',
+    },
+    ...GAMES_ARRAY?.map((game) => {
+      return {
+        key: game,
+        label: game,
+        extra: `⌘${game?.[0]?.toUpperCase()}`,
+      };
+    }),
   ];
 
-  const guestOptions = [
-    {
-      value: "Guest",
-      label: "Guest",
-    },
-  ];
-
-  const info = (message) => {
-    messageApi.info(message);
+  const handleItemClickType = (e) => {
+    setFormValues((old) => ({ ...old, type: String(e.key) }));
   };
 
-  const success = (message) => {
-    messageApi.success(message);
+  const handleItemClickName = (e) => {
+    setFormValues((old) => ({ ...old, name: String(e.key) }));
   };
 
-  const error = (message) => {
-    messageApi.error(message);
+  const menuTypeType = {
+    items: itemsType,
+    onClick: handleItemClickType,
+  };
+
+  const menuTypeGame = {
+    items: itemsGame,
+    onClick: handleItemClickName,
+  };
+
+  const refreshAchievements = () => {
+    try {
+      axios.get('/api/jeevaachievement').then((response) => {
+        setAchievements(response?.data);
+      });
+    } catch (e) {}
+  };
+
+  const saveData = () => {
+    try {
+      axios
+        .post('/api/jeevaachievement', { ...formValues })
+        .then((response) => {
+          refreshAchievements();
+        });
+    } catch (e) {}
   };
 
   useEffect(() => {
-    setPin("");
+    refreshAchievements();
   }, []);
 
-  useEffect(() => {
-    console.log("PIN CHANGED");
-    if (pin?.length == 4 && !allValidPints?.includes(pin)) {
-      error("Not a valid pin !");
-    } else {
-      if (pin === "4104") {
-        setUserOptions(jeevaOptions);
-        setSelected(jeevaOptions?.[0]?.value);
-      } else if (pin === "3333") {
-        setUserOptions(vikramOptions);
-        setSelected(vikramOptions?.[0]?.value);
-      } else if (pin === "0000") {
-        setUserOptions(guestOptions);
-        setSelected(guestOptions?.[0]?.value);
-      }
-    }
-  }, [pin]);
-
-  useEffect(() => {
-    innerRef?.current?.focus();
-  }, [innerRef]);
-
-  if (true) {
-    return (
-      <Container>
-        <Header>
-          <UserDropdown
-            selected={selected}
-            setSelected={setSelected}
-            pin={pin}
-            userOptions={userOptions}
-            setUserOptions={setUserOptions}
-          />
-          <SettingsIcon>
-            {<TodayAmount>Rs {todayAmount ?? 0}</TodayAmount>}
-            {false && createMode && (
-              <HiViewBoards
-                style={{ opacity: 0.75 }}
-                onClick={() => {
-                  setCreateMode((old) => !old);
-                }}
-              />
-            )}
-            {false && !createMode && (
-              <HiPlusCircle
-                style={{ opacity: 0.75, marginRight: "1rem" }}
-                onClick={() => {
-                  setCreateMode((old) => !old);
-                }}
-              />
-            )}
-            {false && !createMode && (
-              <HiLogout
-                style={{ opacity: 0.75 }}
-                onClick={() => {
-                  setPin("");
-                  setSelected("");
-                }}
-              />
-            )}
-          </SettingsIcon>
-        </Header>
-        <Content>
-          {
-            <User
-              createMode={createMode}
-              setCreateMode={setCreateMode}
-              user={selected}
-              setTodayAmount={setTodayAmount}
-            />
-          }
-        </Content>
-      </Container>
-    );
-  } else {
-    return (
-      <PinContainer>
-        {contextHolder}
-        <PINInner>
-          <PINText>PIN</PINText>
-          <Input.OTP
-            ref={innerRef}
-            length={4}
-            mask="🔒"
-            inputMode="numeric"
-            onInput={(e) => {
-              setPin(e?.join(""));
+  return (
+    <Container>
+      {showModal && (
+        <ModalContainer>
+          <ModalContent>
+            <Form>
+              <Title>Add Achievement</Title>
+              <Row>
+                <SubTitle>Type</SubTitle>
+                <Dropdown
+                  trigger={['click']}
+                  overlayStyle={{ minWidth: '60%' }}
+                  menu={menuTypeType}
+                  overlayClassName="full-width-dropdown"
+                >
+                  <Space>
+                    <span
+                      style={{
+                        fontSize: '1rem',
+                        color: '#ACAEB2',
+                      }}
+                    >
+                      {formValues?.name ? formValues?.name : 'Select Type'}
+                    </span>
+                    <Caret>
+                      <FaCaretDown />
+                    </Caret>
+                  </Space>
+                </Dropdown>
+              </Row>
+              <Row>
+                <SubTitle>Game</SubTitle>
+                <Dropdown
+                  trigger={['click']}
+                  overlayStyle={{ minWidth: '60%' }}
+                  menu={menuTypeGame}
+                  overlayClassName="full-width-dropdown"
+                >
+                  <Space>
+                    <span
+                      style={{
+                        fontSize: '1rem',
+                        color: '#ACAEB2',
+                      }}
+                    >
+                      {formValues?.name ? formValues?.name : 'Select Game'}
+                    </span>
+                    <Caret>
+                      <FaCaretDown />
+                    </Caret>
+                  </Space>
+                </Dropdown>
+              </Row>
+              <Row>
+                <SubTitle>Name</SubTitle>
+              </Row>
+              <RowInput>
+                <input
+                  type="text"
+                  onChange={(e) => {
+                    setFormValues((old) => ({
+                      ...old,
+                      title: String(e.target.value),
+                    }));
+                  }}
+                />
+              </RowInput>
+              <Row>
+                <SubTitle>Description</SubTitle>
+              </Row>
+              <RowInputDescription>
+                <textarea
+                  type="text"
+                  onChange={(e) => {
+                    setFormValues((old) => ({
+                      ...old,
+                      description: String(e.target.value),
+                    }));
+                  }}
+                />
+              </RowInputDescription>
+            </Form>
+          </ModalContent>
+          <ModalBottom>
+            <ButtonSmall onClick={() => setShowModal(false)}>
+              CANCEL
+            </ButtonSmall>
+            <ButtonSmall onClick={() => saveData()}>SAVE</ButtonSmall>
+          </ModalBottom>
+        </ModalContainer>
+      )}
+      <Middle showModal={showModal}>
+        <Sections>
+          <Section
+            color={selected == SECTION_MONEY ? COLOR_BLUE : COLOR_WHITE}
+            onClick={() => {
+              setSelected(SECTION_MONEY);
             }}
-            style={{
-              "--input-width": "100px", // Increase input width
-              "--input-height": "50px", // Optional: Adjust height proportionally
-              "--input-border-radius": "8px", // Optional: Add rounded corners
-              "--input-spacing": "10px", // Space between inputs
+          >
+            {selected == SECTION_MONEY && <Dot></Dot>}
+            Money
+          </Section>
+          <Section
+            color={selected == SECTION_GAMES ? COLOR_BLUE : COLOR_WHITE}
+            onClick={() => {
+              setSelected(SECTION_GAMES);
             }}
-          />
-        </PINInner>
-      </PinContainer>
-    );
-  }
+          >
+            {selected == SECTION_GAMES && <Dot></Dot>}
+            Games
+          </Section>
+        </Sections>
+      </Middle>
+      <Bottom>
+        <Button
+          onClick={() => {
+            setShowModal(true);
+          }}
+        >
+          Add Achievement
+        </Button>
+      </Bottom>
+    </Container>
+  );
 }
 
-const TodayAmount = styled.div`
-  display: flex;
-  align-items: center;
-  width: 70px;
-  transform: translateY(1px);
-  padding: 0 0.5rem 0 0;
-  font-size: 1rem;
-  justify-content: center;
-  color: ${COLOR_SUCCESS};
-`;
-
-const PINInner = styled.div`
+const Row = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-  flex-direction: column;
-  transform: translateY(-5rem);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
 `;
 
-const PINText = styled.div`
+const RowInput = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  font-size: 1.5rem;
-`;
+  width: 100%;
+  margin-bottom: 0.5rem;
 
-const SettingsIcon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem 0rem;
-  margin-left: 2rem;
-  font-size: 1.3rem;
-  color: #fefefe;
-
-  &:active {
-    color: ${COLOR_ACCENT};
+  & input {
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 40px;
+    border-radius: 0px;
+    opacity: 0.5;
+    padding: 0.5rem 1rem;
+    background-color: ${COLOR_BLACK2};
   }
 `;
 
-const Header = styled.div`
+const RowInputDescription = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 0.5rem;
+
+  & textarea {
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 80px;
+    border-radius: 0px;
+    opacity: 0.5;
+    padding: 0.5rem 1rem;
+    background-color: ${COLOR_BLACK2};
+  }
+`;
+
+const SubTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  flex: 1;
+`;
+
+const Title = styled.div`
   width: 100%;
-  max-height: 8vh;
-  min-height: 8vh;
-  background-color: ${COLOR_BACKGROUND_HEADER};
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: ${COLOR_BLUE};
+`;
+
+const Form = styled.div`
+  width: 100%;
+  flex-direction: column;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  justify-content: flex-start;
+  min-height: 70vh;
+  max-height: 70vh;
+  overflow: scroll;
+`;
+
+const Caret = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-1px);
+`;
+
+const MoneyForm = styled.div`
+  width: 100%;
+  flex-direction: column;
+  display: flex;
+  padding: 0.5rem 1rem;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 70vh;
+  max-height: 70vh;
+  overflow: scroll;
+`;
+
+const ModalContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
+const ModalBottom = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const ModalContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  position: absolute;
+  left: 50%;
+  width: 90%;
+  top: 45%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  min-height: 80vh;
+  max-height: 80vh;
+  background-color: ${COLOR_BLACK1};
+`;
+
+const Button = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  width: 90%;
+  border-radius: 4px;
+  margin: 1rem;
+  background-color: ${COLOR_BLUE};
+  color: ${generateDarkTextColorForLightBg(COLOR_BLUE)};
+
+  &:active {
+    transform: translate(-2px, 2px);
+  }
+`;
+
+const ButtonSmall = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  width: 90%;
+  border-radius: 4px;
+  margin: 0.5rem;
+  background-color: ${COLOR_GREEN};
+  color: ${generateDarkTextColorForLightBg(COLOR_GREEN)};
+
+  &:active {
+    transform: translate(-2px, 2px);
+  }
+`;
+
+const Dot = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 4rem;
+  transform: translate(-50%);
+  background-color: ${COLOR_BLUE};
+`;
+
+const Sections = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   padding: 1rem;
 `;
 
-const Content = styled.div`
+const Section = styled.div`
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 1rem;
+  color: ${(props) => props.color};
+`;
+
+const Top = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: 100%;
+  height: 0px;
+  background-color: blue;
+`;
+
+const Middle = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
-  min-height: 70vh;
-  max-height: 70vh;
-  padding: 1rem;
-  background-color: ${COLOR_BACKGROUND};
+  flex: 1;
+  opacity: ${(props) => (props.showModal ? '0' : '1')};
+`;
+
+const Bottom = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100px;
 `;
 
 const Container = styled.div`
@@ -238,22 +460,8 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
-  min-width: 100vw;
-  max-width: 100vw;
+  width: 100%;
   min-height: 100vh;
   max-height: 100vh;
-  background-color: ${COLOR_BACKGROUND};
-`;
-
-const PinContainer = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  min-width: 100vw;
-  max-width: 100vw;
-  min-height: 100vh;
-  max-height: 100vh;
-  background-color: ${COLOR_BACKGROUND};
   color: #fefefe;
 `;
