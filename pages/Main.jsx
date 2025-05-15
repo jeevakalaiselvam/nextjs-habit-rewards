@@ -164,12 +164,10 @@ export default function Main() {
       axios.get('/api/jeevaachievement').then((response) => {
         setAchievements(response?.data);
         setLoading(false);
-        setShowLastAch(false);
       });
     } catch (e) {
       message.info('Error refreshing Achievement !');
       setLoading(false);
-      setShowLastAch(false);
     }
   };
 
@@ -208,8 +206,18 @@ export default function Main() {
   useEffect(() => {
     let timer = setTimeout(() => {
       setShowLastAch(false);
-    }, 1000);
+    }, 5000);
+    return () => {
+      clearTimeout(timer);
+    };
   }, [achievements]);
+
+  useEffect(() => {
+    if (showLastAch) {
+      const audio = new Audio('/effect.mp3');
+      audio.play();
+    }
+  }, [showLastAch]);
 
   let achToShow = achievements;
   let lastAch = achToShow?.[achToShow?.length - 1];
@@ -243,7 +251,8 @@ export default function Main() {
         <HRight>
           <AddIcon
             onClick={() => {
-              setShowModal(true);
+              setShowLastAch(true);
+              refreshAchievements();
             }}
           >
             <TbRefresh />
@@ -433,27 +442,29 @@ export default function Main() {
             <Spin></Spin>
           </MiddleTopContainer>
         )}
-        {achToShow && (
-          <A1Container>
-            <Popconfirm
-              title="Delete Achievement"
-              description="Are you sure to delete this task?"
-              onConfirm={() => {}}
-              onCancel={() => {}}
-              okText="Yes"
-              cancelText="No"
-            >
-              <A1Icon icon={ICON_MAPPER[lastAch?.name]}></A1Icon>
-            </Popconfirm>
+        {showLastAch && (
+          <UnlockTrigger>
+            <A1Container>
+              <Popconfirm
+                title="Delete Achievement"
+                description="Are you sure to delete this task?"
+                onConfirm={() => {}}
+                onCancel={() => {}}
+                okText="Yes"
+                cancelText="No"
+              >
+                <A1Icon icon={ICON_MAPPER[lastAch?.name]}></A1Icon>
+              </Popconfirm>
 
-            <A1Right>
-              <A1Title>{lastAch?.title}</A1Title>
-              <A1Desc>{lastAch?.description}</A1Desc>
-            </A1Right>
-            <Tag>
-              <InnerTag>DONE</InnerTag>
-            </Tag>
-          </A1Container>
+              <A1Right>
+                <A1Title>{lastAch?.title}</A1Title>
+                <A1Desc>{lastAch?.description}</A1Desc>
+              </A1Right>
+              <Tag>
+                <InnerTag>DONE</InnerTag>
+              </Tag>
+            </A1Container>
+          </UnlockTrigger>
         )}
 
         <Sections>
@@ -500,6 +511,24 @@ export default function Main() {
     </Container>
   );
 }
+
+const UnlockTrigger = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  animation: slideUp 0.25s linear forwards;
+  @keyframes slideUp {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0px);
+      opacity: 1;
+    }
+  }
+`;
 
 const InnerTag = styled.div`
   display: flex;
