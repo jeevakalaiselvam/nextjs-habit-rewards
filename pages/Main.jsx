@@ -26,12 +26,20 @@ import {
 import { TbRefresh } from 'react-icons/tb';
 import { MdVideogameAsset } from 'react-icons/md';
 import axios from 'axios';
-import { HiPlusCircle, HiRefresh } from 'react-icons/hi';
+import {
+  HiLibrary,
+  HiMailOpen,
+  HiOutlinePlusSm,
+  HiPlusCircle,
+  HiRefresh,
+  HiShieldCheck,
+} from 'react-icons/hi';
 import { FaIndianRupeeSign } from 'react-icons/fa6';
 
 const SECTION_MONEY = 'SECTION_MONEY';
-const SECTION_GAMES = 'SECTION_GAMES';
-const SECTION_HABIT = 'SECTION_HABIT';
+const SECTION_WORK = 'Work';
+const SECTION_HABIT = 'Habit';
+const SECTION_GAMES = 'Games';
 
 export default function Main() {
   const [showLastAch, setShowLastAch] = useState(false);
@@ -219,8 +227,14 @@ export default function Main() {
     }
   }, [showLastAch]);
 
-  let achToShow = achievements;
-  let lastAch = achToShow?.[achToShow?.length - 1];
+  let achToShow = achievements?.map((ach, index) => ({
+    ...ach,
+    index: achievements?.length - index,
+  }));
+
+  achToShow = achToShow?.filter((ach) => ach?.type == selected);
+
+  let lastAch = achievements?.[achievements?.length - 1];
 
   return (
     <Container>
@@ -245,7 +259,7 @@ export default function Main() {
               setShowModal(true);
             }}
           >
-            <HiPlusCircle />
+            <HiOutlinePlusSm />
           </AddIcon>
         </HRight>{' '}
         <HRight>
@@ -275,7 +289,7 @@ export default function Main() {
                   <Space>
                     <span
                       style={{
-                        fontSize: '1rem',
+                        fontSize: '.9rem',
                         color: '#ACAEB2',
                       }}
                     >
@@ -299,7 +313,7 @@ export default function Main() {
                     <Space>
                       <span
                         style={{
-                          fontSize: '1rem',
+                          fontSize: '.9rem',
                           color: '#ACAEB2',
                         }}
                       >
@@ -324,7 +338,7 @@ export default function Main() {
                     <Space>
                       <span
                         style={{
-                          fontSize: '1rem',
+                          fontSize: '.9rem',
                           color: '#ACAEB2',
                         }}
                       >
@@ -349,7 +363,7 @@ export default function Main() {
                     <Space>
                       <span
                         style={{
-                          fontSize: '1rem',
+                          fontSize: '.9rem',
                           color: '#ACAEB2',
                         }}
                       >
@@ -409,9 +423,12 @@ export default function Main() {
           <MiddleTopContainer>
             {achToShow?.length == 0 && <NoData>No Achievements</NoData>}
             {achToShow?.length > 0 &&
-              achToShow?.map((ach) => {
+              achToShow?.map((ach, index) => {
                 return (
                   <A1Container>
+                    <TagCount>
+                      <InnerTag>{ach?.index}</InnerTag>
+                    </TagCount>
                     <Popconfirm
                       title="Delete Achievement"
                       description="Are you sure to delete this task?"
@@ -424,7 +441,6 @@ export default function Main() {
                     >
                       <A1Icon icon={ICON_MAPPER[ach?.name]}></A1Icon>
                     </Popconfirm>
-
                     <A1Right>
                       <A1Title>{ach?.title}</A1Title>
                       <A1Desc>{ach?.description}</A1Desc>
@@ -442,7 +458,7 @@ export default function Main() {
             <Spin></Spin>
           </MiddleTopContainer>
         )}
-        {showLastAch && (
+        {true && (
           <UnlockTrigger>
             <A1Container>
               <Popconfirm
@@ -474,8 +490,14 @@ export default function Main() {
               setSelected(SECTION_MONEY);
             }}
           >
-            <span style={{ fontSize: '1.5rem', marginLeft: '.5rem' }}>
-              <FaIndianRupeeSign />
+            <span
+              style={{
+                fontSize: '1.5rem',
+                marginLeft: '.5rem',
+                marginBottom: '.25rem',
+              }}
+            >
+              <HiLibrary />
             </span>
             <span
               style={{
@@ -488,12 +510,68 @@ export default function Main() {
             </span>
           </Section>
           <Section
+            selected={selected == SECTION_WORK}
+            onClick={() => {
+              setSelected(SECTION_WORK);
+            }}
+          >
+            <span
+              style={{
+                fontSize: '1.5rem',
+                marginLeft: '.5rem',
+                marginBottom: '.25rem',
+              }}
+            >
+              <HiMailOpen />
+            </span>
+            <span
+              style={{
+                fontSize: '.75rem',
+                transform: 'translateY(-1px)',
+                marginLeft: '.5rem',
+              }}
+            >
+              WORK
+            </span>
+          </Section>
+          <Section
+            selected={selected == SECTION_HABIT}
+            onClick={() => {
+              setSelected(SECTION_HABIT);
+            }}
+          >
+            <span
+              style={{
+                fontSize: '1.5rem',
+                marginLeft: '.5rem',
+                marginBottom: '.25rem',
+              }}
+            >
+              <HiShieldCheck />
+            </span>
+            <span
+              style={{
+                fontSize: '.75rem',
+                transform: 'translateY(-1px)',
+                marginLeft: '.5rem',
+              }}
+            >
+              HABITS
+            </span>
+          </Section>
+          <Section
             selected={selected == SECTION_GAMES}
             onClick={() => {
               setSelected(SECTION_GAMES);
             }}
           >
-            <span style={{ fontSize: '1.5rem', marginLeft: '.5rem' }}>
+            <span
+              style={{
+                fontSize: '1.5rem',
+                marginLeft: '.5rem',
+                marginBottom: '.25rem',
+              }}
+            >
               <MdVideogameAsset />
             </span>
             <span
@@ -546,6 +624,15 @@ const Tag = styled.div`
   justify-content: center;
   background-color: ${COLOR_GREEN};
   color: ${(props) => generateDarkTextColorForLightBg(COLOR_GREEN)};
+  height: 70px;
+`;
+
+const TagCount = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${COLOR_BLUE};
+  color: ${(props) => generateDarkTextColorForLightBg(COLOR_BLUE)};
   height: 70px;
 `;
 
@@ -665,7 +752,7 @@ const Title = styled.div`
   justify-content: flex-start;
   color: ${COLOR_WHITE};
   padding: 1rem 0rem;
-  font-size: 1.15rem;
+  font-size: 1.1rem;
 `;
 
 const Form = styled.div`
@@ -676,6 +763,7 @@ const Form = styled.div`
   padding: 0.5rem 1rem;
   justify-content: flex-start;
   overflow: scroll;
+  font-size: 0.9rem;
 `;
 
 const Caret = styled.div`
@@ -765,7 +853,7 @@ const Sections = styled.div`
   justify-content: center;
   width: 100%;
   padding: 1rem 0rem 2rem 0rem;
-  margin-top: 0.5rem;
+  margin-top: 0.25rem;
   background-color: ${(props) => COLOR_BLUE_DARK};
 `;
 
@@ -776,20 +864,10 @@ const Section = styled.div`
   justify-content: center;
   flex-direction: column;
   position: relative;
-  margin: 0rem 0.25rem;
-  padding: 0.25rem 1rem;
+  margin: 0rem 0rem 0.25rem 0rem;
+  padding: 0rem 1rem 0.25rem 0rem;
   border-radius: 4px 4px 0px 0px;
   color: ${(props) => (props.selected ? COLOR_BLUE_LIGHT : COLOR_GREY)};
-`;
-
-const Top = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  width: 100%;
-  height: 0px;
-  background-color: blue;
 `;
 
 const Middle = styled.div`
@@ -808,7 +886,7 @@ const MiddleTopContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
-  padding: 1rem;
+  padding: 0rem 1rem;
   flex: 1;
   opacity: ${(props) => (props.showModal ? '0' : '1')};
 `;
