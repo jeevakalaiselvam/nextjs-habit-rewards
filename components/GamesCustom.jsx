@@ -17,11 +17,13 @@ import styled from 'styled-components';
 import { selectGame } from '../store/gameSlice';
 
 const MAPPING_ORDER = {
-  0: 'GAME IMAGE',
-  1: 'GAME NAME',
-  2: 'ACH NAME',
-  3: 'ACH DESC',
-  4: 'ACH IMAGE',
+  0: 'OWNER',
+  1: 'TYPE',
+  2: 'GAME IMAGE',
+  3: 'GAME NAME',
+  4: 'ACH NAME',
+  5: 'ACH DESC',
+  6: 'ACH IMAGE',
 };
 const HEIGHT_ACHIEVEMENT = 80;
 const HEIGHT_ACHIEVEMENT_TITLE = 40;
@@ -44,7 +46,8 @@ export default function Atom({
   const dispatch = useDispatch();
   const steamtracker = useSelector((state) => state.steamtracker);
   const [messageApi, contextHolder] = message.useMessage();
-  const [selectedType, setSelectedType] = useState('Feature');
+  const [selectedType, setSelectedType] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState('Game');
 
   const [values, setValues] = useState({
     selectedLeftTab: 0,
@@ -253,6 +256,8 @@ export default function Atom({
     'Team',
   ];
 
+  const allCategories = ['Game', 'Habit', 'Work'];
+
   let isWorkRelated = values?.selectedGame == 'Work Simulator';
 
   if (isWorkRelated) {
@@ -264,6 +269,19 @@ export default function Atom({
       }
     });
   }
+
+  let filteredgamesMapped = {};
+
+  Object.keys(gamesMapped)?.forEach((key) => {
+    if (gamesMapped?.[key]?.[0]?.['TYPE'] == selectedCategory) {
+      filteredgamesMapped = {
+        ...filteredgamesMapped,
+        [key]: gamesMapped?.[key],
+      };
+    }
+  });
+
+  console.log(filteredgamesMapped);
 
   return (
     <Container>
@@ -318,11 +336,25 @@ export default function Atom({
       {activeTab == 0 && (
         <MainLeftContainer>
           {!values?.gamesSheetDataLoading && (
+            <Types>
+              {allCategories?.map((type) => {
+                return (
+                  <Type2
+                    onClick={() => setSelectedCategory(type)}
+                    active={selectedCategory == type}
+                  >
+                    {type}
+                  </Type2>
+                );
+              })}
+            </Types>
+          )}
+          {!values?.gamesSheetDataLoading && (
             <GamesContainer>
-              {Object.keys(gamesMapped).map((key) => {
-                let game = gamesMapped[key]?.[0];
-                let allAchs = gamesMapped[key];
-                let completedAchs = gamesMapped[key]?.filter((ach) =>
+              {Object.keys(filteredgamesMapped).map((key) => {
+                let game = filteredgamesMapped[key]?.[0];
+                let allAchs = filteredgamesMapped[key];
+                let completedAchs = filteredgamesMapped[key]?.filter((ach) =>
                   values?.completedAchs
                     ?.map((ach) => ach?.title)
                     ?.includes(`${ach?.['GAME NAME']}-${ach?.['ACH NAME']}`)
@@ -1124,8 +1156,8 @@ const GamesContainer = styled.div`
   width: 100%;
   justify-content: flex-start;
   flex-direction: column;
-  min-height: 73.5vh;
-  max-height: 73.5vh;
+  min-height: 69.5vh;
+  max-height: 69.5vh;
   overflow: scroll;
 `;
 
@@ -1145,6 +1177,18 @@ const Type = styled.div`
   margin: 0rem 0.25rem;
   justify-content: center;
   font-size: 0.9rem;
+  border-radius: 4px 4px 0px 0px;
+  padding: 0.25rem 0.5rem;
+  background-color: ${(props) => (props.active ? '#5474FD' : '#333')};
+`;
+
+const Type2 = styled.div`
+  display: flex;
+  align-items: center;
+  margin: 0rem 0.25rem;
+  justify-content: center;
+  font-size: 0.9rem;
+  flex: 1;
   border-radius: 4px 4px 0px 0px;
   padding: 0.25rem 0.5rem;
   background-color: ${(props) => (props.active ? '#5474FD' : '#333')};
