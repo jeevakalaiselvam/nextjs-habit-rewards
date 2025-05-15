@@ -265,7 +265,6 @@ export default function Main() {
         <HRight>
           <AddIcon
             onClick={() => {
-              setShowRecentAchUnlock(true);
               refreshAchievements();
             }}
           >
