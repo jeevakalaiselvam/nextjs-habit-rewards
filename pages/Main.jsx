@@ -234,10 +234,9 @@ export default function Main() {
     }
   }, [showRecentAchUnlock]);
 
-  let achToShow = achievements?.map((ach, index) => ({
-    ...ach,
-    index: achievements?.length - index,
-  }));
+  let achToShow = achievements
+    ?.sort((ach1, ach2) => new Date(ach2?.unlocked) - new Date(ach1?.unlocked))
+    ?.map((item, index) => ({ ...item, index: achievements?.length - index }));
 
   achToShow = achToShow?.filter((ach) => ach?.type == selected);
 
