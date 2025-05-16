@@ -548,7 +548,13 @@ export default function Main() {
                 </TotalAmount>
                 <RecentItems>
                   <RecentInner>
-                    {achievements?.map((ach, index) => {
+                    {[
+                      ...achievements,
+                      ...achievements,
+                      ...achievements,
+                      ...achievements,
+                      ...achievements,
+                    ]?.map((ach, index) => {
                       return (
                         <AchSmallContainer>
                           <AchSmall
@@ -794,6 +800,7 @@ const RecentInner = styled.div`
   flex-wrap: wrap;
   width: 100%;
   max-height: 55vh;
+  overflow: scroll;
 `;
 const OverviewMode = styled.div`
   display: flex;
