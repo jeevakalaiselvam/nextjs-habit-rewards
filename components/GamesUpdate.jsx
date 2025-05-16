@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { ICON_MAPPER } from '../helpers/gameHelper';
 import {
   COLOR_BLACK1,
+  COLOR_BLACK2,
   COLOR_BLUE,
   COLOR_BLUE_DARK,
   COLOR_BLUE_LIGHT,
@@ -88,6 +89,16 @@ export default function GamesUpdate() {
                   <Title>{ach?.title}</Title>
                   <Description>{ach?.description}</Description>
                   <Link>
+                    <input
+                      type="text"
+                      onChange={(e) => {
+                        setAllEditableUrl((old) => ({
+                          ...old,
+                          [ach?._id]: e.target.value,
+                        }));
+                      }}
+                      value={allEditableUrl?.[ach?._id]}
+                    />
                     <Save
                       onClick={() => {
                         updateInfo(ach?._id);
@@ -103,16 +114,6 @@ export default function GamesUpdate() {
                         <TbRefresh />
                       </span>
                     </Save>
-                    <input
-                      type="text"
-                      onChange={(e) => {
-                        setAllEditableUrl((old) => ({
-                          ...old,
-                          [ach?._id]: e.target.value,
-                        }));
-                      }}
-                      value={allEditableUrl?.[ach?._id]}
-                    />
                   </Link>
                 </Data>
               </AchContainer>
@@ -129,10 +130,10 @@ const Save = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
-  height: 30px;
+  height: 28px;
   cursor: pointer;
   padding: 0rem 1rem;
-  margin-right: 1rem;
+  margin-left: 0.5rem;
   background-color: ${COLOR_BLUE};
 
   &:hover {
@@ -144,7 +145,7 @@ const Icon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 150px;
+  min-width: 90px;
   min-height: 90px;
   background: ${(props) => `url('${props.image}')`};
   background-size: cover;
@@ -185,6 +186,7 @@ const Link = styled.div`
   padding-left: 1rem;
   height: 30px;
   width: 100%;
+  margin-top: 4px;
 
   & input {
     width: 100%;
@@ -192,25 +194,28 @@ const Link = styled.div`
     border: none;
     outline: none;
     height: 30px;
+    transform: translateY(0px);
   }
 `;
 
 const AchContainer = styled.div`
   display: flex;
-  width: 100%;
+  width: 500px;
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
+  background-color: ${COLOR_BLACK2};
+  padding: 0.5rem;
 `;
 
 const AchievementContainer = styled.div`
   display: flex;
-  align-items: center;
-  flex-direction: column;
+  align-items: flex-start;
   justify-content: flex-start;
   overflow: scroll;
   width: 100%;
   min-height: 100vh;
+  padding: 1rem;
   max-height: 100vh;
   color: #fefefe;
 `;
