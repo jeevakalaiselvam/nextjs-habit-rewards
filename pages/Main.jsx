@@ -260,7 +260,8 @@ export default function Main() {
 
   let isOverviewMode = selected == SECTION_MONEY;
 
-  let finalSelectedOverviewAch = selectedOverviewAch ?? achievements?.[0];
+  let finalSelectedOverviewAch =
+    selectedOverviewAch ?? achievements?.[achievements?.length - 1];
   let isfinalMoneyRelated =
     finalSelectedOverviewAch?.type == Work ||
     finalSelectedOverviewAch?.type == Habit;
