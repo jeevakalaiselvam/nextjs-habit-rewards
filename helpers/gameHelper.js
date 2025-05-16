@@ -26,7 +26,7 @@ export const MONEY_TRACKER = {
   [Task]: 250,
   [Bug]: 250,
   [Issue]: 500,
-  [Analysis]: 1000,
+  [Analysis]: 500,
   [DogWalk]: 25,
   [NoJunk]: 100,
   [BedOnTime]: 100,
