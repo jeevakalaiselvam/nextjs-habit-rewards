@@ -9,6 +9,8 @@ export const Analysis = 'Analysis';
 export const Task = 'Task';
 export const Bug = 'Bug';
 export const Issue = 'Issue';
+export const Call30Mins = 'Call 30 Mins';
+export const Call60Mins = 'Call 60 Mins';
 
 export const DogWalk = 'Dog Walk';
 export const NoJunk = 'No Junk';
@@ -17,16 +19,26 @@ export const ReadBook = 'Read 1 Chapter';
 
 export const GAMES_ARRAY = [Battlefield2042, Hitman];
 
-export const WORK_ARRAY = [Feature, Analysis, Task, Issue, Bug];
+export const WORK_ARRAY = [
+  Feature,
+  Analysis,
+  Task,
+  Issue,
+  Bug,
+  Call30Mins,
+  Call60Mins,
+];
 
 export const HABIT_ARRAY = [DogWalk, NoJunk, BedOnTime, ReadBook];
 
 export const MONEY_TRACKER = {
   [Feature]: 1000,
   [Task]: 250,
-  [Bug]: 250,
+  [Bug]: 500,
   [Issue]: 500,
   [Analysis]: 500,
+  [Call30Mins]: 100,
+  [Call60Mins]: 200,
   [DogWalk]: 25,
   [NoJunk]: 100,
   [BedOnTime]: 100,
