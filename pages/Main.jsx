@@ -7,6 +7,7 @@ import {
   COLOR_BLUE,
   COLOR_BLUE_DARK,
   COLOR_BLUE_LIGHT,
+  COLOR_GOLD,
   COLOR_GREEN,
   COLOR_GREY,
   COLOR_PURPLE,
@@ -288,13 +289,16 @@ export default function Main() {
           <HLeft>
             <span
               style={{
-                color: COLOR_BLUE,
+                color: COLOR_GREEN,
                 fontSize: '1.25rem',
                 transform: 'translateY(-2px)',
                 marginRight: '.25rem',
               }}
             >
-              Total Earned
+              {achievements?.length}
+            </span>
+            <span style={{ fontSize: '1.1rem', color: COLOR_GREEN }}>
+              <FaTrophy />
             </span>
           </HLeft>
         )}
@@ -557,7 +561,7 @@ export default function Main() {
                               setSelectedOverviewAch(ach);
                             }}
                           ></AchSmall>
-                          <AchTag>{achievements?.length - index}</AchTag>
+                          {/* <AchTag>{achievements?.length - index}</AchTag> */}
                         </AchSmallContainer>
                       );
                     })}
@@ -751,13 +755,11 @@ const AchTag = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
   background-color: rgba(0, 0, 0, 0.25);
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 70px;
-  height: 70px;
+  bottom: 0;
+  right: 0;
+  width: 40px;
 `;
 
 const TotalAmount = styled.div`
@@ -765,6 +767,7 @@ const TotalAmount = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  transform: translateX(-1rem);
 `;
 
 const RecentItems = styled.div`
