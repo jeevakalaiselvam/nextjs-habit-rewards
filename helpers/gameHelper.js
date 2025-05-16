@@ -9,6 +9,7 @@ export const Analysis = 'Analysis';
 export const Task = 'Task';
 export const Bug = 'Bug';
 export const Issue = 'Issue';
+export const Call15Mins = 'Call 15 Mins';
 export const Call30Mins = 'Call 30 Mins';
 export const Call60Mins = 'Call 60 Mins';
 
@@ -25,6 +26,7 @@ export const WORK_ARRAY = [
   Task,
   Issue,
   Bug,
+  Call15Mins,
   Call30Mins,
   Call60Mins,
 ];
@@ -37,6 +39,7 @@ export const MONEY_TRACKER = {
   [Bug]: 500,
   [Issue]: 500,
   [Analysis]: 500,
+  [Call15Mins]: 50,
   [Call30Mins]: 100,
   [Call60Mins]: 200,
   [DogWalk]: 25,
