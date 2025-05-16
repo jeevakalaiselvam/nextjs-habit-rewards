@@ -12,6 +12,8 @@ export const Issue = 'Issue';
 export const Call15Mins = 'Call 15 Mins';
 export const Call30Mins = 'Call 30 Mins';
 export const Call60Mins = 'Call 60 Mins';
+export const Call90Mins = 'Call 90 Mins';
+export const Call120Mins = 'Call 120 Mins';
 
 export const DogWalk = 'Dog Walk';
 export const NoJunk = 'No Junk';
@@ -29,6 +31,8 @@ export const WORK_ARRAY = [
   Call15Mins,
   Call30Mins,
   Call60Mins,
+  Call90Mins,
+  Call120Mins,
 ];
 
 export const HABIT_ARRAY = [DogWalk, NoJunk, BedOnTime, ReadBook];
@@ -42,6 +46,8 @@ export const MONEY_TRACKER = {
   [Call15Mins]: 50,
   [Call30Mins]: 100,
   [Call60Mins]: 200,
+  [Call90Mins]: 300,
+  [Call120Mins]: 500,
   [DogWalk]: 25,
   [NoJunk]: 100,
   [BedOnTime]: 100,
@@ -75,5 +81,9 @@ export const ICON_MAPPER = {
   [Call60Mins]:
     'https://cdn5.vectorstock.com/i/1000x1000/51/99/hand-with-telephone-pop-art-cartoon-vector-20135199.jpg',
   [Call30Mins]:
+    'https://cdn5.vectorstock.com/i/1000x1000/51/99/hand-with-telephone-pop-art-cartoon-vector-20135199.jpg',
+  [Call90Mins]:
+    'https://cdn5.vectorstock.com/i/1000x1000/51/99/hand-with-telephone-pop-art-cartoon-vector-20135199.jpg',
+  [Call120Mins]:
     'https://cdn5.vectorstock.com/i/1000x1000/51/99/hand-with-telephone-pop-art-cartoon-vector-20135199.jpg',
 };
