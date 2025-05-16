@@ -27,10 +27,10 @@ export const MONEY_TRACKER = {
   [Bug]: 250,
   [Issue]: 500,
   [Analysis]: 1000,
-  [DogWalk]: 50,
-  [NoJunk]: 200,
-  [BedOnTime]: 200,
-  [ReadBook]: 200,
+  [DogWalk]: 25,
+  [NoJunk]: 100,
+  [BedOnTime]: 100,
+  [ReadBook]: 100,
 };
 
 export const ICON_MAPPER = {

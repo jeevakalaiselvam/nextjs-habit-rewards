@@ -248,15 +248,11 @@ export default function Main() {
 
   achievements?.forEach((ach) => {
     let isMoneyRelated = ach?.type == Work || ach?.type == Habit;
-    if (isMoneyRelated) {
-      moneyAchievement.push(ach);
-    } else {
-      nonMoneyAchievement.push(ach);
-    }
+    moneyAchievement.push(ach);
   });
 
   let totalEarned = moneyAchievement?.reduce((acc, ach) => {
-    return acc + MONEY_TRACKER?.[ach?.name];
+    return acc + (MONEY_TRACKER?.[ach?.name] ?? 10);
   }, 0);
 
   let isMoneyRelatedSectionActive =
@@ -265,6 +261,9 @@ export default function Main() {
   let isOverviewMode = selected == SECTION_MONEY;
 
   let finalSelectedOverviewAch = selectedOverviewAch ?? achievements?.[0];
+  let isfinalMoneyRelated =
+    finalSelectedOverviewAch?.type == Work ||
+    finalSelectedOverviewAch?.type == Habit;
 
   return (
     <Container>
@@ -514,20 +513,17 @@ export default function Main() {
                       <A1Desc>{ach?.description}</A1Desc>
                     </A1Right>
                     <Tag>
-                      {!isMoneyRelated && <InnerTag>DONE</InnerTag>}
-                      {isMoneyRelated && (
-                        <InnerTagMoney>
-                          <span
-                            style={{
-                              transform: 'translateY(1px)',
-                              fontSize: '.7rem',
-                            }}
-                          >
-                            <FaIndianRupeeSign />{' '}
-                          </span>
-                          {MONEY_TRACKER[ach?.name]}
-                        </InnerTagMoney>
-                      )}
+                      <InnerTagMoney>
+                        <span
+                          style={{
+                            transform: 'translateY(1px)',
+                            fontSize: '.7rem',
+                          }}
+                        >
+                          <FaIndianRupeeSign />{' '}
+                        </span>
+                        {MONEY_TRACKER[ach?.name] ?? 10}
+                      </InnerTagMoney>
                     </Tag>
                   </A1Container>
                 );
@@ -561,7 +557,6 @@ export default function Main() {
                               setSelectedOverviewAch(ach);
                             }}
                           ></AchSmall>
-                          {/* <AchTag>{achievements?.length - index}</AchTag> */}
                         </AchSmallContainer>
                       );
                     })}
@@ -578,7 +573,20 @@ export default function Main() {
                         <A1Desc>{finalSelectedOverviewAch?.description}</A1Desc>
                       </A1Right>
                       <Tag>
-                        <InnerTag>DONE</InnerTag>
+                        {
+                          <InnerTagMoney>
+                            <span
+                              style={{
+                                transform: 'translateY(1px)',
+                                fontSize: '.7rem',
+                              }}
+                            >
+                              <FaIndianRupeeSign />
+                            </span>
+                            {MONEY_TRACKER[finalSelectedOverviewAch?.name] ??
+                              10}
+                          </InnerTagMoney>
+                        }
                       </Tag>
                     </A1ContainerMoney>
                   </RecentClick>
@@ -818,7 +826,7 @@ const InnerTag = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 0.8rem;
-  transform: rotate(-90deg);
+  transform: rotate(-90deg) translateX(-0.1rem);
   width: 20px;
   font-weight: bolder;
 `;
@@ -828,7 +836,7 @@ const InnerTagMoney = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 0.8rem;
-  transform: rotate(-90deg);
+  transform: rotate(-90deg) translateX(-0.1rem);
   width: 20px;
   font-weight: bolder;
 `;
