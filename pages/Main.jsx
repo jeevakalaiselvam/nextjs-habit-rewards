@@ -16,11 +16,16 @@ import {
 } from '../helpers/colorHelper';
 import { Dropdown, message, Popconfirm, Space, Spin } from 'antd';
 import { FaCaretDown, FaGlobe, FaRupeeSign, FaTrophy } from 'react-icons/fa';
+import { LuIndianRupee } from 'react-icons/lu';
 import {
   Battlefield2042,
+  Feature,
   GAMES_ARRAY,
+  Habit,
   HABIT_ARRAY,
   ICON_MAPPER,
+  MONEY_TRACKER,
+  Work,
   WORK_ARRAY,
 } from '../helpers/gameHelper';
 import { TbRefresh } from 'react-icons/tb';
@@ -236,23 +241,76 @@ export default function Main() {
 
   let lastAch = achievements?.[achievements?.length - 1];
 
+  let nonMoneyAchievement = [];
+  let moneyAchievement = [];
+
+  achievements?.forEach((ach) => {
+    let isMoneyRelated = ach?.type == Work || ach?.type == Habit;
+    if (isMoneyRelated) {
+      moneyAchievement.push(ach);
+    } else {
+      nonMoneyAchievement.push(ach);
+    }
+  });
+
+  let totalEarned = moneyAchievement?.reduce((acc, ach) => {
+    return acc + MONEY_TRACKER?.[ach?.name];
+  }, 0);
+
+  let isMoneyRelatedSectionActive =
+    selected == SECTION_HABIT || selected == SECTION_WORK;
+
+  let isOverviewMode = selected == SECTION_MONEY;
+
   return (
     <Container>
       <Header>
-        <HLeft>
-          <soan
-            style={{
-              fontSize: '1.25rem',
-              transform: 'translateY(-2px)',
-              marginRight: '.25rem',
-            }}
-          >
-            {achievements?.length}
-          </soan>
-          <span style={{ fontSize: '1.1rem' }}>
-            <FaTrophy />
-          </span>
-        </HLeft>
+        {!isMoneyRelatedSectionActive && !isOverviewMode && (
+          <HLeft>
+            <span
+              style={{
+                fontSize: '1.25rem',
+                transform: 'translateY(-2px)',
+                marginRight: '.25rem',
+              }}
+            >
+              {achievements?.length}
+            </span>
+            <span style={{ fontSize: '1.1rem' }}>
+              <FaTrophy />
+            </span>
+          </HLeft>
+        )}
+        {isOverviewMode && (
+          <HLeft>
+            <span
+              style={{
+                color: COLOR_BLUE,
+                fontSize: '1.25rem',
+                transform: 'translateY(-2px)',
+                marginRight: '.25rem',
+              }}
+            >
+              Total Earned
+            </span>
+          </HLeft>
+        )}
+        {isMoneyRelatedSectionActive && (
+          <HLeft>
+            <span
+              style={{
+                fontSize: '1.25rem',
+                transform: 'translateY(-2px)',
+                marginRight: '.25rem',
+              }}
+            >
+              {totalEarned}
+            </span>
+            <span style={{ fontSize: '1.1rem' }}>
+              <FaIndianRupeeSign />
+            </span>
+          </HLeft>
+        )}
         <HRight>
           <AddIcon
             onClick={() => {
@@ -263,13 +321,13 @@ export default function Main() {
           </AddIcon>
         </HRight>{' '}
         <HRight>
-          <AddIcon
+          <AddIconRefresh
             onClick={() => {
               refreshAchievements();
             }}
           >
             <TbRefresh />
-          </AddIcon>
+          </AddIconRefresh>
         </HRight>
       </Header>
       {showModal && (
@@ -420,9 +478,13 @@ export default function Main() {
       <Middle showModal={showModal}>
         {!loading && (
           <MiddleTopContainer>
-            {achToShow?.length == 0 && <NoData>No Achievements</NoData>}
+            {achToShow?.length == 0 && !isOverviewMode && (
+              <NoData>No Achievements</NoData>
+            )}
             {achToShow?.length > 0 &&
+              !isOverviewMode &&
               achToShow?.map((ach, index) => {
+                let isMoneyRelated = ach?.type == Work || ach?.type == Habit;
                 return (
                   <A1Container>
                     <TagCount>
@@ -445,11 +507,53 @@ export default function Main() {
                       <A1Desc>{ach?.description}</A1Desc>
                     </A1Right>
                     <Tag>
-                      <InnerTag>DONE</InnerTag>
+                      {!isMoneyRelated && <InnerTag>DONE</InnerTag>}
+                      {isMoneyRelated && (
+                        <InnerTagMoney>
+                          <span
+                            style={{
+                              transform: 'translateY(1px)',
+                              fontSize: '.7rem',
+                            }}
+                          >
+                            <FaIndianRupeeSign />{' '}
+                          </span>
+                          {MONEY_TRACKER[ach?.name]}
+                        </InnerTagMoney>
+                      )}
                     </Tag>
                   </A1Container>
                 );
               })}
+            {isOverviewMode && (
+              <OverviewMode>
+                <TotalAmount>
+                  <span
+                    style={{
+                      color: COLOR_GREEN,
+                      fontSize: '4rem',
+                      fontWeight: '200',
+                      transform: 'translateY(4px)',
+                    }}
+                  >
+                    <LuIndianRupee />
+                  </span>
+
+                  <span style={{ fontSize: '5rem', color: COLOR_GREEN }}>
+                    {totalEarned}
+                  </span>
+                </TotalAmount>
+                <RecentItems>
+                  <RecentInner>
+                    {achievements?.map((ach) => {
+                      return (
+                        <AchSmall image={ICON_MAPPER?.[ach?.name]}></AchSmall>
+                      );
+                    })}
+                  </RecentInner>
+                </RecentItems>
+              </OverviewMode>
+            )}
           </MiddleTopContainer>
         )}
         {loading && (
@@ -589,6 +693,50 @@ export default function Main() {
   );
 }
 
+const AchSmall = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 70px;
+  min-height: 70px;
+  background: ${(props) => `url('${props.image}')`};
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin: 0.5rem;
+`;
+
+const TotalAmount = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
+const RecentItems = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-height: 50vh;
+  min-height: 50vh;
+`;
+
+const RecentInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+  max-height: 50vh;
+`;
+const OverviewMode = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+`;
+
 const UnlockTrigger = styled.div`
   display: flex;
   align-items: center;
@@ -608,6 +756,16 @@ const UnlockTrigger = styled.div`
 `;
 
 const InnerTag = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  transform: rotate(-90deg);
+  width: 20px;
+  font-weight: bolder;
+`;
+
+const InnerTagMoney = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -928,6 +1086,17 @@ const AddIcon = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
+
+  &:active {
+    color: ${COLOR_BLUE};
+  }
+`;
+
+const AddIconRefresh = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
 
   &:active {
     color: ${COLOR_BLUE};

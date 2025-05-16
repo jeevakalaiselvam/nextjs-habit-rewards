@@ -3,11 +3,11 @@ import {
   FETCH_ALL_ACHIEVEMENTS_SCHEMA,
   FETCH_ALL_GAMES,
   STEAM_ALL_ACHIEVEMENTS_PLAYER,
-} from "../../../../components/helpers/urlHelper";
-const axios = require("axios");
+} from '../../../../components/helpers/urlHelper';
+const axios = require('axios');
 
 const handler = async (req, res) => {
-  if (req.method === "GET") {
+  if (req.method === 'GET') {
     try {
       let finalGamesResponse = {};
       const { gameId } = req.query;
@@ -87,7 +87,7 @@ const handler = async (req, res) => {
         (newAchievementsInner &&
           newAchievementsInner.length > 0 &&
           newAchievementsInner.filter(
-            (achievement) => achievement?.achieved != "1"
+            (achievement) => achievement?.achieved != '1'
           ).length) ||
         0;
       const completionPercentage =
@@ -105,11 +105,11 @@ const handler = async (req, res) => {
         completed: newAchievementsInner.length - toGet,
       };
       //Get all Games and Refresh data in File
-      res.status(200).json({ status: "success", data: finalGamesResponse });
+      res.status(200).json({ status: 'success', data: finalGamesResponse });
     } catch (error) {
       console.error(error);
       //Get all Games and Refresh data in File
-      res.status(500).json({ status: "error", error: error });
+      res.status(500).json({ status: 'error', error: error });
     }
   }
 };
