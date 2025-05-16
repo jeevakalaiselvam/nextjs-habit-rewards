@@ -723,7 +723,7 @@ const AchSmall = styled.div`
   background: ${(props) => `url('${props.image}')`};
   background-size: cover;
   background-repeat: no-repeat;
-  margin: 0.5rem;
+  margin: 0.75rem;
 `;
 
 const TotalAmount = styled.div`
@@ -747,7 +747,7 @@ const RecentInner = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-wrap: wrap;
-  width: 91.5%;
+  width: 100%;
   max-height: 55vh;
 `;
 const OverviewMode = styled.div`
