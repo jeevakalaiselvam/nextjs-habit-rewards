@@ -14,6 +14,7 @@ export const Call30Mins = 'Call 30 Mins';
 export const Call60Mins = 'Call 60 Mins';
 export const Call90Mins = 'Call 90 Mins';
 export const Call120Mins = 'Call 120 Mins';
+export const StoryValidation = 'Story Validation';
 
 export const DogWalk = 'Dog Walk';
 export const NoJunk = 'No Junk';
@@ -33,6 +34,7 @@ export const WORK_ARRAY = [
   Call60Mins,
   Call90Mins,
   Call120Mins,
+  StoryValidation,
 ];
 
 export const HABIT_ARRAY = [DogWalk, NoJunk, BedOnTime, ReadBook];
@@ -52,6 +54,7 @@ export const MONEY_TRACKER = {
   [NoJunk]: 100,
   [BedOnTime]: 100,
   [ReadBook]: 100,
+  [StoryValidation]: 250,
 };
 
 export const ICON_MAPPER = {

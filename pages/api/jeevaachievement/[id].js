@@ -5,13 +5,15 @@ export default async function handler(req, res) {
   const { id } = req.query;
 
   if (req.method === 'PUT') {
-    const { name, title, description, type } = req.body;
+    const { url } = req.body;
 
-    if (!name || !title || !description || !type) {
-      return res
-        .status(400)
-        .json({ error: 'Name, Title, Description and Type are required' });
+    if (!url) {
+      return res.status(400).json({ error: 'URL is required' });
     }
+
+    let finalUrl = url?.includes('/revision/latest')
+      ? url?.split('/revision/latest')?.[0]
+      : url;
 
     try {
       const client = await clientPromise;
@@ -21,11 +23,7 @@ export default async function handler(req, res) {
         { _id: new ObjectId(id) },
         {
           $set: {
-            name,
-            title,
-            description,
-            type,
-            unlocked: new Date(),
+            url: finalUrl,
           },
         }
       );
