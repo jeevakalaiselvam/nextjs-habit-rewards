@@ -14,7 +14,7 @@ import { HiRefresh } from 'react-icons/hi';
 import { TbRefresh } from 'react-icons/tb';
 
 export default function GamesUpdate() {
-  const [achievements, setAchievements] = useState([]);
+  const [achievements, setAchievementsMap] = useState([]);
   const [loading, setLoading] = useState(false);
   const [allEditableUrl, setAllEditableUrl] = useState({});
   const [allSaving, setAllSaving] = useState({});
@@ -23,16 +23,18 @@ export default function GamesUpdate() {
     setLoading(true);
     try {
       axios.get('/api/jeevaachievement').then((response) => {
-        setAchievements(response?.data);
         let achievementsInner = response?.data;
         let allEditMap = {};
         let allSaveMap = {};
+        let allAchDetailsMap = {};
         achievementsInner?.forEach((ach) => {
+          allAchDetailsMap[ach?._id] = ach;
           allEditMap[ach?._id] = '';
           allSaveMap[ach?._id] = false;
         });
         setAllEditableUrl(allEditMap);
         setAllSaving(allSaveMap);
+        setAchievementsMap(allAchDetailsMap);
         setLoading(false);
       });
     } catch (e) {
@@ -53,13 +55,22 @@ export default function GamesUpdate() {
           url: allEditableUrl?.[achId],
         })
         .then((response) => {
+          setAchievementsMap((old) => ({
+            ...old,
+            [achId]: { ...old?.[achId], url: allEditableUrl?.[achId] },
+          }));
           setAllSaving((old) => ({ ...old, [achId]: false }));
-          refreshAchievements();
         });
     } catch (e) {}
   };
 
-  const toShowAchs = achievements?.filter((ach) => ach?.type == 'Games');
+  let toShowAchs = {};
+
+  Object.keys(achievements)?.forEach((key) => {
+    if (achievements?.[key]?.type == 'Games') {
+      toShowAchs[key] = achievements?.[key];
+    }
+  });
 
   return (
     <Container>
@@ -68,7 +79,8 @@ export default function GamesUpdate() {
       )}
       {!loading && (
         <AchievementContainer>
-          {toShowAchs?.map((ach) => {
+          {Object.keys(toShowAchs)?.map((key) => {
+            let ach = achievements?.[key];
             return (
               <AchContainer>
                 <Icon image={ach?.url ?? ICON_MAPPER?.[ach?.name]}></Icon>
