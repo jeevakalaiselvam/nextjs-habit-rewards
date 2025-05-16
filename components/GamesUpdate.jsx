@@ -3,7 +3,7 @@ import { Descriptions, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { ICON_MAPPER } from '../helpers/gameHelper';
+import { getFandomRemovedUrl, ICON_MAPPER } from '../helpers/gameHelper';
 import {
   COLOR_BLACK1,
   COLOR_BLACK2,
@@ -53,12 +53,15 @@ export default function GamesUpdate() {
     try {
       axios
         .put(`/api/jeevaachievement/${achId}`, {
-          url: allEditableUrl?.[achId],
+          url: getFandomRemovedUrl(allEditableUrl?.[achId]),
         })
         .then((response) => {
           setAchievementsMap((old) => ({
             ...old,
-            [achId]: { ...old?.[achId], url: allEditableUrl?.[achId] },
+            [achId]: {
+              ...old?.[achId],
+              url: getFandomRemovedUrl(allEditableUrl?.[achId]),
+            },
           }));
           setAllSaving((old) => ({ ...old, [achId]: false }));
         });

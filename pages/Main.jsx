@@ -33,6 +33,7 @@ import { TbRefresh } from 'react-icons/tb';
 import { MdVideogameAsset } from 'react-icons/md';
 import axios from 'axios';
 import {
+  HiHome,
   HiLibrary,
   HiMailOpen,
   HiOutlinePlusSm,
@@ -46,14 +47,16 @@ const SECTION_MONEY = 'SECTION_MONEY';
 const SECTION_WORK = 'Work';
 const SECTION_HABIT = 'Habit';
 const SECTION_GAMES = 'Games';
+const SECTION_ICONS = 'Icons';
 
 export default function Main() {
   const [showRecentAchUnlock, setShowRecentAchUnlock] = useState(false);
   const [loading, setLoading] = useState(false);
   const [achievements, setAchievements] = useState([]);
-  const [selected, setSelected] = useState(SECTION_MONEY);
+  const [selected, setSelected] = useState(SECTION_ICONS);
   const [showModal, setShowModal] = useState(false);
   const [selectedOverviewAch, setSelectedOverviewAch] = useState(null);
+  const [selectedOverviewAchGame, setSelectedOverviewAchGame] = useState(null);
   const [formValues, setFormValues] = useState({
     type: '',
     name: '',
@@ -257,12 +260,22 @@ export default function Main() {
   let isMoneyRelatedSectionActive =
     selected == SECTION_HABIT || selected == SECTION_WORK;
 
+  let isLongAchievementsActive =
+    selected == SECTION_GAMES ||
+    selected == SECTION_HABIT ||
+    selected == SECTION_WORK;
+
   let isOverviewMode = selected == SECTION_MONEY;
+
+  let isGameIconsActive = selected == SECTION_ICONS;
 
   let finalSelectedOverviewAch = selectedOverviewAch ?? achievements?.[0];
   let isfinalMoneyRelated =
     finalSelectedOverviewAch?.type == Work ||
     finalSelectedOverviewAch?.type == Habit;
+
+  let onlyGameAchs = achievements?.filter((ach) => ach?.type == 'Games');
+  let finalSelectedOverviewGameAch = selectedOverviewAch ?? onlyGameAchs?.[0];
 
   return (
     <Container>
@@ -276,7 +289,7 @@ export default function Main() {
                 marginRight: '.25rem',
               }}
             >
-              {achievements?.length}
+              {onlyGameAchs?.length}
             </span>
             <span style={{ fontSize: '1.1rem' }}>
               <FaTrophy />
@@ -483,10 +496,11 @@ export default function Main() {
       <Middle showModal={showModal}>
         {!loading && (
           <MiddleTopContainer>
-            {achToShow?.length == 0 && !isOverviewMode && (
-              <NoData>No Achievements</NoData>
-            )}
+            {achToShow?.length == 0 &&
+              !isOverviewMode &&
+              isLongAchievementsActive && <NoData>No Achievements</NoData>}
             {achToShow?.length > 0 &&
+              isLongAchievementsActive &&
               !isOverviewMode &&
               achToShow?.map((ach, index) => {
                 let isMoneyRelated = ach?.type == Work || ach?.type == Habit;
@@ -551,7 +565,7 @@ export default function Main() {
                       return (
                         <AchSmallContainer>
                           <AchSmall
-                            image={ICON_MAPPER?.[ach?.name]}
+                            image={ach?.url ?? ICON_MAPPER?.[ach?.name]}
                             onClick={() => {
                               setSelectedOverviewAch(ach);
                             }}
@@ -584,6 +598,73 @@ export default function Main() {
                             </span>
                             {MONEY_TRACKER[finalSelectedOverviewAch?.name] ??
                               10}
+                          </InnerTagMoney>
+                        }
+                      </Tag>
+                    </A1ContainerMoney>
+                  </RecentClick>
+                )}
+              </OverviewMode>
+            )}
+            {isGameIconsActive && (
+              <OverviewMode>
+                <RecentItemsGame>
+                  <RecentInner>
+                    {onlyGameAchs?.map((ach, index) => {
+                      return (
+                        <AchSmallContainer>
+                          <AchSmall
+                            image={ach?.url ?? ICON_MAPPER?.[ach?.name]}
+                            onClick={() => {
+                              setSelectedOverviewAchGame(ach);
+                            }}
+                          >
+                            <InnerCount>
+                              <span>{index + 1}</span>
+                              <span
+                                style={{
+                                  fontSize: '.8rem',
+                                  marginLeft: '.25rem',
+                                }}
+                              >
+                                <FaTrophy />
+                              </span>
+                            </InnerCount>
+                          </AchSmall>
+                        </AchSmallContainer>
+                      );
+                    })}
+                  </RecentInner>
+                </RecentItemsGame>
+                {!showRecentAchUnlock && (
+                  <RecentClick>
+                    <A1ContainerMoney>
+                      <A1Icon
+                        icon={
+                          finalSelectedOverviewGameAch?.url ??
+                          ICON_MAPPER[finalSelectedOverviewGameAch?.name]
+                        }
+                      ></A1Icon>
+                      <A1Right>
+                        <A1Title>{finalSelectedOverviewGameAch?.title}</A1Title>
+                        <A1Desc>
+                          {finalSelectedOverviewGameAch?.description}
+                        </A1Desc>
+                      </A1Right>
+                      <Tag>
+                        {
+                          <InnerTagMoney>
+                            <span
+                              style={{
+                                transform: 'translateY(1px)',
+                                fontSize: '.7rem',
+                              }}
+                            >
+                              <FaIndianRupeeSign />
+                            </span>
+                            {MONEY_TRACKER[
+                              finalSelectedOverviewGameAch?.name
+                            ] ?? 10}
                           </InnerTagMoney>
                         }
                       </Tag>
@@ -699,7 +780,7 @@ export default function Main() {
             >
               HABITS
             </span>
-          </Section>
+          </Section>{' '}
           <Section
             selected={selected == SECTION_GAMES}
             onClick={() => {
@@ -725,6 +806,31 @@ export default function Main() {
               GAMES
             </span>
           </Section>
+          <Section
+            selected={selected == SECTION_ICONS}
+            onClick={() => {
+              setSelected(SECTION_ICONS);
+            }}
+          >
+            <span
+              style={{
+                fontSize: '1.5rem',
+                marginLeft: '.5rem',
+                marginBottom: '.25rem',
+              }}
+            >
+              <HiHome />
+            </span>
+            <span
+              style={{
+                fontSize: '.75rem',
+                transform: 'translateY(-1px)',
+                marginLeft: '.5rem',
+              }}
+            >
+              ICONS
+            </span>
+          </Section>
         </Sections>
       </Middle>
     </Container>
@@ -742,11 +848,26 @@ const AchSmall = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 70px;
-  min-height: 70px;
+  min-width: 80px;
+  min-height: 80px;
   background: ${(props) => `url('${props.image}')`};
   background-size: cover;
   background-repeat: no-repeat;
+  background-origin: center;
+  position: relative;
+`;
+
+const InnerCount = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  transform: translateY(50%);
+  width: 100%;
+  background-color: ${COLOR_GREEN};
+  color: ${generateDarkTextColorForLightBg(COLOR_GREEN)};
 `;
 
 const AchSmallContainer = styled.div`
@@ -784,6 +905,15 @@ const RecentItems = styled.div`
   width: 100%;
   max-height: 55vh;
   min-height: 55vh;
+`;
+
+const RecentItemsGame = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  max-height: 65vh;
+  min-height: 65vh;
 `;
 
 const RecentInner = styled.div`
@@ -892,6 +1022,7 @@ const A1Icon = styled.div`
   background: ${(props) => `url('${props.icon}')`};
   background-size: cover;
   background-repeat: no-repeat;
+  background-origin: center;
 `;
 
 const A1Title = styled.div`
