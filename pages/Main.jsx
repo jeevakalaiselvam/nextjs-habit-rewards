@@ -775,7 +775,7 @@ const TotalAmount = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  transform: translateX(-1rem);
+  transform: translateX(-1.25rem);
 `;
 
 const RecentItems = styled.div`
