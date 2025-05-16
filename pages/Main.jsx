@@ -552,6 +552,18 @@ export default function Main() {
                     })}
                   </RecentInner>
                 </RecentItems>
+                <RecentClick>
+                  <A1ContainerMoney>
+                    <A1Icon icon={ICON_MAPPER[lastAch?.name]}></A1Icon>
+                    <A1Right>
+                      <A1Title>{lastAch?.title}</A1Title>
+                      <A1Desc>{lastAch?.description}</A1Desc>
+                    </A1Right>
+                    <Tag>
+                      <InnerTag>DONE</InnerTag>
+                    </Tag>
+                  </A1ContainerMoney>
+                </RecentClick>
               </OverviewMode>
             )}
           </MiddleTopContainer>
@@ -693,6 +705,13 @@ export default function Main() {
   );
 }
 
+const RecentClick = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
 const AchSmall = styled.div`
   display: flex;
   align-items: center;
@@ -717,8 +736,8 @@ const RecentItems = styled.div`
   align-items: flex-start;
   justify-content: center;
   width: 100%;
-  max-height: 50vh;
-  min-height: 50vh;
+  max-height: 55vh;
+  min-height: 55vh;
 `;
 
 const RecentInner = styled.div`
@@ -726,8 +745,8 @@ const RecentInner = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-wrap: wrap;
-  width: 100%;
-  max-height: 50vh;
+  width: 91.5%;
+  max-height: 55vh;
 `;
 const OverviewMode = styled.div`
   display: flex;
@@ -805,6 +824,15 @@ const A1Container = styled.div`
   justify-content: center;
   width: 100%;
   margin: 1rem 0.25rem 0rem 0.25rem;
+  background-color: ${COLOR_ACH};
+`;
+
+const A1ContainerMoney = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 1rem 0rem 0rem 0rem;
   background-color: ${COLOR_ACH};
 `;
 
@@ -1043,7 +1071,7 @@ const MiddleTopContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
-  padding: 0rem 1rem;
+  padding: 0.1rem 0.5rem;
   flex: 1;
   opacity: ${(props) => (props.showModal ? '0' : '1')};
 `;
