@@ -552,18 +552,20 @@ export default function Main() {
                     })}
                   </RecentInner>
                 </RecentItems>
-                <RecentClick>
-                  <A1ContainerMoney>
-                    <A1Icon icon={ICON_MAPPER[lastAch?.name]}></A1Icon>
-                    <A1Right>
-                      <A1Title>{lastAch?.title}</A1Title>
-                      <A1Desc>{lastAch?.description}</A1Desc>
-                    </A1Right>
-                    <Tag>
-                      <InnerTag>DONE</InnerTag>
-                    </Tag>
-                  </A1ContainerMoney>
-                </RecentClick>
+                {!showRecentAchUnlock && (
+                  <RecentClick>
+                    <A1ContainerMoney>
+                      <A1Icon icon={ICON_MAPPER[lastAch?.name]}></A1Icon>
+                      <A1Right>
+                        <A1Title>{lastAch?.title}</A1Title>
+                        <A1Desc>{lastAch?.description}</A1Desc>
+                      </A1Right>
+                      <Tag>
+                        <InnerTag>DONE</InnerTag>
+                      </Tag>
+                    </A1ContainerMoney>
+                  </RecentClick>
+                )}
               </OverviewMode>
             )}
           </MiddleTopContainer>
