@@ -294,7 +294,7 @@ export default function Main() {
                 marginRight: '.25rem',
               }}
             >
-              NeverTheEzWay - {achievements?.length}
+              NotRealLogan - {achievements?.length}
             </span>
             <span style={{ fontSize: '1.1rem', color: COLOR_GREEN }}>
               <FaTrophy />
