@@ -7,10 +7,6 @@ export default async function handler(req, res) {
   if (req.method === 'PUT') {
     const { url } = req.body;
 
-    if (!url) {
-      return res.status(400).json({ error: 'URL is required' });
-    }
-
     let finalUrl = url?.includes('/revision/latest')
       ? url?.split('/revision/latest')?.[0]
       : url;

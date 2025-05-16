@@ -151,9 +151,7 @@ export default function Main() {
       description: '',
     }));
 
-    if (formValues?.type == 'Habit') {
-      setFormValues((old) => ({ ...old, title: String(e.key) }));
-    }
+    setFormValues((old) => ({ ...old, title: String(e.key) }));
   };
 
   const menuTypeType = {
@@ -620,14 +618,15 @@ export default function Main() {
                             }}
                           >
                             <InnerCount>
-                              <span>{index + 1}</span>
+                              <span>{10}</span>
                               <span
                                 style={{
                                   fontSize: '.8rem',
-                                  marginLeft: '.25rem',
+                                  marginLeft: '.1rem',
+                                  transform: 'translateY(1px)',
                                 }}
                               >
-                                <FaTrophy />
+                                <FaIndianRupeeSign />
                               </span>
                             </InnerCount>
                           </AchSmall>
