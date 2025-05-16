@@ -52,6 +52,7 @@ export default function Main() {
   const [achievements, setAchievements] = useState([]);
   const [selected, setSelected] = useState(SECTION_MONEY);
   const [showModal, setShowModal] = useState(false);
+  const [selectedOverviewAch, setSelectedOverviewAch] = useState(null);
   const [formValues, setFormValues] = useState({
     type: '',
     name: '',
@@ -261,6 +262,8 @@ export default function Main() {
     selected == SECTION_HABIT || selected == SECTION_WORK;
 
   let isOverviewMode = selected == SECTION_MONEY;
+
+  let finalSelectedOverviewAch = selectedOverviewAch ?? achievements?.[0];
 
   return (
     <Container>
@@ -545,9 +548,17 @@ export default function Main() {
                 </TotalAmount>
                 <RecentItems>
                   <RecentInner>
-                    {achievements?.map((ach) => {
+                    {achievements?.map((ach, index) => {
                       return (
-                        <AchSmall image={ICON_MAPPER?.[ach?.name]}></AchSmall>
+                        <AchSmallContainer>
+                          <AchSmall
+                            image={ICON_MAPPER?.[ach?.name]}
+                            onClick={() => {
+                              setSelectedOverviewAch(ach);
+                            }}
+                          ></AchSmall>
+                          <AchTag>{achievements?.length - index}</AchTag>
+                        </AchSmallContainer>
                       );
                     })}
                   </RecentInner>
@@ -555,10 +566,12 @@ export default function Main() {
                 {!showRecentAchUnlock && (
                   <RecentClick>
                     <A1ContainerMoney>
-                      <A1Icon icon={ICON_MAPPER[lastAch?.name]}></A1Icon>
+                      <A1Icon
+                        icon={ICON_MAPPER[finalSelectedOverviewAch?.name]}
+                      ></A1Icon>
                       <A1Right>
-                        <A1Title>{lastAch?.title}</A1Title>
-                        <A1Desc>{lastAch?.description}</A1Desc>
+                        <A1Title>{finalSelectedOverviewAch?.title}</A1Title>
+                        <A1Desc>{finalSelectedOverviewAch?.description}</A1Desc>
                       </A1Right>
                       <Tag>
                         <InnerTag>DONE</InnerTag>
@@ -723,7 +736,28 @@ const AchSmall = styled.div`
   background: ${(props) => `url('${props.image}')`};
   background-size: cover;
   background-repeat: no-repeat;
+`;
+
+const AchSmallContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   margin: 0.75rem;
+  position: relative;
+`;
+
+const AchTag = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.25);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 70px;
+  height: 70px;
 `;
 
 const TotalAmount = styled.div`
