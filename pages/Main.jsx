@@ -548,13 +548,7 @@ export default function Main() {
                 </TotalAmount>
                 <RecentItems>
                   <RecentInner>
-                    {[
-                      ...achievements,
-                      ...achievements,
-                      ...achievements,
-                      ...achievements,
-                      ...achievements,
-                    ]?.map((ach, index) => {
+                    {achievements?.map((ach, index) => {
                       return (
                         <AchSmallContainer>
                           <AchSmall
