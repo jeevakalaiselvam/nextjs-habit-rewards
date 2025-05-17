@@ -961,7 +961,6 @@ const InnerTag = styled.div`
   font-size: 0.8rem;
   transform: rotate(-90deg) translateX(-0.1rem);
   width: 20px;
-  font-weight: bolder;
 `;
 
 const InnerTagMoney = styled.div`
@@ -971,7 +970,6 @@ const InnerTagMoney = styled.div`
   font-size: 0.8rem;
   transform: rotate(-90deg) translateX(-0.1rem);
   width: 20px;
-  font-weight: bolder;
 `;
 
 const Tag = styled.div`
