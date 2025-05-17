@@ -179,6 +179,7 @@ export default function Main() {
     setLoading(true);
     try {
       axios.get('/api/jeevaachievement').then((response) => {
+        setAchievements([]);
         setAchievements(response?.data);
         setLoading(false);
       });
@@ -240,9 +241,9 @@ export default function Main() {
     ?.sort((ach1, ach2) => new Date(ach2?.unlocked) - new Date(ach1?.unlocked))
     ?.map((item, index) => ({ ...item, index: achievements?.length - index }));
 
-  achToShow = achToShow?.filter((ach) => ach?.type == selected);
+  let lastAch = achToShow?.[achToShow?.length - 1];
 
-  let lastAch = achievements?.[achievements?.length - 1];
+  achToShow = achToShow?.filter((ach) => ach?.type == selected);
 
   let nonMoneyAchievement = [];
   let moneyAchievement = [];
@@ -314,6 +315,9 @@ export default function Main() {
         )}
         {isMoneyRelatedSectionActive && (
           <HLeft>
+            <span style={{ fontSize: '1.1rem' }}>
+              <FaIndianRupeeSign />
+            </span>
             <span
               style={{
                 fontSize: '1.25rem',
@@ -322,9 +326,6 @@ export default function Main() {
               }}
             >
               {totalEarned}
-            </span>
-            <span style={{ fontSize: '1.1rem' }}>
-              <FaIndianRupeeSign />
             </span>
           </HLeft>
         )}
