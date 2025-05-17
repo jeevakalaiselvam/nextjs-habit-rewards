@@ -1,5 +1,4 @@
 import { LoadingOutlined } from '@ant-design/icons';
-import { Descriptions, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -8,10 +7,8 @@ import {
   COLOR_BLACK1,
   COLOR_BLACK2,
   COLOR_BLUE,
-  COLOR_BLUE_DARK,
   COLOR_BLUE_LIGHT,
 } from '../helpers/colorHelper';
-import { HiRefresh } from 'react-icons/hi';
 import { TbRefresh } from 'react-icons/tb';
 
 export default function GamesUpdate() {
