@@ -42,6 +42,7 @@ import {
   HiShieldCheck,
 } from 'react-icons/hi';
 import { FaIndianRupeeSign } from 'react-icons/fa6';
+import { LoadingOutlined } from '@ant-design/icons';
 
 const SECTION_MONEY = 'SECTION_MONEY';
 const SECTION_WORK = 'Work';
@@ -676,7 +677,9 @@ export default function Main() {
         )}
         {loading && (
           <MiddleTopContainer>
-            <Spin></Spin>
+            <Spin
+              indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
+            />
           </MiddleTopContainer>
         )}
         {showRecentAchUnlock && (
@@ -847,8 +850,8 @@ const AchSmall = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 80px;
-  min-height: 80px;
+  min-width: 70px;
+  min-height: 70px;
   background: ${(props) => `url('${props.image}')`};
   background-size: cover;
   background-repeat: no-repeat;

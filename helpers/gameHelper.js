@@ -50,7 +50,7 @@ export const MONEY_TRACKER = {
   [Call60Mins]: 200,
   [Call90Mins]: 300,
   [Call120Mins]: 500,
-  [DogWalk]: 25,
+  [DogWalk]: 50,
   [NoJunk]: 100,
   [BedOnTime]: 100,
   [ReadBook]: 100,
