@@ -65,6 +65,9 @@ export default function Main() {
     description: '',
     date: new Date(),
   });
+  const [showMoneyChangeModal, setShowMoneyChangeModal] = useState(false);
+  const [showChangeAmount, setShowChangeAmount] = useState(false);
+  const [totalToShow, setTotalToShow] = useState(0);
 
   const itemsType = [
     {
@@ -208,6 +211,7 @@ export default function Main() {
 
   const refreshAchievements = () => {
     setLoading(true);
+    setAchievements((old) => []);
     try {
       axios.get('/api/jeevaachievement').then((response) => {
         setAchievements([]);
@@ -309,6 +313,49 @@ export default function Main() {
   let finalSelectedOverviewGameAch =
     selectedOverviewAchGame ?? onlyGameAchs?.[0];
 
+  useEffect(() => {
+    setShowMoneyChangeModal(true);
+    let timer = setTimeout(() => {
+      setShowMoneyChangeModal(false);
+    }, 3000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [achievements]);
+
+  useEffect(() => {
+    let lastStored = 0;
+    lastStored = JSON.parse(localStorage.getItem('MONEY_DATA', 0));
+    let totalEarned = achievements?.reduce((acc, ach) => {
+      return acc + (MONEY_TRACKER?.[ach?.name] ?? 10);
+    }, 0);
+
+    if (totalEarned != lastStored) {
+      setShowChangeAmount(true);
+
+      let achToShow = achievements
+        ?.sort(
+          (ach1, ach2) => new Date(ach2?.unlocked) - new Date(ach1?.unlocked)
+        )
+        ?.map((item, index) => ({
+          ...item,
+          index: achievements?.length - index,
+        }));
+
+      let lastAch = achToShow?.[0];
+      setTotalToShow(totalEarned - MONEY_TRACKER?.[lastAch?.name]);
+      let timer = setTimeout(() => {
+        setShowChangeAmount(false);
+        setTotalToShow((old) => old + MONEY_TRACKER?.[lastAch?.name]);
+
+        localStorage.setItem('MONEY_DATA', JSON.stringify(totalEarned));
+      }, 1000);
+      return () => {
+        clearTimeout(timer);
+      };
+    }
+  }, [achievements]);
+
   return (
     <Container>
       <Header>
@@ -324,7 +371,7 @@ export default function Main() {
                 marginRight: '.25rem',
               }}
             >
-              {formatIndianMoney(totalEarned)}
+              {formatIndianMoney(totalToShow)}
             </span>
           </HLeft>
         )}
@@ -340,7 +387,7 @@ export default function Main() {
                 marginRight: '.25rem',
               }}
             >
-              {formatIndianMoney(totalEarned)}
+              {formatIndianMoney(totalToShow)}
             </span>
           </HLeft>
         )}
@@ -356,7 +403,7 @@ export default function Main() {
                 marginRight: '.25rem',
               }}
             >
-              {formatIndianMoney(totalEarned)}
+              {formatIndianMoney(totalToShow)}
             </span>
           </HLeft>
         )}
@@ -613,7 +660,7 @@ export default function Main() {
                     </span>
 
                     <span style={{ fontSize: '5rem', color: COLOR_GREEN }}>
-                      {formatIndianMoney(totalEarned)}
+                      {formatIndianMoney(totalToShow)}
                     </span>
                   </TotalAmount>
                 )}
@@ -921,9 +968,74 @@ export default function Main() {
           </Section>
         </Sections>
       </Middle>
+
+      {totalToShow > 0 && showMoneyChangeModal && (
+        <MoneyChange>
+          <Total>
+            <span style={{ fontSize: '2rem', transform: 'translateY(.1rem)' }}>
+              <LuIndianRupee />
+            </span>
+            <span style={{ fontSize: '2.5rem' }}>{totalToShow}</span>
+          </Total>
+          {true && (
+            <Change>
+              <span style={{ fontSize: '1rem', color: COLOR_GREEN }}>+</span>
+              <span
+                style={{ transform: 'translateY(2px)', fontSize: '1.25rem' }}
+              >
+                <LuIndianRupee />
+              </span>
+              <span>{MONEY_TRACKER?.[lastAch?.name]}</span>
+            </Change>
+          )}
+        </MoneyChange>
+      )}
     </Container>
   );
 }
+
+const Total = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${COLOR_GREEN};
+  transform: translateX(-1rem);
+`;
+
+const Change = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  font-size: 1.25rem;
+  color: ${COLOR_GREEN};
+  transform: translateX(-1rem);
+  animation: slideUp 0.5s linear forwards;
+  @keyframes slideUp {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0px);
+      opacity: 1;
+    }
+  }
+`;
+
+const MoneyChange = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  background-color: ${COLOR_BLACK1};
+  flex-direction: column;
+`;
 
 const RecentClick = styled.div`
   display: flex;
