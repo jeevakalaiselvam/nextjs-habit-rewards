@@ -30,6 +30,7 @@ export const GAMES_ARRAY = [Battlefield2042, Hitman];
 
 export const WORK_ARRAY = [
   Feature,
+  Feature,
   Analysis,
   Task,
   Issue,
