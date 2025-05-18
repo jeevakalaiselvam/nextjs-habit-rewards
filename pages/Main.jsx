@@ -633,15 +633,21 @@ export default function Main() {
                             }}
                           >
                             <InnerCount>
-                              <span>{MONEY_TRACKER?.[ach?.name] ?? 10}</span>
                               <span
                                 style={{
                                   fontSize: '.8rem',
-                                  marginLeft: '.1rem',
-                                  transform: 'translateY(1px)',
+                                  marginRight: '0rem',
+                                  transform: 'translate(-.25rem,2px)',
                                 }}
                               >
                                 <LuIndianRupee />
+                              </span>
+                              <span
+                                style={{
+                                  transform: 'translate(-.25rem, 1px)',
+                                }}
+                              >
+                                {MONEY_TRACKER?.[ach?.name] ?? 10}
                               </span>
                             </InnerCount>
                           </AchSmall>
