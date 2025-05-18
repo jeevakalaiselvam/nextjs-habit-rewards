@@ -21,6 +21,7 @@ import { LuIndianRupee } from 'react-icons/lu';
 import {
   Battlefield2042,
   Feature,
+  formatIndianMoney,
   GAMES_ARRAY,
   Habit,
   HABIT_ARRAY,
@@ -41,7 +42,6 @@ import {
   HiRefresh,
   HiShieldCheck,
 } from 'react-icons/hi';
-import { FaIndianRupeeSign } from 'react-icons/fa6';
 import { LoadingOutlined } from '@ant-design/icons';
 
 const SECTION_MONEY = 'SECTION_MONEY';
@@ -241,7 +241,7 @@ export default function Main() {
     ?.sort((ach1, ach2) => new Date(ach2?.unlocked) - new Date(ach1?.unlocked))
     ?.map((item, index) => ({ ...item, index: achievements?.length - index }));
 
-  let lastAch = achToShow?.[achToShow?.length - 1];
+  let lastAch = achToShow?.[0];
 
   achToShow = achToShow?.filter((ach) => ach?.type == selected);
 
@@ -282,6 +282,9 @@ export default function Main() {
       <Header>
         {!isMoneyRelatedSectionActive && !isOverviewMode && (
           <HLeft>
+            <span style={{ fontSize: '1.1rem' }}>
+              <LuIndianRupee />
+            </span>
             <span
               style={{
                 fontSize: '1.25rem',
@@ -289,34 +292,30 @@ export default function Main() {
                 marginRight: '.25rem',
               }}
             >
-              {onlyGameAchs?.length}
-            </span>
-            <span style={{ fontSize: '1.1rem' }}>
-              <FaTrophy />
+              {formatIndianMoney(totalEarned)}
             </span>
           </HLeft>
         )}
         {isOverviewMode && (
           <HLeft>
+            <span style={{ fontSize: '1.1rem' }}>
+              <LuIndianRupee />
+            </span>
             <span
               style={{
-                color: COLOR_GREEN,
                 fontSize: '1.25rem',
                 transform: 'translateY(-2px)',
                 marginRight: '.25rem',
               }}
             >
-              NotRealLogan - {achievements?.length}
-            </span>
-            <span style={{ fontSize: '1.1rem', color: COLOR_GREEN }}>
-              <FaTrophy />
+              {formatIndianMoney(totalEarned)}
             </span>
           </HLeft>
         )}
         {isMoneyRelatedSectionActive && (
           <HLeft>
             <span style={{ fontSize: '1.1rem' }}>
-              <FaIndianRupeeSign />
+              <LuIndianRupee />
             </span>
             <span
               style={{
@@ -325,7 +324,7 @@ export default function Main() {
                 marginRight: '.25rem',
               }}
             >
-              {totalEarned}
+              {formatIndianMoney(totalEarned)}
             </span>
           </HLeft>
         )}
@@ -533,7 +532,7 @@ export default function Main() {
                             fontSize: '.7rem',
                           }}
                         >
-                          <FaIndianRupeeSign />{' '}
+                          <LuIndianRupee />{' '}
                         </span>
                         {MONEY_TRACKER[ach?.name] ?? 10}
                       </InnerTagMoney>
@@ -556,7 +555,7 @@ export default function Main() {
                   </span>
 
                   <span style={{ fontSize: '5rem', color: COLOR_GREEN }}>
-                    {totalEarned}
+                    {formatIndianMoney(totalEarned)}
                   </span>
                 </TotalAmount>
                 <RecentItems>
@@ -594,7 +593,7 @@ export default function Main() {
                                 fontSize: '.7rem',
                               }}
                             >
-                              <FaIndianRupeeSign />
+                              <LuIndianRupee />
                             </span>
                             {MONEY_TRACKER[finalSelectedOverviewAch?.name] ??
                               10}
@@ -628,7 +627,7 @@ export default function Main() {
                                   transform: 'translateY(1px)',
                                 }}
                               >
-                                <FaIndianRupeeSign />
+                                <LuIndianRupee />
                               </span>
                             </InnerCount>
                           </AchSmall>
@@ -661,7 +660,7 @@ export default function Main() {
                                 fontSize: '.7rem',
                               }}
                             >
-                              <FaIndianRupeeSign />
+                              <LuIndianRupee />
                             </span>
                             {MONEY_TRACKER[
                               finalSelectedOverviewGameAch?.name
@@ -856,7 +855,7 @@ const AchSmall = styled.div`
   background: ${(props) => `url('${props.image}')`};
   background-size: cover;
   background-repeat: no-repeat;
-  background-origin: center;
+  background-position: center;
   position: relative;
 `;
 
@@ -1023,7 +1022,7 @@ const A1Icon = styled.div`
   background: ${(props) => `url('${props.icon}')`};
   background-size: cover;
   background-repeat: no-repeat;
-  background-origin: center;
+  background-position: center;
 `;
 
 const A1Title = styled.div`

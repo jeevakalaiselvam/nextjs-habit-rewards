@@ -10,6 +10,7 @@ import {
   COLOR_BLUE_LIGHT,
 } from '../helpers/colorHelper';
 import { TbRefresh } from 'react-icons/tb';
+import { Spin } from 'antd';
 
 export default function GamesUpdate() {
   const [achievements, setAchievementsMap] = useState([]);
@@ -84,7 +85,9 @@ export default function GamesUpdate() {
             let ach = achievements?.[key];
             return (
               <AchContainer>
-                <Icon image={ach?.url ?? ICON_MAPPER?.[ach?.name]}></Icon>
+                <Icon
+                  image={ach?.url !== '' ? ach?.url : ICON_MAPPER?.[ach?.name]}
+                ></Icon>
                 <Data>
                   <Title>{ach?.title}</Title>
                   <Description>{ach?.description}</Description>
@@ -150,7 +153,7 @@ const Icon = styled.div`
   background: ${(props) => `url('${props.image}')`};
   background-size: cover;
   background-repeat: no-repeat;
-  background-origin: center;
+  background-position: center;
 `;
 
 const Data = styled.div`

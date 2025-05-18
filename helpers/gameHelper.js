@@ -21,6 +21,11 @@ export const NoJunk = 'No Junk';
 export const BedOnTime = 'Bed on Time';
 export const ReadBook = 'Read 1 Chapter';
 
+export const Outside3 = 'Outside 3 Hour';
+export const Outside6 = 'Outside 6 Hour';
+export const Outside12 = 'Outside 12 Hour';
+export const Outside24 = 'Outside 24 Hour';
+
 export const GAMES_ARRAY = [Battlefield2042, Hitman];
 
 export const WORK_ARRAY = [
@@ -37,7 +42,16 @@ export const WORK_ARRAY = [
   StoryValidation,
 ];
 
-export const HABIT_ARRAY = [DogWalk, NoJunk, BedOnTime, ReadBook];
+export const HABIT_ARRAY = [
+  DogWalk,
+  NoJunk,
+  BedOnTime,
+  ReadBook,
+  Outside3,
+  Outside6,
+  Outside12,
+  Outside24,
+];
 
 export const MONEY_TRACKER = {
   [Feature]: 1000,
@@ -55,9 +69,21 @@ export const MONEY_TRACKER = {
   [BedOnTime]: 100,
   [ReadBook]: 100,
   [StoryValidation]: 250,
+  [Outside3]: 250,
+  [Outside6]: 500,
+  [Outside12]: 1000,
+  [Outside24]: 2000,
 };
 
 export const ICON_MAPPER = {
+  [Outside3]:
+    'https://miro.medium.com/v2/resize:fit:1200/1*6cayr2r1Rubd9GS3ZAz8Tg.jpeg',
+  [Outside6]:
+    'https://miro.medium.com/v2/resize:fit:1200/1*6cayr2r1Rubd9GS3ZAz8Tg.jpeg',
+  [Outside12]:
+    'https://miro.medium.com/v2/resize:fit:1200/1*6cayr2r1Rubd9GS3ZAz8Tg.jpeg',
+  [Outside24]:
+    'https://miro.medium.com/v2/resize:fit:1200/1*6cayr2r1Rubd9GS3ZAz8Tg.jpeg',
   [Battlefield2042]:
     'https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1517290/59d040bb9b67112e982261a71d93ed033740ac4c.jpg',
   [Hitman]:
@@ -95,4 +121,8 @@ export const getFandomRemovedUrl = (url) => {
   return url?.includes('/revision/latest')
     ? url?.split('/revision/latest')?.[0]
     : url;
+};
+
+export const formatIndianMoney = (value) => {
+  return new Intl.NumberFormat('en-IN').format(value);
 };
