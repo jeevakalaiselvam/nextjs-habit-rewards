@@ -1255,6 +1255,7 @@ const Section = styled.div`
   padding: 0rem 1rem 0.25rem 0rem;
   border-radius: 4px 4px 0px 0px;
   color: ${(props) => (props.selected ? COLOR_BLUE_LIGHT : COLOR_GREY)};
+  cursor: pointer;
 `;
 
 const Middle = styled.div`
