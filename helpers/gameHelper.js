@@ -19,8 +19,11 @@ export const StoryValidation = 'Story Validation';
 export const DogWalk = 'Dog Walk';
 export const NoJunk = 'No Junk';
 export const BedOnTime = 'Bed on Time';
+export const Exercise30Mins = 'Exercise 30 Mins';
+export const Exercise60Mins = 'Exercise 60 Mins';
 export const ReadBook = 'Read 1 Chapter';
 
+export const Outside1 = 'Outside 1 Hour';
 export const Outside3 = 'Outside 3 Hour';
 export const Outside6 = 'Outside 6 Hour';
 export const Outside12 = 'Outside 12 Hour';
@@ -28,6 +31,8 @@ export const Outside24 = 'Outside 24 Hour';
 
 export const LearnArticle = 'Learn Article';
 export const LearnGithub = 'Github Push';
+export const TeachAswathy30 = 'Teach Aswathy 30 Mins';
+export const TeachAswathy60 = 'Teach Aswathy 60 Mins';
 
 export const GAMES_ARRAY = [Battlefield2042, Hitman];
 
@@ -45,13 +50,21 @@ export const WORK_ARRAY = [
   StoryValidation,
 ];
 
-export const LEARN_ARRAY = [LearnArticle, LearnGithub];
+export const LEARN_ARRAY = [
+  LearnArticle,
+  LearnGithub,
+  TeachAswathy30,
+  TeachAswathy60,
+];
 
 export const HABIT_ARRAY = [
   DogWalk,
   NoJunk,
   BedOnTime,
   ReadBook,
+  Exercise30Mins,
+  Exercise60Mins,
+  Outside1,
   Outside3,
   Outside6,
   Outside12,
@@ -59,30 +72,43 @@ export const HABIT_ARRAY = [
 ];
 
 export const MONEY_TRACKER = {
+  [Exercise30Mins]: 500,
+  [Exercise60Mins]: 1000,
   [Feature]: 5000,
   [Task]: 1000,
   [Bug]: 1000,
   [Issue]: 1000,
   [Analysis]: 2000,
   [Call15Mins]: 100,
-  [Call30Mins]: 200,
-  [Call60Mins]: 300,
-  [Call90Mins]: 500,
+  [Call30Mins]: 250,
+  [Call60Mins]: 500,
+  [Call90Mins]: 750,
   [Call120Mins]: 1000,
-  [DogWalk]: 50,
+  [DogWalk]: 100,
   [NoJunk]: 200,
   [BedOnTime]: 200,
   [ReadBook]: 200,
   [StoryValidation]: 500,
-  [Outside3]: 1000,
-  [Outside6]: 2000,
-  [Outside12]: 3000,
-  [Outside24]: 4000,
+  [Outside1]: 250,
+  [Outside3]: 500,
+  [Outside6]: 1000,
+  [Outside12]: 2500,
+  [Outside24]: 5000,
   [LearnArticle]: 250,
   [LearnGithub]: 1000,
+  [TeachAswathy30]: 200,
+  [TeachAswathy60]: 500,
 };
 
 export const ICON_MAPPER = {
+  [TeachAswathy30]:
+    'https://thumbs.dreamstime.com/b/teacher-guiding-students-art-class-vibrant-wall-displays-stands-group-attentive-children-surrounded-342750216.jpg',
+  [TeachAswathy60]:
+    'https://thumbs.dreamstime.com/b/teacher-guiding-students-art-class-vibrant-wall-displays-stands-group-attentive-children-surrounded-342750216.jpg',
+  [LearnArticle]:
+    'https://miro.medium.com/v2/resize:fit:900/1*ZKRQP3kWhr4rbsjrVCCcKw.jpeg',
+  [LearnGithub]:
+    'https://cdn3.iconfinder.com/data/icons/inficons/512/github.png',
   [Outside3]:
     'https://miro.medium.com/v2/resize:fit:1200/1*6cayr2r1Rubd9GS3ZAz8Tg.jpeg',
   [Outside6]:
