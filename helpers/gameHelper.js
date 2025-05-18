@@ -19,8 +19,8 @@ export const StoryValidation = 'Story Validation';
 export const DogWalk = 'Dog Walk';
 export const NoJunk = 'No Junk';
 export const BedOnTime = 'Bed on Time';
-export const Exercise30Mins = 'Exercise 30 Mins';
-export const Exercise60Mins = 'Exercise 60 Mins';
+export const ExerciseCardio = 'Exercise Cardio';
+export const ExerciseStrength = 'Exercise Strength';
 export const ReadBook = 'Read 1 Chapter';
 export const HouseSmall = 'House Small';
 export const HouseMedium = 'House Medium';
@@ -66,8 +66,8 @@ export const HABIT_ARRAY = [
   NoJunk,
   BedOnTime,
   ReadBook,
-  Exercise30Mins,
-  Exercise60Mins,
+  ExerciseCardio,
+  ExerciseStrength,
   Outside1,
   Outside3,
   Outside6,
@@ -78,8 +78,8 @@ export const HABIT_ARRAY = [
 export const MONEY_TRACKER = {
   [HouseSmall]: 50,
   [HouseMedium]: 100,
-  [Exercise30Mins]: 500,
-  [Exercise60Mins]: 1000,
+  [ExerciseCardio]: 1000,
+  [ExerciseStrength]: 1000,
   [Feature]: 5000,
   [Task]: 1000,
   [Bug]: 1000,
