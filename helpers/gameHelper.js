@@ -22,6 +22,8 @@ export const BedOnTime = 'Bed on Time';
 export const Exercise30Mins = 'Exercise 30 Mins';
 export const Exercise60Mins = 'Exercise 60 Mins';
 export const ReadBook = 'Read 1 Chapter';
+export const HouseSmall = 'House Small';
+export const HouseMedium = 'House Medium';
 
 export const Outside1 = 'Outside 1 Hour';
 export const Outside3 = 'Outside 3 Hour';
@@ -59,6 +61,8 @@ export const LEARN_ARRAY = [
 
 export const HABIT_ARRAY = [
   DogWalk,
+  HouseSmall,
+  HouseMedium,
   NoJunk,
   BedOnTime,
   ReadBook,
@@ -72,6 +76,8 @@ export const HABIT_ARRAY = [
 ];
 
 export const MONEY_TRACKER = {
+  [HouseSmall]: 50,
+  [HouseMedium]: 100,
   [Exercise30Mins]: 500,
   [Exercise60Mins]: 1000,
   [Feature]: 5000,
@@ -96,11 +102,13 @@ export const MONEY_TRACKER = {
   [Outside24]: 5000,
   [LearnArticle]: 250,
   [LearnGithub]: 1000,
-  [TeachAswathy30]: 200,
+  [TeachAswathy30]: 250,
   [TeachAswathy60]: 500,
 };
 
 export const ICON_MAPPER = {
+  [HouseSmall]: 'https://i.ebayimg.com/images/g/81EAAOSwsO9lBiAM/s-l1200.jpg',
+  [HouseMedium]: 'https://i.ebayimg.com/images/g/81EAAOSwsO9lBiAM/s-l1200.jpg',
   [TeachAswathy30]:
     'https://thumbs.dreamstime.com/b/teacher-guiding-students-art-class-vibrant-wall-displays-stands-group-attentive-children-surrounded-342750216.jpg',
   [TeachAswathy60]:
