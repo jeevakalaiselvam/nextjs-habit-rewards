@@ -70,9 +70,9 @@ export const MONEY_TRACKER = {
   [BedOnTime]: 200,
   [ReadBook]: 200,
   [StoryValidation]: 500,
-  [Outside3]: 500,
-  [Outside6]: 1000,
-  [Outside12]: 2000,
+  [Outside3]: 1000,
+  [Outside6]: 2000,
+  [Outside12]: 3000,
   [Outside24]: 4000,
 };
 
