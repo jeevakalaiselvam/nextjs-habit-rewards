@@ -63,7 +63,7 @@ export const MONEY_TRACKER = {
   [Task]: 1000,
   [Bug]: 1000,
   [Issue]: 1000,
-  [Analysis]: 1000,
+  [Analysis]: 2000,
   [Call15Mins]: 100,
   [Call30Mins]: 200,
   [Call60Mins]: 300,
