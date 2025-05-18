@@ -132,7 +132,7 @@ export const ICON_MAPPER = {
   [Hitman]:
     'https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1659040/79c615cd7d3feef4deb072173a36ee546e916615.jpg',
   [Feature]:
-    'https://static.vecteezy.com/system/resources/previews/026/685/364/non_2x/task-completion-successful-planning-and-time-management-concept-young-businesswoman-sitting-with-laptop-and-giant-sandglass-and-feeling-confident-with-deadlines-and-tasks-illustration-vector.jpg',
+    'https://i.pinimg.com/474x/f5/7c/0b/f57c0b2395836333e657fb3ec6bb8b1f.jpg',
   [Task]:
     'https://www.shutterstock.com/image-vector/businessman-ticked-checkbox-after-completing-600nw-2224943071.jpg',
   [Bug]:
@@ -149,15 +149,15 @@ export const ICON_MAPPER = {
   [ReadBook]:
     'https://miro.medium.com/v2/resize:fit:1200/1*TP25t-WrSRdIKszudngUYQ.jpeg',
   [Call15Mins]:
-    'https://i.pinimg.com/originals/e6/22/7e/e6227e6c5b6b466694dcc542d18bc6ba.jpg',
+    'https://www.shutterstock.com/image-vector/entrepreneur-product-owner-running-away-600nw-2161355081.jpg',
   [Call60Mins]:
-    'https://i.pinimg.com/originals/e6/22/7e/e6227e6c5b6b466694dcc542d18bc6ba.jpg',
+    'https://www.shutterstock.com/image-vector/entrepreneur-product-owner-running-away-600nw-2161355081.jpg',
   [Call30Mins]:
-    'https://i.pinimg.com/originals/e6/22/7e/e6227e6c5b6b466694dcc542d18bc6ba.jpg',
+    'https://www.shutterstock.com/image-vector/entrepreneur-product-owner-running-away-600nw-2161355081.jpg',
   [Call90Mins]:
-    'https://i.pinimg.com/originals/e6/22/7e/e6227e6c5b6b466694dcc542d18bc6ba.jpg',
+    'https://www.shutterstock.com/image-vector/entrepreneur-product-owner-running-away-600nw-2161355081.jpg',
   [Call120Mins]:
-    'https://i.pinimg.com/originals/e6/22/7e/e6227e6c5b6b466694dcc542d18bc6ba.jpg',
+    'https://www.shutterstock.com/image-vector/entrepreneur-product-owner-running-away-600nw-2161355081.jpg',
 };
 
 export const getFandomRemovedUrl = (url) => {
