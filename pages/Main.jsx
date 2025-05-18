@@ -56,7 +56,6 @@ export default function Main() {
   const [achievements, setAchievements] = useState([]);
   const [selected, setSelected] = useState(SECTION_ICONS);
   const [showModal, setShowModal] = useState(false);
-  const [selectedOverviewAch, setSelectedOverviewAch] = useState(null);
   const [selectedOverviewAchGame, setSelectedOverviewAchGame] = useState(null);
   const [formValues, setFormValues] = useState({
     type: '',
@@ -269,13 +268,14 @@ export default function Main() {
 
   let isGameIconsActive = selected == SECTION_ICONS;
 
-  let finalSelectedOverviewAch = selectedOverviewAch ?? achievements?.[0];
+  let finalSelectedOverviewAch = selectedOverviewAchGame ?? achievements?.[0];
   let isfinalMoneyRelated =
     finalSelectedOverviewAch?.type == Work ||
     finalSelectedOverviewAch?.type == Habit;
 
   let onlyGameAchs = achievements?.filter((ach) => ach?.type == 'Games');
-  let finalSelectedOverviewGameAch = selectedOverviewAch ?? onlyGameAchs?.[0];
+  let finalSelectedOverviewGameAch =
+    selectedOverviewAchGame ?? onlyGameAchs?.[0];
 
   return (
     <Container>
@@ -576,7 +576,7 @@ export default function Main() {
                             }}
                           >
                             <InnerCount>
-                              <span>{10}</span>
+                              <span>{MONEY_TRACKER?.[ach?.name] ?? 10}</span>
                               <span
                                 style={{
                                   fontSize: '.8rem',
@@ -597,11 +597,11 @@ export default function Main() {
                   <RecentClick>
                     <A1ContainerMoney>
                       <A1Icon
-                        icon={ICON_MAPPER[finalSelectedOverviewAch?.name]}
+                        icon={ICON_MAPPER[selectedOverviewAchGame?.name]}
                       ></A1Icon>
                       <A1Right>
-                        <A1Title>{finalSelectedOverviewAch?.title}</A1Title>
-                        <A1Desc>{finalSelectedOverviewAch?.description}</A1Desc>
+                        <A1Title>{selectedOverviewAchGame?.title}</A1Title>
+                        <A1Desc>{selectedOverviewAchGame?.description}</A1Desc>
                       </A1Right>
                       <Tag>
                         {
@@ -614,8 +614,7 @@ export default function Main() {
                             >
                               <LuIndianRupee />
                             </span>
-                            {MONEY_TRACKER[finalSelectedOverviewAch?.name] ??
-                              10}
+                            {MONEY_TRACKER[selectedOverviewAchGame?.name] ?? 10}
                           </InnerTagMoney>
                         }
                       </Tag>
@@ -638,7 +637,7 @@ export default function Main() {
                             }}
                           >
                             <InnerCount>
-                              <span>{10}</span>
+                              <span>{MONEY_TRACKER?.[ach?.name] ?? 10}</span>
                               <span
                                 style={{
                                   fontSize: '.8rem',
@@ -876,6 +875,7 @@ const AchSmall = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   position: relative;
+  cursor: pointer;
 `;
 
 const InnerCount = styled.div`
