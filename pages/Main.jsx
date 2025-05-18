@@ -566,7 +566,11 @@ export default function Main() {
                       return (
                         <AchSmallContainer>
                           <AchSmall
-                            image={ach?.url ?? ICON_MAPPER?.[ach?.name]}
+                            image={
+                              ach?.url?.length > 0
+                                ? ach?.url
+                                : ICON_MAPPER?.[ach?.name]
+                            }
                             onClick={() => {
                               setSelectedOverviewAch(ach);
                             }}
