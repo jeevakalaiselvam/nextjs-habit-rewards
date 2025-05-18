@@ -663,8 +663,9 @@ export default function Main() {
                     <A1ContainerMoney>
                       <A1Icon
                         icon={
-                          finalSelectedOverviewGameAch?.url ??
-                          ICON_MAPPER[finalSelectedOverviewGameAch?.name]
+                          finalSelectedOverviewGameAch?.url?.length > 0
+                            ? finalSelectedOverviewGameAch?.url
+                            : ICON_MAPPER?.[finalSelectedOverviewGameAch?.name]
                         }
                       ></A1Icon>
                       <A1Right>
@@ -827,7 +828,7 @@ export default function Main() {
                 marginLeft: '.5rem',
               }}
             >
-              GAMES
+              GAME LIST
             </span>
           </Section>
           <Section
@@ -852,7 +853,7 @@ export default function Main() {
                 marginLeft: '.5rem',
               }}
             >
-              ICONS
+              GAME ICON
             </span>
           </Section>
         </Sections>
