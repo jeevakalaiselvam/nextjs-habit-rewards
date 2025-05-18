@@ -78,6 +78,8 @@ export const MONEY_TRACKER = {
   [Outside6]: 2000,
   [Outside12]: 3000,
   [Outside24]: 4000,
+  [LearnArticle]: 500,
+  [LearnGithub]: 1000,
 };
 
 export const ICON_MAPPER = {

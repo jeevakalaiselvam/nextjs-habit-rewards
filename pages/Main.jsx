@@ -119,7 +119,9 @@ export default function Main() {
       return {
         key: game,
         label: game,
-        extra: `Rs ${MONEY_TRACKER?.[game]}`,
+        extra: (
+          <span style={{ color: COLOR_GREEN }}>Rs {MONEY_TRACKER?.[game]}</span>
+        ),
       };
     }),
   ];
@@ -134,7 +136,9 @@ export default function Main() {
       return {
         key: game,
         label: game,
-        extra: `Rs ${MONEY_TRACKER?.[game]}`,
+        extra: (
+          <span style={{ color: COLOR_GREEN }}>Rs {MONEY_TRACKER?.[game]}</span>
+        ),
       };
     }),
   ];
@@ -149,7 +153,9 @@ export default function Main() {
       return {
         key: game,
         label: game,
-        extra: `Rs ${MONEY_TRACKER?.[game]}`,
+        extra: (
+          <span style={{ color: COLOR_GREEN }}>Rs {MONEY_TRACKER?.[game]}</span>
+        ),
       };
     }),
   ];
@@ -191,7 +197,7 @@ export default function Main() {
   };
 
   const menuTypeLearn = {
-    items: itemsWork,
+    items: itemsLearn,
     onClick: handleItemClickName,
   };
 
