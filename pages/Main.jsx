@@ -542,22 +542,24 @@ export default function Main() {
               })}
             {isOverviewMode && (
               <OverviewMode>
-                <TotalAmount>
-                  <span
-                    style={{
-                      color: COLOR_GREEN,
-                      fontSize: '4rem',
-                      fontWeight: '200',
-                      transform: 'translateY(4px)',
-                    }}
-                  >
-                    <LuIndianRupee />
-                  </span>
+                {false && (
+                  <TotalAmount>
+                    <span
+                      style={{
+                        color: COLOR_GREEN,
+                        fontSize: '4rem',
+                        fontWeight: '200',
+                        transform: 'translateY(4px)',
+                      }}
+                    >
+                      <LuIndianRupee />
+                    </span>
 
-                  <span style={{ fontSize: '5rem', color: COLOR_GREEN }}>
-                    {formatIndianMoney(totalEarned)}
-                  </span>
-                </TotalAmount>
+                    <span style={{ fontSize: '5rem', color: COLOR_GREEN }}>
+                      {formatIndianMoney(totalEarned)}
+                    </span>
+                  </TotalAmount>
+                )}
                 <RecentItems>
                   <RecentInner>
                     {achievements?.map((ach, index) => {
@@ -730,7 +732,7 @@ export default function Main() {
                 marginLeft: '.5rem',
               }}
             >
-              MONEY
+              TOTAL
             </span>
           </Section>
           <Section
@@ -905,8 +907,8 @@ const RecentItems = styled.div`
   align-items: flex-start;
   justify-content: center;
   width: 100%;
-  max-height: 55vh;
-  min-height: 55vh;
+  max-height: 65vh;
+  min-height: 65vh;
 `;
 
 const RecentItemsGame = styled.div`
