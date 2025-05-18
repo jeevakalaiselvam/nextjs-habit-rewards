@@ -26,6 +26,7 @@ import {
   Habit,
   HABIT_ARRAY,
   ICON_MAPPER,
+  LEARN_ARRAY,
   MONEY_TRACKER,
   Work,
   WORK_ARRAY,
@@ -82,6 +83,11 @@ export default function Main() {
       extra: '⌘G',
     },
     {
+      key: 'Learn',
+      label: 'Learn',
+      extra: '⌘G',
+    },
+    {
       key: 'Habit',
       label: 'Habit',
       extra: '⌘H',
@@ -113,7 +119,22 @@ export default function Main() {
       return {
         key: game,
         label: game,
-        extra: `⌘${game?.[0]?.toUpperCase()}`,
+        extra: `Rs ${MONEY_TRACKER?.[game]}`,
+      };
+    }),
+  ];
+
+  const itemsLearn = [
+    {
+      key: '33',
+      label: <div style={{ width: '100%' }}>All Learn</div>,
+      disabled: true,
+    },
+    ...LEARN_ARRAY?.map((game) => {
+      return {
+        key: game,
+        label: game,
+        extra: `Rs ${MONEY_TRACKER?.[game]}`,
       };
     }),
   ];
@@ -128,7 +149,7 @@ export default function Main() {
       return {
         key: game,
         label: game,
-        extra: `⌘${game?.[0]?.toUpperCase()}`,
+        extra: `Rs ${MONEY_TRACKER?.[game]}`,
       };
     }),
   ];
@@ -165,6 +186,11 @@ export default function Main() {
   };
 
   const menuTypeWork = {
+    items: itemsWork,
+    onClick: handleItemClickName,
+  };
+
+  const menuTypeLearn = {
     items: itemsWork,
     onClick: handleItemClickName,
   };
@@ -406,7 +432,32 @@ export default function Main() {
                   <Dropdown
                     trigger={['click']}
                     overlayStyle={{ minWidth: '60%' }}
-                    menu={menuTypeWork}
+                    menu={menuTypeLearn}
+                    overlayClassName="full-width-dropdown"
+                  >
+                    <Space>
+                      <span
+                        style={{
+                          fontSize: '.9rem',
+                          color: '#ACAEB2',
+                        }}
+                      >
+                        {formValues?.name ? formValues?.name : 'Select Work'}
+                      </span>
+                      <Caret>
+                        <FaCaretDown />
+                      </Caret>
+                    </Space>
+                  </Dropdown>
+                </Row>
+              )}
+              {formValues?.type == 'Learn' && (
+                <Row>
+                  <SubTitle>Learn</SubTitle>
+                  <Dropdown
+                    trigger={['click']}
+                    overlayStyle={{ minWidth: '60%' }}
+                    menu={menuTypeLearn}
                     overlayClassName="full-width-dropdown"
                   >
                     <Space>

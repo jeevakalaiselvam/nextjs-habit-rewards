@@ -26,10 +26,12 @@ export const Outside6 = 'Outside 6 Hour';
 export const Outside12 = 'Outside 12 Hour';
 export const Outside24 = 'Outside 24 Hour';
 
+export const LearnArticle = 'Learn Article';
+export const LearnGithub = 'Github Push';
+
 export const GAMES_ARRAY = [Battlefield2042, Hitman];
 
 export const WORK_ARRAY = [
-  Feature,
   Feature,
   Analysis,
   Task,
@@ -42,6 +44,8 @@ export const WORK_ARRAY = [
   Call120Mins,
   StoryValidation,
 ];
+
+export const LEARN_ARRAY = [LearnArticle, LearnGithub];
 
 export const HABIT_ARRAY = [
   DogWalk,
