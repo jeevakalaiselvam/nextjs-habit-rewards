@@ -107,15 +107,15 @@ export const ICON_MAPPER = {
   [ReadBook]:
     'https://miro.medium.com/v2/resize:fit:1200/1*TP25t-WrSRdIKszudngUYQ.jpeg',
   [Call15Mins]:
-    'https://cdn5.vectorstock.com/i/1000x1000/51/99/hand-with-telephone-pop-art-cartoon-vector-20135199.jpg',
+    'https://i.pinimg.com/originals/e6/22/7e/e6227e6c5b6b466694dcc542d18bc6ba.jpg',
   [Call60Mins]:
-    'https://cdn5.vectorstock.com/i/1000x1000/51/99/hand-with-telephone-pop-art-cartoon-vector-20135199.jpg',
+    'https://i.pinimg.com/originals/e6/22/7e/e6227e6c5b6b466694dcc542d18bc6ba.jpg',
   [Call30Mins]:
-    'https://cdn5.vectorstock.com/i/1000x1000/51/99/hand-with-telephone-pop-art-cartoon-vector-20135199.jpg',
+    'https://i.pinimg.com/originals/e6/22/7e/e6227e6c5b6b466694dcc542d18bc6ba.jpg',
   [Call90Mins]:
-    'https://cdn5.vectorstock.com/i/1000x1000/51/99/hand-with-telephone-pop-art-cartoon-vector-20135199.jpg',
+    'https://i.pinimg.com/originals/e6/22/7e/e6227e6c5b6b466694dcc542d18bc6ba.jpg',
   [Call120Mins]:
-    'https://cdn5.vectorstock.com/i/1000x1000/51/99/hand-with-telephone-pop-art-cartoon-vector-20135199.jpg',
+    'https://i.pinimg.com/originals/e6/22/7e/e6227e6c5b6b466694dcc542d18bc6ba.jpg',
 };
 
 export const getFandomRemovedUrl = (url) => {
