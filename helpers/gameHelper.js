@@ -109,6 +109,8 @@ export const ICON_MAPPER = {
     'https://miro.medium.com/v2/resize:fit:900/1*ZKRQP3kWhr4rbsjrVCCcKw.jpeg',
   [LearnGithub]:
     'https://cdn3.iconfinder.com/data/icons/inficons/512/github.png',
+  [Outside1]:
+    'https://miro.medium.com/v2/resize:fit:1200/1*6cayr2r1Rubd9GS3ZAz8Tg.jpeg',
   [Outside3]:
     'https://miro.medium.com/v2/resize:fit:1200/1*6cayr2r1Rubd9GS3ZAz8Tg.jpeg',
   [Outside6]:
