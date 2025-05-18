@@ -572,9 +572,22 @@ export default function Main() {
                                 : ICON_MAPPER?.[ach?.name]
                             }
                             onClick={() => {
-                              setSelectedOverviewAch(ach);
+                              setSelectedOverviewAchGame(ach);
                             }}
-                          ></AchSmall>
+                          >
+                            <InnerCount>
+                              <span>{10}</span>
+                              <span
+                                style={{
+                                  fontSize: '.8rem',
+                                  marginLeft: '.1rem',
+                                  transform: 'translateY(1px)',
+                                }}
+                              >
+                                <LuIndianRupee />
+                              </span>
+                            </InnerCount>
+                          </AchSmall>
                         </AchSmallContainer>
                       );
                     })}
