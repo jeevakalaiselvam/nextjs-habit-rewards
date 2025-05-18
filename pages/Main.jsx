@@ -940,7 +940,7 @@ export default function Main() {
                 marginLeft: '.5rem',
               }}
             >
-              GAME LIST
+              LIST
             </span>
           </Section>
           <Section
@@ -965,7 +965,7 @@ export default function Main() {
                 marginLeft: '.5rem',
               }}
             >
-              GAME ICON
+              ICON
             </span>
           </Section>
         </Sections>
