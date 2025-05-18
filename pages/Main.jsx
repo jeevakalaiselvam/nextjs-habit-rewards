@@ -323,38 +323,40 @@ export default function Main() {
     };
   }, [achievements]);
 
-  useEffect(() => {
-    let lastStored = 0;
-    lastStored = JSON.parse(localStorage.getItem('MONEY_DATA', 0));
-    let totalEarned = achievements?.reduce((acc, ach) => {
-      return acc + (MONEY_TRACKER?.[ach?.name] ?? 10);
-    }, 0);
+  // useEffect(() => {
+  //   let lastStored = 0;
+  //   lastStored = JSON.parse(localStorage.getItem('MONEY_DATA', 0));
+  //   let totalEarned = achievements?.reduce((acc, ach) => {
+  //     return acc + (MONEY_TRACKER?.[ach?.name] ?? 10);
+  //   }, 0);
 
-    if (totalEarned != lastStored) {
-      setShowChangeAmount(true);
+  //   if (totalEarned !== lastStored) {
+  //     setShowChangeAmount(true);
+  //     let achToShow = achievements
+  //       ?.sort(
+  //         (ach1, ach2) => new Date(ach2?.unlocked) - new Date(ach1?.unlocked)
+  //       )
+  //       ?.map((item, index) => ({
+  //         ...item,
+  //         index: achievements?.length - index,
+  //       }));
 
-      let achToShow = achievements
-        ?.sort(
-          (ach1, ach2) => new Date(ach2?.unlocked) - new Date(ach1?.unlocked)
-        )
-        ?.map((item, index) => ({
-          ...item,
-          index: achievements?.length - index,
-        }));
+  //     let lastAch = achToShow?.[0];
+  //     setTotalToShow(totalEarned - MONEY_TRACKER?.[lastAch?.name]);
+  //     let timer = setTimeout(() => {
+  //       setShowChangeAmount(false);
+  //       setTotalToShow((old) => old + MONEY_TRACKER?.[lastAch?.name]);
 
-      let lastAch = achToShow?.[0];
-      setTotalToShow(totalEarned - MONEY_TRACKER?.[lastAch?.name]);
-      let timer = setTimeout(() => {
-        setShowChangeAmount(false);
-        setTotalToShow((old) => old + MONEY_TRACKER?.[lastAch?.name]);
-
-        localStorage.setItem('MONEY_DATA', JSON.stringify(totalEarned));
-      }, 1000);
-      return () => {
-        clearTimeout(timer);
-      };
-    }
-  }, [achievements]);
+  //       localStorage.setItem('MONEY_DATA', JSON.stringify(totalEarned));
+  //     }, 1000);
+  //     return () => {
+  //       clearTimeout(timer);
+  //     };
+  //   } else {
+  //     setShowChangeAmount(false);
+  //     setTotalToShow(totalEarned);
+  //   }
+  // }, [achievements]);
 
   return (
     <Container>
@@ -371,7 +373,7 @@ export default function Main() {
                 marginRight: '.25rem',
               }}
             >
-              {formatIndianMoney(totalToShow)}
+              {formatIndianMoney(totalEarned)}
             </span>
           </HLeft>
         )}
@@ -387,7 +389,7 @@ export default function Main() {
                 marginRight: '.25rem',
               }}
             >
-              {formatIndianMoney(totalToShow)}
+              {formatIndianMoney(totalEarned)}
             </span>
           </HLeft>
         )}
@@ -403,7 +405,7 @@ export default function Main() {
                 marginRight: '.25rem',
               }}
             >
-              {formatIndianMoney(totalToShow)}
+              {formatIndianMoney(totalEarned)}
             </span>
           </HLeft>
         )}
@@ -660,7 +662,7 @@ export default function Main() {
                     </span>
 
                     <span style={{ fontSize: '5rem', color: COLOR_GREEN }}>
-                      {formatIndianMoney(totalToShow)}
+                      {formatIndianMoney(totalEarned)}
                     </span>
                   </TotalAmount>
                 )}
@@ -969,13 +971,13 @@ export default function Main() {
         </Sections>
       </Middle>
 
-      {totalToShow > 0 && showMoneyChangeModal && (
+      {false && totalToShow > 0 && showMoneyChangeModal && (
         <MoneyChange>
           <Total>
             <span style={{ fontSize: '2rem', transform: 'translateY(.1rem)' }}>
               <LuIndianRupee />
             </span>
-            <span style={{ fontSize: '2.5rem' }}>{totalToShow}</span>
+            <span style={{ fontSize: '2.5rem' }}>{totalEarned}</span>
           </Total>
           {true && (
             <Change>
