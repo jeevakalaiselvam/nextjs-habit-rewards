@@ -32,6 +32,8 @@ export default function GamesTrophies({
     }
   });
 
+  console.log()
+  
   return (
     <Container>
       <TrophySmall2
