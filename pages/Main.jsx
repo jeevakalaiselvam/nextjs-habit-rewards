@@ -51,6 +51,8 @@ const SECTION_WORK = 'Work';
 const SECTION_HABIT = 'Habit';
 const SECTION_GAMES = 'Games';
 const SECTION_ICONS = 'Icons';
+const SECTION_GAMES_ALL = 'Games All';
+const SECTION_GAME = 'Game';
 
 export default function Main() {
   const [showRecentAchUnlock, setShowRecentAchUnlock] = useState(false);
@@ -231,7 +233,6 @@ export default function Main() {
   let lastAch = achToShow?.[0];
 
 
-  let nonMoneyAchievement = [];
   let moneyAchievement = [];
 
   achievements?.forEach((ach) => {
@@ -239,12 +240,6 @@ export default function Main() {
     moneyAchievement.push(ach);
   });
 
-  let totalEarned = moneyAchievement?.reduce((acc, ach) => {
-    return acc + (MONEY_TRACKER?.[ach?.name] ?? 10);
-  }, 0);
-
-  let isMoneyRelatedSectionActive =
-    selected == SECTION_HABIT || selected == SECTION_WORK;
 
   let isLongAchievementsActive =
     selected == SECTION_GAMES ||
@@ -264,6 +259,11 @@ export default function Main() {
   let finalSelectedOverviewGameAch =
     selectedOverviewAchGame ?? onlyGameAchs?.[0];
 
+  let allGames = achToShow?.map(ach => {
+    return ach?.name
+  })
+
+  allGames = new Set([...allGames])
 
 
 
@@ -687,6 +687,56 @@ export default function Main() {
               }}
             >
               LIST
+            </span>
+          </Section>
+          <Section
+            selected={selected == SECTION_GAMES_ALL}
+            onClick={() => {
+              setSelected(SECTION_GAMES_ALL);
+            }}
+          >
+            <span
+              style={{
+                fontSize: '1.5rem',
+                marginLeft: '.5rem',
+                marginBottom: '.25rem',
+              }}
+            >
+              <MdVideogameAsset />
+            </span>
+            <span
+              style={{
+                fontSize: '.75rem',
+                transform: 'translateY(-1px)',
+                marginLeft: '.5rem',
+              }}
+            >
+              GAME
+            </span>
+          </Section>
+          <Section
+            selected={selected == SECTION_GAME}
+            onClick={() => {
+              setSelected(SECTION_GAME);
+            }}
+          >
+            <span
+              style={{
+                fontSize: '1.5rem',
+                marginLeft: '.5rem',
+                marginBottom: '.25rem',
+              }}
+            >
+              <MdVideogameAsset />
+            </span>
+            <span
+              style={{
+                fontSize: '.75rem',
+                transform: 'translateY(-1px)',
+                marginLeft: '.5rem',
+              }}
+            >
+              GAMES
             </span>
           </Section>
         </Sections>
