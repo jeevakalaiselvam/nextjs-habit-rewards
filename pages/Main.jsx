@@ -59,7 +59,7 @@ export default function Main() {
   const [showModal, setShowModal] = useState(false);
   const [selectedOverviewAchGame, setSelectedOverviewAchGame] = useState(null);
   const [formValues, setFormValues] = useState({
-    type: '',
+    type: 'Games',
     name: '',
     title: '',
     description: '',
