@@ -65,149 +65,10 @@ export default function Main() {
     description: '',
     date: new Date(),
   });
-  const [showMoneyChangeModal, setShowMoneyChangeModal] = useState(false);
-  const [showChangeAmount, setShowChangeAmount] = useState(false);
-  const [totalToShow, setTotalToShow] = useState(0);
 
-  const itemsType = [
-    {
-      key: '11',
-      label: <div style={{ width: '100%' }}>All Types</div>,
-      disabled: true,
-    },
-    {
-      key: 'Games',
-      label: 'Games',
-      extra: '⌘G',
-    },
-    {
-      key: 'Work',
-      label: 'Work',
-      extra: '⌘G',
-    },
-    {
-      key: 'Learn',
-      label: 'Learn',
-      extra: '⌘G',
-    },
-    {
-      key: 'Habit',
-      label: 'Habit',
-      extra: '⌘H',
-    },
-  ];
 
-  const itemsGame = [
-    {
-      key: '22',
-      label: <div style={{ width: '100%' }}>All Games</div>,
-      disabled: true,
-    },
-    ...GAMES_ARRAY?.map((game) => {
-      return {
-        key: game,
-        label: game,
-        extra: `⌘${game?.[0]?.toUpperCase()}`,
-      };
-    }),
-  ];
 
-  const itemsWork = [
-    {
-      key: '33',
-      label: <div style={{ width: '100%' }}>All Activity</div>,
-      disabled: true,
-    },
-    ...WORK_ARRAY?.map((game) => {
-      return {
-        key: game,
-        label: game,
-        extra: (
-          <span style={{ color: COLOR_GREEN }}>Rs {MONEY_TRACKER?.[game]}</span>
-        ),
-      };
-    }),
-  ];
-
-  const itemsLearn = [
-    {
-      key: '33',
-      label: <div style={{ width: '100%' }}>All Learn</div>,
-      disabled: true,
-    },
-    ...LEARN_ARRAY?.map((game) => {
-      return {
-        key: game,
-        label: game,
-        extra: (
-          <span style={{ color: COLOR_GREEN }}>Rs {MONEY_TRACKER?.[game]}</span>
-        ),
-      };
-    }),
-  ];
-
-  const itemsHabit = [
-    {
-      key: '33',
-      label: <div style={{ width: '100%' }}>All Habit</div>,
-      disabled: true,
-    },
-    ...HABIT_ARRAY?.map((game) => {
-      return {
-        key: game,
-        label: game,
-        extra: (
-          <span style={{ color: COLOR_GREEN }}>Rs {MONEY_TRACKER?.[game]}</span>
-        ),
-      };
-    }),
-  ];
-
-  const handleItemClickType = (e) => {
-    setFormValues((old) => ({
-      ...old,
-      type: String(e.key),
-      name: '',
-      title: '',
-      description: '',
-    }));
-  };
-
-  const handleItemClickName = (e) => {
-    setFormValues((old) => ({
-      ...old,
-      name: String(e.key),
-      title: '',
-      description: '',
-    }));
-
-    setFormValues((old) => ({ ...old, title: String(e.key) }));
-  };
-
-  const menuTypeType = {
-    items: itemsType,
-    onClick: handleItemClickType,
-  };
-
-  const menuTypeGame = {
-    items: itemsGame,
-    onClick: handleItemClickName,
-  };
-
-  const menuTypeWork = {
-    items: itemsWork,
-    onClick: handleItemClickName,
-  };
-
-  const menuTypeLearn = {
-    items: itemsLearn,
-    onClick: handleItemClickName,
-  };
-
-  const menuTypeHabit = {
-    items: itemsHabit,
-    onClick: handleItemClickName,
-  };
+ 
 
   const refreshAchievements = () => {
     setLoading(true);
@@ -311,16 +172,6 @@ export default function Main() {
   let onlyGameAchs = achievements?.filter((ach) => ach?.type == 'Games');
   let finalSelectedOverviewGameAch =
     selectedOverviewAchGame ?? onlyGameAchs?.[0];
-
-  useEffect(() => {
-    setShowMoneyChangeModal(true);
-    let timer = setTimeout(() => {
-      setShowMoneyChangeModal(false);
-    }, 3000);
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [achievements]);
 
 
   return (
@@ -529,14 +380,7 @@ export default function Main() {
                       <Tag>
                         {
                           <InnerTagMoney>
-                            <span
-                              style={{
-                                transform: 'translateY(1px)',
-                                fontSize: '.9rem',
-                              }}
-                            >
-                              <FaTrophy />
-                            </span>
+                            <span style={{fontSize:'.9rem'}}>RECENT</span>
                           </InnerTagMoney>
                         }
                       </Tag>
