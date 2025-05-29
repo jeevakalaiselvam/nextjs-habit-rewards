@@ -278,7 +278,6 @@ export default function Main() {
 
   let lastAch = achToShow?.[0];
 
-  achToShow = achToShow?.filter((ach) => ach?.type == selected);
 
   let nonMoneyAchievement = [];
   let moneyAchievement = [];
@@ -323,48 +322,13 @@ export default function Main() {
     };
   }, [achievements]);
 
-  // useEffect(() => {
-  //   let lastStored = 0;
-  //   lastStored = JSON.parse(localStorage.getItem('MONEY_DATA', 0));
-  //   let totalEarned = achievements?.reduce((acc, ach) => {
-  //     return acc + (MONEY_TRACKER?.[ach?.name] ?? 10);
-  //   }, 0);
-
-  //   if (totalEarned !== lastStored) {
-  //     setShowChangeAmount(true);
-  //     let achToShow = achievements
-  //       ?.sort(
-  //         (ach1, ach2) => new Date(ach2?.unlocked) - new Date(ach1?.unlocked)
-  //       )
-  //       ?.map((item, index) => ({
-  //         ...item,
-  //         index: achievements?.length - index,
-  //       }));
-
-  //     let lastAch = achToShow?.[0];
-  //     setTotalToShow(totalEarned - MONEY_TRACKER?.[lastAch?.name]);
-  //     let timer = setTimeout(() => {
-  //       setShowChangeAmount(false);
-  //       setTotalToShow((old) => old + MONEY_TRACKER?.[lastAch?.name]);
-
-  //       localStorage.setItem('MONEY_DATA', JSON.stringify(totalEarned));
-  //     }, 1000);
-  //     return () => {
-  //       clearTimeout(timer);
-  //     };
-  //   } else {
-  //     setShowChangeAmount(false);
-  //     setTotalToShow(totalEarned);
-  //   }
-  // }, [achievements]);
 
   return (
     <Container>
       <Header>
-        {!isMoneyRelatedSectionActive && !isOverviewMode && (
-          <HLeft>
-            <span style={{ fontSize: '1.1rem' }}>
-              <LuIndianRupee />
+        <HLeft>
+            <span style={{ fontSize: '1.1rem', marginRight:'.5rem' }}>
+              <FaTrophy />
             </span>
             <span
               style={{
@@ -373,42 +337,9 @@ export default function Main() {
                 marginRight: '.25rem',
               }}
             >
-              {formatIndianMoney(totalEarned)}
+              {achToShow?.length}
             </span>
           </HLeft>
-        )}
-        {isOverviewMode && (
-          <HLeft>
-            <span style={{ fontSize: '1.1rem' }}>
-              <LuIndianRupee />
-            </span>
-            <span
-              style={{
-                fontSize: '1.25rem',
-                transform: 'translateY(-2px)',
-                marginRight: '.25rem',
-              }}
-            >
-              {formatIndianMoney(totalEarned)}
-            </span>
-          </HLeft>
-        )}
-        {isMoneyRelatedSectionActive && (
-          <HLeft>
-            <span style={{ fontSize: '1.1rem' }}>
-              <LuIndianRupee />
-            </span>
-            <span
-              style={{
-                fontSize: '1.25rem',
-                transform: 'translateY(-2px)',
-                marginRight: '.25rem',
-              }}
-            >
-              {formatIndianMoney(totalEarned)}
-            </span>
-          </HLeft>
-        )}
         <HRight>
           <AddIcon
             onClick={() => {
@@ -434,30 +365,6 @@ export default function Main() {
             <Form>
               <Title>Add Achievement</Title>
               <Row>
-                <SubTitle>Type</SubTitle>
-                <Dropdown
-                  trigger={['click']}
-                  overlayStyle={{ minWidth: '60%' }}
-                  menu={menuTypeType}
-                  overlayClassName="full-width-dropdown"
-                >
-                  <Space>
-                    <span
-                      style={{
-                        fontSize: '.9rem',
-                        color: '#ACAEB2',
-                      }}
-                    >
-                      {formValues?.type ? formValues?.type : 'Select Type'}
-                    </span>
-                    <Caret>
-                      <FaCaretDown />
-                    </Caret>
-                  </Space>
-                </Dropdown>
-              </Row>
-              {formValues?.type == 'Games' && (
-                <Row>
                   <SubTitle>Game</SubTitle>
                   <Dropdown
                     trigger={['click']}
@@ -480,82 +387,6 @@ export default function Main() {
                     </Space>
                   </Dropdown>
                 </Row>
-              )}
-              {formValues?.type == 'Work' && (
-                <Row>
-                  <SubTitle>Work</SubTitle>
-                  <Dropdown
-                    trigger={['click']}
-                    overlayStyle={{ minWidth: '60%' }}
-                    menu={menuTypeLearn}
-                    overlayClassName="full-width-dropdown"
-                  >
-                    <Space>
-                      <span
-                        style={{
-                          fontSize: '.9rem',
-                          color: '#ACAEB2',
-                        }}
-                      >
-                        {formValues?.name ? formValues?.name : 'Select Work'}
-                      </span>
-                      <Caret>
-                        <FaCaretDown />
-                      </Caret>
-                    </Space>
-                  </Dropdown>
-                </Row>
-              )}
-              {formValues?.type == 'Learn' && (
-                <Row>
-                  <SubTitle>Learn</SubTitle>
-                  <Dropdown
-                    trigger={['click']}
-                    overlayStyle={{ minWidth: '60%' }}
-                    menu={menuTypeLearn}
-                    overlayClassName="full-width-dropdown"
-                  >
-                    <Space>
-                      <span
-                        style={{
-                          fontSize: '.9rem',
-                          color: '#ACAEB2',
-                        }}
-                      >
-                        {formValues?.name ? formValues?.name : 'Select Work'}
-                      </span>
-                      <Caret>
-                        <FaCaretDown />
-                      </Caret>
-                    </Space>
-                  </Dropdown>
-                </Row>
-              )}
-              {formValues?.type == 'Habit' && (
-                <Row>
-                  <SubTitle>Habit</SubTitle>
-                  <Dropdown
-                    trigger={['click']}
-                    overlayStyle={{ minWidth: '60%' }}
-                    menu={menuTypeHabit}
-                    overlayClassName="full-width-dropdown"
-                  >
-                    <Space>
-                      <span
-                        style={{
-                          fontSize: '.9rem',
-                          color: '#ACAEB2',
-                        }}
-                      >
-                        {formValues?.name ? formValues?.name : 'Select Habit'}
-                      </span>
-                      <Caret>
-                        <FaCaretDown />
-                      </Caret>
-                    </Space>
-                  </Dropdown>
-                </Row>
-              )}
               <Row>
                 <SubTitle>Name</SubTitle>
               </Row>
@@ -611,9 +442,6 @@ export default function Main() {
                 let isMoneyRelated = ach?.type == Work || ach?.type == Habit;
                 return (
                   <A1Container>
-                    <TagCount>
-                      <InnerTag>{ach?.index}</InnerTag>
-                    </TagCount>
                     <Popconfirm
                       title="Delete Achievement"
                       description="Are you sure to delete this task?"
@@ -635,106 +463,18 @@ export default function Main() {
                         <span
                           style={{
                             transform: 'translateY(1px)',
-                            fontSize: '.7rem',
+                            fontSize: '.9rem',
                           }}
                         >
-                          <LuIndianRupee />{' '}
+                          <FaTrophy />{' '}
                         </span>
-                        {MONEY_TRACKER[ach?.name] ?? 10}
+                        <span style={{marginLeft:'.25rem'}}>
+                        {achToShow?.length -index}</span>
                       </InnerTagMoney>
                     </Tag>
                   </A1Container>
                 );
               })}
-            {isOverviewMode && (
-              <OverviewMode>
-                {false && (
-                  <TotalAmount>
-                    <span
-                      style={{
-                        color: COLOR_GREEN,
-                        fontSize: '4rem',
-                        fontWeight: '200',
-                        transform: 'translateY(4px)',
-                      }}
-                    >
-                      <LuIndianRupee />
-                    </span>
-
-                    <span style={{ fontSize: '5rem', color: COLOR_GREEN }}>
-                      {formatIndianMoney(totalEarned)}
-                    </span>
-                  </TotalAmount>
-                )}
-                <RecentItems>
-                  <RecentInner>
-                    {achievements?.map((ach, index) => {
-                      return (
-                        <AchSmallContainer>
-                          <AchSmall
-                            image={
-                              ach?.url?.length > 0
-                                ? ach?.url
-                                : ICON_MAPPER?.[ach?.name]
-                            }
-                            onClick={() => {
-                              setSelectedOverviewAchGame(ach);
-                            }}
-                          >
-                            <InnerCount>
-                              <span
-                                style={{
-                                  fontSize: '.8rem',
-                                  marginRight: '0rem',
-                                  transform: 'translate(-.25rem,2px)',
-                                }}
-                              >
-                                <LuIndianRupee />
-                              </span>
-                              <span
-                                style={{
-                                  transform: 'translate(-.25rem, 1px)',
-                                }}
-                              >
-                                {MONEY_TRACKER?.[ach?.name] ?? 10}
-                              </span>
-                            </InnerCount>
-                          </AchSmall>
-                        </AchSmallContainer>
-                      );
-                    })}
-                  </RecentInner>
-                </RecentItems>
-                {!showRecentAchUnlock && (
-                  <RecentClick>
-                    <A1ContainerMoney>
-                      <A1Icon
-                        icon={ICON_MAPPER[selectedOverviewAchGame?.name]}
-                      ></A1Icon>
-                      <A1Right>
-                        <A1Title>{selectedOverviewAchGame?.title}</A1Title>
-                        <A1Desc>{selectedOverviewAchGame?.description}</A1Desc>
-                      </A1Right>
-                      <Tag>
-                        {
-                          <InnerTagMoney>
-                            <span
-                              style={{
-                                transform: 'translateY(1px)',
-                                fontSize: '.7rem',
-                              }}
-                            >
-                              <LuIndianRupee />
-                            </span>
-                            {MONEY_TRACKER[selectedOverviewAchGame?.name] ?? 10}
-                          </InnerTagMoney>
-                        }
-                      </Tag>
-                    </A1ContainerMoney>
-                  </RecentClick>
-                )}
-              </OverviewMode>
-            )}
             {isGameIconsActive && (
               <OverviewMode>
                 <RecentItemsGame>
@@ -752,19 +492,19 @@ export default function Main() {
                               setSelectedOverviewAchGame(ach);
                             }}
                           >
+                          </AchSmall>
                             <InnerCount>
-                              <span>{MONEY_TRACKER?.[ach?.name] ?? 10}</span>
+                              <span>{onlyGameAchs?.length - index}</span>
                               <span
                                 style={{
                                   fontSize: '.8rem',
-                                  marginLeft: '.1rem',
+                                  marginLeft: '.25rem',
                                   transform: 'translateY(1px)',
                                 }}
                               >
-                                <LuIndianRupee />
+                                <FaTrophy />
                               </span>
                             </InnerCount>
-                          </AchSmall>
                         </AchSmallContainer>
                       );
                     })}
@@ -792,14 +532,11 @@ export default function Main() {
                             <span
                               style={{
                                 transform: 'translateY(1px)',
-                                fontSize: '.7rem',
+                                fontSize: '.9rem',
                               }}
                             >
-                              <LuIndianRupee />
+                              <FaTrophy />
                             </span>
-                            {MONEY_TRACKER[
-                              finalSelectedOverviewGameAch?.name
-                            ] ?? 10}
                           </InnerTagMoney>
                         }
                       </Tag>
@@ -844,9 +581,9 @@ export default function Main() {
 
         <Sections>
           <Section
-            selected={selected == SECTION_MONEY}
+            selected={selected == SECTION_ICONS}
             onClick={() => {
-              setSelected(SECTION_MONEY);
+              setSelected(SECTION_ICONS);
             }}
           >
             <span
@@ -856,7 +593,7 @@ export default function Main() {
                 marginBottom: '.25rem',
               }}
             >
-              <HiLibrary />
+              <HiHome />
             </span>
             <span
               style={{
@@ -865,59 +602,9 @@ export default function Main() {
                 marginLeft: '.5rem',
               }}
             >
-              TOTAL
+              ICON
             </span>
           </Section>
-          <Section
-            selected={selected == SECTION_WORK}
-            onClick={() => {
-              setSelected(SECTION_WORK);
-            }}
-          >
-            <span
-              style={{
-                fontSize: '1.5rem',
-                marginLeft: '.5rem',
-                marginBottom: '.25rem',
-              }}
-            >
-              <HiMailOpen />
-            </span>
-            <span
-              style={{
-                fontSize: '.75rem',
-                transform: 'translateY(-1px)',
-                marginLeft: '.5rem',
-              }}
-            >
-              WORK
-            </span>
-          </Section>
-          <Section
-            selected={selected == SECTION_HABIT}
-            onClick={() => {
-              setSelected(SECTION_HABIT);
-            }}
-          >
-            <span
-              style={{
-                fontSize: '1.5rem',
-                marginLeft: '.5rem',
-                marginBottom: '.25rem',
-              }}
-            >
-              <HiShieldCheck />
-            </span>
-            <span
-              style={{
-                fontSize: '.75rem',
-                transform: 'translateY(-1px)',
-                marginLeft: '.5rem',
-              }}
-            >
-              HABITS
-            </span>
-          </Section>{' '}
           <Section
             selected={selected == SECTION_GAMES}
             onClick={() => {
@@ -943,55 +630,9 @@ export default function Main() {
               LIST
             </span>
           </Section>
-          <Section
-            selected={selected == SECTION_ICONS}
-            onClick={() => {
-              setSelected(SECTION_ICONS);
-            }}
-          >
-            <span
-              style={{
-                fontSize: '1.5rem',
-                marginLeft: '.5rem',
-                marginBottom: '.25rem',
-              }}
-            >
-              <HiHome />
-            </span>
-            <span
-              style={{
-                fontSize: '.75rem',
-                transform: 'translateY(-1px)',
-                marginLeft: '.5rem',
-              }}
-            >
-              ICON
-            </span>
-          </Section>
         </Sections>
       </Middle>
 
-      {false && totalToShow > 0 && showMoneyChangeModal && (
-        <MoneyChange>
-          <Total>
-            <span style={{ fontSize: '2rem', transform: 'translateY(.1rem)' }}>
-              <LuIndianRupee />
-            </span>
-            <span style={{ fontSize: '2.5rem' }}>{totalEarned}</span>
-          </Total>
-          {true && (
-            <Change>
-              <span style={{ fontSize: '1rem', color: COLOR_GREEN }}>+</span>
-              <span
-                style={{ transform: 'translateY(2px)', fontSize: '1.25rem' }}
-              >
-                <LuIndianRupee />
-              </span>
-              <span>{MONEY_TRACKER?.[lastAch?.name]}</span>
-            </Change>
-          )}
-        </MoneyChange>
-      )}
     </Container>
   );
 }
@@ -1064,10 +705,6 @@ const InnerCount = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  transform: translateY(50%);
   width: 100%;
   background-color: ${COLOR_GREEN};
   color: ${generateDarkTextColorForLightBg(COLOR_GREEN)};
@@ -1167,9 +804,9 @@ const InnerTagMoney = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
+  font-size: 1rem;
   transform: rotate(-90deg) translateX(-0.1rem);
-  width: 20px;
+  width: 25px;
 `;
 
 const Tag = styled.div`
