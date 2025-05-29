@@ -16,7 +16,7 @@ import {
   generateDarkTextColorForLightBg,
 } from '../helpers/colorHelper';
 import { Dropdown, message, Popconfirm, Space, Spin } from 'antd';
-import { FaCaretDown, FaGlobe, FaRupeeSign, FaTrophy } from 'react-icons/fa';
+import { FaCaretDown, FaGlobe, FaPlus, FaRupeeSign, FaTrophy } from 'react-icons/fa';
 import { LuIndianRupee } from 'react-icons/lu';
 import {
   Battlefield2042,
@@ -54,9 +54,11 @@ const SECTION_ICONS = 'Icons';
 export default function Main() {
   const [showRecentAchUnlock, setShowRecentAchUnlock] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [games, setGames] = useState([]);
   const [achievements, setAchievements] = useState([]);
   const [selected, setSelected] = useState(SECTION_ICONS);
   const [showModal, setShowModal] = useState(false);
+  const [showModalGames, setShowModalGame] = useState(false);
   const [selectedOverviewAchGame, setSelectedOverviewAchGame] = useState(null);
   const [formValues, setFormValues] = useState({
     type: 'Games',
@@ -66,13 +68,18 @@ export default function Main() {
     date: new Date(),
   });
 
+  const [formValuesGame, setFormValuesGame] = useState({
+    name: '',
+    url: '',
+  });
+
   const itemsGame = [
     {
       key: '22',
       label: <div style={{ width: '100%' }}>All Games</div>,
       disabled: true,
     },
-    ...GAMES_ARRAY?.map((game) => {
+    ...games?.map(inner => inner?.name)?.map((game) => {
       return {
         key: game,
         label: game,
@@ -113,6 +120,37 @@ export default function Main() {
     }
   };
 
+  const refreshGames = () => {
+    setLoading(true);
+    setGames((old) => []);
+    try {
+      axios.get('/api/jeevagame').then((response) => {
+        setGames([]);
+        setGames(response?.data);
+        setLoading(false);
+      });
+    } catch (e) {
+      message.info('Error refreshing Achievement !');
+      setLoading(false);
+    }
+  };
+
+  const saveGame = () => {
+    setLoading(true);
+    try {
+      axios
+        .post('/api/jeevagame', { ...formValuesGame })
+        .then((response) => {
+          setShowModalGame(false);
+          refreshGames();
+        });
+    } catch (e) {
+      message.info('Error saving Achievement !');
+      setLoading(false);
+    }
+  };
+
+
   const saveAchievement = () => {
     setLoading(true);
     try {
@@ -143,6 +181,7 @@ export default function Main() {
 
   useEffect(() => {
     refreshAchievements();
+    refreshGames();
   }, []);
 
   useEffect(() => {
@@ -238,6 +277,53 @@ export default function Main() {
           </AddIconRefresh>
         </HRight>
       </Header>
+      {showModalGames && (
+        <ModalContainerGame>
+          <ModalContent>
+            <Form>
+              <Title>Add Game</Title>
+              <Row>
+                <SubTitle>Name</SubTitle>
+              </Row>
+              <RowInput>
+                <input
+                  type="text"
+                  value={formValuesGame?.name}
+                  onChange={(e) => {
+                    setFormValuesGame((old) => ({
+                      ...old,
+                      name: String(e.target.value),
+                    }));
+                  }}
+                />
+              </RowInput>
+              <Row>
+                <SubTitle>URL</SubTitle>
+              </Row>
+              <RowInputDescription>
+                <input
+                  value={formValues?.url}
+                  type="text"
+                  onChange={(e) => {
+                    setFormValuesGame((old) => ({
+                      ...old,
+                      url: String(e.target.value),
+                    }));
+                  }}
+                />
+              </RowInputDescription>
+            </Form>
+          </ModalContent>
+          <ModalBottom>
+            <ButtonSmall onClick={() => setShowModal(false)} color={COLOR_RED}>
+              CANCEL
+            </ButtonSmall>
+            <ButtonSmall onClick={() => saveGame()} color={COLOR_GREEN}>
+              SAVE
+            </ButtonSmall>
+          </ModalBottom>
+        </ModalContainerGame>
+      )}
       {showModal && (
         <ModalContainer>
           <ModalContent>
@@ -265,6 +351,10 @@ export default function Main() {
                     </Caret>
                   </Space>
                 </Dropdown>
+                <span style={{ marginLeft: '1rem', opacity: .5 }} onClick={() => {
+                  setShowModalGame(true)
+                  setShowModal(false)
+                }}><FaPlus /></span>
               </Row>
               <Row>
                 <SubTitle>Name</SubTitle>
@@ -808,6 +898,17 @@ const RowInputDescription = styled.div`
     padding: 0.5rem 1rem;
     background-color: ${COLOR_BLACK2};
   }
+
+  & input {
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 35px;
+    border-radius: 0px;
+    opacity: 0.5;
+    padding: 0.5rem 1rem;
+    background-color: ${COLOR_BLACK2};
+  }
 `;
 
 const SubTitle = styled.div`
@@ -873,6 +974,21 @@ const ModalContainer = styled.div`
   transform: translate(-50%, -50%);
   background-color: ${COLOR_BLACK1};
 `;
+
+const ModalContainerGame = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  position: absolute;
+  left: 50%;
+  width: 90%;
+  top: 45%;
+  z-index: 3;
+  transform: translate(-50%, -50%);
+  background-color: ${COLOR_BLACK1};
+`;
+
 
 const Button = styled.div`
   display: flex;

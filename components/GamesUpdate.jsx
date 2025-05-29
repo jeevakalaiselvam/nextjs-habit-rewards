@@ -21,7 +21,7 @@ export default function GamesUpdate() {
   const refreshAchievements = () => {
     setLoading(true);
     try {
-      axios.get('/api/jeevaachievement').then((response) => {
+      axios.get('/api/jeevagame').then((response) => {
         let achievementsInner = response?.data;
         let allEditMap = {};
         let allSaveMap = {};
@@ -50,7 +50,7 @@ export default function GamesUpdate() {
     setAllSaving((old) => ({ ...old, [achId]: true }));
     try {
       axios
-        .put(`/api/jeevaachievement/${achId}`, {
+        .put(`/api/jeevagame/${achId}`, {
           url: getFandomRemovedUrl(allEditableUrl?.[achId]),
         })
         .then((response) => {
@@ -63,15 +63,14 @@ export default function GamesUpdate() {
           }));
           setAllSaving((old) => ({ ...old, [achId]: false }));
         });
-    } catch (e) {}
+    } catch (e) { }
   };
 
   let toShowAchs = {};
 
   Object.keys(achievements)?.forEach((key) => {
-    if (achievements?.[key]?.type == 'Games') {
-      toShowAchs[key] = achievements?.[key];
-    }
+
+    toShowAchs[key] = achievements?.[key];
   });
 
   return (
@@ -88,37 +87,34 @@ export default function GamesUpdate() {
                 <Icon
                   image={ach?.url !== '' ? ach?.url : ICON_MAPPER?.[ach?.name]}
                 ></Icon>
-                <Data>
-                  <Title>{ach?.title}</Title>
-                  <Description>{ach?.description}</Description>
-                  <Link>
-                    <input
-                      type="text"
-                      onChange={(e) => {
-                        setAllEditableUrl((old) => ({
-                          ...old,
-                          [ach?._id]: e.target.value,
-                        }));
-                      }}
-                      value={allEditableUrl?.[ach?._id]}
-                    />
-                    <Save
-                      onClick={() => {
-                        updateInfo(ach?._id);
+                <Title>{ach?.name}</Title>
+                <Link>
+                  <input
+                    type="text"
+                    onChange={(e) => {
+                      setAllEditableUrl((old) => ({
+                        ...old,
+                        [ach?._id]: e.target.value,
+                      }));
+                    }}
+                    value={allEditableUrl?.[ach?._id]}
+                  />
+                  <Save
+                    onClick={() => {
+                      updateInfo(ach?._id);
+                    }}
+                  >
+                    <span>SAVE</span>
+                    <span
+                      style={{
+                        transform: 'translateY(2px)',
+                        marginLeft: '.5rem',
                       }}
                     >
-                      <span>SAVE</span>
-                      <span
-                        style={{
-                          transform: 'translateY(2px)',
-                          marginLeft: '.5rem',
-                        }}
-                      >
-                        <TbRefresh />
-                      </span>
-                    </Save>
-                  </Link>
-                </Data>
+                      <TbRefresh />
+                    </span>
+                  </Save>
+                </Link>
               </AchContainer>
             );
           })}
@@ -133,9 +129,9 @@ const Save = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
-  height: 28px;
   cursor: pointer;
   padding: 0rem 1rem;
+  height: 30px;
   margin-left: 0.5rem;
   background-color: ${COLOR_BLUE};
 
@@ -148,8 +144,8 @@ const Icon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 90px;
-  min-height: 90px;
+  min-width: 40px;
+  min-height: 40px;
   background: ${(props) => `url('${props.image}')`};
   background-size: cover;
   background-repeat: no-repeat;
@@ -170,6 +166,8 @@ const Title = styled.div`
   height: 30px;
   padding-left: 1rem;
   width: 100%;
+  flex: 1;
+  font-size: .8rem;
 `;
 
 const Description = styled.div`
@@ -179,6 +177,7 @@ const Description = styled.div`
   height: 30px;
   width: 100%;
   opacity: 0.5;
+  font-size: .8rem;
   padding-left: 1rem;
 `;
 
@@ -190,6 +189,7 @@ const Link = styled.div`
   height: 30px;
   width: 100%;
   margin-top: 4px;
+  flex: 2;
 
   & input {
     width: 100%;
@@ -203,7 +203,7 @@ const Link = styled.div`
 
 const AchContainer = styled.div`
   display: flex;
-  width: 500px;
+  width: 100%;
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
@@ -215,6 +215,7 @@ const AchievementContainer = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
+  flex-direction: column;
   overflow: scroll;
   width: 100%;
   min-height: 100vh;
@@ -231,5 +232,6 @@ const Container = styled.div`
   width: 100%;
   min-height: 100vh;
   max-height: 100vh;
+  font-size: .8rem;
   color: #fefefe;
 `;
