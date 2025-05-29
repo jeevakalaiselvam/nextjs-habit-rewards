@@ -66,9 +66,37 @@ export default function Main() {
     date: new Date(),
   });
 
+  const itemsGame = [
+    {
+      key: '22',
+      label: <div style={{ width: '100%' }}>All Games</div>,
+      disabled: true,
+    },
+    ...GAMES_ARRAY?.map((game) => {
+      return {
+        key: game,
+        label: game,
+        extra: `⌘${game?.[0]?.toUpperCase()}`,
+      };
+    }),
+  ];
 
+  const handleItemClickName = (e) => {
+    setFormValues((old) => ({
+      ...old,
+      name: String(e.key),
+      title: '',
+      description: '',
+    }));
 
- 
+    setFormValues((old) => ({ ...old, title: String(e.key) }));
+  };
+
+  const menuTypeGame = {
+    items: itemsGame,
+    onClick: handleItemClickName,
+  };
+
 
   const refreshAchievements = () => {
     setLoading(true);
@@ -178,19 +206,19 @@ export default function Main() {
     <Container>
       <Header>
         <HLeft>
-            <span style={{ fontSize: '1.1rem', marginRight:'.5rem' }}>
-              <FaTrophy />
-            </span>
-            <span
-              style={{
-                fontSize: '1.25rem',
-                transform: 'translateY(-2px)',
-                marginRight: '.25rem',
-              }}
-            >
-              {achToShow?.length}
-            </span>
-          </HLeft>
+          <span style={{ fontSize: '1.1rem', marginRight: '.5rem' }}>
+            <FaTrophy />
+          </span>
+          <span
+            style={{
+              fontSize: '1.25rem',
+              transform: 'translateY(-2px)',
+              marginRight: '.25rem',
+            }}
+          >
+            {achToShow?.length}
+          </span>
+        </HLeft>
         <HRight>
           <AddIcon
             onClick={() => {
@@ -216,28 +244,28 @@ export default function Main() {
             <Form>
               <Title>Add Achievement</Title>
               <Row>
-                  <SubTitle>Game</SubTitle>
-                  <Dropdown
-                    trigger={['click']}
-                    overlayStyle={{ minWidth: '60%' }}
-                    menu={menuTypeGame}
-                    overlayClassName="full-width-dropdown"
-                  >
-                    <Space>
-                      <span
-                        style={{
-                          fontSize: '.9rem',
-                          color: '#ACAEB2',
-                        }}
-                      >
-                        {formValues?.name ? formValues?.name : 'Select Game'}
-                      </span>
-                      <Caret>
-                        <FaCaretDown />
-                      </Caret>
-                    </Space>
-                  </Dropdown>
-                </Row>
+                <SubTitle>Game</SubTitle>
+                <Dropdown
+                  trigger={['click']}
+                  overlayStyle={{ minWidth: '60%' }}
+                  menu={menuTypeGame}
+                  overlayClassName="full-width-dropdown"
+                >
+                  <Space>
+                    <span
+                      style={{
+                        fontSize: '.9rem',
+                        color: '#ACAEB2',
+                      }}
+                    >
+                      {formValues?.name ? formValues?.name : 'Select Game'}
+                    </span>
+                    <Caret>
+                      <FaCaretDown />
+                    </Caret>
+                  </Space>
+                </Dropdown>
+              </Row>
               <Row>
                 <SubTitle>Name</SubTitle>
               </Row>
@@ -299,7 +327,7 @@ export default function Main() {
                       onConfirm={() => {
                         deleteAchievement(ach);
                       }}
-                      onCancel={() => {}}
+                      onCancel={() => { }}
                       okText="Yes"
                       cancelText="No"
                     >
@@ -319,8 +347,8 @@ export default function Main() {
                         >
                           <FaTrophy />{' '}
                         </span>
-                        <span style={{marginLeft:'.25rem'}}>
-                        {achToShow?.length -index}</span>
+                        <span style={{ marginLeft: '.25rem' }}>
+                          {achToShow?.length - index}</span>
                       </InnerTagMoney>
                     </Tag>
                   </A1Container>
@@ -344,18 +372,18 @@ export default function Main() {
                             }}
                           >
                           </AchSmall>
-                            <InnerCount>
-                              <span>{onlyGameAchs?.length - index}</span>
-                              <span
-                                style={{
-                                  fontSize: '.8rem',
-                                  marginLeft: '.25rem',
-                                  transform: 'translateY(1px)',
-                                }}
-                              >
-                                <FaTrophy />
-                              </span>
-                            </InnerCount>
+                          <InnerCount>
+                            <span>{onlyGameAchs?.length - index}</span>
+                            <span
+                              style={{
+                                fontSize: '.8rem',
+                                marginLeft: '.25rem',
+                                transform: 'translateY(1px)',
+                              }}
+                            >
+                              <FaTrophy />
+                            </span>
+                          </InnerCount>
                         </AchSmallContainer>
                       );
                     })}
@@ -380,7 +408,7 @@ export default function Main() {
                       <Tag>
                         {
                           <InnerTagMoney>
-                            <span style={{fontSize:'.9rem'}}>RECENT</span>
+                            <span style={{ fontSize: '.9rem' }}>RECENT</span>
                           </InnerTagMoney>
                         }
                       </Tag>
@@ -404,8 +432,8 @@ export default function Main() {
               <Popconfirm
                 title="Delete Achievement"
                 description="Are you sure to delete this task?"
-                onConfirm={() => {}}
-                onCancel={() => {}}
+                onConfirm={() => { }}
+                onCancel={() => { }}
                 okText="Yes"
                 cancelText="No"
               >
