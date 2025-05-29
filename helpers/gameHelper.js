@@ -10,7 +10,7 @@ export const ICON_MAPPER = {
 };
 
 
-export const GAMES_ARRAY = ['Battlefield 2042', 'Hitman World of Assassination',"Dex"];
+export const GAMES_ARRAY = ['Battlefield 2042', 'Hitman World of Assassination', "Dex"];
 
 
 
@@ -23,3 +23,6 @@ export const getFandomRemovedUrl = (url) => {
 export const formatIndianMoney = (value) => {
   return new Intl.NumberFormat('en-IN').format(value);
 };
+
+
+export const TROPHY_PLACEHOLDER = "https://t3.ftcdn.net/jpg/03/32/32/04/360_F_332320458_OFW95fppmZAYYs3lT8CwDfK2HdQLF7RU.jpg"

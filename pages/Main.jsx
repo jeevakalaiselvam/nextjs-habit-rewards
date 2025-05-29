@@ -28,6 +28,7 @@ import {
   ICON_MAPPER,
   LEARN_ARRAY,
   MONEY_TRACKER,
+  TROPHY_PLACEHOLDER,
   Work,
   WORK_ARRAY,
 } from '../helpers/gameHelper';
@@ -204,6 +205,11 @@ export default function Main() {
     ?.sort((ach1, ach2) => new Date(ach2?.unlocked) - new Date(ach1?.unlocked))
     ?.map((item, index) => ({ ...item, index: achievements?.length - index }));
 
+
+  achToShow = achToShow?.map(ach => {
+    return { ...ach, url: games?.find(game => game?.name == ach?.name)?.url ?? TROPHY_PLACEHOLDER }
+  })
+
   let lastAch = achToShow?.[0];
 
 
@@ -236,9 +242,11 @@ export default function Main() {
     finalSelectedOverviewAch?.type == Work ||
     finalSelectedOverviewAch?.type == Habit;
 
-  let onlyGameAchs = achievements?.filter((ach) => ach?.type == 'Games');
+  let onlyGameAchs = achToShow
   let finalSelectedOverviewGameAch =
     selectedOverviewAchGame ?? onlyGameAchs?.[0];
+
+
 
 
   return (
@@ -421,7 +429,7 @@ export default function Main() {
                       okText="Yes"
                       cancelText="No"
                     >
-                      <A1Icon icon={ICON_MAPPER[ach?.name]}></A1Icon>
+                      <A1Icon icon={ach?.url ?? TROPHY_PLACEHOLDER}></A1Icon>
                     </Popconfirm>
                     <A1Right>
                       <A1Title>{ach?.title}</A1Title>
@@ -455,7 +463,7 @@ export default function Main() {
                             image={
                               ach?.url?.length > 0
                                 ? ach?.url
-                                : ICON_MAPPER?.[ach?.name]
+                                : TROPHY_PLACEHOLDER
                             }
                             onClick={() => {
                               setSelectedOverviewAchGame(ach);
@@ -484,9 +492,7 @@ export default function Main() {
                     <A1ContainerMoney>
                       <A1Icon
                         icon={
-                          finalSelectedOverviewGameAch?.url?.length > 0
-                            ? finalSelectedOverviewGameAch?.url
-                            : ICON_MAPPER?.[finalSelectedOverviewGameAch?.name]
+                          finalSelectedOverviewGameAch?.url ?? TROPHY_PLACEHOLDER
                         }
                       ></A1Icon>
                       <A1Right>

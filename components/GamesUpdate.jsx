@@ -2,7 +2,7 @@ import { LoadingOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { getFandomRemovedUrl, ICON_MAPPER } from '../helpers/gameHelper';
+import { getFandomRemovedUrl, ICON_MAPPER, TROPHY_PLACEHOLDER } from '../helpers/gameHelper';
 import {
   COLOR_BLACK1,
   COLOR_BLACK2,
@@ -85,7 +85,7 @@ export default function GamesUpdate() {
             return (
               <AchContainer>
                 <Icon
-                  image={ach?.url !== '' ? ach?.url : ICON_MAPPER?.[ach?.name]}
+                  image={ach?.url !== '' ? ach?.url : TROPHY_PLACEHOLDER}
                 ></Icon>
                 <Title>{ach?.name}</Title>
                 <Link>
