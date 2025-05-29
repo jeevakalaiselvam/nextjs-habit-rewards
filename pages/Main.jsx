@@ -60,6 +60,8 @@ export default function Main() {
   const [selected, setSelected] = useState(SECTION_ICONS);
   const [showModal, setShowModal] = useState(false);
   const [showModalGames, setShowModalGame] = useState(false);
+  const [selectedAchToEdit, setSelectedAchToEdit] = useState({});
+  const [showModalEdit, setShowModalEdit] = useState(false);
   const [selectedOverviewAchGame, setSelectedOverviewAchGame] = useState(null);
   const [formValues, setFormValues] = useState({
     type: 'Games',
@@ -159,6 +161,22 @@ export default function Main() {
         .post('/api/jeevaachievement', { ...formValues })
         .then((response) => {
           setShowModal(false);
+          setShowRecentAchUnlock(true);
+          refreshAchievements();
+        });
+    } catch (e) {
+      message.info('Error saving Achievement !');
+      setLoading(false);
+    }
+  };
+
+  const editAchievement = () => {
+    setLoading(true);
+    try {
+      axios
+        .put(`/api/jeevaachievement/${selectedAchToEdit?._id}`, { ...selectedAchToEdit })
+        .then((response) => {
+          setShowModalEdit(false);
           setShowRecentAchUnlock(true);
           refreshAchievements();
         });
@@ -406,6 +424,76 @@ export default function Main() {
           </ModalBottom>
         </ModalContainer>
       )}
+      {showModalEdit && (
+        <ModalContainer>
+          <ModalContent>
+            <Form>
+              <Title>Edit Achievement</Title>
+              <Row>
+                <SubTitle>Game</SubTitle>
+                <Dropdown
+                  trigger={['click']}
+                  overlayStyle={{ minWidth: '60%' }}
+                  menu={menuTypeGame}
+                  overlayClassName="full-width-dropdown"
+                >
+                  <Space>
+                    <span
+                      style={{
+                        fontSize: '.9rem',
+                        color: '#ACAEB2',
+                      }}
+                    >
+                      {selectedAchToEdit?.name}
+                    </span>
+                    <Caret>
+                      <FaCaretDown />
+                    </Caret>
+                  </Space>
+                </Dropdown>
+              </Row>
+              <Row>
+                <SubTitle>Name</SubTitle>
+              </Row>
+              <RowInput>
+                <input
+                  type="text"
+                  value={selectedAchToEdit?.title}
+                  onChange={(e) => {
+                    setSelectedAchToEdit((old) => ({
+                      ...old,
+                      title: String(e.target.value),
+                    }));
+                  }}
+                />
+              </RowInput>
+              <Row>
+                <SubTitle>Description</SubTitle>
+              </Row>
+              <RowInputDescription>
+                <textarea
+                  value={selectedAchToEdit?.description}
+                  type="text"
+                  onChange={(e) => {
+                    setSelectedAchToEdit((old) => ({
+                      ...old,
+                      description: String(e.target.value),
+                    }));
+                  }}
+                />
+              </RowInputDescription>
+            </Form>
+          </ModalContent>
+          <ModalBottom>
+            <ButtonSmall onClick={() => setShowModalEdit(false)} color={COLOR_RED}>
+              CANCEL
+            </ButtonSmall>
+            <ButtonSmall onClick={() => editAchievement()} color={COLOR_GREEN}>
+              SAVE
+            </ButtonSmall>
+          </ModalBottom>
+        </ModalContainer>
+      )}
       <Middle showModal={showModal}>
         {!loading && (
           <MiddleTopContainer>
@@ -435,7 +523,10 @@ export default function Main() {
                       <A1Title>{ach?.title}</A1Title>
                       <A1Desc>{ach?.description}</A1Desc>
                     </A1Right>
-                    <Tag>
+                    <Tag onClick={() => {
+                      setSelectedAchToEdit(ach)
+                      setShowModalEdit(true)
+                    }}>
                       <InnerTagMoney>
                         <span
                           style={{
