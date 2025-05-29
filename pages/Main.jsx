@@ -247,6 +247,7 @@ export default function Main() {
     selected == SECTION_WORK;
 
   let isOverviewMode = selected == SECTION_MONEY;
+  let isGamesMode = selected == SECTION_GAMES;
 
   let isGameIconsActive = selected == SECTION_ICONS;
 
@@ -604,6 +605,9 @@ export default function Main() {
                 )}
               </OverviewMode>
             )}
+            {isGamesMode && games?.map(game => {
+              return <GameCard>{JSON.stringify(game)}</GameCard>
+            })}
           </MiddleTopContainer>
         )}
         {loading && (
@@ -687,56 +691,6 @@ export default function Main() {
               }}
             >
               LIST
-            </span>
-          </Section>
-          <Section
-            selected={selected == SECTION_GAMES_ALL}
-            onClick={() => {
-              setSelected(SECTION_GAMES_ALL);
-            }}
-          >
-            <span
-              style={{
-                fontSize: '1.5rem',
-                marginLeft: '.5rem',
-                marginBottom: '.25rem',
-              }}
-            >
-              <MdVideogameAsset />
-            </span>
-            <span
-              style={{
-                fontSize: '.75rem',
-                transform: 'translateY(-1px)',
-                marginLeft: '.5rem',
-              }}
-            >
-              GAME
-            </span>
-          </Section>
-          <Section
-            selected={selected == SECTION_GAME}
-            onClick={() => {
-              setSelected(SECTION_GAME);
-            }}
-          >
-            <span
-              style={{
-                fontSize: '1.5rem',
-                marginLeft: '.5rem',
-                marginBottom: '.25rem',
-              }}
-            >
-              <MdVideogameAsset />
-            </span>
-            <span
-              style={{
-                fontSize: '.75rem',
-                transform: 'translateY(-1px)',
-                marginLeft: '.5rem',
-              }}
-            >
-              GAMES
             </span>
           </Section>
         </Sections>
