@@ -267,7 +267,6 @@ export default function Main() {
   allGames = new Set([...allGames])
 
 
-  achToShow = [...achToShow, ...achToShow, ...achToShow, ...achToShow]
 
   return (
     <Container>
@@ -1147,8 +1146,9 @@ const Header = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  height: 80px;
+  height: 60px;
   padding: 1rem;
+  background-color: ${COLOR_BLUE_DARK};
 `;
 
 const HLeft = styled.div`
