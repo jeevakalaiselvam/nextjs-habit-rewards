@@ -59,7 +59,7 @@ export default function Main() {
   const [loading, setLoading] = useState(false);
   const [games, setGames] = useState([]);
   const [achievements, setAchievements] = useState([]);
-  const [selected, setSelected] = useState(SECTION_ICONS);
+  const [selected, setSelected] = useState(SECTION_GAMES);
   const [showModal, setShowModal] = useState(false);
   const [showModalGames, setShowModalGame] = useState(false);
   const [selectedAchToEdit, setSelectedAchToEdit] = useState({});
@@ -267,6 +267,7 @@ export default function Main() {
   allGames = new Set([...allGames])
 
 
+  achToShow = [...achToShow, ...achToShow, ...achToShow, ...achToShow]
 
   return (
     <Container>
@@ -605,9 +606,6 @@ export default function Main() {
                 )}
               </OverviewMode>
             )}
-            {isGamesMode && games?.map(game => {
-              return <GameCard>{JSON.stringify(game)}</GameCard>
-            })}
           </MiddleTopContainer>
         )}
         {loading && (
@@ -641,59 +639,6 @@ export default function Main() {
             </A1Container>
           </UnlockTrigger>
         )}
-
-        <Sections>
-          <Section
-            selected={selected == SECTION_ICONS}
-            onClick={() => {
-              setSelected(SECTION_ICONS);
-            }}
-          >
-            <span
-              style={{
-                fontSize: '1.5rem',
-                marginLeft: '.5rem',
-                marginBottom: '.25rem',
-              }}
-            >
-              <HiHome />
-            </span>
-            <span
-              style={{
-                fontSize: '.75rem',
-                transform: 'translateY(-1px)',
-                marginLeft: '.5rem',
-              }}
-            >
-              ICON
-            </span>
-          </Section>
-          <Section
-            selected={selected == SECTION_GAMES}
-            onClick={() => {
-              setSelected(SECTION_GAMES);
-            }}
-          >
-            <span
-              style={{
-                fontSize: '1.5rem',
-                marginLeft: '.5rem',
-                marginBottom: '.25rem',
-              }}
-            >
-              <MdVideogameAsset />
-            </span>
-            <span
-              style={{
-                fontSize: '.75rem',
-                transform: 'translateY(-1px)',
-                marginLeft: '.5rem',
-              }}
-            >
-              LIST
-            </span>
-          </Section>
-        </Sections>
       </Middle>
 
     </Container>
@@ -1171,6 +1116,8 @@ const Middle = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
+  max-height: 90vh;
+  overflow:scroll;
   flex: 1;
   opacity: ${(props) => (props.showModal ? '0' : '1')};
 `;
