@@ -500,7 +500,7 @@ export default function Main() {
           <MiddleTopContainer>
             {achToShow?.length == 0 &&
               !isOverviewMode &&
-              isLongAchievementsActive && <NoData>No Achievements</NoData>}
+              isLongAchievementsActive && <NoData>No Games</NoData>}
             {achToShow?.length > 0 &&
               isLongAchievementsActive &&
               !isOverviewMode &&
@@ -838,6 +838,7 @@ const NoData = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 1rem;6
 `;
 
 const A1Container = styled.div`
@@ -862,7 +863,7 @@ const A1Icon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 70px;
+  width: 140px;
   height: 70px;
   background: ${(props) => `url('${props.icon}')`};
   background-size: cover;

@@ -99,22 +99,22 @@ export default function GamesUpdate() {
                     }}
                     value={allEditableUrl?.[ach?._id]}
                   />
-                  <Save
-                    onClick={() => {
-                      updateInfo(ach?._id);
+                </Link>
+                <Save
+                  onClick={() => {
+                    updateInfo(ach?._id);
+                  }}
+                >
+                  <span>SAVE</span>
+                  <span
+                    style={{
+                      transform: 'translateY(2px)',
+                      marginLeft: '.5rem',
                     }}
                   >
-                    <span>SAVE</span>
-                    <span
-                      style={{
-                        transform: 'translateY(2px)',
-                        marginLeft: '.5rem',
-                      }}
-                    >
-                      <TbRefresh />
-                    </span>
-                  </Save>
-                </Link>
+                    <TbRefresh />
+                  </span>
+                </Save>
               </AchContainer>
             );
           })}
@@ -128,11 +128,11 @@ const Save = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
+  width: 100%;
   cursor: pointer;
   padding: 0rem 1rem;
   height: 30px;
-  margin-left: 0.5rem;
+  margin-top: 0.5rem;
   background-color: ${COLOR_BLUE};
 
   &:hover {
@@ -144,8 +144,8 @@ const Icon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 40px;
-  min-height: 40px;
+  min-width: 140px;
+  min-height: 70px;
   background: ${(props) => `url('${props.image}')`};
   background-size: cover;
   background-repeat: no-repeat;
@@ -162,9 +162,9 @@ const Data = styled.div`
 const Title = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   height: 30px;
-  padding-left: 1rem;
+  padding: .5rem;
   width: 100%;
   flex: 1;
   font-size: .8rem;
@@ -178,18 +178,15 @@ const Description = styled.div`
   width: 100%;
   opacity: 0.5;
   font-size: .8rem;
-  padding-left: 1rem;
 `;
 
 const Link = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding-left: 1rem;
   height: 30px;
   width: 100%;
   margin-top: 4px;
-  flex: 2;
 
   & input {
     width: 100%;
@@ -203,19 +200,19 @@ const Link = styled.div`
 
 const AchContainer = styled.div`
   display: flex;
-  width: 100%;
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
   background-color: ${COLOR_BLACK2};
+  flex-direction:column;
   padding: 0.5rem;
+  margin:1rem;
 `;
 
 const AchievementContainer = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  flex-direction: column;
   overflow: scroll;
   width: 100%;
   min-height: 100vh;
