@@ -1,3 +1,4 @@
+import moment from "moment/moment";
 
 
 export const ICON_MAPPER = {
@@ -26,3 +27,9 @@ export const formatIndianMoney = (value) => {
 
 
 export const TROPHY_PLACEHOLDER = "https://wallpapers.com/images/hd/sick-steam-logo-z39nec53f2dqayr0.jpg"
+
+export const getTimeFormattedForAch = (time) => {
+  return moment(new Date(time)).format(
+    "DD MMM, YYYY hh:mm A"
+  );
+};

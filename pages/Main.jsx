@@ -23,6 +23,7 @@ import {
   Feature,
   formatIndianMoney,
   GAMES_ARRAY,
+  getTimeFormattedForAch,
   Habit,
   HABIT_ARRAY,
   ICON_MAPPER,
@@ -544,6 +545,7 @@ export default function Main() {
                     <A1Right>
                       <A1Title>{ach?.title}</A1Title>
                       <A1Desc>{ach?.description}</A1Desc>
+                      <A1Unlocked>{getTimeFormattedForAch(ach?.unlocked)}</A1Unlocked>
                     </A1Right>
                     <Tag onClick={() => {
                       setSelectedAchToEdit(ach)
@@ -906,9 +908,19 @@ const A1Desc = styled.div`
   align-items: center;
   justify-content: center;
   padding: 0rem 1rem;
-  opacity: 0.5;
+  opacity: 0.7;
   font-size: 0.8rem;
-  flex: 2;
+  flex: 3;
+`;
+
+const A1Unlocked = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0rem 1rem;
+  opacity: 0.25;
+  font-size: 0.8rem;
+  flex: 3;
 `;
 
 const A1Right = styled.div`
