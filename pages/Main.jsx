@@ -62,7 +62,7 @@ export default function Main() {
   const [loading, setLoading] = useState(false);
   const [games, setGames] = useState([]);
   const [achievements, setAchievements] = useState([]);
-  const [selected, setSelected] = useState("RECENT");
+  const [selected, setSelected] = useState("GAMES");
   const [showModal, setShowModal] = useState(false);
   const [showModalGames, setShowModalGame] = useState(false);
   const [selectedAchToEdit, setSelectedAchToEdit] = useState({});
