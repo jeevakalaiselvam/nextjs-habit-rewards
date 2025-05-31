@@ -584,7 +584,7 @@ export default function Main() {
                       <A1Title>{ach?.title}</A1Title>
                       <A1Desc>{ach?.description}</A1Desc>
                       {/* <A1Unlocked>{getTimeFormattedForAch(ach?.unlocked)}</A1Unlocked> */}
-                    </A1Right>
+                    </A1Right>6
                     <Tag onClick={() => {
                       setSelectedAchToEdit(ach)
                       setShowModalEdit(true)
@@ -642,7 +642,18 @@ export default function Main() {
               achsForGame?.map((ach, index) => {
                 return (
                   <A1Container>
-                    <A1Icon icon={urlsForGame[ach?.name] ?? TROPHY_PLACEHOLDER}></A1Icon>
+                    <Popconfirm
+                      title="Delete Achievement"
+                      description="Are you sure to delete this task?"
+                      onConfirm={() => {
+                        deleteAchievement(ach);
+                      }}
+                      onCancel={() => { }}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <A1Icon icon={urlsForGame[ach?.name] ?? TROPHY_PLACEHOLDER}></A1Icon>
+                    </Popconfirm>
                     <A1Right>
                       <A1Title>{ach?.title}</A1Title>
                       <A1Desc>{ach?.description}</A1Desc>
@@ -751,7 +762,7 @@ export default function Main() {
                 okText="Yes"
                 cancelText="No"
               >
-                <A1Icon icon={urlsForGame[lastAch6?.name] ?? TROPHY_PLACEHOLDER}></A1Icon>
+                <A1Icon icon={urlsForGame[lastAch?.name] ?? TROPHY_PLACEHOLDER}></A1Icon>
               </Popconfirm>
 
               <A1Right>
