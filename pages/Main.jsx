@@ -68,6 +68,7 @@ export default function Main() {
   const [formValues, setFormValues] = useState({
     type: 'Games',
     name: '',
+    gameValue: '',
     title: '',
     description: '',
     date: new Date(),
@@ -97,6 +98,7 @@ export default function Main() {
     setFormValues((old) => ({
       ...old,
       name: String(e.key),
+      value: String(e.key)?.toLowerCase()?.split(" ")?.join("_"),
       title: '',
       description: '',
     }));
@@ -189,9 +191,10 @@ export default function Main() {
   };
 
   const deleteAchievement = (ach) => {
+    console.log(ach)
     setLoading(true);
     try {
-      axios.delete(`/api/jeevaachievement/${ach?._id}`).then((response) => {
+      axios.delete(`/api/jeevaachievement/${ach?._id}?value=${ach?.name?.toLowerCase()?.split(" ")?.join("_")}`).then((response) => {
         refreshAchievements();
       });
     } catch (e) {
@@ -320,6 +323,7 @@ export default function Main() {
                     setFormValuesGame((old) => ({
                       ...old,
                       name: String(e.target.value),
+                      value: String(e.target.value)?.toLowerCase()?.split(" ")?.join("_"),
                     }));
                   }}
                 />

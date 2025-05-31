@@ -2,9 +2,9 @@ import clientPromise from '../../../lib/db';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { name, title, description, type } = req.body;
+    const { name, title, description, type, value } = req.body;
 
-    if (!name || !title || !description || !type) {
+    if (!name || !title || !description || !type || !value) {
       return res
         .status(400)
         .json({ error: 'Name, Title, Description, Type required' });
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
     try {
       const client = await clientPromise;
       const db = client.db('habittracker');
-      await db.collection('jeevaachievements').insertOne({
+      await db.collection(value).insertOne({
         name,
         title,
         description,
@@ -30,11 +30,26 @@ export default async function handler(req, res) {
     try {
       const client = await clientPromise;
       const db = client.db('habittracker');
-      const jeevaAchievements = await db
-        .collection('jeevaachievements')
+
+      let allAchievements = []
+
+      const jeevagames = await db
+        .collection('allgames')
         .find({})
         .toArray();
-      res.status(200).json(jeevaAchievements);
+
+      await Promise.all(
+        jeevagames?.map(async (game) => {
+          const gameAchs = await db
+            .collection(game?.value)
+            .find({})
+            .toArray();
+
+          allAchievements.push(...gameAchs);
+        })
+      );
+
+      res.status(200).json(allAchievements);
     } catch (error) {
       res.status(500).json({ error: 'Failed to fetch Jeeva Achievements' });
     }

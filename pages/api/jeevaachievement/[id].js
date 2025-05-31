@@ -40,8 +40,11 @@ export default async function handler(req, res) {
       const client = await clientPromise;
       const db = client.db('habittracker');
 
+
+      const { value } = req.query;
+
       const result = await db
-        .collection('jeevaachievements')
+        .collection(req.query.value)
         .deleteOne({ _id: new ObjectId(id) });
 
       if (result.deletedCount === 1) {
