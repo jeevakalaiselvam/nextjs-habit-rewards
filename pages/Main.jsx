@@ -94,6 +94,21 @@ export default function Main() {
     }),
   ];
 
+  const clearFormData = () => {
+    setFormValuesGame(old => ({
+      name: '',
+      url: '',
+    }))
+    setFormValues(old => ({
+      type: 'Games',
+      name: '',
+      gameValue: '',
+      title: '',
+      description: '',
+      date: new Date(),
+    }))
+  }
+
   const handleItemClickName = (e) => {
     setFormValues((old) => ({
       ...old,
@@ -292,6 +307,7 @@ export default function Main() {
         <HRight>
           <AddIcon
             onClick={() => {
+              clearFormData()
               setShowModal(true);
             }}
           >
