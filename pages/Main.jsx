@@ -346,7 +346,7 @@ export default function Main() {
             </Form>
           </ModalContent>
           <ModalBottom>
-            <ButtonSmall onClick={() => setShowModal(false)} color={COLOR_RED}>
+            <ButtonSmall onClick={() => setShowModalGame(false)} color={COLOR_RED}>
               CANCEL
             </ButtonSmall>
             <ButtonSmall onClick={() => saveGame()} color={COLOR_GREEN}>
