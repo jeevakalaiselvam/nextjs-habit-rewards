@@ -748,31 +748,31 @@ export default function Main() {
             />
           </MiddleTopContainer>
         )}
-        {showRecentAchUnlock && (
-          <UnlockTrigger>
-            <A1Container>
-              <Popconfirm
-                title="Delete Achievement"
-                description="Are you sure to delete this task?"
-                onConfirm={() => { }}
-                onCancel={() => { }}
-                okText="Yes"
-                cancelText="No"
-              >
-                <A1Icon icon={urlsForGame[lastAch?.name] ?? TROPHY_PLACEHOLDER}></A1Icon>
-              </Popconfirm>
-
-              <A1Right>
-                <A1Title>{lastAch?.title}</A1Title>
-                <A1Desc>{lastAch?.description}</A1Desc>
-              </A1Right>
-              <Tag>
-                <InnerTag>DONE</InnerTag>
-              </Tag>
-            </A1Container>
-          </UnlockTrigger>
-        )}
       </Middle>
+      {true && (
+        <UnlockTrigger>
+          <A1Container>
+            <Popconfirm
+              title="Delete Achievement"
+              description="Are you sure to delete this task?"
+              onConfirm={() => { }}
+              onCancel={() => { }}
+              okText="Yes"
+              cancelText="No"
+            >
+              <A1Icon icon={urlsForGame[lastAch?.name] ?? TROPHY_PLACEHOLDER}></A1Icon>
+            </Popconfirm>
+
+            <A1Right>
+              <A1Title>{lastAch?.title}</A1Title>
+              <A1Desc>{lastAch?.description}</A1Desc>
+            </A1Right>
+            <Tag>
+              <InnerTag>DONE</InnerTag>
+            </Tag>
+          </A1Container>
+        </UnlockTrigger>
+      )}
       <BottomProgress>
         <BLeft>
           <span style={{ marginRight: '.25rem' }}><FaTrophy /></span>
@@ -1013,6 +1013,7 @@ const UnlockTrigger = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  margin-bottom: 4px;
   animation: slideUp 0.25s linear forwards;
   @keyframes slideUp {
     from {
