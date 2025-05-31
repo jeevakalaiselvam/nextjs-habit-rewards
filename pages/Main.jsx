@@ -17,7 +17,7 @@ import {
   generateDarkTextColorForLightBg,
 } from '../helpers/colorHelper';
 import { Dropdown, message, Popconfirm, Progress, Space, Spin } from 'antd';
-import { FaCaretDown, FaGlobe, FaPlus, FaRupeeSign, FaTrophy } from 'react-icons/fa';
+import { FaCaretDown, FaGlobe, FaIcons, FaPlus, FaRupeeSign, FaTrophy } from 'react-icons/fa';
 import { LuIndianRupee } from 'react-icons/lu';
 import {
   Battlefield2042,
@@ -34,7 +34,7 @@ import {
   Work,
   WORK_ARRAY,
 } from '../helpers/gameHelper';
-import { TbRefresh } from 'react-icons/tb';
+import { TbGoGame, TbRefresh } from 'react-icons/tb';
 import { MdVideogameAsset } from 'react-icons/md';
 import axios from 'axios';
 import {
@@ -45,6 +45,7 @@ import {
   HiPlusCircle,
   HiRefresh,
   HiShieldCheck,
+  HiViewBoards,
 } from 'react-icons/hi';
 import { LoadingOutlined } from '@ant-design/icons';
 
@@ -282,7 +283,7 @@ export default function Main() {
     selectedOverviewAchGame ?? onlyGameAchs?.[0];
 
   let allGames = achToShow?.map(ach => {
-    return ach?.name
+    return { name: ach?.name, url: ach?.url }
   })
 
   allGames = new Set([...allGames])
@@ -292,11 +293,26 @@ export default function Main() {
   let nextLevel = Math.floor(totalXP / 1000) + 1
   let completionForNext = ((totalXP) / (nextLevel * 1000)) * 100;
 
+  allGames = [...allGames]
+  console.log({ allGames })
+
 
   return (
     <Container>
       <Header>
         <HLeft>
+          <span style={{ fontSize: '1.3rem', marginRight: '.5rem', color: COLOR_ACCENT }}>
+            <HiShieldCheck />
+          </span>
+          <span
+            style={{
+              fontSize: '1.25rem',
+              transform: 'translateY(-2px)',
+              marginRight: '1rem', color: COLOR_ACCENT
+            }}
+          >
+            {games?.length}
+          </span>
           <span style={{ fontSize: '1.1rem', marginRight: '.5rem' }}>
             <FaTrophy />
           </span>
@@ -525,9 +541,7 @@ export default function Main() {
             {achToShow?.length == 0 &&
               !isOverviewMode &&
               isLongAchievementsActive && <NoData>No Games</NoData>}
-            {achToShow?.length > 0 &&
-              isLongAchievementsActive &&
-              !isOverviewMode &&
+            {achToShow?.length > 0 && (selected == "RECENT") &&
               achToShow?.map((ach, index) => {
                 let isMoneyRelated = ach?.type == Work || ach?.type == Habit;
                 return (
@@ -564,6 +578,35 @@ export default function Main() {
                         </span>
                         <span style={{ marginLeft: '.25rem' }}>
                           {achToShow?.length - index}</span>
+                      </InnerTagMoney>
+                    </Tag>
+                  </A1Container>
+                );
+              })}
+            {achToShow?.length > 0 && (selected == "GAMES") &&
+              games?.map((ach, index) => {
+                return (
+                  <A1Container>
+                    <A1Icon icon={ach?.url ?? TROPHY_PLACEHOLDER}></A1Icon>
+                    <A1Right>
+                      <A1Title>{ach?.name}</A1Title>
+                      <A1Desc>{`Played ${ach?.name}`}</A1Desc>
+                    </A1Right>
+                    <Tag onClick={() => {
+                      setSelectedAchToEdit(ach)
+                      setShowModalEdit(true)
+                    }}>
+                      <InnerTagMoney>
+                        <span
+                          style={{
+                            transform: 'translateY(1px)',
+                            fontSize: '.9rem',
+                          }}
+                        >
+                          <FaTrophy />{' '}
+                        </span>
+                        <span style={{ marginLeft: '.25rem' }}>
+                          {games?.length - index}</span>
                       </InnerTagMoney>
                     </Tag>
                   </A1Container>
@@ -676,9 +719,33 @@ export default function Main() {
           <span style={{ marginRight: '.25rem' }}><FaTrophy /></span>
           <span>{nextLevel}</span></BRight>
       </BottomProgress>
+      <Bottom>
+        <BottomItem active={selected == "GAMES"} onClick={() => { setSelected("GAMES") }}>
+          <span><MdVideogameAsset /></span>
+          <span style={{ fontSize: '.8rem' }}>GAMES</span>
+        </BottomItem>
+        <BottomItem active={selected == "GAME"} onClick={() => { setSelected("GAME") }}>
+          <span><MdVideogameAsset /></span>
+          <span style={{ fontSize: '.8rem' }}>GAME</span>
+        </BottomItem>
+        <BottomItem active={selected == "RECENT"} onClick={() => { setSelected("RECENT") }}>
+          <span><HiViewBoards /></span>
+          <span style={{ fontSize: '.8rem' }}>RECENT</span>
+        </BottomItem>
+      </Bottom>
     </Container>
   );
 }
+
+
+const BottomItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex: 1;
+  color: ${props => props.active ? COLOR_ACCENT : ""};
+  `
 
 const BLeft = styled.div`
   display: flex;
@@ -720,6 +787,7 @@ const BottomProgress = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100%;
+  background-color: ${COLOR_ACH};
 `;
 
 const Total = styled.div`
@@ -1213,8 +1281,7 @@ const MiddleTopContainer = styled.div`
 const Bottom = styled.div`
   display: flex;
   align-items: center;
-  flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
   height: 100px;
 `;
