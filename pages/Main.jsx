@@ -68,6 +68,7 @@ export default function Main() {
   const [selectedAchToEdit, setSelectedAchToEdit] = useState({});
   const [showModalEdit, setShowModalEdit] = useState(false);
   const [selectedOverviewAchGame, setSelectedOverviewAchGame] = useState(null);
+  const [selectedGame, setSelectedGame] = useState(null);
   const [formValues, setFormValues] = useState({
     type: 'Games',
     name: '',
@@ -294,7 +295,28 @@ export default function Main() {
   let completionForNext = ((totalXP) / (nextLevel * 1000)) * 100;
 
   allGames = [...allGames]
-  console.log({ allGames })
+
+  let achsForGame = achievements?.filter(ach => ach?.name == selectedGame)
+
+  let urlsForGame = {}
+  let achAllForGame = {}
+
+  achievements.forEach(ach => {
+    if (!achAllForGame?.[ach?.name]) {
+      achAllForGame[ach?.name] = []
+      achAllForGame[ach?.name].push(ach)
+    } else {
+      achAllForGame[ach?.name].push(ach)
+    }
+  })
+
+  games.forEach(game => {
+    if (!urlsForGame?.[game?.name]) {
+      urlsForGame[game?.name] = game?.url
+    }
+  })
+
+  console.log({ achsForGame, urlsForGame })
 
 
   return (
@@ -302,7 +324,7 @@ export default function Main() {
       <Header>
         <HLeft>
           <span style={{ fontSize: '1.3rem', marginRight: '.5rem', color: COLOR_ACCENT }}>
-            <HiShieldCheck />
+            <HiLibrary />
           </span>
           <span
             style={{
@@ -561,7 +583,7 @@ export default function Main() {
                     <A1Right>
                       <A1Title>{ach?.title}</A1Title>
                       <A1Desc>{ach?.description}</A1Desc>
-                      <A1Unlocked>{getTimeFormattedForAch(ach?.unlocked)}</A1Unlocked>
+                      {/* <A1Unlocked>{getTimeFormattedForAch(ach?.unlocked)}</A1Unlocked> */}
                     </A1Right>
                     <Tag onClick={() => {
                       setSelectedAchToEdit(ach)
@@ -583,14 +605,47 @@ export default function Main() {
                   </A1Container>
                 );
               })}
-            {achToShow?.length > 0 && (selected == "GAMES") &&
+            {games?.length > 0 && (selected == "GAMES") &&
               games?.map((ach, index) => {
                 return (
-                  <A1Container>
-                    <A1Icon icon={ach?.url ?? TROPHY_PLACEHOLDER}></A1Icon>
+                  <A1Container onClick={() => {
+                    setSelectedGame(ach?.name)
+                    setSelected("GAME")
+                  }}>
+                    {/* <Name>GAME</Name> */}
+                    <A1Icon icon={urlsForGame[ach?.name] ?? TROPHY_PLACEHOLDER}></A1Icon>
                     <A1Right>
                       <A1Title>{ach?.name}</A1Title>
                       <A1Desc>{`Played ${ach?.name}`}</A1Desc>
+                    </A1Right>
+                    <Tag forGame={true} onClick={() => {
+                      setSelectedAchToEdit(ach)
+                      setShowModalEdit(true)
+                    }}>
+                      <InnerTagMoney>
+                        <span
+                          style={{
+                            transform: 'translateY(1px)',
+                            fontSize: '1rem',
+                          }}
+                        >
+                          <FaTrophy />{' '}
+                        </span>
+                        <span style={{ marginLeft: '.25rem' }}>
+                          {achAllForGame?.[ach?.name]?.length ?? 0}</span>
+                      </InnerTagMoney>
+                    </Tag>
+                  </A1Container>
+                );
+              })}
+            {achsForGame?.length > 0 && (selected == "GAME") && selectedGame?.length > 0 &&
+              achsForGame?.map((ach, index) => {
+                return (
+                  <A1Container>
+                    <A1Icon icon={urlsForGame[ach?.name] ?? TROPHY_PLACEHOLDER}></A1Icon>
+                    <A1Right>
+                      <A1Title>{ach?.title}</A1Title>
+                      <A1Desc>{ach?.description}</A1Desc>
                     </A1Right>
                     <Tag onClick={() => {
                       setSelectedAchToEdit(ach)
@@ -606,12 +661,15 @@ export default function Main() {
                           <FaTrophy />{' '}
                         </span>
                         <span style={{ marginLeft: '.25rem' }}>
-                          {games?.length - index}</span>
+                          {achsForGame?.length - index}</span>
                       </InnerTagMoney>
                     </Tag>
                   </A1Container>
                 );
               })}
+            {achsForGame?.length == 0 && (selected == "GAME") && selectedGame?.length > 0 &&
+              <NoData>No Achievements</NoData>}
+            {!selectedGame && (selected == "GAME") && <NoData>No Game Selected</NoData>}
             {isGameIconsActive && (
               <OverviewMode>
                 <RecentItemsGame>
@@ -693,7 +751,7 @@ export default function Main() {
                 okText="Yes"
                 cancelText="No"
               >
-                <A1Icon icon={lastAch?.url ?? TROPHY_PLACEHOLDER}></A1Icon>
+                <A1Icon icon={urlsForGame[lastAch6?.name] ?? TROPHY_PLACEHOLDER}></A1Icon>
               </Popconfirm>
 
               <A1Right>
@@ -722,20 +780,35 @@ export default function Main() {
       <Bottom>
         <BottomItem active={selected == "GAMES"} onClick={() => { setSelected("GAMES") }}>
           <span><MdVideogameAsset /></span>
-          <span style={{ fontSize: '.8rem' }}>GAMES</span>
+          <span style={{ fontWeight: 'bold', fontSize: '.8rem' }}>GAMES</span>
         </BottomItem>
         <BottomItem active={selected == "GAME"} onClick={() => { setSelected("GAME") }}>
           <span><MdVideogameAsset /></span>
-          <span style={{ fontSize: '.8rem' }}>GAME</span>
+          <span style={{ fontWeight: 'bold', fontSize: '.8rem' }}>GAME</span>
         </BottomItem>
         <BottomItem active={selected == "RECENT"} onClick={() => { setSelected("RECENT") }}>
           <span><HiViewBoards /></span>
-          <span style={{ fontSize: '.8rem' }}>RECENT</span>
+          <span style={{ fontWeight: 'bold', fontSize: '.8rem' }}>RECENT</span>
         </BottomItem>
       </Bottom>
     </Container>
   );
 }
+
+const Name = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center; 
+  position: absolute;
+  left: 0;
+  bottom: 50%;
+  width: 70px;
+  height: 20px;
+  transform: translate(-25%,50%) rotate(-90deg);
+  font-size: .8rem;
+  background-color: ${COLOR_GREEN};
+  color: ${generateDarkTextColorForLightBg(COLOR_GREEN)};
+  `
 
 
 const BottomItem = styled.div`
@@ -744,6 +817,7 @@ const BottomItem = styled.div`
   justify-content: center;
   flex-direction: column;
   flex: 1;
+  transform: translateY(.25rem);
   color: ${props => props.active ? COLOR_ACCENT : ""};
   `
 
@@ -966,8 +1040,8 @@ const Tag = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${COLOR_GREEN};
-  color: ${(props) => generateDarkTextColorForLightBg(COLOR_GREEN)};
+  background-color: ${props => props.forGame ? COLOR_ACCENT : COLOR_GREEN};
+  color: ${(props) => props.forGame ? generateDarkTextColorForLightBg(COLOR_ACCENT) : generateDarkTextColorForLightBg(COLOR_GREEN)};
   height: 70px;
 `;
 
@@ -984,7 +1058,7 @@ const NoData = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;6
+  padding: 1rem;
 `;
 
 const A1Container = styled.div`
@@ -1283,7 +1357,7 @@ const Bottom = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100px;
+  padding: 1rem 1rem 3rem 1rem;
 `;
 
 const Header = styled.div`
