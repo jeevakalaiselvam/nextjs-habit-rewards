@@ -25,4 +25,4 @@ export const formatIndianMoney = (value) => {
 };
 
 
-export const TROPHY_PLACEHOLDER = "https://t3.ftcdn.net/jpg/03/32/32/04/360_F_332320458_OFW95fppmZAYYs3lT8CwDfK2HdQLF7RU.jpg"
+export const TROPHY_PLACEHOLDER = "https://wallpapers.com/images/hd/sick-steam-logo-z39nec53f2dqayr0.jpg"
