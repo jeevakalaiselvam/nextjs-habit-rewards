@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import {
+  COLOR_ACCENT,
   COLOR_ACH,
   COLOR_BLACK1,
   COLOR_BLACK2,
@@ -15,7 +16,7 @@ import {
   COLOR_WHITE,
   generateDarkTextColorForLightBg,
 } from '../helpers/colorHelper';
-import { Dropdown, message, Popconfirm, Space, Spin } from 'antd';
+import { Dropdown, message, Popconfirm, Progress, Space, Spin } from 'antd';
 import { FaCaretDown, FaGlobe, FaPlus, FaRupeeSign, FaTrophy } from 'react-icons/fa';
 import { LuIndianRupee } from 'react-icons/lu';
 import {
@@ -286,6 +287,10 @@ export default function Main() {
 
   allGames = new Set([...allGames])
 
+  let totalXP = achievements?.reduce((acc, ach) => acc + 100, 0)
+  let currentLevel = Math.floor(totalXP / 1000)
+  let nextLevel = Math.floor(totalXP / 1000) + 1
+  let completionForNext = ((totalXP) / (nextLevel * 1000)) * 100;
 
 
   return (
@@ -312,16 +317,13 @@ export default function Main() {
               setShowModal(true);
             }}
           >
-            <HiOutlinePlusSm />
-          </AddIcon>
-        </HRight>{' '}
-        <HRight>
-          <AddIconRefresh
+            <span><HiOutlinePlusSm /></span>
+          </AddIcon> <AddIconRefresh
             onClick={() => {
               refreshAchievements();
             }}
           >
-            <TbRefresh />
+            <span style={{ marginLeft: '1rem' }}><TbRefresh /></span>
           </AddIconRefresh>
         </HRight>
       </Header>
@@ -662,10 +664,63 @@ export default function Main() {
           </UnlockTrigger>
         )}
       </Middle>
-
+      <BottomProgress>
+        <BLeft>
+          <span style={{ marginRight: '.25rem' }}><FaTrophy /></span>
+          <span>{currentLevel}</span>
+        </BLeft>
+        <BMiddle>
+          <Progress percent={completionForNext} showInfo={false} />
+        </BMiddle>
+        <BRight>
+          <span style={{ marginRight: '.25rem' }}><FaTrophy /></span>
+          <span>{nextLevel}</span></BRight>
+      </BottomProgress>
     </Container>
   );
 }
+
+const BLeft = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem;
+  `
+
+const BMiddle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  `
+
+const BRight = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem;
+  `
+
+
+const Middle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  width: 100%;
+  max-height: 82vh;
+  overflow:scroll;
+  flex: 1;
+  opacity: ${(props) => (props.showModal ? '0' : '1')};
+`;
+
+
+const BottomProgress = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+`;
 
 const Total = styled.div`
   display: flex;
@@ -1143,17 +1198,6 @@ const Section = styled.div`
   }
 `;
 
-const Middle = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 100%;
-  max-height: 90vh;
-  overflow:scroll;
-  flex: 1;
-  opacity: ${(props) => (props.showModal ? '0' : '1')};
-`;
 
 const MiddleTopContainer = styled.div`
   display: flex;
@@ -1193,10 +1237,19 @@ const HLeft = styled.div`
   color: ${COLOR_GREEN};
 `;
 
+const HCenter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content:center;
+  flex: 2;
+  color: ${COLOR_ACCENT};
+`;
+
+
 const HRight = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 1rem;
+  flex: 1;
   justify-content: flex-end;
 `;
 
