@@ -625,7 +625,7 @@ export default function Main() {
                 okText="Yes"
                 cancelText="No"
               >
-                <A1Icon icon={ICON_MAPPER[lastAch?.name]}></A1Icon>
+                <A1Icon icon={lastAch?.url ?? TROPHY_PLACEHOLDER}></A1Icon>
               </Popconfirm>
 
               <A1Right>
