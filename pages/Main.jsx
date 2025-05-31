@@ -104,10 +104,7 @@ export default function Main() {
       url: '',
     }))
     setFormValues(old => ({
-      type: 'Games',
-      name: '',
-      gameValue: '',
-      title: '',
+      ...old,
       description: '',
       date: new Date(),
     }))
