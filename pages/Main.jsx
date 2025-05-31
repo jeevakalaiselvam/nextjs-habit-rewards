@@ -178,7 +178,7 @@ export default function Main() {
     setLoading(true);
     try {
       axios
-        .put(`/api/jeevaachievement/${selectedAchToEdit?._id}`, { ...selectedAchToEdit })
+        .put(`/api/jeevaachievement/${selectedAchToEdit?._id}?value=${selectedAchToEdit?.name?.toLowerCase()?.split(" ")?.join("_")}`, { ...selectedAchToEdit })
         .then((response) => {
           setShowModalEdit(false);
           setShowRecentAchUnlock(true);
@@ -186,6 +186,7 @@ export default function Main() {
         });
     } catch (e) {
       message.info('Error saving Achievement !');
+      console.error(e)
       setLoading(false);
     }
   };
