@@ -1382,7 +1382,7 @@ const Bottom = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 1rem 1rem 1rem 1rem;
+  padding: 1rem 1rem 2rem 1rem;
   background-color: ${COLOR_ACH};
 `;
 
