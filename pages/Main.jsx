@@ -252,7 +252,7 @@ export default function Main() {
 
 
   achToShow = achToShow?.map(ach => {
-    return { ...ach, url: games?.find(game => game?.name == ach?.name)?.url ?? TROPHY_PLACEHOLDER }
+    return { ...ach, url: games?.find(game => game?.name == ach?.name)?.url }
   })
 
   let lastAch = achToShow?.[0];
@@ -323,6 +323,41 @@ export default function Main() {
       refreshGames();
     })
   }
+
+  const markAchAsCompleted = (ach) => {
+    setLoading(true);
+    try {
+      axios
+        .put(`/api/jeevaachievement/${ach?._id}?value=${ach?.name?.toLowerCase()?.split(" ")?.join("_")}`, { ...ach, achieved: true })
+        .then((response) => {
+          setShowModalEdit(false);
+          setShowRecentAchUnlock(true);
+          refreshAchievements();
+        });
+    } catch (e) {
+      message.info('Error saving Achievement !');
+      console.error(e)
+      setLoading(false);
+    }
+  }
+
+  const markAchAsNotCompleted = (ach) => {
+    setLoading(true);
+    try {
+      axios
+        .put(`/api/jeevaachievement/${ach?._id}?value=${ach?.name?.toLowerCase()?.split(" ")?.join("_")}`, { ...ach, achieved: false })
+        .then((response) => {
+          setShowModalEdit(false);
+          setShowRecentAchUnlock(true);
+          refreshAchievements();
+        });
+    } catch (e) {
+      message.info('Error saving Achievement !');
+      console.error(e)
+      setLoading(false);
+    }
+  }
+
 
 
   return (
@@ -584,7 +619,7 @@ export default function Main() {
                       okText="Yes"
                       cancelText="No"
                     >
-                      <A1Icon icon={ach?.url ?? TROPHY_PLACEHOLDER}></A1Icon>
+                      <A1Icon icon={ach?.url}></A1Icon>
                     </Popconfirm>
                     <A1Right>
                       <A1Title>{ach?.title}</A1Title>
@@ -626,7 +661,7 @@ export default function Main() {
                       okText="Yes"
                       cancelText="No"
                     >
-                      <A1Icon icon={urlsForGame[ach?.name] ?? TROPHY_PLACEHOLDER}></A1Icon>
+                      <A1Icon icon={urlsForGame[ach?.name]}></A1Icon>
                     </Popconfirm>
                     <A1Right onClick={(e) => {
                       setSelectedGame(ach?.name)
@@ -659,6 +694,18 @@ export default function Main() {
               achsForGame?.map((ach, index) => {
                 return (
                   <A1Container>
+                    <Tag achieved={ach?.achieved} onClick={() => {
+                      if (ach?.achieved) {
+                        markAchAsNotCompleted(ach)
+                      } else {
+                        markAchAsCompleted(ach)
+                      }
+                    }}>
+                      <InnerTagMoney achieved={ach?.achieved}>
+                        <span style={{ marginLeft: '.25rem', background: ach?.achieved ? COLOR_GREEN : COLOR_ACCENT }}>
+                          {ach?.achieved ? "DONE" : "ACTIVE"}</span>
+                      </InnerTagMoney>
+                    </Tag>
                     <Popconfirm
                       title="Delete Achievement"
                       description="Are you sure to delete this task?"
@@ -669,7 +716,7 @@ export default function Main() {
                       okText="Yes"
                       cancelText="No"
                     >
-                      <A1Icon icon={urlsForGame[ach?.name] ?? TROPHY_PLACEHOLDER}></A1Icon>
+                      <A1Icon icon={urlsForGame[ach?.name]}></A1Icon>
                     </Popconfirm>
                     <A1Right>
                       <A1Title>{ach?.title}</A1Title>
@@ -738,7 +785,7 @@ export default function Main() {
                     <A1ContainerMoney>
                       <A1Icon
                         icon={
-                          finalSelectedOverviewGameAch?.url ?? TROPHY_PLACEHOLDER
+                          finalSelectedOverviewGameAch?.url
                         }
                       ></A1Icon>
                       <A1Right>
@@ -769,7 +816,7 @@ export default function Main() {
           </MiddleTopContainer>
         )}
       </Middle>
-      {showRecentAchUnlock && (
+      {showRecentAchUnlock && lastAch && (
         <UnlockTrigger>
           <A1Container>
             <Popconfirm
@@ -780,15 +827,15 @@ export default function Main() {
               okText="Yes"
               cancelText="No"
             >
-              <A1Icon icon={urlsForGame[lastAch?.name] ?? TROPHY_PLACEHOLDER}></A1Icon>
+              <A1Icon icon={urlsForGame[lastAch?.name]}></A1Icon>
             </Popconfirm>
 
             <A1Right>
               <A1Title>{lastAch?.title}</A1Title>
               <A1Desc>{lastAch?.description}</A1Desc>
             </A1Right>
-            <Tag>
-              <InnerTag>DONE</InnerTag>
+            <Tag achieved={lastAch?.achieved}>
+              <InnerTag>{lastAch?.achieved ? "DONE" : "ACTIVE "}</InnerTag>
             </Tag>
           </A1Container>
         </UnlockTrigger>
@@ -1069,8 +1116,8 @@ const Tag = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${props => props.forGame ? COLOR_ACCENT : COLOR_GREEN};
-  color: ${(props) => props.forGame ? generateDarkTextColorForLightBg(COLOR_ACCENT) : generateDarkTextColorForLightBg(COLOR_GREEN)};
+  background-color: ${props => props.forGame ? COLOR_ACCENT : props?.achieved ? COLOR_GREEN : COLOR_ACCENT};
+  color: ${(props) => props.forGame ? generateDarkTextColorForLightBg(COLOR_ACCENT) : props?.achieved ? generateDarkTextColorForLightBg(COLOR_GREEN) : generateDarkTextColorForLightBg(COLOR_ACCENT)};
   height: 70px;
 `;
 

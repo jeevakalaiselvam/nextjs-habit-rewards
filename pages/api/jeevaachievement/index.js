@@ -18,7 +18,7 @@ export default async function handler(req, res) {
         title,
         description,
         type,
-        unlocked: new Date(),
+        unlocked: new Date(), achieved: false
       });
 
       res.status(201).json({ message: 'Achievement added successfully' });

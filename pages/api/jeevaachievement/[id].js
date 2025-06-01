@@ -6,7 +6,7 @@ export default async function handler(req, res) {
 
   if (req.method === 'PUT') {
 
-    const { name, title, description, type } = req.body;
+    const { name, title, description, type, achieved } = req.body;
 
     if (!name || !title || !description || !type) {
       return res
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
         { _id: new ObjectId(id) },
         {
           $set: {
-            name, title, description, type
+            name, title, description, type, achieved: achieved ?? false
           },
         }
       );
