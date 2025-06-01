@@ -581,7 +581,7 @@ export default function Main() {
                       <A1Title>{ach?.title}</A1Title>
                       <A1Desc>{ach?.description}</A1Desc>
                       {/* <A1Unlocked>{getTimeFormattedForAch(ach?.unlocked)}</A1Unlocked> */}
-                    </A1Right>6
+                    </A1Right>
                     <Tag onClick={() => {
                       setSelectedAchToEdit(ach)
                       setShowModalEdit(true)
