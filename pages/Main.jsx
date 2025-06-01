@@ -34,10 +34,11 @@ import {
   Work,
   WORK_ARRAY,
 } from '../helpers/gameHelper';
-import { TbGoGame, TbRefresh } from 'react-icons/tb';
+import { TbFlareFilled, TbGoGame, TbJewishStarFilled, TbKeyframeFilled, TbKeyframesFilled, TbRefresh } from 'react-icons/tb';
 import { MdVideogameAsset } from 'react-icons/md';
 import axios from 'axios';
 import {
+  HiHeart,
   HiHome,
   HiLibrary,
   HiMailOpen,
@@ -45,7 +46,10 @@ import {
   HiPlusCircle,
   HiRefresh,
   HiShieldCheck,
+  HiSparkles,
   HiStar,
+  HiUser,
+  HiUserGroup,
   HiViewBoards,
 } from 'react-icons/hi';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -326,7 +330,7 @@ export default function Main() {
       <Header>
         <HLeft>
           <span style={{ fontSize: '1.3rem', marginRight: '.5rem', color: COLOR_ACCENT }}>
-            <HiStar />
+            <TbKeyframeFilled />
           </span>
           <span
             style={{
@@ -338,7 +342,7 @@ export default function Main() {
             {games?.length}
           </span>
           <span style={{ fontSize: '1.1rem', marginRight: '.5rem' }}>
-            <FaTrophy />
+            <TbJewishStarFilled />
           </span>
           <span
             style={{
@@ -598,7 +602,7 @@ export default function Main() {
                             fontSize: '.9rem',
                           }}
                         >
-                          <FaTrophy />{' '}
+                          <TbJewishStarFilled />{' '}
                         </span>
                         <span style={{ marginLeft: '.25rem' }}>
                           {achToShow?.length - index}</span>
@@ -642,7 +646,7 @@ export default function Main() {
                             fontSize: '1rem',
                           }}
                         >
-                          <FaTrophy />{' '}
+                          <TbJewishStarFilled />{' '}
                         </span>
                         <span style={{ marginLeft: '.25rem' }}>
                           {achAllForGame?.[ach?.name]?.length ?? 0}</span>
@@ -682,7 +686,7 @@ export default function Main() {
                             fontSize: '.9rem',
                           }}
                         >
-                          <FaTrophy />{' '}
+                          <TbJewishStarFilled />{' '}
                         </span>
                         <span style={{ marginLeft: '.25rem' }}>
                           {achsForGame?.length - index}</span>
@@ -721,7 +725,7 @@ export default function Main() {
                                 transform: 'translateY(1px)',
                               }}
                             >
-                              <FaTrophy />
+                              <TbJewishStarFilled />
                             </span>
                           </InnerCount>
                         </AchSmallContainer>
@@ -791,27 +795,27 @@ export default function Main() {
       )}
       {false && <BottomProgress>
         <BLeft>
-          <span style={{ marginRight: '.25rem' }}><FaTrophy /></span>
+          <span style={{ marginRight: '.25rem' }}><TbJewishStarFilled /></span>
           <span>{currentLevel}</span>
         </BLeft>
         <BMiddle>
           <Progress percent={completionForNext} showInfo={false} />
         </BMiddle>
         <BRight>
-          <span style={{ marginRight: '.25rem' }}><FaTrophy /></span>
+          <span style={{ marginRight: '.25rem' }}><TbJewishStarFilled /></span>
           <span>{nextLevel}</span></BRight>
       </BottomProgress>}
       <Bottom>
         <BottomItem active={selected == "RECENT"} onClick={() => { setSelected("RECENT") }}>
-          <span><HiViewBoards /></span>
+          <span style={{ fontSize: '1.5rem', marginBottom: '.25rem' }}><HiHome /></span>
           <span style={{ fontWeight: 'bold', fontSize: '.8rem' }}>RECENT</span>
         </BottomItem>
         <BottomItem active={selected == "GAMES"} onClick={() => { setSelected("GAMES") }}>
-          <span><MdVideogameAsset /></span>
+          <span style={{ fontSize: '1.5rem', marginBottom: '.25rem' }}><TbKeyframesFilled /></span>
           <span style={{ fontWeight: 'bold', fontSize: '.8rem' }}>GAMES</span>
         </BottomItem>
         <BottomItem active={selected == "GAME"} onClick={() => { setSelected("GAME") }}>
-          <span><MdVideogameAsset /></span>
+          <span style={{ fontSize: '1.5rem', marginBottom: '.25rem' }}><TbKeyframeFilled /></span>
           <span style={{ fontWeight: 'bold', fontSize: '.8rem' }}>GAME</span>
         </BottomItem>
       </Bottom>
@@ -1382,7 +1386,7 @@ const Bottom = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 1rem 1rem 2rem 1rem;
+  padding: 1rem 1rem 2.5rem 1rem;
   background-color: ${COLOR_ACH};
 `;
 
