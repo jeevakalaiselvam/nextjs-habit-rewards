@@ -45,6 +45,7 @@ import {
   HiPlusCircle,
   HiRefresh,
   HiShieldCheck,
+  HiStar,
   HiViewBoards,
 } from 'react-icons/hi';
 import { LoadingOutlined } from '@ant-design/icons';
@@ -321,7 +322,7 @@ export default function Main() {
       <Header>
         <HLeft>
           <span style={{ fontSize: '1.3rem', marginRight: '.5rem', color: COLOR_ACCENT }}>
-            <HiLibrary />
+            <HiStar />
           </span>
           <span
             style={{
@@ -773,7 +774,7 @@ export default function Main() {
           </A1Container>
         </UnlockTrigger>
       )}
-      <BottomProgress>
+      {false && <BottomProgress>
         <BLeft>
           <span style={{ marginRight: '.25rem' }}><FaTrophy /></span>
           <span>{currentLevel}</span>
@@ -784,7 +785,7 @@ export default function Main() {
         <BRight>
           <span style={{ marginRight: '.25rem' }}><FaTrophy /></span>
           <span>{nextLevel}</span></BRight>
-      </BottomProgress>
+      </BottomProgress>}
       <Bottom>
         <BottomItem active={selected == "GAMES"} onClick={() => { setSelected("GAMES") }}>
           <span><MdVideogameAsset /></span>
@@ -1366,7 +1367,8 @@ const Bottom = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 1rem 1rem 3rem 1rem;
+  padding: 1rem 1rem 1rem 1rem;
+  background-color: ${COLOR_ACH};
 `;
 
 const Header = styled.div`
