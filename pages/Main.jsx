@@ -314,7 +314,11 @@ export default function Main() {
     }
   })
 
-  console.log({ achsForGame, urlsForGame })
+  const deleteGame = (id) => {
+    axios.delete(`/api/jeevagame/${id}`).then(response => {
+      refreshGames();
+    })
+  }
 
 
   return (
@@ -606,13 +610,24 @@ export default function Main() {
             {games?.length > 0 && (selected == "GAMES") &&
               games?.map((ach, index) => {
                 return (
-                  <A1Container onClick={() => {
-                    setSelectedGame(ach?.name)
-                    setSelected("GAME")
-                  }}>
+                  <A1Container>
                     {/* <Name>GAME</Name> */}
-                    <A1Icon icon={urlsForGame[ach?.name] ?? TROPHY_PLACEHOLDER}></A1Icon>
-                    <A1Right>
+                    <Popconfirm
+                      title="Delete Game"
+                      description="Are you sure to delete this game?"
+                      onConfirm={() => {
+                        deleteGame(ach?._id);
+                      }}
+                      onCancel={() => { }}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <A1Icon icon={urlsForGame[ach?.name] ?? TROPHY_PLACEHOLDER}></A1Icon>
+                    </Popconfirm>
+                    <A1Right onClick={(e) => {
+                      setSelectedGame(ach?.name)
+                      setSelected("GAME")
+                    }}>
                       <A1Title>{ach?.name}</A1Title>
                       <A1Desc>{`Played ${ach?.name}`}</A1Desc>
                     </A1Right>
@@ -787,6 +802,10 @@ export default function Main() {
           <span>{nextLevel}</span></BRight>
       </BottomProgress>}
       <Bottom>
+        <BottomItem active={selected == "RECENT"} onClick={() => { setSelected("RECENT") }}>
+          <span><HiViewBoards /></span>
+          <span style={{ fontWeight: 'bold', fontSize: '.8rem' }}>RECENT</span>
+        </BottomItem>
         <BottomItem active={selected == "GAMES"} onClick={() => { setSelected("GAMES") }}>
           <span><MdVideogameAsset /></span>
           <span style={{ fontWeight: 'bold', fontSize: '.8rem' }}>GAMES</span>
@@ -794,10 +813,6 @@ export default function Main() {
         <BottomItem active={selected == "GAME"} onClick={() => { setSelected("GAME") }}>
           <span><MdVideogameAsset /></span>
           <span style={{ fontWeight: 'bold', fontSize: '.8rem' }}>GAME</span>
-        </BottomItem>
-        <BottomItem active={selected == "RECENT"} onClick={() => { setSelected("RECENT") }}>
-          <span><HiViewBoards /></span>
-          <span style={{ fontWeight: 'bold', fontSize: '.8rem' }}>RECENT</span>
         </BottomItem>
       </Bottom>
     </Container>
