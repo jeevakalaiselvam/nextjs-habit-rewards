@@ -111,7 +111,7 @@ export default function Main() {
     title: "",
     description: "",
     date: new Date(),
-    priority: "Priority 1",
+    priority: "Priority 2",
   });
 
   const [formValuesGame, setFormValuesGame] = useState({
@@ -472,13 +472,22 @@ export default function Main() {
   );
 
   let onlyP1WorkItems = achToShow?.filter(
-    (ach) => ach?.priority == "Priority 1" && !ach?.achieved
+    (ach) =>
+      ach?.priority == "Priority 1" &&
+      !ach?.achieved &&
+      ach?.name == "Work Tracker"
   );
   let onlyP2WorkItems = achToShow?.filter(
-    (ach) => ach?.priority == "Priority 2" && !ach?.achieved
+    (ach) =>
+      ach?.priority == "Priority 2" &&
+      !ach?.achieved &&
+      ach?.name == "Work Tracker"
   );
   let onlyP3WorkItems = achToShow?.filter(
-    (ach) => ach?.priority == "Priority 3" && !ach?.achieved
+    (ach) =>
+      ach?.priority == "Priority 3" &&
+      !ach?.achieved &&
+      ach?.name == "Work Tracker"
   );
 
   return (
@@ -1195,22 +1204,17 @@ export default function Main() {
               setSelectedPriority("Priority 1");
             }}
           >
-            <span style={{ fontSize: "1.5rem" }}>
-              <TbTallymark1 />
-            </span>
-            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
-              <span>Priority 1</span>
-            </span>
             <span
               style={{
-                fontWeight: "bold",
-                fontSize: ".6rem",
-                margin: ".25rem",
-                padding: ".25rem",
-                borderRadius: "2rem",
+                fontSize: "1.5rem",
+                marginBottom: ".5rem",
+                opacity: selectedPriority == "Priority 1" ? 1 : 0.25,
               }}
             >
               {onlyP1WorkItems?.length}
+            </span>
+            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
+              <span>Priority 1</span>
             </span>
           </BottomItemSmall>
           <BottomItemSmall
@@ -1219,22 +1223,17 @@ export default function Main() {
               setSelectedPriority("Priority 2");
             }}
           >
-            <span style={{ fontSize: "1.5rem" }}>
-              <TbTallymark2 />
-            </span>
-            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
-              <span>Priority 2</span>
-            </span>
             <span
               style={{
-                fontWeight: "bold",
-                fontSize: ".6rem",
-                margin: ".25rem",
-                padding: ".25rem",
-                borderRadius: "2rem",
+                fontSize: "1.5rem",
+                marginBottom: ".5rem",
+                opacity: selectedPriority == "Priority 2" ? 1 : 0.25,
               }}
             >
               {onlyP2WorkItems?.length}
+            </span>
+            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
+              <span>Priority 2</span>
             </span>
           </BottomItemSmall>
           <BottomItemSmall
@@ -1243,22 +1242,17 @@ export default function Main() {
               setSelectedPriority("Priority 3");
             }}
           >
-            <span style={{ fontSize: "1.5rem" }}>
-              <TbTallymark3 />
-            </span>
-            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
-              <span>Priority 3</span>
-            </span>
             <span
               style={{
-                fontWeight: "bold",
-                fontSize: ".6rem",
-                margin: ".25rem",
-                padding: ".25rem",
-                borderRadius: "2rem",
+                fontSize: "1.5rem",
+                marginBottom: ".5rem",
+                opacity: selectedPriority == "Priority 3" ? 1 : 0.25,
               }}
             >
               {onlyP3WorkItems?.length}
+            </span>
+            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
+              <span>Priority 3</span>
             </span>
           </BottomItemSmall>
           <BottomItemSmall
@@ -1267,22 +1261,17 @@ export default function Main() {
               setSelectedPriority("Completed");
             }}
           >
-            <span style={{ fontSize: "1.5rem", marginBottom: ".25rem" }}>
-              <TbTallymark4 />
-            </span>
-            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
-              <span>Completed</span>
-            </span>
             <span
               style={{
-                fontWeight: "bold",
-                fontSize: ".6rem",
-                margin: ".25rem",
-                padding: ".25rem",
-                borderRadius: "2rem",
+                fontSize: "1.5rem",
+                marginBottom: ".5rem",
+                opacity: selectedPriority == "Completed" ? 1 : 0.25,
               }}
             >
               {onlyUnlockedWorkItems?.length}
+            </span>
+            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
+              <span>Completed</span>
             </span>
           </BottomItemSmall>
         </BottomSmall>
@@ -1907,7 +1896,6 @@ const BottomSmallInput = styled.div`
   justify-content: center;
   width: 100%;
   margin-top: 4px;
-  background-color: ${COLOR_ACH};
 
   & input {
     outline: none;
@@ -1918,7 +1906,7 @@ const BottomSmallInput = styled.div`
     opacity: 0.5;
     font-size: 0.9rem;
     padding: 0.5rem 1rem;
-    background-color: ${COLOR_ACH};
+    background-color: #00000000;
   }
 `;
 
