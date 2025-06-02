@@ -1,34 +1,39 @@
-import { LoadingOutlined } from '@ant-design/icons';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { getFandomRemovedUrl, ICON_MAPPER, TROPHY_PLACEHOLDER } from '../helpers/gameHelper';
+import { LoadingOutlined } from "@ant-design/icons";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import {
+  getFandomRemovedUrl,
+  ICON_MAPPER,
+  TROPHY_PLACEHOLDER,
+} from "../helpers/gameHelper";
 import {
   COLOR_BLACK1,
   COLOR_BLACK2,
   COLOR_BLUE,
   COLOR_BLUE_LIGHT,
-} from '../helpers/colorHelper';
-import { TbRefresh } from 'react-icons/tb';
-import { Spin } from 'antd';
+} from "../helpers/colorHelper";
+import { TbRefresh } from "react-icons/tb";
+import { Spin } from "antd";
 
 export default function GamesUpdate() {
   const [achievements, setAchievementsMap] = useState([]);
   const [loading, setLoading] = useState(false);
   const [allEditableUrl, setAllEditableUrl] = useState({});
   const [allSaving, setAllSaving] = useState({});
+  const [searchTerm, setSearchTerm] = useState("");
 
   const refreshAchievements = () => {
     setLoading(true);
     try {
-      axios.get('/api/jeevagame').then((response) => {
+      axios.get("/api/jeevagame").then((response) => {
         let achievementsInner = response?.data;
         let allEditMap = {};
         let allSaveMap = {};
         let allAchDetailsMap = {};
         achievementsInner?.forEach((ach) => {
           allAchDetailsMap[ach?._id] = ach;
-          allEditMap[ach?._id] = '';
+          allEditMap[ach?._id] = "";
           allSaveMap[ach?._id] = false;
         });
         setAllEditableUrl(allEditMap);
@@ -37,7 +42,7 @@ export default function GamesUpdate() {
         setLoading(false);
       });
     } catch (e) {
-      message.info('Error refreshing Achievement !');
+      message.info("Error refreshing Achievement !");
       setLoading(false);
     }
   };
@@ -63,75 +68,106 @@ export default function GamesUpdate() {
           }));
           setAllSaving((old) => ({ ...old, [achId]: false }));
         });
-    } catch (e) { }
+    } catch (e) {}
   };
 
   let toShowAchs = {};
 
   Object.keys(achievements)?.forEach((key) => {
-
     toShowAchs[key] = achievements?.[key];
   });
 
   return (
     <Container>
+      <SearchContainer>
+        <input
+          type="text"
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+          }}
+          value={searchTerm}
+        />
+      </SearchContainer>
       {loading && (
         <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
       )}
       {!loading && (
         <AchievementContainer>
-          {Object.keys(toShowAchs)?.map((key) => {
-            let ach = achievements?.[key];
-            return (
-              <AchContainer>
-                <Icon
-                  image={ach?.url !== '' ? ach?.url : TROPHY_PLACEHOLDER}
-                ></Icon>
-                <Title>{ach?.name}</Title>
-                <Link>
-                  <input
-                    type="text"
-                    onChange={(e) => {
-                      setAllEditableUrl((old) => ({
-                        ...old,
-                        [ach?._id]: e.target.value,
-                      }));
-                    }}
-                    value={allEditableUrl?.[ach?._id]}
-                  />
-                </Link>
-                <Save
-                  onClick={() => {
-                    updateInfo(ach?._id);
-                  }}
-                >
-                  <span>SAVE</span>
-                  <span
-                    style={{
-                      transform: 'translateY(2px)',
-                      marginLeft: '.5rem',
+          {Object.keys(toShowAchs)
+            ?.filter((key) => {
+              let ach = achievements?.[key];
+              return ach?.name
+                ?.toLowerCase()
+                ?.includes(searchTerm?.toLowerCase());
+            })
+            ?.map((key) => {
+              let ach = achievements?.[key];
+              return (
+                <AchContainer>
+                  <Title>{ach?.name}</Title>
+                  <Icon
+                    image={ach?.url !== "" ? ach?.url : TROPHY_PLACEHOLDER}
+                  ></Icon>
+                  <Link>
+                    <input
+                      type="text"
+                      onChange={(e) => {
+                        setAllEditableUrl((old) => ({
+                          ...old,
+                          [ach?._id]: e.target.value,
+                        }));
+                      }}
+                      value={allEditableUrl?.[ach?._id]}
+                    />
+                  </Link>
+                  <Save
+                    onClick={() => {
+                      updateInfo(ach?._id);
                     }}
                   >
-                    <TbRefresh />
-                  </span>
-                </Save>
-              </AchContainer>
-            );
-          })}
+                    <span>SAVE</span>
+                    <span
+                      style={{
+                        transform: "translateY(2px)",
+                        marginLeft: ".5rem",
+                      }}
+                    >
+                      <TbRefresh />
+                    </span>
+                  </Save>
+                </AchContainer>
+              );
+            })}
         </AchievementContainer>
       )}
     </Container>
   );
 }
 
+const SearchContainer = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0.5rem;
+  justify-content: center;
+  width: 100%;
+
+  & input {
+    width: 100%;
+    background-color: ${COLOR_BLACK1};
+    border: none;
+    outline: none;
+    height: 30px;
+    transform: translateY(0px);
+  }
+`;
+
 const Save = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
+  padding: 0.5rem;
   cursor: pointer;
-  padding: 0rem 1rem;
-  height: 30px;
   margin-top: 0.5rem;
   background-color: ${COLOR_BLUE};
 
@@ -144,19 +180,12 @@ const Icon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 140px;
-  min-height: 70px;
+  width: 100%;
+  min-height: 120px;
   background: ${(props) => `url('${props.image}')`};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-`;
-
-const Data = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  flex: 1;
 `;
 
 const Title = styled.div`
@@ -164,28 +193,18 @@ const Title = styled.div`
   align-items: center;
   justify-content: center;
   height: 30px;
-  padding: .5rem;
+  padding: 0.5rem;
   width: 100%;
-  flex: 1;
-  font-size: .8rem;
-`;
-
-const Description = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  height: 30px;
-  width: 100%;
-  opacity: 0.5;
-  font-size: .8rem;
+  font-size: 0.8rem;
+  background-color: rgba(0, 0, 0, 0.5);
 `;
 
 const Link = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  height: 30px;
   width: 100%;
+  padding: 0.25rem;
   margin-top: 4px;
 
   & input {
@@ -204,9 +223,9 @@ const AchContainer = styled.div`
   justify-content: center;
   margin-bottom: 1rem;
   background-color: ${COLOR_BLACK2};
-  flex-direction:column;
-  padding: 0.5rem;
-  margin:1rem;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
 `;
 
 const AchievementContainer = styled.div`
@@ -214,6 +233,7 @@ const AchievementContainer = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   overflow: scroll;
+  flex-direction: column;
   width: 100%;
   min-height: 100vh;
   padding: 1rem;
@@ -226,9 +246,9 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
-  width: 100%;
+  min-width: 100vw;
   min-height: 100vh;
   max-height: 100vh;
-  font-size: .8rem;
+  font-size: 0.8rem;
   color: #fefefe;
 `;
