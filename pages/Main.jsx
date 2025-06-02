@@ -54,6 +54,10 @@ import {
   TbRefresh,
   TbShield,
   TbShieldFilled,
+  TbTallymark1,
+  TbTallymark2,
+  TbTallymark3,
+  TbTilde,
 } from "react-icons/tb";
 import { MdVideogameAsset } from "react-icons/md";
 import axios from "axios";
@@ -90,6 +94,7 @@ export default function Main() {
   const [games, setGames] = useState([]);
   const [achievements, setAchievements] = useState([]);
   const [selected, setSelected] = useState("GAMES");
+  const [selectedPriority, setSelectedPriority] = useState("All");
   const [showModal, setShowModal] = useState(false);
   const [showModalGames, setShowModalGame] = useState(false);
   const [selectedAchToEdit, setSelectedAchToEdit] = useState({});
@@ -103,6 +108,7 @@ export default function Main() {
     title: "",
     description: "",
     date: new Date(),
+    priority: "Priority 1",
   });
 
   const [formValuesGame, setFormValuesGame] = useState({
@@ -125,6 +131,29 @@ export default function Main() {
           extra: `⌘${game?.[0]?.toUpperCase()}`,
         };
       }),
+  ];
+
+  const itemsWork = [
+    {
+      key: "33",
+      label: <div style={{ width: "100%" }}>All Priority</div>,
+      disabled: true,
+    },
+    {
+      key: "Priority 1",
+      label: "Priority 1",
+      extra: `⌘P1`,
+    },
+    {
+      key: "Priority 2",
+      label: "Priority 2",
+      extra: `⌘P2`,
+    },
+    {
+      key: "Priority 3",
+      label: "Priority 3",
+      extra: `⌘P3`,
+    },
   ];
 
   const clearFormData = () => {
@@ -151,9 +180,23 @@ export default function Main() {
     setFormValues((old) => ({ ...old, title: String(e.key) }));
   };
 
+  const handleItemClickPriority = (e) => {
+    setFormValues((old) => ({
+      ...old,
+      priority: e.key,
+    }));
+
+    setFormValues((old) => ({ ...old, title: String(e.key) }));
+  };
+
   const menuTypeGame = {
     items: itemsGame,
     onClick: handleItemClickName,
+  };
+
+  const menuTypeWork = {
+    items: itemsWork,
+    onClick: handleItemClickPriority,
   };
 
   const refreshAchievements = () => {
@@ -572,6 +615,35 @@ export default function Main() {
                   <FaPlus />
                 </span>
               </Row>
+              {formValues?.name == "Work Tracker" && (
+                <>
+                  <Row>
+                    <SubTitle>Priority</SubTitle>
+                    <Dropdown
+                      trigger={["click"]}
+                      overlayStyle={{ minWidth: "60%" }}
+                      menu={menuTypeWork}
+                      overlayClassName="full-width-dropdown"
+                    >
+                      <Space>
+                        <span
+                          style={{
+                            fontSize: ".9rem",
+                            color: "#ACAEB2",
+                          }}
+                        >
+                          {formValues?.priority
+                            ? formValues?.priority
+                            : "Select Priority"}
+                        </span>
+                        <Caret>
+                          <FaCaretDown />
+                        </Caret>
+                      </Space>
+                    </Dropdown>
+                  </Row>
+                </>
+              )}
               <Row>
                 <SubTitle>Name</SubTitle>
               </Row>
@@ -642,6 +714,35 @@ export default function Main() {
                   </Space>
                 </Dropdown>
               </Row>
+              {selectedAchToEdit?.name == "Work Tracker" && (
+                <>
+                  <Row>
+                    <SubTitle>Priority</SubTitle>
+                    <Dropdown
+                      trigger={["click"]}
+                      overlayStyle={{ minWidth: "60%" }}
+                      menu={menuTypeWork}
+                      overlayClassName="full-width-dropdown"
+                    >
+                      <Space>
+                        <span
+                          style={{
+                            fontSize: ".9rem",
+                            color: "#ACAEB2",
+                          }}
+                        >
+                          {selectedAchToEdit?.priority
+                            ? selectedAchToEdit?.priority
+                            : "Select Priority"}
+                        </span>
+                        <Caret>
+                          <FaCaretDown />
+                        </Caret>
+                      </Space>
+                    </Dropdown>
+                  </Row>
+                </>
+              )}
               <Row>
                 <SubTitle>Name</SubTitle>
               </Row>
@@ -803,6 +904,7 @@ export default function Main() {
                 );
               })}
             {achsForGame?.length > 0 &&
+              selectedGame !== "Work Tracker" &&
               selected == "GAME" &&
               selectedGame?.length > 0 &&
               achsForGame?.map((ach, index) => {
@@ -876,67 +978,92 @@ export default function Main() {
                   </A1Container>
                 );
               })}
+            {achsForGame?.length > 0 &&
+              selectedGame == "Work Tracker" &&
+              selected == "GAME" &&
+              selectedGame?.length > 0 &&
+              achsForGame
+                ?.filter(
+                  (ach) =>
+                    ach?.priority == selectedPriority ||
+                    selectedPriority == "All"
+                )
+                ?.map((ach, index) => {
+                  return (
+                    <A1Container>
+                      <Tag
+                        achieved={ach?.achieved}
+                        onClick={() => {
+                          if (ach?.achieved) {
+                            markAchAsNotCompleted(ach);
+                          } else {
+                            markAchAsCompleted(ach);
+                          }
+                        }}
+                      >
+                        <InnerTagMoney achieved={ach?.achieved}>
+                          <span
+                            style={{
+                              marginLeft: ".25rem",
+                              background: ach?.achieved
+                                ? COLOR_GREEN
+                                : COLOR_ACCENT,
+                            }}
+                          >
+                            {ach?.achieved ? "DONE" : "ACTIVE"}
+                          </span>
+                        </InnerTagMoney>
+                      </Tag>
+                      <Popconfirm
+                        title="Delete Achievement"
+                        description="Are you sure to delete this task?"
+                        onConfirm={() => {
+                          deleteAchievement(ach);
+                        }}
+                        onCancel={() => {}}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <A1Icon icon={urlsForGame[ach?.name]}></A1Icon>
+                      </Popconfirm>
+                      <A1Right>
+                        <A1Title>{ach?.title}</A1Title>
+                        <A1Desc>{ach?.description}</A1Desc>
+                      </A1Right>
+                      <Tag
+                        achieved={ach?.achieved}
+                        onClick={() => {
+                          setSelectedAchToEdit(ach);
+                          setShowModalEdit(true);
+                        }}
+                      >
+                        <InnerTagMoney>
+                          <span
+                            style={{
+                              transform: "translateY(1px)",
+                              fontSize: ".9rem",
+                            }}
+                          >
+                            <TbJewishStarFilled />{" "}
+                          </span>
+                          <span
+                            style={{
+                              marginLeft: ".25rem",
+                              fontSize: "1rem",
+                            }}
+                          >
+                            {achsForGame?.length - index}
+                          </span>
+                        </InnerTagMoney>
+                      </Tag>
+                    </A1Container>
+                  );
+                })}
             {achsForGame?.length == 0 &&
               selected == "GAME" &&
               selectedGame?.length > 0 && <NoData>No Achievements</NoData>}
             {!selectedGame && selected == "GAME" && (
               <NoData>No Game Selected</NoData>
-            )}
-            {isGameIconsActive && (
-              <OverviewMode>
-                <RecentItemsGame>
-                  <RecentInner>
-                    {onlyGameAchs?.map((ach, index) => {
-                      return (
-                        <AchSmallContainer>
-                          <AchSmall
-                            image={
-                              ach?.url?.length > 0
-                                ? ach?.url
-                                : TROPHY_PLACEHOLDER
-                            }
-                            onClick={() => {
-                              setSelectedOverviewAchGame(ach);
-                            }}
-                          ></AchSmall>
-                          <InnerCount>
-                            <span>{onlyGameAchs?.length - index}</span>
-                            <span
-                              style={{
-                                fontSize: ".8rem",
-                                marginLeft: ".25rem",
-                                transform: "translateY(1px)",
-                              }}
-                            >
-                              <TbJewishStarFilled />
-                            </span>
-                          </InnerCount>
-                        </AchSmallContainer>
-                      );
-                    })}
-                  </RecentInner>
-                </RecentItemsGame>
-                {!showRecentAchUnlock && (
-                  <RecentClick>
-                    <A1ContainerMoney>
-                      <A1Icon icon={finalSelectedOverviewGameAch?.url}></A1Icon>
-                      <A1Right>
-                        <A1Title>{finalSelectedOverviewGameAch?.title}</A1Title>
-                        <A1Desc>
-                          {finalSelectedOverviewGameAch?.description}
-                        </A1Desc>
-                      </A1Right>
-                      <Tag>
-                        {
-                          <InnerTagMoney>
-                            <span style={{ fontSize: ".9rem" }}>RECENT</span>
-                          </InnerTagMoney>
-                        }
-                      </Tag>
-                    </A1ContainerMoney>
-                  </RecentClick>
-                )}
-              </OverviewMode>
             )}
           </MiddleTopContainer>
         )}
@@ -991,33 +1118,72 @@ export default function Main() {
           </BRight>
         </BottomProgress>
       )}
-      <Bottom>
-        <BottomItem
-          active={selected == "GAMES"}
-          onClick={() => {
-            setSelected("GAMES");
-          }}
-        >
-          <span style={{ fontSize: "1.5rem", marginBottom: ".25rem" }}>
-            <TbLayoutGridFilled />
-          </span>
-          <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>GAMES</span>
-        </BottomItem>
-        <BottomItem
-          active={selected == "GAME"}
-          onClick={() => {
-            setSelected("GAME");
-          }}
-        >
-          <span style={{ fontSize: "1.5rem", marginBottom: ".25rem" }}>
-            <TbLayoutListFilled />
-          </span>
-          <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>GAME</span>
-        </BottomItem>
-      </Bottom>
+      {selectedGame == "Work Tracker" && (
+        <BottomSmall>
+          <BottomItemSmall
+            active={selectedPriority == "Priority 1"}
+            onClick={() => {
+              setSelectedPriority("Priority 1");
+            }}
+          >
+            <span style={{ fontSize: "1.5rem", marginBottom: ".25rem" }}>
+              <TbTallymark1 />
+            </span>
+            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
+              Priority 1
+            </span>
+          </BottomItemSmall>
+          <BottomItemSmall
+            active={selectedPriority == "Priority 2"}
+            onClick={() => {
+              setSelectedPriority("Priority 2");
+            }}
+          >
+            <span style={{ fontSize: "1.5rem", marginBottom: ".25rem" }}>
+              <TbTallymark2 />
+            </span>
+            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
+              Priority 2
+            </span>
+          </BottomItemSmall>
+          <BottomItemSmall
+            active={selectedPriority == "Priority 3"}
+            onClick={() => {
+              setSelectedPriority("Priority 3");
+            }}
+          >
+            <span style={{ fontSize: "1.5rem", marginBottom: ".25rem" }}>
+              <TbTallymark3 />
+            </span>
+            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
+              Priority 3
+            </span>
+          </BottomItemSmall>
+          <BottomItemSmall
+            active={selectedPriority == "All"}
+            onClick={() => {
+              setSelectedPriority("All");
+            }}
+          >
+            <span style={{ fontSize: "1.5rem", marginBottom: ".25rem" }}>
+              <TbTilde />
+            </span>
+            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>All</span>
+          </BottomItemSmall>
+        </BottomSmall>
+      )}
     </Container>
   );
 }
+const BottomItemSmall = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex: 1;
+  transform: translateY(0.25rem);
+  color: ${(props) => (props.active ? COLOR_ACCENT : "")};
+`;
 
 const Name = styled.div`
   display: flex;
@@ -1603,6 +1769,15 @@ const MiddleTopContainer = styled.div`
 `;
 
 const Bottom = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem 1rem 2.5rem 1rem;
+  background-color: ${COLOR_ACH};
+`;
+
+const BottomSmall = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
