@@ -51,12 +51,14 @@ import {
   TbLayoutGridFilled,
   TbLayoutListFilled,
   TbOctagonFilled,
+  TbPresentationFilled,
   TbRefresh,
   TbShield,
   TbShieldFilled,
   TbTallymark1,
   TbTallymark2,
   TbTallymark3,
+  TbTallymark4,
   TbTilde,
 } from "react-icons/tb";
 import { MdVideogameAsset } from "react-icons/md";
@@ -90,11 +92,12 @@ const SECTION_GAME = "Game";
 export default function Main() {
   const router = useRouter();
   const [showRecentAchUnlock, setShowRecentAchUnlock] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
   const [games, setGames] = useState([]);
   const [achievements, setAchievements] = useState([]);
   const [selected, setSelected] = useState("GAMES");
-  const [selectedPriority, setSelectedPriority] = useState("All");
+  const [selectedPriority, setSelectedPriority] = useState("Completed");
   const [showModal, setShowModal] = useState(false);
   const [showModalGames, setShowModalGame] = useState(false);
   const [selectedAchToEdit, setSelectedAchToEdit] = useState({});
@@ -189,6 +192,13 @@ export default function Main() {
     setFormValues((old) => ({ ...old, title: String(e.key) }));
   };
 
+  const handleItemClickPriorityEdit = (e) => {
+    setSelectedAchToEdit((old) => ({
+      ...old,
+      priority: e.key,
+    }));
+  };
+
   const menuTypeGame = {
     items: itemsGame,
     onClick: handleItemClickName,
@@ -197,6 +207,11 @@ export default function Main() {
   const menuTypeWork = {
     items: itemsWork,
     onClick: handleItemClickPriority,
+  };
+
+  const menuTypeWorkEdit = {
+    items: itemsWork,
+    onClick: handleItemClickPriorityEdit,
   };
 
   const refreshAchievements = () => {
@@ -447,6 +462,25 @@ export default function Main() {
     }
   };
 
+  let onlyUnlocked = achToShow?.filter((ach) => ach?.achieved);
+
+  let onlyUnlockedWorkItems = achToShow?.filter(
+    (ach) => ach?.achieved && ach?.name == "Work Tracker"
+  );
+  let onlyLockedWorkItems = achToShow?.filter(
+    (ach) => ach?.achieved && ach?.name == "Work Tracker"
+  );
+
+  let onlyP1WorkItems = achToShow?.filter(
+    (ach) => ach?.priority == "Priority 1" && !ach?.achieved
+  );
+  let onlyP2WorkItems = achToShow?.filter(
+    (ach) => ach?.priority == "Priority 2" && !ach?.achieved
+  );
+  let onlyP3WorkItems = achToShow?.filter(
+    (ach) => ach?.priority == "Priority 3" && !ach?.achieved
+  );
+
   return (
     <Container>
       <Header>
@@ -462,7 +496,7 @@ export default function Main() {
               color: COLOR_ACCENT,
             }}
           >
-            <HiLibrary />
+            <TbPresentationFilled />
           </span>
           <span
             style={{
@@ -490,7 +524,7 @@ export default function Main() {
               marginRight: ".25rem",
             }}
           >
-            {achToShow?.length}
+            {onlyUnlocked?.length}
           </span>
         </HLeft>
         <HRight>
@@ -721,7 +755,7 @@ export default function Main() {
                     <Dropdown
                       trigger={["click"]}
                       overlayStyle={{ minWidth: "60%" }}
-                      menu={menuTypeWork}
+                      menu={menuTypeWorkEdit}
                       overlayClassName="full-width-dropdown"
                     >
                       <Space>
@@ -788,18 +822,51 @@ export default function Main() {
           </ModalBottom>
         </ModalContainer>
       )}
+      <BottomSmallInput>
+        <input
+          type="text"
+          placeholder="Search for Achievement..."
+          onChange={(e) => {
+            setSearchTerm(e.target.value);
+          }}
+          value={searchTerm}
+        />
+      </BottomSmallInput>
       <Middle showModal={showModal}>
         {!loading && (
           <MiddleTopContainer>
             {achToShow?.length == 0 &&
               !isOverviewMode &&
               isLongAchievementsActive && <NoData>No Games</NoData>}
-            {achToShow?.length > 0 &&
+            {onlyUnlocked?.length > 0 &&
               selected == "RECENT" &&
-              achToShow?.map((ach, index) => {
+              onlyUnlocked?.map((ach, index) => {
                 let isMoneyRelated = ach?.type == Work || ach?.type == Habit;
                 return (
                   <A1Container>
+                    <Tag
+                      achieved={ach?.achieved}
+                      onClick={() => {
+                        if (ach?.achieved) {
+                          markAchAsNotCompleted(ach);
+                        } else {
+                          markAchAsCompleted(ach);
+                        }
+                      }}
+                    >
+                      <InnerTagMoney achieved={ach?.achieved}>
+                        <span
+                          style={{
+                            marginLeft: ".25rem",
+                            background: ach?.achieved
+                              ? COLOR_GREEN
+                              : COLOR_ACCENT,
+                          }}
+                        >
+                          {ach?.achieved ? "DONE" : "ACTIVE"}
+                        </span>
+                      </InnerTagMoney>
+                    </Tag>
                     <Popconfirm
                       title="Delete Achievement"
                       description="Are you sure to delete this trophy?"
@@ -818,7 +885,7 @@ export default function Main() {
                       {/* <A1Unlocked>{getTimeFormattedForAch(ach?.unlocked)}</A1Unlocked> */}
                     </A1Right>
                     <Tag
-                      achieved={achToShow?.achieved}
+                      achieved={ach?.achieved}
                       onClick={() => {
                         setSelectedAchToEdit(ach);
                         setShowModalEdit(true);
@@ -839,7 +906,7 @@ export default function Main() {
                             fontSize: "1rem",
                           }}
                         >
-                          {achToShow?.length - index}
+                          {onlyUnlocked?.length - index}
                         </span>
                       </InnerTagMoney>
                     </Tag>
@@ -983,11 +1050,13 @@ export default function Main() {
               selected == "GAME" &&
               selectedGame?.length > 0 &&
               achsForGame
-                ?.filter(
-                  (ach) =>
-                    ach?.priority == selectedPriority ||
-                    selectedPriority == "All"
-                )
+                ?.filter((ach) => {
+                  if (selectedPriority == "Completed") {
+                    return ach?.achieved;
+                  } else {
+                    return ach?.priority == selectedPriority && !ach?.achieved;
+                  }
+                })
                 ?.map((ach, index) => {
                   return (
                     <A1Container>
@@ -1118,7 +1187,7 @@ export default function Main() {
           </BRight>
         </BottomProgress>
       )}
-      {selectedGame == "Work Tracker" && (
+      {selectedGame == "Work Tracker" && selected == "GAME" && (
         <BottomSmall>
           <BottomItemSmall
             active={selectedPriority == "Priority 1"}
@@ -1126,11 +1195,22 @@ export default function Main() {
               setSelectedPriority("Priority 1");
             }}
           >
-            <span style={{ fontSize: "1.5rem", marginBottom: ".25rem" }}>
+            <span style={{ fontSize: "1.5rem" }}>
               <TbTallymark1 />
             </span>
             <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
-              Priority 1
+              <span>Priority 1</span>
+            </span>
+            <span
+              style={{
+                fontWeight: "bold",
+                fontSize: ".6rem",
+                margin: ".25rem",
+                padding: ".25rem",
+                borderRadius: "2rem",
+              }}
+            >
+              {onlyP1WorkItems?.length}
             </span>
           </BottomItemSmall>
           <BottomItemSmall
@@ -1139,11 +1219,22 @@ export default function Main() {
               setSelectedPriority("Priority 2");
             }}
           >
-            <span style={{ fontSize: "1.5rem", marginBottom: ".25rem" }}>
+            <span style={{ fontSize: "1.5rem" }}>
               <TbTallymark2 />
             </span>
             <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
-              Priority 2
+              <span>Priority 2</span>
+            </span>
+            <span
+              style={{
+                fontWeight: "bold",
+                fontSize: ".6rem",
+                margin: ".25rem",
+                padding: ".25rem",
+                borderRadius: "2rem",
+              }}
+            >
+              {onlyP2WorkItems?.length}
             </span>
           </BottomItemSmall>
           <BottomItemSmall
@@ -1152,23 +1243,47 @@ export default function Main() {
               setSelectedPriority("Priority 3");
             }}
           >
-            <span style={{ fontSize: "1.5rem", marginBottom: ".25rem" }}>
+            <span style={{ fontSize: "1.5rem" }}>
               <TbTallymark3 />
             </span>
             <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
-              Priority 3
+              <span>Priority 3</span>
+            </span>
+            <span
+              style={{
+                fontWeight: "bold",
+                fontSize: ".6rem",
+                margin: ".25rem",
+                padding: ".25rem",
+                borderRadius: "2rem",
+              }}
+            >
+              {onlyP3WorkItems?.length}
             </span>
           </BottomItemSmall>
           <BottomItemSmall
-            active={selectedPriority == "All"}
+            active={selectedPriority == "Completed"}
             onClick={() => {
-              setSelectedPriority("All");
+              setSelectedPriority("Completed");
             }}
           >
             <span style={{ fontSize: "1.5rem", marginBottom: ".25rem" }}>
-              <TbTilde />
+              <TbTallymark4 />
             </span>
-            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>All</span>
+            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
+              <span>Completed</span>
+            </span>
+            <span
+              style={{
+                fontWeight: "bold",
+                fontSize: ".6rem",
+                margin: ".25rem",
+                padding: ".25rem",
+                borderRadius: "2rem",
+              }}
+            >
+              {onlyUnlockedWorkItems?.length}
+            </span>
           </BottomItemSmall>
         </BottomSmall>
       )}
@@ -1484,7 +1599,7 @@ const A1Container = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin: 1rem 0.25rem 0rem 0.25rem;
+  margin: 0.25rem 0.25rem 0.25rem 0.25rem;
   background-color: ${COLOR_ACH};
 `;
 
@@ -1784,6 +1899,27 @@ const BottomSmall = styled.div`
   width: 100%;
   padding: 1rem 1rem 2.5rem 1rem;
   background-color: ${COLOR_ACH};
+`;
+
+const BottomSmallInput = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 4px;
+  background-color: ${COLOR_ACH};
+
+  & input {
+    outline: none;
+    border: none;
+    width: 100%;
+    height: 40px;
+    border-radius: 0px;
+    opacity: 0.5;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    background-color: ${COLOR_ACH};
+  }
 `;
 
 const Header = styled.div`
