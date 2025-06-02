@@ -17,7 +17,7 @@ import {
   generateDarkTextColorForLightBg,
 } from '../helpers/colorHelper';
 import { Dropdown, message, Popconfirm, Progress, Space, Spin } from 'antd';
-import { FaCaretDown, FaGlobe, FaIcons, FaPlus, FaRupeeSign, FaTrophy } from 'react-icons/fa';
+import { FaCaretDown, FaGlobe, FaIcons, FaPlus, FaRupeeSign, FaShoppingCart, FaTrophy } from 'react-icons/fa';
 import { LuIndianRupee } from 'react-icons/lu';
 import {
   Battlefield2042,
@@ -34,7 +34,7 @@ import {
   Work,
   WORK_ARRAY,
 } from '../helpers/gameHelper';
-import { TbFlareFilled, TbGoGame, TbJewishStarFilled, TbKeyframeFilled, TbKeyframesFilled, TbRefresh } from 'react-icons/tb';
+import { TbFlareFilled, TbGoGame, TbJewishStarFilled, TbKeyframeFilled, TbKeyframesFilled, TbLayoutGridFilled, TbLayoutListFilled, TbOctagonFilled, TbRefresh } from 'react-icons/tb';
 import { MdVideogameAsset } from 'react-icons/md';
 import axios from 'axios';
 import {
@@ -304,11 +304,13 @@ export default function Main() {
   let achAllForGame = {}
 
   achievements.forEach(ach => {
-    if (!achAllForGame?.[ach?.name]) {
-      achAllForGame[ach?.name] = []
-      achAllForGame[ach?.name].push(ach)
-    } else {
-      achAllForGame[ach?.name].push(ach)
+    if (ach?.achieved) {
+      if (!achAllForGame?.[ach?.name]) {
+        achAllForGame[ach?.name] = []
+        achAllForGame[ach?.name].push(ach)
+      } else {
+        achAllForGame[ach?.name].push(ach)
+      }
     }
   })
 
@@ -363,9 +365,9 @@ export default function Main() {
   return (
     <Container>
       <Header>
-        <HLeft>
-          <span style={{ fontSize: '1.3rem', marginRight: '.5rem', color: COLOR_ACCENT }}>
-            <TbKeyframeFilled />
+        <HLeft onClick={() => { setSelected("GAMES") }}>
+          <span style={{ fontSize: '1.3rem', marginRight: '.5rem', color: COLOR_ACCENT }} >
+            <HiLibrary />
           </span>
           <span
             style={{
@@ -376,8 +378,11 @@ export default function Main() {
           >
             {games?.length}
           </span>
-          <span style={{ fontSize: '1.1rem', marginRight: '.5rem' }}>
-            <TbJewishStarFilled />
+
+        </HLeft>
+        <HLeft onClick={() => { setSelected("RECENT") }}>
+          <span style={{ fontSize: '1.1rem', marginRight: '.5rem' }} >
+            <FaTrophy />
           </span>
           <span
             style={{
@@ -611,7 +616,7 @@ export default function Main() {
                   <A1Container>
                     <Popconfirm
                       title="Delete Achievement"
-                      description="Are you sure to delete this task?"
+                      description="Are you sure to delete this trophy?"
                       onConfirm={() => {
                         deleteAchievement(ach);
                       }}
@@ -626,7 +631,7 @@ export default function Main() {
                       <A1Desc>{ach?.description}</A1Desc>
                       {/* <A1Unlocked>{getTimeFormattedForAch(ach?.unlocked)}</A1Unlocked> */}
                     </A1Right>
-                    <Tag onClick={() => {
+                    <Tag achieved={achToShow?.achieved} onClick={() => {
                       setSelectedAchToEdit(ach)
                       setShowModalEdit(true)
                     }}>
@@ -639,7 +644,10 @@ export default function Main() {
                         >
                           <TbJewishStarFilled />{' '}
                         </span>
-                        <span style={{ marginLeft: '.25rem' }}>
+                        <span style={{
+                          marginLeft: '.25rem',
+                          fontSize: '1rem',
+                        }}>
                           {achToShow?.length - index}</span>
                       </InnerTagMoney>
                     </Tag>
@@ -670,7 +678,7 @@ export default function Main() {
                       <A1Title>{ach?.name}</A1Title>
                       <A1Desc>{`Played ${ach?.name}`}</A1Desc>
                     </A1Right>
-                    <Tag forGame={true} onClick={() => {
+                    <Tag achieved={ach?.achieved} forGame={true} onClick={() => {
                       setSelectedAchToEdit(ach)
                       setShowModalEdit(true)
                     }}>
@@ -683,7 +691,10 @@ export default function Main() {
                         >
                           <TbJewishStarFilled />{' '}
                         </span>
-                        <span style={{ marginLeft: '.25rem' }}>
+                        <span style={{
+                          marginLeft: '.25rem',
+                          fontSize: '1rem',
+                        }}>
                           {achAllForGame?.[ach?.name]?.length ?? 0}</span>
                       </InnerTagMoney>
                     </Tag>
@@ -722,7 +733,7 @@ export default function Main() {
                       <A1Title>{ach?.title}</A1Title>
                       <A1Desc>{ach?.description}</A1Desc>
                     </A1Right>
-                    <Tag onClick={() => {
+                    <Tag achieved={ach?.achieved} onClick={() => {
                       setSelectedAchToEdit(ach)
                       setShowModalEdit(true)
                     }}>
@@ -735,7 +746,10 @@ export default function Main() {
                         >
                           <TbJewishStarFilled />{' '}
                         </span>
-                        <span style={{ marginLeft: '.25rem' }}>
+                        <span style={{
+                          marginLeft: '.25rem',
+                          fontSize: '1rem',
+                        }}>
                           {achsForGame?.length - index}</span>
                       </InnerTagMoney>
                     </Tag>
@@ -853,17 +867,13 @@ export default function Main() {
           <span>{nextLevel}</span></BRight>
       </BottomProgress>}
       <Bottom>
-        <BottomItem active={selected == "RECENT"} onClick={() => { setSelected("RECENT") }}>
-          <span style={{ fontSize: '1.5rem', marginBottom: '.25rem' }}><HiHome /></span>
-          <span style={{ fontWeight: 'bold', fontSize: '.8rem' }}>RECENT</span>
-        </BottomItem>
         <BottomItem active={selected == "GAMES"} onClick={() => { setSelected("GAMES") }}>
-          <span style={{ fontSize: '1.5rem', marginBottom: '.25rem' }}><TbKeyframesFilled /></span>
-          <span style={{ fontWeight: 'bold', fontSize: '.8rem' }}>GAMES</span>
+          <span style={{ fontSize: '1.5rem', marginBottom: '.25rem' }}><TbLayoutGridFilled /></span>
+          <span style={{ fontWeight: 'bold', fontSize: '.6rem' }}>GAMES</span>
         </BottomItem>
         <BottomItem active={selected == "GAME"} onClick={() => { setSelected("GAME") }}>
-          <span style={{ fontSize: '1.5rem', marginBottom: '.25rem' }}><TbKeyframeFilled /></span>
-          <span style={{ fontWeight: 'bold', fontSize: '.8rem' }}>GAME</span>
+          <span style={{ fontSize: '1.5rem', marginBottom: '.25rem' }}><TbLayoutListFilled /></span>
+          <span style={{ fontWeight: 'bold', fontSize: '.6rem' }}>GAME</span>
         </BottomItem>
       </Bottom>
     </Container>
@@ -1107,7 +1117,6 @@ const InnerTagMoney = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
   transform: rotate(-90deg) translateX(-0.1rem);
   width: 25px;
 `;
@@ -1119,6 +1128,17 @@ const Tag = styled.div`
   background-color: ${props => props.forGame ? COLOR_ACCENT : props?.achieved ? COLOR_GREEN : COLOR_ACCENT};
   color: ${(props) => props.forGame ? generateDarkTextColorForLightBg(COLOR_ACCENT) : props?.achieved ? generateDarkTextColorForLightBg(COLOR_GREEN) : generateDarkTextColorForLightBg(COLOR_ACCENT)};
   height: 70px;
+  font-size: .8rem;
+`;
+
+const TagIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${props => props.forGame ? COLOR_ACCENT : props?.achieved ? COLOR_GREEN : COLOR_ACCENT};
+  color: ${(props) => props.forGame ? generateDarkTextColorForLightBg(COLOR_ACCENT) : props?.achieved ? generateDarkTextColorForLightBg(COLOR_GREEN) : generateDarkTextColorForLightBg(COLOR_ACCENT)};
+  height: 70px;
+  font-size: .8rem;
 `;
 
 const TagCount = styled.div`
@@ -1451,7 +1471,6 @@ const HLeft = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  flex: 1;
   color: ${COLOR_GREEN};
 `;
 
