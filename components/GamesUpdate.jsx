@@ -18,7 +18,12 @@ import {
   COLOR_GREEN,
   generateDarkTextColorForLightBg,
 } from "../helpers/colorHelper";
-import { TbHomePlus, TbRefresh } from "react-icons/tb";
+import {
+  TbFolder,
+  TbFolderFilled,
+  TbHomePlus,
+  TbRefresh,
+} from "react-icons/tb";
 import { Popconfirm, Spin } from "antd";
 import { FaHome } from "react-icons/fa";
 import { useRouter } from "next/router";
@@ -98,12 +103,20 @@ export default function GamesUpdate() {
             value={searchTerm}
           />
           <span
-            style={{ fontSize: "1.25rem", margin: "0rem 0rem 0rem 1rem" }}
+            style={{ fontSize: "1.35rem", margin: "0rem 0rem 0rem 1rem" }}
             onClick={() => {
               router.push("/");
             }}
           >
-            <TbHomePlus />
+            <TbFolder />
+          </span>
+          <span
+            style={{ fontSize: "1.35rem", margin: "0rem 0rem 0rem 1rem" }}
+            onClick={() => {
+              refreshAchievements();
+            }}
+          >
+            <TbRefresh />
           </span>
         </SearchContainer>
       </Header>
@@ -143,8 +156,9 @@ export default function GamesUpdate() {
                     achieved={ach?.achieved}
                     forGame={true}
                     onClick={() => {
-                      setSelectedAchToEdit(ach);
-                      setShowModalEdit(true);
+                      if (allEditableUrl?.[ach?._id]?.length > 0) {
+                        updateInfo(ach?._id);
+                      }
                     }}
                   >
                     <InnerTagMoney>
@@ -172,12 +186,14 @@ const A1Right = styled.div`
   align-items: flex-start;
   justify-content: center;
   flex-direction: column;
+  flex: 1;
   height: 70px;
 `;
 
 const Tag = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
   justify-content: center;
   background-color: ${(props) =>
     props.forGame
@@ -225,8 +241,10 @@ const A1Desc = styled.div`
     background-color: #111421;
     border: none;
     outline: none;
-    transform: translateY(0px);
+    transform: translateY(-4px);
     height: 25px;
+    width: 100%;
+    border-radius: 0px;
   }
 `;
 
@@ -245,9 +263,9 @@ const A1Icon = styled.div`
 const A1Container = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
-  margin: 1rem 0.25rem 0rem 0.25rem;
+  margin: 0.25rem 0.25rem 0.5rem 0.25rem;
   background-color: ${COLOR_ACH};
 `;
 
@@ -264,7 +282,6 @@ const Header = styled.div`
 const SearchContainer = styled.div`
   display: flex;
   align-items: center;
-  padding: 0.5rem;
   justify-content: center;
   width: 100%;
 
@@ -279,79 +296,6 @@ const SearchContainer = styled.div`
   }
 `;
 
-const Save = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem;
-  cursor: pointer;
-  height: 30px;
-  background-color: ${COLOR_BLUE};
-
-  &:hover {
-    background-color: ${COLOR_BLUE_LIGHT};
-  }
-`;
-
-const Icon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  min-height: 150px;
-  background: ${(props) => `url('${props.image}')`};
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-`;
-
-const Title = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  padding: 0.5rem;
-  width: 100%;
-  font-size: 0.9rem;
-  background-color: rgba(0, 0, 0, 0.75);
-  position: absolute;
-  top: 0;
-  left: 0;
-`;
-
-const Link = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  padding: 0.25rem;
-  margin-top: 4px;
-  background-color: rgba(0, 0, 0, 0.75);
-  position: absolute;
-  bottom: 0;
-  left: 0;
-
-  & input {
-    width: 100%;
-    background-color: rgba(0, 0, 0, 0.75);
-    border: none;
-    outline: none;
-    height: 30px;
-    transform: translateY(0px);
-  }
-`;
-
-const AchContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
-  background-color: ${COLOR_BLACK2};
-  flex-direction: column;
-  position: relative;
-  width: 100%;
-`;
-
 const AchievementContainer = styled.div`
   display: flex;
   align-items: flex-start;
@@ -360,7 +304,7 @@ const AchievementContainer = styled.div`
   flex-direction: column;
   width: 100%;
   min-height: 90vh;
-  padding: 1rem;
+  padding: 1rem 0.5rem;
   max-height: 90vh;
   color: #fefefe;
 `;
