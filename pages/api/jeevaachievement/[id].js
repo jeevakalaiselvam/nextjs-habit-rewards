@@ -8,7 +8,7 @@ export default async function handler(req, res) {
 
     const { name, title, description, type, achieved, priority } = req.body;
 
-    if (!name || !title || !description || !type || !priority) {
+    if (!name || !title || !description || !type ) {
       return res
         .status(400)
         .json({ error: 'Name, Title, Description, Type required' });
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
         { _id: new ObjectId(id) },
         {
           $set: {
-            name, title, description, type, achieved: achieved ?? false, priority: priority ?? "Priority 1"
+            name, title, description, type, achieved: achieved ?? false, priority: priority ?? "Priority 2"
           },
         }
       );
