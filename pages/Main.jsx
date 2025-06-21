@@ -21,7 +21,9 @@ import {
   FaCaretDown,
   FaGlobe,
   FaIcons,
+  FaMinusCircle,
   FaPlus,
+  FaPlusCircle,
   FaRupeeSign,
   FaShoppingCart,
   FaTrophy,
@@ -36,13 +38,14 @@ import {
   Habit,
   HABIT_ARRAY,
   ICON_MAPPER,
-  LEARN_ARRAY,
+  LEARtitleRAY,
   MONEY_TRACKER,
   TROPHY_PLACEHOLDER,
   Work,
   WORK_ARRAY,
 } from "../helpers/gameHelper";
 import {
+  TbExposurePlus1,
   TbFlareFilled,
   TbGoGame,
   TbJewishStarFilled,
@@ -60,6 +63,7 @@ import {
   TbTallymark3,
   TbTallymark4,
   TbTilde,
+  TbTrophy,
 } from "react-icons/tb";
 import { MdVideogameAsset } from "react-icons/md";
 import axios from "axios";
@@ -112,6 +116,8 @@ export default function Main() {
     description: "",
     date: new Date(),
     priority: "Priority 2",
+    total: 1,
+    completed: 0,
   });
 
   const [formValuesGame, setFormValuesGame] = useState({
@@ -179,8 +185,6 @@ export default function Main() {
       title: "",
       description: "",
     }));
-
-    setFormValues((old) => ({ ...old, title: String(e.key) }));
   };
 
   const handleItemClickPriority = (e) => {
@@ -490,6 +494,49 @@ export default function Main() {
       ach?.name == "Work Tracker"
   );
 
+  const addOneToAch = (ach) => {
+    try {
+      axios
+        .put(
+          `/api/jeevaachievement/${ach?._id}?value=${ach?.name
+            ?.toLowerCase()
+            ?.split(" ")
+            ?.join("_")}`,
+          { ...ach, completed: ach?.completed + 1 }
+        )
+        .then((response) => {
+          setShowModalEdit(false);
+          setShowRecentAchUnlock(true);
+          refreshAchievements();
+        });
+    } catch (e) {
+      message.info("Error saving Achievement !");
+      console.error(e);
+      setLoading(false);
+    }
+  };
+  const removeOneToAch = (ach) => {
+    try {
+      axios
+        .put(
+          `/api/jeevaachievement/${ach?._id}?value=${ach?.name
+            ?.toLowerCase()
+            ?.split(" ")
+            ?.join("_")}`,
+          { ...ach, completed: ach?.completed - 1 }
+        )
+        .then((response) => {
+          setShowModalEdit(false);
+          setShowRecentAchUnlock(true);
+          refreshAchievements();
+        });
+    } catch (e) {
+      message.info("Error saving Achievement !");
+      console.error(e);
+      setLoading(false);
+    }
+  };
+
   return (
     <Container>
       <Header>
@@ -523,7 +570,13 @@ export default function Main() {
             setSelected("RECENT");
           }}
         >
-          <span style={{ fontSize: "1.1rem", marginRight: ".5rem" }}>
+          <span
+            style={{
+              fontSize: "1.1rem",
+              marginRight: ".5rem",
+              color: COLOR_ACCENT,
+            }}
+          >
             <FaTrophy />
           </span>
           <span
@@ -531,6 +584,7 @@ export default function Main() {
               fontSize: "1.25rem",
               transform: "translateY(-2px)",
               marginRight: ".25rem",
+              color: COLOR_ACCENT,
             }}
           >
             {onlyUnlocked?.length}
@@ -658,35 +712,6 @@ export default function Main() {
                   <FaPlus />
                 </span>
               </Row>
-              {formValues?.name == "Work Tracker" && (
-                <>
-                  <Row>
-                    <SubTitle>Priority</SubTitle>
-                    <Dropdown
-                      trigger={["click"]}
-                      overlayStyle={{ minWidth: "60%" }}
-                      menu={menuTypeWork}
-                      overlayClassName="full-width-dropdown"
-                    >
-                      <Space>
-                        <span
-                          style={{
-                            fontSize: ".9rem",
-                            color: "#ACAEB2",
-                          }}
-                        >
-                          {formValues?.priority
-                            ? formValues?.priority
-                            : "Select Priority"}
-                        </span>
-                        <Caret>
-                          <FaCaretDown />
-                        </Caret>
-                      </Space>
-                    </Dropdown>
-                  </Row>
-                </>
-              )}
               <Row>
                 <SubTitle>Name</SubTitle>
               </Row>
@@ -698,6 +723,23 @@ export default function Main() {
                     setFormValues((old) => ({
                       ...old,
                       title: String(e.target.value),
+                    }));
+                  }}
+                />
+              </RowInput>
+              <Row>
+                <SubTitle>Count</SubTitle>
+              </Row>
+              <RowInput>
+                <input
+                  type="number"
+                  min={1}
+                  step={1}
+                  value={formValues?.total}
+                  onChange={(e) => {
+                    setFormValues((old) => ({
+                      ...old,
+                      total: String(e.target.value),
                     }));
                   }}
                 />
@@ -757,35 +799,6 @@ export default function Main() {
                   </Space>
                 </Dropdown>
               </Row>
-              {selectedAchToEdit?.name == "Work Tracker" && (
-                <>
-                  <Row>
-                    <SubTitle>Priority</SubTitle>
-                    <Dropdown
-                      trigger={["click"]}
-                      overlayStyle={{ minWidth: "60%" }}
-                      menu={menuTypeWorkEdit}
-                      overlayClassName="full-width-dropdown"
-                    >
-                      <Space>
-                        <span
-                          style={{
-                            fontSize: ".9rem",
-                            color: "#ACAEB2",
-                          }}
-                        >
-                          {selectedAchToEdit?.priority
-                            ? selectedAchToEdit?.priority
-                            : "Select Priority"}
-                        </span>
-                        <Caret>
-                          <FaCaretDown />
-                        </Caret>
-                      </Space>
-                    </Dropdown>
-                  </Row>
-                </>
-              )}
               <Row>
                 <SubTitle>Name</SubTitle>
               </Row>
@@ -797,6 +810,23 @@ export default function Main() {
                     setSelectedAchToEdit((old) => ({
                       ...old,
                       title: String(e.target.value),
+                    }));
+                  }}
+                />
+              </RowInput>
+              <Row>
+                <SubTitle>Count</SubTitle>
+              </Row>
+              <RowInput>
+                <input
+                  type="number"
+                  min={1}
+                  step={1}
+                  value={selectedAchToEdit?.total}
+                  onChange={(e) => {
+                    setFormValues((old) => ({
+                      ...old,
+                      total: String(e.target.value),
                     }));
                   }}
                 />
@@ -847,87 +877,11 @@ export default function Main() {
             {achToShow?.length == 0 &&
               !isOverviewMode &&
               isLongAchievementsActive && <NoData>No Games</NoData>}
-            {onlyUnlocked?.length > 0 &&
-              selected == "RECENT" &&
-              onlyUnlocked?.map((ach, index) => {
-                let isMoneyRelated = ach?.type == Work || ach?.type == Habit;
-                return (
-                  <A1Container>
-                    <Tag
-                      achieved={ach?.achieved}
-                      onClick={() => {
-                        if (ach?.achieved) {
-                          markAchAsNotCompleted(ach);
-                        } else {
-                          markAchAsCompleted(ach);
-                        }
-                      }}
-                    >
-                      <InnerTagMoney achieved={ach?.achieved}>
-                        <span
-                          style={{
-                            marginLeft: ".25rem",
-                            background: ach?.achieved
-                              ? COLOR_GREEN
-                              : COLOR_ACCENT,
-                          }}
-                        >
-                          {ach?.achieved ? "DONE" : "ACTIVE"}
-                        </span>
-                      </InnerTagMoney>
-                    </Tag>
-                    <Popconfirm
-                      title="Delete Achievement"
-                      description="Are you sure to delete this trophy?"
-                      onConfirm={() => {
-                        deleteAchievement(ach);
-                      }}
-                      onCancel={() => {}}
-                      okText="Yes"
-                      cancelText="No"
-                    >
-                      <A1Icon icon={ach?.url}></A1Icon>
-                    </Popconfirm>
-                    <A1Right>
-                      <A1Title>{ach?.title}</A1Title>
-                      <A1Desc>{ach?.description}</A1Desc>
-                      {/* <A1Unlocked>{getTimeFormattedForAch(ach?.unlocked)}</A1Unlocked> */}
-                    </A1Right>
-                    <Tag
-                      achieved={ach?.achieved}
-                      onClick={() => {
-                        setSelectedAchToEdit(ach);
-                        setShowModalEdit(true);
-                      }}
-                    >
-                      <InnerTagMoney>
-                        <span
-                          style={{
-                            transform: "translateY(1px)",
-                            fontSize: ".9rem",
-                          }}
-                        >
-                          <TbJewishStarFilled />{" "}
-                        </span>
-                        <span
-                          style={{
-                            marginLeft: ".25rem",
-                            fontSize: "1rem",
-                          }}
-                        >
-                          {onlyUnlocked?.length - index}
-                        </span>
-                      </InnerTagMoney>
-                    </Tag>
-                  </A1Container>
-                );
-              })}
             {games?.length > 0 &&
               selected == "GAMES" &&
               games?.map((ach, index) => {
                 return (
                   <A1Container>
-                    {/* <Name>GAME</Name> */}
                     <Popconfirm
                       title="Delete Game"
                       description="Are you sure to delete this game?"
@@ -938,7 +892,7 @@ export default function Main() {
                       okText="Yes"
                       cancelText="No"
                     >
-                      <A1Icon icon={urlsForGame[ach?.name]}></A1Icon>
+                      <A1Icon2 icon={ach?.url}></A1Icon2>
                     </Popconfirm>
                     <A1Right
                       onClick={(e) => {
@@ -957,7 +911,7 @@ export default function Main() {
                         setShowModalEdit(true);
                       }}
                     >
-                      <InnerTagMoney>
+                      <InnerTagGame>
                         <span
                           style={{
                             transform: "translateY(1px)",
@@ -974,7 +928,7 @@ export default function Main() {
                         >
                           {achAllForGame?.[ach?.name]?.length ?? 0}
                         </span>
-                      </InnerTagMoney>
+                      </InnerTagGame>
                     </Tag>
                   </A1Container>
                 );
@@ -986,29 +940,6 @@ export default function Main() {
               achsForGame?.map((ach, index) => {
                 return (
                   <A1Container>
-                    <Tag
-                      achieved={ach?.achieved}
-                      onClick={() => {
-                        if (ach?.achieved) {
-                          markAchAsNotCompleted(ach);
-                        } else {
-                          markAchAsCompleted(ach);
-                        }
-                      }}
-                    >
-                      <InnerTagMoney achieved={ach?.achieved}>
-                        <span
-                          style={{
-                            marginLeft: ".25rem",
-                            background: ach?.achieved
-                              ? COLOR_GREEN
-                              : COLOR_ACCENT,
-                          }}
-                        >
-                          {ach?.achieved ? "DONE" : "ACTIVE"}
-                        </span>
-                      </InnerTagMoney>
-                    </Tag>
                     <Popconfirm
                       title="Delete Achievement"
                       description="Are you sure to delete this task?"
@@ -1019,124 +950,56 @@ export default function Main() {
                       okText="Yes"
                       cancelText="No"
                     >
-                      <A1Icon icon={urlsForGame[ach?.name]}></A1Icon>
+                      <A1Icon icon={ICON_MAPPER?.[ach?.name]}></A1Icon>
                     </Popconfirm>
                     <A1Right>
                       <A1Title>{ach?.title}</A1Title>
                       <A1Desc>{ach?.description}</A1Desc>
+                      <A1Progress>
+                        <Progress
+                          steps={ach?.total}
+                          percent={(ach?.completed / ach?.total) * 100}
+                          size={"100%"}
+                        />
+                      </A1Progress>
                     </A1Right>
-                    <Tag
-                      achieved={ach?.achieved}
-                      onClick={() => {
-                        setSelectedAchToEdit(ach);
-                        setShowModalEdit(true);
-                      }}
-                    >
-                      <InnerTagMoney>
-                        <span
-                          style={{
-                            transform: "translateY(1px)",
-                            fontSize: ".9rem",
+                    <MainTag>
+                      <TagPositived achieved={ach?.achieved}>
+                        <InnerTag
+                          onClick={() => {
+                            addOneToAch(ach);
                           }}
                         >
-                          <TbJewishStarFilled />{" "}
-                        </span>
-                        <span
-                          style={{
-                            marginLeft: ".25rem",
-                            fontSize: "1rem",
-                          }}
-                        >
-                          {achsForGame?.length - index}
-                        </span>
-                      </InnerTagMoney>
-                    </Tag>
-                  </A1Container>
-                );
-              })}
-            {achsForGame?.length > 0 &&
-              selectedGame == "Work Tracker" &&
-              selected == "GAME" &&
-              selectedGame?.length > 0 &&
-              achsForGame
-                ?.filter((ach) => {
-                  if (selectedPriority == "Completed") {
-                    return ach?.achieved;
-                  } else {
-                    return ach?.priority == selectedPriority && !ach?.achieved;
-                  }
-                })
-                ?.map((ach, index) => {
-                  return (
-                    <A1Container>
-                      <Tag
-                        achieved={ach?.achieved}
-                        onClick={() => {
-                          if (ach?.achieved) {
-                            markAchAsNotCompleted(ach);
-                          } else {
-                            markAchAsCompleted(ach);
-                          }
-                        }}
-                      >
-                        <InnerTagMoney achieved={ach?.achieved}>
-                          <span
-                            style={{
-                              marginLeft: ".25rem",
-                              background: ach?.achieved
-                                ? COLOR_GREEN
-                                : COLOR_ACCENT,
-                            }}
-                          >
-                            {ach?.achieved ? "DONE" : "ACTIVE"}
-                          </span>
-                        </InnerTagMoney>
-                      </Tag>
-                      <Popconfirm
-                        title="Delete Achievement"
-                        description="Are you sure to delete this task?"
-                        onConfirm={() => {
-                          deleteAchievement(ach);
-                        }}
-                        onCancel={() => {}}
-                        okText="Yes"
-                        cancelText="No"
-                      >
-                        <A1Icon icon={urlsForGame[ach?.name]}></A1Icon>
-                      </Popconfirm>
-                      <A1Right>
-                        <A1Title>{ach?.title}</A1Title>
-                        <A1Desc>{ach?.description}</A1Desc>
-                      </A1Right>
-                      <Tag
-                        achieved={ach?.achieved}
-                        onClick={() => {
-                          setSelectedAchToEdit(ach);
-                          setShowModalEdit(true);
-                        }}
-                      >
-                        <InnerTagMoney>
-                          <span
-                            style={{
-                              transform: "translateY(1px)",
-                              fontSize: ".9rem",
-                            }}
-                          >
-                            <TbJewishStarFilled />{" "}
-                          </span>
                           <span
                             style={{
                               marginLeft: ".25rem",
                               fontSize: "1rem",
                             }}
                           >
-                            {achsForGame?.length - index}
+                            <FaPlusCircle />
                           </span>
-                        </InnerTagMoney>
-                      </Tag>
-                    </A1Container>
-                  );
-                })}
+                        </InnerTag>
+                      </TagPositived>
+                      <TagNegative achieved={ach?.achieved}>
+                        <InnerTag
+                          onClick={() => {
+                            removeOneToAch(ach);
+                          }}
+                        >
+                          <span
+                            style={{
+                              marginLeft: ".25rem",
+                              fontSize: "1rem",
+                            }}
+                          >
+                            <FaMinusCircle />
+                          </span>
+                        </InnerTag>
+                      </TagNegative>
+                    </MainTag>
+                  </A1Container>
+                );
+              })}
             {achsForGame?.length == 0 &&
               selected == "GAME" &&
               selectedGame?.length > 0 && <NoData>No Achievements</NoData>}
@@ -1153,7 +1016,7 @@ export default function Main() {
           </MiddleTopContainer>
         )}
       </Middle>
-      {showRecentAchUnlock && lastAch && (
+      {false && showRecentAchUnlock && lastAch && (
         <UnlockTrigger>
           <A1Container>
             <Popconfirm
@@ -1176,105 +1039,6 @@ export default function Main() {
             </Tag>
           </A1Container>
         </UnlockTrigger>
-      )}
-      {false && (
-        <BottomProgress>
-          <BLeft>
-            <span style={{ marginRight: ".25rem" }}>
-              <TbJewishStarFilled />
-            </span>
-            <span>{currentLevel}</span>
-          </BLeft>
-          <BMiddle>
-            <Progress percent={completionForNext} showInfo={false} />
-          </BMiddle>
-          <BRight>
-            <span style={{ marginRight: ".25rem" }}>
-              <TbJewishStarFilled />
-            </span>
-            <span>{nextLevel}</span>
-          </BRight>
-        </BottomProgress>
-      )}
-      {selectedGame == "Work Tracker" && selected == "GAME" && (
-        <BottomSmall>
-          <BottomItemSmall
-            active={selectedPriority == "Priority 1"}
-            onClick={() => {
-              setSelectedPriority("Priority 1");
-            }}
-          >
-            <span
-              style={{
-                fontSize: "1.5rem",
-                marginBottom: ".5rem",
-                opacity: selectedPriority == "Priority 1" ? 1 : 0.25,
-              }}
-            >
-              {onlyP1WorkItems?.length}
-            </span>
-            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
-              <span>Priority 1</span>
-            </span>
-          </BottomItemSmall>
-          <BottomItemSmall
-            active={selectedPriority == "Priority 2"}
-            onClick={() => {
-              setSelectedPriority("Priority 2");
-            }}
-          >
-            <span
-              style={{
-                fontSize: "1.5rem",
-                marginBottom: ".5rem",
-                opacity: selectedPriority == "Priority 2" ? 1 : 0.25,
-              }}
-            >
-              {onlyP2WorkItems?.length}
-            </span>
-            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
-              <span>Priority 2</span>
-            </span>
-          </BottomItemSmall>
-          <BottomItemSmall
-            active={selectedPriority == "Priority 3"}
-            onClick={() => {
-              setSelectedPriority("Priority 3");
-            }}
-          >
-            <span
-              style={{
-                fontSize: "1.5rem",
-                marginBottom: ".5rem",
-                opacity: selectedPriority == "Priority 3" ? 1 : 0.25,
-              }}
-            >
-              {onlyP3WorkItems?.length}
-            </span>
-            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
-              <span>Priority 3</span>
-            </span>
-          </BottomItemSmall>
-          <BottomItemSmall
-            active={selectedPriority == "Completed"}
-            onClick={() => {
-              setSelectedPriority("Completed");
-            }}
-          >
-            <span
-              style={{
-                fontSize: "1.5rem",
-                marginBottom: ".5rem",
-                opacity: selectedPriority == "Completed" ? 1 : 0.25,
-              }}
-            >
-              {onlyUnlockedWorkItems?.length}
-            </span>
-            <span style={{ fontWeight: "bold", fontSize: ".6rem" }}>
-              <span>Completed</span>
-            </span>
-          </BottomItemSmall>
-        </BottomSmall>
       )}
     </Container>
   );
@@ -1515,15 +1279,26 @@ const InnerTag = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 0.8rem;
-  transform: rotate(-90deg) translateX(-0.1rem);
-  width: 20px;
+  transform: translate(-0.1rem, 0.2rem);
+  width: 30px;
 `;
 
 const InnerTagMoney = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  transform: translateX(-0.1rem);
+  font-size: 1rem;
+  width: 25px;
+`;
+
+const InnerTagGame = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transform: rotate(-90deg) translateX(-0.1rem);
+  font-size: 1rem;
   width: 25px;
 `;
 
@@ -1544,6 +1319,45 @@ const Tag = styled.div`
       ? generateDarkTextColorForLightBg(COLOR_GREEN)
       : generateDarkTextColorForLightBg(COLOR_ACCENT)};
   height: 70px;
+  font-size: 0.8rem;
+`;
+
+const MainTag = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const TagNegative = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${(props) =>
+    props.forGame ? COLOR_RED : props?.achieved ? COLOR_RED : COLOR_RED};
+  color: ${(props) =>
+    props.forGame
+      ? generateDarkTextColorForLightBg(COLOR_RED)
+      : props?.achieved
+      ? generateDarkTextColorForLightBg(COLOR_RED)
+      : generateDarkTextColorForLightBg(COLOR_RED)};
+  height: 35px;
+  font-size: 0.8rem;
+`;
+
+const TagPositived = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${(props) =>
+    props.forGame ? COLOR_GREEN : props?.achieved ? COLOR_GREEN : COLOR_GREEN};
+  color: ${(props) =>
+    props.forGame
+      ? generateDarkTextColorForLightBg(COLOR_GREEN)
+      : props?.achieved
+      ? generateDarkTextColorForLightBg(COLOR_GREEN)
+      : generateDarkTextColorForLightBg(COLOR_GREEN)};
+  height: 35px;
   font-size: 0.8rem;
 `;
 
@@ -1605,6 +1419,18 @@ const A1Icon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 70px;
+  height: 70px;
+  background: ${(props) => `url('${props.icon}')`};
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+`;
+
+const A1Icon2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 140px;
   height: 70px;
   background: ${(props) => `url('${props.icon}')`};
@@ -1628,6 +1454,16 @@ const A1Desc = styled.div`
   justify-content: center;
   padding: 0rem 1rem;
   opacity: 0.7;
+  font-size: 0.8rem;
+  flex: 3;
+`;
+
+const A1Progress = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0rem 1rem;
+  opacity: 1;
   font-size: 0.8rem;
   flex: 3;
 `;

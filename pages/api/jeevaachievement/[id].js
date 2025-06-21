@@ -6,7 +6,7 @@ export default async function handler(req, res) {
 
   if (req.method === 'PUT') {
 
-    const { name, title, description, type, achieved, priority } = req.body;
+    const { name, title, description, type, achieved, priority, total,completed, _id } = req.body;
 
     if (!name || !title || !description || !type ) {
       return res
@@ -18,12 +18,12 @@ export default async function handler(req, res) {
     try {
       const client = await clientPromise;
       const db = client.db('habittracker');
-
+      console.log("req.query.value",req.query.value)
       const result = await db.collection(req.query.value).updateOne(
-        { _id: new ObjectId(id) },
+        { _id: new ObjectId(_id) },
         {
           $set: {
-            name, title, description, type, achieved: achieved ?? false, priority: priority ?? "Priority 2"
+            name, title, description, type, achieved: achieved ?? false, priority: priority ?? "Priority 2", total: total ?? 1, completed: completed ?? 0
           },
         }
       );

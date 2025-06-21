@@ -2,7 +2,7 @@ import clientPromise from '../../../lib/db';
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { name, title, description, type, value, priority } = req.body;
+    const { name, title, description, type, value, priority, total,completed } = req.body;
 
     if (!name || !title || !description || !type || !value || !priority) {
       return res
@@ -18,6 +18,7 @@ export default async function handler(req, res) {
         title,
         description,
         type,priority,
+        total: total ?? 1,completed: completed ?? 0,
         unlocked: new Date(), achieved: false
       });
 

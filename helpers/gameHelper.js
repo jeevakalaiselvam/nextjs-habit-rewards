@@ -8,6 +8,7 @@ export const ICON_MAPPER = {
     'https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/1659040/79c615cd7d3feef4deb072173a36ee546e916615.jpg',
   "Dex":
     'https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/apps/269650/37dd7d1b585764249e35566fc1afca5c76de340b.jpg',
+    "Rainbow Six Siege": "https://images.steamusercontent.com/ugc/1797474602914928017/E4477817964EABF1E2E59DB6B815C584E68951F9/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false"
 };
 
 
@@ -33,3 +34,11 @@ export const getTimeFormattedForAch = (time) => {
     "DD MMM, YYYY hh:mm A"
   );
 };
+
+const SIEGE_ICONS = {
+  "ash":"URL"
+}
+
+export const  getIconBasedOnKeyword = (keyword) => {
+  return 
+}
