@@ -993,7 +993,6 @@ export default function Main() {
                       <A1Desc>{ach?.description}</A1Desc>
                       <A1Progress>
                         <Progress
-                          width={"100%"}
                           percent={(
                             (ach?.completed / ach?.total) *
                             100
@@ -1544,6 +1543,7 @@ const A1Progress = styled.div`
   opacity: 1;
   font-size: 0.8rem;
   flex: 3;
+  width: 100%;
 `;
 
 const A1Unlocked = styled.div`
