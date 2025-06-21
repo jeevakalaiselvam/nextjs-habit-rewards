@@ -964,25 +964,34 @@ export default function Main() {
               achsForGame?.map((ach, index) => {
                 return (
                   <A1Container opaque={ach?.total == ach?.completed}>
-                    <Tag
-                      achieved={ach?.achieved}
-                      forGame={true}
-                      onClick={() => {
-                        setSelectedAchToEdit(ach);
-                        setShowModalEdit(true);
-                      }}
-                    >
-                      <InnerTagGame>
-                        <span style={{ fontSize: ".8rem" }}>EDIT</span>
-                      </InnerTagGame>
-                    </Tag>
+                    <MainTag>
+                      <TagNegative achieved={ach?.achieved}>
+                        <InnerTag
+                          onClick={() => {
+                            removeOneToAch(ach);
+                          }}
+                        >
+                          <span
+                            style={{
+                              marginLeft: ".25rem",
+                              fontSize: "1rem",
+                            }}
+                          >
+                            <FaMinusCircle />
+                          </span>
+                        </InnerTag>
+                      </TagNegative>
+                    </MainTag>
                     <Popconfirm
                       title="Delete Achievement"
                       description="Are you sure to delete this task?"
                       onConfirm={() => {
+                        setSelectedAchToEdit(ach);
+                        setShowModalEdit(true);
+                      }}
+                      onCancel={() => {
                         deleteAchievement(ach);
                       }}
-                      onCancel={() => {}}
                       okText="Yes"
                       cancelText="No"
                     >
@@ -1018,22 +1027,6 @@ export default function Main() {
                             </span>
                           </InnerTag>
                         </TagPositived>
-                        <TagNegative achieved={ach?.achieved}>
-                          <InnerTag
-                            onClick={() => {
-                              removeOneToAch(ach);
-                            }}
-                          >
-                            <span
-                              style={{
-                                marginLeft: ".25rem",
-                                fontSize: "1rem",
-                              }}
-                            >
-                              <FaMinusCircle />
-                            </span>
-                          </InnerTag>
-                        </TagNegative>
                       </MainTag>
                     )}
                     {ach?.completed == ach?.total && (
@@ -1401,7 +1394,7 @@ const TagNegative = styled.div`
       : props?.achieved
       ? generateDarkTextColorForLightBg(COLOR_RED)
       : generateDarkTextColorForLightBg(COLOR_RED)};
-  height: 45px;
+  height: 90px;
   font-size: 0.8rem;
 `;
 
@@ -1417,7 +1410,7 @@ const TagPositived = styled.div`
       : props?.achieved
       ? generateDarkTextColorForLightBg(COLOR_GREEN)
       : generateDarkTextColorForLightBg(COLOR_GREEN)};
-  height: 45px;
+  height: 90px;
   font-size: 0.8rem;
 `;
 
