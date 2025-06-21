@@ -95,7 +95,7 @@ const SECTION_ICONS = "Icons";
 const SECTION_GAMES_ALL = "Games All";
 const SECTION_GAME = "Game";
 
-let MAX_FOR_COUNT = 10;
+let MAX_FOR_COUNT = 100;
 
 export default function Main() {
   const router = useRouter();
@@ -993,7 +993,7 @@ export default function Main() {
                       <A1Desc>{ach?.description}</A1Desc>
                       <A1Progress>
                         <Progress
-                          steps={ach?.total}
+                          width={"100%"}
                           percent={(
                             (ach?.completed / ach?.total) *
                             100
