@@ -95,7 +95,7 @@ const SECTION_ICONS = "Icons";
 const SECTION_GAMES_ALL = "Games All";
 const SECTION_GAME = "Game";
 
-let MAX_FOR_COUNT = 100;
+let MAX_FOR_COUNT = 10;
 
 export default function Main() {
   const router = useRouter();
@@ -462,7 +462,7 @@ export default function Main() {
     });
   };
 
-  let onlyUnlocked = achToShow?.filter((ach) => ach?.achieved);
+  let onlyUnlocked = achToShow?.filter((ach) => ach?.completed == ach?.total);
 
   let onlyUnlockedWorkItems = achToShow?.filter(
     (ach) => ach?.achieved && ach?.name == "Work Tracker"
@@ -563,7 +563,7 @@ export default function Main() {
             style={{
               fontSize: "1.3rem",
               marginRight: ".5rem",
-              color: COLOR_ACCENT,
+              color: COLOR_GREEN,
             }}
           >
             <TbPresentationFilled />
@@ -573,7 +573,7 @@ export default function Main() {
               fontSize: "1.25rem",
               transform: "translateY(-2px)",
               marginRight: "1rem",
-              color: COLOR_ACCENT,
+              color: COLOR_GREEN,
             }}
           >
             {games?.length}
@@ -984,6 +984,9 @@ export default function Main() {
                       <A1Desc>{ach?.description}</A1Desc>
                       <A1Progress>
                         <Progress
+                          strokeColor={COLOR_ACCENT}
+                          size={[30, 10]}
+                          steps={MAX_FOR_COUNT}
                           percent={(
                             (ach?.completed / ach?.total) *
                             100
@@ -1529,7 +1532,7 @@ const A1Desc = styled.div`
 const A1Progress = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 0rem 1rem;
   opacity: 1;
   font-size: 0.8rem;
