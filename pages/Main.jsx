@@ -1392,7 +1392,7 @@ const TagNegative = styled.div`
       : props?.achieved
       ? generateDarkTextColorForLightBg(COLOR_RED)
       : generateDarkTextColorForLightBg(COLOR_RED)};
-  height: 45px;
+  height: 35px;
   font-size: 0.8rem;
 `;
 
@@ -1408,7 +1408,7 @@ const TagPositived = styled.div`
       : props?.achieved
       ? generateDarkTextColorForLightBg(COLOR_GREEN)
       : generateDarkTextColorForLightBg(COLOR_GREEN)};
-  height: 45px;
+  height: 35px;
   font-size: 0.8rem;
 `;
 
@@ -1424,7 +1424,7 @@ const TagCompleted = styled.div`
       : props?.achieved
       ? generateDarkTextColorForLightBg(COLOR_GREEN)
       : generateDarkTextColorForLightBg(COLOR_GREEN)};
-  height: 90px;
+  height: 70px;
   font-size: 0.8rem;
 `;
 
@@ -1487,8 +1487,8 @@ const A1Icon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 90px;
-  height: 90px;
+  width: 70px;
+  height: 70px;
   background: ${(props) => `url('${props.icon}')`};
   background-size: cover;
   background-repeat: no-repeat;
@@ -1552,7 +1552,7 @@ const A1Right = styled.div`
   align-items: flex-start;
   justify-content: center;
   flex-direction: column;
-  height: 90px;
+  height: 70px;
   flex: 1;
 `;
 
