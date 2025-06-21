@@ -19,6 +19,7 @@ import {
 import { Dropdown, message, Popconfirm, Progress, Space, Spin } from "antd";
 import {
   FaCaretDown,
+  FaCheck,
   FaGlobe,
   FaIcons,
   FaMinusCircle,
@@ -34,6 +35,7 @@ import {
   Feature,
   formatIndianMoney,
   GAMES_ARRAY,
+  getIconBasedOnKeyword,
   getTimeFormattedForAch,
   Habit,
   HABIT_ARRAY,
@@ -93,10 +95,13 @@ const SECTION_ICONS = "Icons";
 const SECTION_GAMES_ALL = "Games All";
 const SECTION_GAME = "Game";
 
+let MAX_FOR_COUNT = 10;
+
 export default function Main() {
   const router = useRouter();
   const [showRecentAchUnlock, setShowRecentAchUnlock] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm1, setSearchTerm1] = useState("");
+  const [searchTerm2, setSearchTerm2] = useState("");
   const [loading, setLoading] = useState(false);
   const [games, setGames] = useState([]);
   const [achievements, setAchievements] = useState([]);
@@ -262,39 +267,74 @@ export default function Main() {
   };
 
   const saveAchievement = () => {
-    setLoading(true);
     try {
-      axios
-        .post("/api/jeevaachievement", { ...formValues })
-        .then((response) => {
-          setShowModal(false);
-          setShowRecentAchUnlock(true);
-          refreshAchievements();
-        });
+      if (formValues?.total > MAX_FOR_COUNT) {
+        message.info("Max Limit is 20 !");
+      } else {
+        setLoading(true);
+        axios
+          .post("/api/jeevaachievement", { ...formValues })
+          .then((response) => {
+            setShowModal(false);
+            setShowRecentAchUnlock(true);
+            refreshAchievements();
+          });
+      }
     } catch (e) {
       message.info("Error saving Achievement !");
       setLoading(false);
     }
   };
 
-  const editAchievement = () => {
-    setLoading(true);
+  const resetAchievement = (achInner) => {
     try {
-      axios
-        .put(
-          `/api/jeevaachievement/${
-            selectedAchToEdit?._id
-          }?value=${selectedAchToEdit?.name
-            ?.toLowerCase()
-            ?.split(" ")
-            ?.join("_")}`,
-          { ...selectedAchToEdit }
-        )
-        .then((response) => {
-          setShowModalEdit(false);
-          setShowRecentAchUnlock(true);
-          refreshAchievements();
-        });
+      if (achInner?.total > MAX_FOR_COUNT) {
+        message.info("Max Limit is 20 !");
+      } else {
+        setLoading(true);
+        axios
+          .put(
+            `/api/jeevaachievement/${achInner?._id}?value=${achInner?.name
+              ?.toLowerCase()
+              ?.split(" ")
+              ?.join("_")}`,
+            { ...achInner, completed: 0 }
+          )
+          .then((response) => {
+            setShowModalEdit(false);
+            setShowRecentAchUnlock(true);
+            refreshAchievements();
+          });
+      }
+    } catch (e) {
+      message.info("Error saving Achievement !");
+      console.error(e);
+      setLoading(false);
+    }
+  };
+
+  const editAchievement = () => {
+    try {
+      if (selectedAchToEdit?.total > MAX_FOR_COUNT) {
+        message.info("Max Limit is 20 !");
+      } else {
+        setLoading(true);
+        axios
+          .put(
+            `/api/jeevaachievement/${
+              selectedAchToEdit?._id
+            }?value=${selectedAchToEdit?.name
+              ?.toLowerCase()
+              ?.split(" ")
+              ?.join("_")}`,
+            { ...selectedAchToEdit }
+          )
+          .then((response) => {
+            setShowModalEdit(false);
+            setShowRecentAchUnlock(true);
+            refreshAchievements();
+          });
+      }
     } catch (e) {
       message.info("Error saving Achievement !");
       console.error(e);
@@ -335,13 +375,6 @@ export default function Main() {
       clearTimeout(timer);
     };
   }, [achievements]);
-
-  useEffect(() => {
-    if (showRecentAchUnlock) {
-      const audio = new Audio("/effect.mp3");
-      audio.play();
-    }
-  }, [showRecentAchUnlock]);
 
   let achToShow = achievements
     ?.sort((ach1, ach2) => new Date(ach2?.unlocked) - new Date(ach1?.unlocked))
@@ -392,7 +425,16 @@ export default function Main() {
 
   allGames = [...allGames];
 
-  let achsForGame = achievements?.filter((ach) => ach?.name == selectedGame);
+  let achsForGame = achievements
+    ?.filter((ach) => ach?.name == selectedGame)
+    ?.filter((ach) => {
+      if (
+        ach?.description?.toLowerCase()?.includes(searchTerm1?.toLowerCase()) &&
+        ach?.description?.toLowerCase()?.includes(searchTerm2?.toLowerCase())
+      ) {
+        return true;
+      }
+    });
 
   let urlsForGame = {};
   let achAllForGame = {};
@@ -418,52 +460,6 @@ export default function Main() {
     axios.delete(`/api/jeevagame/${id}`).then((response) => {
       refreshGames();
     });
-  };
-
-  const markAchAsCompleted = (ach) => {
-    setLoading(true);
-    try {
-      axios
-        .put(
-          `/api/jeevaachievement/${ach?._id}?value=${ach?.name
-            ?.toLowerCase()
-            ?.split(" ")
-            ?.join("_")}`,
-          { ...ach, achieved: true }
-        )
-        .then((response) => {
-          setShowModalEdit(false);
-          setShowRecentAchUnlock(true);
-          refreshAchievements();
-        });
-    } catch (e) {
-      message.info("Error saving Achievement !");
-      console.error(e);
-      setLoading(false);
-    }
-  };
-
-  const markAchAsNotCompleted = (ach) => {
-    setLoading(true);
-    try {
-      axios
-        .put(
-          `/api/jeevaachievement/${ach?._id}?value=${ach?.name
-            ?.toLowerCase()
-            ?.split(" ")
-            ?.join("_")}`,
-          { ...ach, achieved: false }
-        )
-        .then((response) => {
-          setShowModalEdit(false);
-          setShowRecentAchUnlock(true);
-          refreshAchievements();
-        });
-    } catch (e) {
-      message.info("Error saving Achievement !");
-      console.error(e);
-      setLoading(false);
-    }
   };
 
   let onlyUnlocked = achToShow?.filter((ach) => ach?.achieved);
@@ -495,20 +491,31 @@ export default function Main() {
   );
 
   const addOneToAch = (ach) => {
+    if (true) {
+      const audio = new Audio("/effect.mp3");
+      audio.play();
+    }
     try {
-      axios
-        .put(
-          `/api/jeevaachievement/${ach?._id}?value=${ach?.name
-            ?.toLowerCase()
-            ?.split(" ")
-            ?.join("_")}`,
-          { ...ach, completed: ach?.completed + 1 }
-        )
-        .then((response) => {
-          setShowModalEdit(false);
-          setShowRecentAchUnlock(true);
-          refreshAchievements();
-        });
+      if (ach?.completed == ach?.total) {
+      } else {
+        axios
+          .put(
+            `/api/jeevaachievement/${ach?._id}?value=${ach?.name
+              ?.toLowerCase()
+              ?.split(" ")
+              ?.join("_")}`,
+            {
+              ...ach,
+              completed: ach?.completed + 1,
+              achieved: ach?.completed + 1 == ach?.completed ? "true" : "false",
+            }
+          )
+          .then((response) => {
+            setShowModalEdit(false);
+            setShowRecentAchUnlock(true);
+            refreshAchievements();
+          });
+      }
     } catch (e) {
       message.info("Error saving Achievement !");
       console.error(e);
@@ -517,19 +524,26 @@ export default function Main() {
   };
   const removeOneToAch = (ach) => {
     try {
-      axios
-        .put(
-          `/api/jeevaachievement/${ach?._id}?value=${ach?.name
-            ?.toLowerCase()
-            ?.split(" ")
-            ?.join("_")}`,
-          { ...ach, completed: ach?.completed - 1 }
-        )
-        .then((response) => {
-          setShowModalEdit(false);
-          setShowRecentAchUnlock(true);
-          refreshAchievements();
-        });
+      if (ach?.completed == 0) {
+      } else {
+        axios
+          .put(
+            `/api/jeevaachievement/${ach?._id}?value=${ach?.name
+              ?.toLowerCase()
+              ?.split(" ")
+              ?.join("_")}`,
+            {
+              ...ach,
+              completed: ach?.completed - 1,
+              achieved: ach?.total == ach?.completed ? "true" : "false",
+            }
+          )
+          .then((response) => {
+            setShowModalEdit(false);
+            setShowRecentAchUnlock(true);
+            refreshAchievements();
+          });
+      }
     } catch (e) {
       message.info("Error saving Achievement !");
       console.error(e);
@@ -735,6 +749,7 @@ export default function Main() {
                   type="number"
                   min={1}
                   step={1}
+                  max={MAX_FOR_COUNT}
                   value={formValues?.total}
                   onChange={(e) => {
                     setFormValues((old) => ({
@@ -821,10 +836,11 @@ export default function Main() {
                 <input
                   type="number"
                   min={1}
+                  max={MAX_FOR_COUNT}
                   step={1}
                   value={selectedAchToEdit?.total}
                   onChange={(e) => {
-                    setFormValues((old) => ({
+                    setSelectedAchToEdit((old) => ({
                       ...old,
                       total: String(e.target.value),
                     }));
@@ -864,11 +880,19 @@ export default function Main() {
       <BottomSmallInput>
         <input
           type="text"
-          placeholder="Search for Achievement..."
+          placeholder="Search..."
           onChange={(e) => {
-            setSearchTerm(e.target.value);
+            setSearchTerm1(e.target.value);
           }}
-          value={searchTerm}
+          value={searchTerm1}
+        />
+        <input
+          type="text"
+          placeholder="Search..."
+          onChange={(e) => {
+            setSearchTerm2(e.target.value);
+          }}
+          value={searchTerm2}
         />
       </BottomSmallInput>
       <Middle showModal={showModal}>
@@ -939,7 +963,19 @@ export default function Main() {
               selectedGame?.length > 0 &&
               achsForGame?.map((ach, index) => {
                 return (
-                  <A1Container>
+                  <A1Container opaque={ach?.total == ach?.completed}>
+                    <Tag
+                      achieved={ach?.achieved}
+                      forGame={true}
+                      onClick={() => {
+                        setSelectedAchToEdit(ach);
+                        setShowModalEdit(true);
+                      }}
+                    >
+                      <InnerTagGame>
+                        <span style={{ fontSize: ".8rem" }}>EDIT</span>
+                      </InnerTagGame>
+                    </Tag>
                     <Popconfirm
                       title="Delete Achievement"
                       description="Are you sure to delete this task?"
@@ -958,45 +994,69 @@ export default function Main() {
                       <A1Progress>
                         <Progress
                           steps={ach?.total}
-                          percent={(ach?.completed / ach?.total) * 100}
-                          size={"100%"}
+                          percent={(
+                            (ach?.completed / ach?.total) *
+                            100
+                          )?.toFixed(0)}
                         />
                       </A1Progress>
                     </A1Right>
-                    <MainTag>
-                      <TagPositived achieved={ach?.achieved}>
-                        <InnerTag
-                          onClick={() => {
-                            addOneToAch(ach);
-                          }}
-                        >
-                          <span
-                            style={{
-                              marginLeft: ".25rem",
-                              fontSize: "1rem",
+                    {ach?.completed < ach?.total && (
+                      <MainTag>
+                        <TagPositived achieved={ach?.achieved}>
+                          <InnerTag
+                            onClick={() => {
+                              addOneToAch(ach);
                             }}
                           >
-                            <FaPlusCircle />
-                          </span>
-                        </InnerTag>
-                      </TagPositived>
-                      <TagNegative achieved={ach?.achieved}>
-                        <InnerTag
-                          onClick={() => {
-                            removeOneToAch(ach);
-                          }}
-                        >
-                          <span
-                            style={{
-                              marginLeft: ".25rem",
-                              fontSize: "1rem",
+                            <span
+                              style={{
+                                marginLeft: ".25rem",
+                                fontSize: "1rem",
+                              }}
+                            >
+                              <FaPlusCircle />
+                            </span>
+                          </InnerTag>
+                        </TagPositived>
+                        <TagNegative achieved={ach?.achieved}>
+                          <InnerTag
+                            onClick={() => {
+                              removeOneToAch(ach);
                             }}
                           >
-                            <FaMinusCircle />
-                          </span>
-                        </InnerTag>
-                      </TagNegative>
-                    </MainTag>
+                            <span
+                              style={{
+                                marginLeft: ".25rem",
+                                fontSize: "1rem",
+                              }}
+                            >
+                              <FaMinusCircle />
+                            </span>
+                          </InnerTag>
+                        </TagNegative>
+                      </MainTag>
+                    )}
+                    {ach?.completed == ach?.total && (
+                      <MainTag>
+                        <TagCompleted achieved={ach?.achieved}>
+                          <InnerTagGame
+                            onClick={() => {
+                              resetAchievement(ach);
+                            }}
+                          >
+                            <span
+                              style={{
+                                marginLeft: ".25rem",
+                                fontSize: "1rem",
+                              }}
+                            >
+                              DONE
+                            </span>
+                          </InnerTagGame>
+                        </TagCompleted>
+                      </MainTag>
+                    )}
                   </A1Container>
                 );
               })}
@@ -1299,7 +1359,8 @@ const InnerTagGame = styled.div`
   justify-content: center;
   transform: rotate(-90deg) translateX(-0.1rem);
   font-size: 1rem;
-  width: 25px;
+  width: 30px;
+  background-color: ${(props) => (props.background ? props.background : "")};
 `;
 
 const Tag = styled.div`
@@ -1318,7 +1379,7 @@ const Tag = styled.div`
       : props?.achieved
       ? generateDarkTextColorForLightBg(COLOR_GREEN)
       : generateDarkTextColorForLightBg(COLOR_ACCENT)};
-  height: 70px;
+  height: 90px;
   font-size: 0.8rem;
 `;
 
@@ -1341,7 +1402,7 @@ const TagNegative = styled.div`
       : props?.achieved
       ? generateDarkTextColorForLightBg(COLOR_RED)
       : generateDarkTextColorForLightBg(COLOR_RED)};
-  height: 35px;
+  height: 45px;
   font-size: 0.8rem;
 `;
 
@@ -1357,7 +1418,23 @@ const TagPositived = styled.div`
       : props?.achieved
       ? generateDarkTextColorForLightBg(COLOR_GREEN)
       : generateDarkTextColorForLightBg(COLOR_GREEN)};
-  height: 35px;
+  height: 45px;
+  font-size: 0.8rem;
+`;
+
+const TagCompleted = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${(props) =>
+    props.forGame ? COLOR_GREEN : props?.achieved ? COLOR_GREEN : COLOR_GREEN};
+  color: ${(props) =>
+    props.forGame
+      ? generateDarkTextColorForLightBg(COLOR_GREEN)
+      : props?.achieved
+      ? generateDarkTextColorForLightBg(COLOR_GREEN)
+      : generateDarkTextColorForLightBg(COLOR_GREEN)};
+  height: 90px;
   font-size: 0.8rem;
 `;
 
@@ -1403,6 +1480,7 @@ const A1Container = styled.div`
   justify-content: center;
   width: 100%;
   margin: 0.25rem 0.25rem 0.25rem 0.25rem;
+  opacity: ${(props) => (props.opaque ? 0.2 : 1)};
   background-color: ${COLOR_ACH};
 `;
 
@@ -1419,8 +1497,8 @@ const A1Icon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 70px;
-  height: 70px;
+  width: 90px;
+  height: 90px;
   background: ${(props) => `url('${props.icon}')`};
   background-size: cover;
   background-repeat: no-repeat;
@@ -1432,7 +1510,7 @@ const A1Icon2 = styled.div`
   align-items: center;
   justify-content: center;
   width: 140px;
-  height: 70px;
+  height: 90px;
   background: ${(props) => `url('${props.icon}')`};
   background-size: cover;
   background-repeat: no-repeat;
@@ -1483,7 +1561,7 @@ const A1Right = styled.div`
   align-items: flex-start;
   justify-content: center;
   flex-direction: column;
-  height: 70px;
+  height: 90px;
   flex: 1;
 `;
 
@@ -1732,11 +1810,13 @@ const BottomSmallInput = styled.div`
   justify-content: center;
   width: 100%;
   margin-top: 4px;
+  text-align: center;
 
   & input {
     outline: none;
     border: none;
     width: 100%;
+    text-align: center;
     height: 40px;
     border-radius: 0px;
     opacity: 0.5;
