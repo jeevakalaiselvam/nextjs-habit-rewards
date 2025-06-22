@@ -95,7 +95,7 @@ const SECTION_ICONS = "Icons";
 const SECTION_GAMES_ALL = "Games All";
 const SECTION_GAME = "Game";
 
-let MAX_FOR_COUNT = 100;
+let MAX_FOR_COUNT = 50;
 
 export default function Main() {
   const router = useRouter();
@@ -996,15 +996,27 @@ export default function Main() {
                     </Popconfirm>
                     <A1Right>
                       <A1Title>{ach?.title}</A1Title>
-                      <A1Desc>{ach?.description}</A1Desc>
+                      <A1Desc>
+                        {ach?.description} - {ach?.total}
+                      </A1Desc>
                       <A1Progress>
-                        <Progress
-                          strokeColor={COLOR_ACCENT}
-                          percent={(
-                            (ach?.completed / ach?.total) *
-                            100
-                          )?.toFixed(0)}
-                        />
+                        <A1Progress1>
+                          <Progress
+                            strokeColor={COLOR_ACCENT}
+                            size={[1, 7]}
+                            steps={MAX_FOR_COUNT}
+                            percent={(
+                              (ach?.completed / ach?.total) *
+                              100
+                            )?.toFixed(0)}
+                            showInfo={false}
+                          />
+                        </A1Progress1>
+                        <A1Progress2>
+                          <span style={{ marginLeft: ".25rem" }}>
+                            {ach?.completed}/{ach?.total}
+                          </span>
+                        </A1Progress2>
                       </A1Progress>
                     </A1Right>
                     {ach?.completed < ach?.total && (
@@ -1555,18 +1567,25 @@ const A1Progress = styled.div`
   padding: 0rem 1rem;
   opacity: 1;
   font-size: 0.8rem;
-  flex: 3;
   width: 100%;
 `;
 
-const A1Unlocked = styled.div`
+const A1Progress1 = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0rem 1rem;
-  opacity: 0.25;
+  justify-content: flex-start;
+  opacity: 1;
   font-size: 0.8rem;
-  flex: 3;
+  width: 60%;
+`;
+
+const A1Progress2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  opacity: 1;
+  font-size: 0.8rem;
+  width: 40%;
 `;
 
 const A1Right = styled.div`
