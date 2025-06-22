@@ -442,17 +442,27 @@ export default function Main() {
 
   let urlsForGame = {};
   let achAllForGame = {};
+  let achAllForGameCompleted = {};
 
   achievements.forEach((ach) => {
+    if (!achAllForGame?.[ach?.name]) {
+      achAllForGame[ach?.name] = [];
+      achAllForGame[ach?.name].push(ach);
+    } else {
+      achAllForGame[ach?.name].push(ach);
+    }
+
     if (ach?.achieved) {
-      if (!achAllForGame?.[ach?.name]) {
-        achAllForGame[ach?.name] = [];
-        achAllForGame[ach?.name].push(ach);
+      if (!achAllForGameCompleted?.[ach?.name]) {
+        achAllForGameCompleted[ach?.name] = [];
+        achAllForGameCompleted[ach?.name].push(ach);
       } else {
-        achAllForGame[ach?.name].push(ach);
+        achAllForGameCompleted[ach?.name].push(ach);
       }
     }
   });
+
+  console.log({ achAllForGame, achievements });
 
   games.forEach((game) => {
     if (!urlsForGame?.[game?.name]) {
@@ -939,7 +949,7 @@ export default function Main() {
                         setShowModalEdit(true);
                       }}
                     >
-                      <InnerTagGame>
+                      <InnerTagGameAbsolute>
                         <span
                           style={{
                             transform: "translateY(1px)",
@@ -954,9 +964,10 @@ export default function Main() {
                             fontSize: "1rem",
                           }}
                         >
+                          {achAllForGameCompleted?.[ach?.name]?.length ?? 0} /{" "}
                           {achAllForGame?.[ach?.name]?.length ?? 0}
                         </span>
-                      </InnerTagGame>
+                      </InnerTagGameAbsolute>
                     </Tag>
                   </A1Container>
                 );
@@ -1340,7 +1351,7 @@ const InnerTag = styled.div`
   width: 30px;
 `;
 
-const InnerTagMoney = styled.div`
+const InnerTagGame = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1350,14 +1361,19 @@ const InnerTagMoney = styled.div`
   width: 25px;
 `;
 
-const InnerTagGame = styled.div`
+const InnerTagGameAbsolute = styled.div`
+  position: absolute;
+  right: 0;
+  top: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: rotate(-90deg) translateX(-0.1rem);
+  transform: translate(32%, -50%) rotate(-90deg);
   font-size: 1rem;
-  width: 30px;
+  width: 90px;
+  height: 30px;
   background-color: ${(props) => (props.background ? props.background : "")};
+  background-color: ${COLOR_ACCENT};
 `;
 
 const Tag = styled.div`
@@ -1378,6 +1394,7 @@ const Tag = styled.div`
       : generateDarkTextColorForLightBg(COLOR_ACCENT)};
   height: 90px;
   font-size: 0.8rem;
+  position: relative;
 `;
 
 const MainTag = styled.div`
