@@ -95,7 +95,7 @@ const SECTION_ICONS = "Icons";
 const SECTION_GAMES_ALL = "Games All";
 const SECTION_GAME = "Game";
 
-let MAX_FOR_COUNT = 50;
+let MAX_FOR_COUNT = 10;
 
 export default function Main() {
   const router = useRouter();
@@ -1010,6 +1010,8 @@ export default function Main() {
                         <A1Progress1>
                           <Progress
                             strokeColor={COLOR_ACCENT}
+                            steps={MAX_FOR_COUNT}
+                            size={[30, 7]}
                             percent={(
                               (ach?.completed / ach?.total) *
                               100
@@ -1584,7 +1586,7 @@ const A1Progress1 = styled.div`
   justify-content: flex-start;
   opacity: 1;
   font-size: 0.8rem;
-  width: 80%;
+  width: 100%;
 `;
 
 const A1Progress2 = styled.div`
@@ -1593,7 +1595,7 @@ const A1Progress2 = styled.div`
   justify-content: flex-end;
   opacity: 1;
   font-size: 0.8rem;
-  width: 20%;
+  width: 10%;
 `;
 
 const A1Right = styled.div`
