@@ -95,7 +95,7 @@ const SECTION_ICONS = "Icons";
 const SECTION_GAMES_ALL = "Games All";
 const SECTION_GAME = "Game";
 
-let MAX_FOR_COUNT = 10;
+let MAX_FOR_COUNT = 100;
 
 export default function Main() {
   const router = useRouter();
@@ -1000,8 +1000,6 @@ export default function Main() {
                       <A1Progress>
                         <Progress
                           strokeColor={COLOR_ACCENT}
-                          size={[20, 7]}
-                          steps={MAX_FOR_COUNT}
                           percent={(
                             (ach?.completed / ach?.total) *
                             100
@@ -1048,7 +1046,7 @@ export default function Main() {
                     {ach?.completed == ach?.total && (
                       <MainTag>
                         <TagCompleted achieved={ach?.achieved}>
-                          <InnerTagGame
+                          <InnerTagGame2
                             onClick={() => {
                               resetAchievement(ach);
                             }}
@@ -1061,7 +1059,7 @@ export default function Main() {
                             >
                               DONE
                             </span>
-                          </InnerTagGame>
+                          </InnerTagGame2>
                         </TagCompleted>
                       </MainTag>
                     )}
@@ -1359,6 +1357,16 @@ const InnerTagGame = styled.div`
   transform: translateX(-0.1rem);
   font-size: 1rem;
   width: 25px;
+`;
+
+const InnerTagGame2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transform: translateX(-0.1rem) rotate(-90deg);
+  font-size: 1rem;
+  width: 30px;
 `;
 
 const InnerTagGameAbsolute = styled.div`
