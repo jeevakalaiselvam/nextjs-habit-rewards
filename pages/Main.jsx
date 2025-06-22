@@ -1584,7 +1584,7 @@ const A1Progress1 = styled.div`
   justify-content: flex-start;
   opacity: 1;
   font-size: 0.8rem;
-  width: 100%;
+  width: 80%;
 `;
 
 const A1Progress2 = styled.div`
@@ -1593,7 +1593,7 @@ const A1Progress2 = styled.div`
   justify-content: flex-end;
   opacity: 1;
   font-size: 0.8rem;
-  width: 10%;
+  width: 20%;
 `;
 
 const A1Right = styled.div`
