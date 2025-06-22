@@ -891,6 +891,24 @@ export default function Main() {
           </ModalBottom>
         </ModalContainer>
       )}
+      <BottomSmallInput>
+        <input
+          type="text"
+          placeholder="Search..."
+          onChange={(e) => {
+            setSearchTerm1(e.target.value);
+          }}
+          value={searchTerm1}
+        />
+        <input
+          type="text"
+          placeholder="Search..."
+          onChange={(e) => {
+            setSearchTerm2(e.target.value);
+          }}
+          value={searchTerm2}
+        />
+      </BottomSmallInput>
       <Middle showModal={showModal}>
         {!loading && (
           <MiddleTopContainer>
@@ -1078,24 +1096,6 @@ export default function Main() {
           </MiddleTopContainer>
         )}
       </Middle>
-      <BottomSmallInput>
-        <input
-          type="text"
-          placeholder="Search..."
-          onChange={(e) => {
-            setSearchTerm1(e.target.value);
-          }}
-          value={searchTerm1}
-        />
-        <input
-          type="text"
-          placeholder="Search..."
-          onChange={(e) => {
-            setSearchTerm2(e.target.value);
-          }}
-          value={searchTerm2}
-        />
-      </BottomSmallInput>
       {false && showRecentAchUnlock && lastAch && (
         <UnlockTrigger>
           <A1Container>
@@ -1185,7 +1185,7 @@ const Middle = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  max-height: 85vh;
+  max-height: 83vh;
   overflow: scroll;
   flex: 1;
   opacity: ${(props) => (props.showModal ? "0" : "1")};
