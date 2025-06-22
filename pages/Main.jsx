@@ -95,7 +95,7 @@ const SECTION_ICONS = "Icons";
 const SECTION_GAMES_ALL = "Games All";
 const SECTION_GAME = "Game";
 
-let MAX_FOR_COUNT = 10;
+let MAX_FOR_COUNT = 100;
 
 export default function Main() {
   const router = useRouter();
@@ -269,7 +269,7 @@ export default function Main() {
   const saveAchievement = () => {
     try {
       if (formValues?.total > MAX_FOR_COUNT) {
-        message.info("Max Limit is 20 !");
+        message.info(`Max Limit is ${MAX_FOR_COUNT} `);
       } else {
         setLoading(true);
         axios
@@ -289,7 +289,7 @@ export default function Main() {
   const resetAchievement = (achInner) => {
     try {
       if (achInner?.total > MAX_FOR_COUNT) {
-        message.info("Max Limit is 20 !");
+        message.info(`Max Limit is ${MAX_FOR_COUNT} `);
       } else {
         setLoading(true);
         axios
@@ -316,7 +316,7 @@ export default function Main() {
   const editAchievement = () => {
     try {
       if (selectedAchToEdit?.total > MAX_FOR_COUNT) {
-        message.info("Max Limit is 20 !");
+        message.info(`Max Limit is ${MAX_FOR_COUNT} `);
       } else {
         setLoading(true);
         axios
@@ -1048,7 +1048,7 @@ export default function Main() {
                     {ach?.completed == ach?.total && (
                       <MainTag>
                         <TagCompleted achieved={ach?.achieved}>
-                          <InnerTagGame
+                          <InnerTagGameDone
                             onClick={() => {
                               resetAchievement(ach);
                             }}
@@ -1061,7 +1061,7 @@ export default function Main() {
                             >
                               DONE
                             </span>
-                          </InnerTagGame>
+                          </InnerTagGameDone>
                         </TagCompleted>
                       </MainTag>
                     )}
@@ -1351,14 +1351,14 @@ const InnerTag = styled.div`
   width: 30px;
 `;
 
-const InnerTagGame = styled.div`
+const InnerTagGameDone = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  transform: translateX(-0.1rem);
+  transform: translateX(-0.1rem) rotate(-90deg);
   font-size: 1rem;
-  width: 25px;
+  width: 30px;
 `;
 
 const InnerTagGameAbsolute = styled.div`
