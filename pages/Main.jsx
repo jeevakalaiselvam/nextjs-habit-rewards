@@ -95,7 +95,7 @@ const SECTION_ICONS = "Icons";
 const SECTION_GAMES_ALL = "Games All";
 const SECTION_GAME = "Game";
 
-let MAX_FOR_COUNT = 50;
+let MAX_FOR_COUNT = 10;
 
 export default function Main() {
   const router = useRouter();
