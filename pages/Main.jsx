@@ -996,7 +996,9 @@ export default function Main() {
                         </A1Progress1>
                         <A1Progress2>
                           <span style={{ marginLeft: ".25rem" }}>
-                            {ach?.completed}/{ach?.total}
+                            <span>{ach?.completed}</span>
+                            <span>/</span>
+                            <span>{ach?.total}</span>
                           </span>
                         </A1Progress2>
                       </A1Progress>
@@ -1183,7 +1185,7 @@ const Middle = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  max-height: 82vh;
+  max-height: 85vh;
   overflow: scroll;
   flex: 1;
   opacity: ${(props) => (props.showModal ? "0" : "1")};
@@ -1419,13 +1421,13 @@ const TagNegative = styled.div`
   align-items: center;
   justify-content: center;
   background-color: ${(props) =>
-    props.forGame ? COLOR_RED : props?.achieved ? COLOR_RED : COLOR_RED};
+    props.forGame ? COLOR_GREY : props?.achieved ? COLOR_GREY : COLOR_GREY};
   color: ${(props) =>
     props.forGame
-      ? generateDarkTextColorForLightBg(COLOR_RED)
+      ? generateDarkTextColorForLightBg(COLOR_GREY)
       : props?.achieved
-      ? generateDarkTextColorForLightBg(COLOR_RED)
-      : generateDarkTextColorForLightBg(COLOR_RED)};
+      ? generateDarkTextColorForLightBg(COLOR_GREY)
+      : generateDarkTextColorForLightBg(COLOR_GREY)};
   height: 35px;
   font-size: 0.8rem;
 `;
@@ -1435,13 +1437,13 @@ const TagPositived = styled.div`
   align-items: center;
   justify-content: center;
   background-color: ${(props) =>
-    props.forGame ? COLOR_GREEN : props?.achieved ? COLOR_GREEN : COLOR_GREEN};
+    props.forGame ? COLOR_GREY : props?.achieved ? COLOR_GREY : COLOR_GREY};
   color: ${(props) =>
     props.forGame
-      ? generateDarkTextColorForLightBg(COLOR_GREEN)
+      ? generateDarkTextColorForLightBg(COLOR_GREY)
       : props?.achieved
-      ? generateDarkTextColorForLightBg(COLOR_GREEN)
-      : generateDarkTextColorForLightBg(COLOR_GREEN)};
+      ? generateDarkTextColorForLightBg(COLOR_GREY)
+      : generateDarkTextColorForLightBg(COLOR_GREY)};
   height: 35px;
   font-size: 0.8rem;
 `;
@@ -1568,6 +1570,7 @@ const A1Progress = styled.div`
   opacity: 1;
   font-size: 0.8rem;
   width: 100%;
+  flex: 3;
 `;
 
 const A1Progress1 = styled.div`
