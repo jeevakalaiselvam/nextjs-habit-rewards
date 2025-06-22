@@ -434,7 +434,11 @@ export default function Main() {
       ) {
         return true;
       }
-    });
+    })
+    ?.sort(
+      (ach1, ach2) =>
+        ach2?.completed / ach2?.total - ach1?.completed / ach1?.total
+    );
 
   let urlsForGame = {};
   let achAllForGame = {};
