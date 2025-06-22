@@ -1000,8 +1000,6 @@ export default function Main() {
                       <A1Progress>
                         <Progress
                           strokeColor={COLOR_ACCENT}
-                          size={[20, 7]}
-                          steps={MAX_FOR_COUNT}
                           percent={(
                             (ach?.completed / ach?.total) *
                             100
