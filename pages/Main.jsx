@@ -434,11 +434,18 @@ export default function Main() {
       ) {
         return true;
       }
-    })
+    });
+
+  let final = [];
+  let completed = achsForGame?.filter((ach) => ach?.completed == ach?.total);
+  let notCompleted = achsForGame
+    ?.filter((ach) => ach?.completed != ach?.total)
     ?.sort(
       (ach1, ach2) =>
-        ach2?.completed / ach2?.total - ach1?.completed / ach1?.total
+        ach2.completed / ach2?.total - ach1.completed / ach1?.total
     );
+
+  achsForGame = [...notCompleted, ...completed];
 
   let urlsForGame = {};
   let achAllForGame = {};
