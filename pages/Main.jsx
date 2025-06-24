@@ -102,6 +102,8 @@ export default function Main() {
   const [showRecentAchUnlock, setShowRecentAchUnlock] = useState(false);
   const [searchTerm1, setSearchTerm1] = useState("");
   const [searchTerm2, setSearchTerm2] = useState("");
+  const [searchTerm3, setSearchTerm3] = useState("");
+  const [searchTerm4, setSearchTerm4] = useState("");
   const [loading, setLoading] = useState(false);
   const [games, setGames] = useState([]);
   const [achievements, setAchievements] = useState([]);
@@ -429,8 +431,10 @@ export default function Main() {
     ?.filter((ach) => ach?.name == selectedGame)
     ?.filter((ach) => {
       if (
-        ach?.description?.toLowerCase()?.includes(searchTerm1?.toLowerCase()) &&
-        ach?.description?.toLowerCase()?.includes(searchTerm2?.toLowerCase())
+        ach?.description?.toLowerCase()?.includes(searchTerm1?.toLowerCase()) ||
+        ach?.description?.toLowerCase()?.includes(searchTerm2?.toLowerCase()) ||
+        ach?.description?.toLowerCase()?.includes(searchTerm3?.toLowerCase()) ||
+        ach?.description?.toLowerCase()?.includes(searchTerm4?.toLowerCase())
       ) {
         return true;
       }
@@ -914,6 +918,22 @@ export default function Main() {
             setSearchTerm2(e.target.value);
           }}
           value={searchTerm2}
+        />{" "}
+        <input
+          type="text"
+          placeholder="Search..."
+          onChange={(e) => {
+            setSearchTerm3(e.target.value);
+          }}
+          value={searchTerm3}
+        />
+        <input
+          type="text"
+          placeholder="Search..."
+          onChange={(e) => {
+            setSearchTerm4(e.target.value);
+          }}
+          value={searchTerm4}
         />
       </BottomSmallInput>
       <Middle showModal={showModal}>
