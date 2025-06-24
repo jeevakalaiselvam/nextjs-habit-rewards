@@ -1020,8 +1020,6 @@ export default function Main() {
                         <A1Progress2>
                           <span style={{ marginLeft: ".25rem" }}>
                             <span>{ach?.completed}</span>
-                            <span>/</span>
-                            <span>{ach?.total}</span>
                           </span>
                         </A1Progress2>
                       </A1Progress>
