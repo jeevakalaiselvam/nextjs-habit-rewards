@@ -431,12 +431,33 @@ export default function Main() {
     ?.filter((ach) => ach?.name == selectedGame)
     ?.filter((ach) => {
       if (
-        ach?.description?.toLowerCase()?.includes(searchTerm1?.toLowerCase()) ||
-        ach?.description?.toLowerCase()?.includes(searchTerm2?.toLowerCase()) ||
-        ach?.description?.toLowerCase()?.includes(searchTerm3?.toLowerCase()) ||
-        ach?.description?.toLowerCase()?.includes(searchTerm4?.toLowerCase())
+        searchTerm1?.length == 0 &&
+        searchTerm2?.length == 0 &&
+        searchTerm3?.length == 0 &&
+        searchTerm4?.length == 0
       ) {
         return true;
+      } else {
+        if (
+          (searchTerm1?.length > 0 &&
+            ach?.description
+              ?.toLowerCase()
+              ?.includes(searchTerm1?.toLowerCase())) ||
+          (searchTerm2?.length > 0 &&
+            ach?.description
+              ?.toLowerCase()
+              ?.includes(searchTerm2?.toLowerCase())) ||
+          (searchTerm3?.length > 0 &&
+            ach?.description
+              ?.toLowerCase()
+              ?.includes(searchTerm3?.toLowerCase())) ||
+          (searchTerm4?.length > 0 &&
+            ach?.description
+              ?.toLowerCase()
+              ?.includes(searchTerm4?.toLowerCase()))
+        ) {
+          return true;
+        }
       }
     });
 
