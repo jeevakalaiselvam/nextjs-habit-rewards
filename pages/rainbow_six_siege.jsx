@@ -255,7 +255,7 @@ export default function MainGames() {
         )}
 
         {!allChallengeLoading && !allChallengeCompletedLoading && (
-          <TitleRecent>Next Challenge</TitleRecent>
+          <TitleRecent2>Next Challenge</TitleRecent2>
         )}
         {!allChallengeLoading && !allChallengeCompletedLoading && (
           <TopContent>
@@ -432,12 +432,32 @@ const TitleRecent = styled.div`
   font-size: 0.9rem;
 `;
 
+const TitleRecent2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  color: #fefefe;
+  opacity: 0.5;
+  margin-left: 0.75rem;
+  padding: 0.5rem 0rem;
+  transform: translateY(-0.25rem);
+  font-size: 0.9rem;
+`;
+
 const NoContent = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
   min-height: 10vh;
+`;
+
+const NoContent1 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 `;
 
 const CompletionButton = styled.div`
