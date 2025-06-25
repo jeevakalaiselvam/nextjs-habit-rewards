@@ -10,6 +10,9 @@ import IconCount from "../components/IconCount";
 import { TbBinaryTree2Filled, TbLayoutGridFilled } from "react-icons/tb";
 import { FaTrophy } from "react-icons/fa";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { message } from "antd";
+import axios from "axios";
 
 export default function all_games() {
   const games = [
@@ -22,6 +25,29 @@ export default function all_games() {
     },
   ];
 
+  const [allChallengeCompletedLoading, setAllChallengeCompletedLoading] =
+    useState(false);
+  const [allCompleted, setCompletedChallenges] = useState([]);
+
+  const refreshAllCompletedChallenges = (collectionName) => {
+    setAllChallengeCompletedLoading(true);
+    setCompletedChallenges((_) => []);
+    try {
+      axios.get(`/api/${collectionName}`).then((response) => {
+        setCompletedChallenges([]);
+        setCompletedChallenges((old) => [...old, ...response?.data]);
+        setAllChallengeCompletedLoading(false);
+      });
+    } catch (e) {
+      message.info("Error refreshing Challenges !");
+      setAllChallengeCompletedLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshAllCompletedChallenges("rainbow_six_siege_completed");
+  }, []);
+
   return (
     <Container>
       <Header>
@@ -32,7 +58,7 @@ export default function all_games() {
             textSize="1.25rem"
             icon={<FaTrophy />}
             color={COLOR_ACCENT}
-            count={games?.length}
+            count={allCompleted?.length}
           />
         </HLeft>
         <HRight></HRight>
