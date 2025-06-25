@@ -48,8 +48,6 @@ body {
 .ant-input {
   border: none; /* Remove the border */
   box-shadow: none; /* Remove the box shadow */
-  font-size: 1rem;
-  height: 45px;
 }
 
 .ant-select-focused .ant-select-selector,
@@ -122,6 +120,12 @@ body {
 * {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* IE and Edge */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* Internet Explorer/Edge */
+  user-select: none;         /* Standard syntax */
+  
+
 }
 
 *::-webkit-scrollbar {

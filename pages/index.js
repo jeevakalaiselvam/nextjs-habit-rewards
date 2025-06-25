@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-import Main from './Main';
+import AllGames from "./all_games";
 
 export default function Home() {
-  return <Main />;
+  return <AllGames />;
 }
