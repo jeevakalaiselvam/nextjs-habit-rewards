@@ -115,6 +115,15 @@ export default function MainGames() {
           unlocked: new Date(),
         })
         .then((response) => {
+          if (window) {
+            if (challenge?.type == "Attacker") {
+              localStorage.setItem("ATTACKER_CHALLENGE", JSON.stringify({}));
+              changeRandomChallenge();
+            } else {
+              localStorage.setItem("DEFENDER_CHALLENGE", JSON.stringify({}));
+              changeRandomChallenge();
+            }
+          }
           setChallengeCompleteLoading(false);
           refreshAllChallenges();
           refreshAllCompletedChallenges();
@@ -205,7 +214,7 @@ export default function MainGames() {
   }, [selectedTab, allChallenges, completedChallenges]);
 
   let sortedChallenges = completedChallenges?.sort(
-    (ach1, ach2) => new Date(ach2) - new Date(ach1)
+    (ach1, ach2) => new Date(ach2?.unlocked) - new Date(ach1?.unlocked)
   );
 
   return (
