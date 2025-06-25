@@ -279,8 +279,8 @@ export default function MainGames() {
                       <InnerRightTag>
                         <span
                           style={{
-                            fontSize: ".9rem",
-                            transform: "translateY(1px)",
+                            fontSize: "1rem",
+                            transform: "translateY(0.5px)",
                           }}
                         >
                           {completedChallenges?.length - index}
@@ -424,7 +424,7 @@ const Description = styled.div`
   width: 100%;
   flex: 2;
   padding: 0.25rem;
-  opacity: 0.25;
+  opacity: 0.5;
 `;
 
 const IconOuter = styled.div`
