@@ -136,7 +136,7 @@ export default function MainGames() {
       (challenge) => challenge?.type == (selectedTab ?? "Attacker")
     );
     const shuffled = [...filteredForType].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, 1);
+    return shuffled.slice(0, 3);
   }
 
   const options = [
