@@ -141,12 +141,7 @@ export default function MainGames() {
   }, []);
 
   function get1RandomChallenges() {
-    let filteredForType = allChallenges?.filter(
-      (challenge) => challenge?.type == (selectedTab ?? "Attacker")
-    );
-    const shuffled = [...filteredForType].sort(() => 0.5 - Math.random());
-    let challenge = shuffled.slice(0, 1)?.[0];
-
+    let challenge = Ran;
     return challenge;
   }
 
@@ -276,57 +271,6 @@ export default function MainGames() {
           allChallenges?.length == 0 && (
             <NoContent style={{ color: COLOR_WHITE }}>No Challenges</NoContent>
           )}
-        {showModalNewAch && (
-          <Modal
-            title="Create Challenge"
-            closable={{ "aria-label": "Custom Close Button" }}
-            open={showModalNewAch}
-            onOk={() => {
-              createChallenge();
-            }}
-            onCancel={() => {
-              setShowModalNewAch(false);
-            }}
-          >
-            <CreateForm>
-              <FormLabel>Type</FormLabel>
-              <FormInput>
-                <Radio.Group
-                  options={options}
-                  onChange={(e) => {
-                    setNewAch((_) => ({ ..._, type: e?.target?.value }));
-                  }}
-                  value={newAch?.type}
-                />
-              </FormInput>
-              <FormLabel>Title</FormLabel>
-              <FormInput>
-                <Input
-                  placeholder="Enter Title..."
-                  value={newAch?.title ?? ""}
-                  onChange={(e) => {
-                    setNewAch((_) => ({ ..._, title: e?.target?.value }));
-                  }}
-                />
-              </FormInput>
-              <FormLabel>Description</FormLabel>
-              <FormInput>
-                <TextArea
-                  value={newAch?.description ?? ""}
-                  onChange={(e) => {
-                    setNewAch((_) => ({
-                      ..._,
-                      description: e?.target?.value,
-                    }));
-                  }}
-                  placeholder="Enter Description.."
-                  autoSize={{ minRows: 3, maxRows: 5 }}
-                />
-              </FormInput>
-            </CreateForm>
-          </Modal>
-        )}
-
         {!allChallengeLoading && !allChallengeCompletedLoading && (
           <TitleRecent2>Next Challenge</TitleRecent2>
         )}
