@@ -34,6 +34,7 @@ export default function MainGames() {
   const router = useRouter();
   const key = "rainbow_six_siege";
 
+  const [randomChallenge, setRandomChallenge] = useState({});
   const [selectedTab, setSelectedTab] = useState("Attacker");
   const [challengeCompleteLoading, setChallengeCompleteLoading] =
     useState(false);
@@ -131,18 +132,78 @@ export default function MainGames() {
   }, []);
 
   function get1RandomChallenges() {
-    console.log(allChallenges);
     let filteredForType = allChallenges?.filter(
       (challenge) => challenge?.type == (selectedTab ?? "Attacker")
     );
     const shuffled = [...filteredForType].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, 3);
+    let challenge = shuffled.slice(0, 1)?.[0];
+
+    return challenge;
   }
 
   const options = [
     { label: "Attacker", value: "Attacker" },
     { label: "Defender", value: "Defender" },
   ];
+
+  const changeRandomChallenge = () => {
+    let challenge = get1RandomChallenges();
+    if (window) {
+      if (selectedTab == "Attacker") {
+        localStorage.setItem("ATTACKER_CHALLENGE", JSON.stringify(challenge));
+        setRandomChallenge(challenge);
+      } else {
+        localStorage.setItem("DEFENDER_CHALLENGE", JSON.stringify(challenge));
+        setRandomChallenge(challenge);
+      }
+    }
+  };
+
+  useEffect(() => {
+    let sortedChallenges = completedChallenges?.sort(
+      (ach1, ach2) => new Date(ach2) - new Date(ach1)
+    );
+
+    let sortedAttackerChallenges = sortedChallenges?.filter(
+      (challenge) => challenge?.type == "Attacker"
+    );
+    let sortedDefenderChallenges = sortedChallenges?.filter(
+      (challenge) => challenge?.type == "Defender"
+    );
+
+    let lastUnlockedAttackerChallenge = sortedAttackerChallenges?.[0];
+    let lastUnlockedDefenderChallenge = sortedDefenderChallenges?.[0];
+
+    let attackerChallengeInStorage = {};
+    let defenderChallengeInStorage = {};
+
+    if (window) {
+      attackerChallengeInStorage = JSON.parse(
+        localStorage.getItem("ATTACKER_CHALLENGE") ?? {}
+      );
+      defenderChallengeInStorage = JSON.parse(
+        localStorage.getItem("DEFENDER_CHALLENGE") ?? {}
+      );
+    }
+
+    if (selectedTab == "Attacker") {
+      if (attackerChallengeInStorage?.title) {
+        setRandomChallenge(attackerChallengeInStorage);
+      } else {
+        changeRandomChallenge();
+      }
+    } else {
+      if (defenderChallengeInStorage?.title) {
+        setRandomChallenge(defenderChallengeInStorage);
+      } else {
+        changeRandomChallenge();
+      }
+    }
+  }, [selectedTab, allChallenges, completedChallenges]);
+
+  let sortedChallenges = completedChallenges?.sort(
+    (ach1, ach2) => new Date(ach2) - new Date(ach1)
+  );
 
   return (
     <Container>
@@ -259,7 +320,47 @@ export default function MainGames() {
         )}
         {!allChallengeLoading && !allChallengeCompletedLoading && (
           <TopContent>
-            {get1RandomChallenges()?.map((challenge) => {
+            <ChallengeOuterContainer>
+              <ChallengeContainer>
+                <IconOuter>
+                  <Icon
+                    icon={getOperatorIconFor(randomChallenge?.title)}
+                  ></Icon>
+                </IconOuter>
+                <Data>
+                  <Title>{randomChallenge?.title}</Title>
+                  <Description>{randomChallenge?.description}</Description>
+                </Data>
+              </ChallengeContainer>
+              <Actions>
+                <ActionComplete
+                  onClick={() => {
+                    changeRandomChallenge();
+                  }}
+                >
+                  <NextButton>
+                    <TitleForNext>NEXT</TitleForNext>
+                  </NextButton>
+                </ActionComplete>
+                <ActionComplete
+                  onClick={() => {
+                    completeChallenge(randomChallenge);
+                  }}
+                >
+                  <CompletionButton>
+                    <TitleForCompletion>COMPLETE</TitleForCompletion>
+                  </CompletionButton>
+                </ActionComplete>
+              </Actions>
+            </ChallengeOuterContainer>
+          </TopContent>
+        )}
+        {!allChallengeLoading && !allChallengeCompletedLoading && (
+          <TitleRecent>Completed Challenges</TitleRecent>
+        )}
+        {!allChallengeLoading && !allChallengeCompletedLoading && (
+          <BottomContent>
+            {sortedChallenges?.map((challenge, index) => {
               return (
                 <ChallengeOuterContainer>
                   <ChallengeContainer>
@@ -270,76 +371,30 @@ export default function MainGames() {
                       <Title>{challenge?.title}</Title>
                       <Description>{challenge?.description}</Description>
                     </Data>
+                    <RightTag>
+                      <InnerRightTag>
+                        <span
+                          style={{
+                            fontSize: "1rem",
+                            transform: "translateY(0.5px)",
+                          }}
+                        >
+                          {completedChallenges?.length - index}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: ".8rem",
+                            transform: "translateY(1px)",
+                          }}
+                        >
+                          <FaTrophy />
+                        </span>
+                      </InnerRightTag>
+                    </RightTag>
                   </ChallengeContainer>
-                  <Actions>
-                    <ActionComplete
-                      onClick={() => {
-                        completeChallenge(challenge);
-                      }}
-                    >
-                      {challengeCompleteLoading ? (
-                        <CompletionButton>
-                          <TitleForCompletion>MARKING...</TitleForCompletion>
-                        </CompletionButton>
-                      ) : (
-                        <CompletionButton>
-                          <TitleForCompletion>MARK COMPLETE</TitleForCompletion>
-                        </CompletionButton>
-                      )}
-                    </ActionComplete>
-                  </Actions>
                 </ChallengeOuterContainer>
               );
             })}
-          </TopContent>
-        )}
-        {!allChallengeLoading && !allChallengeCompletedLoading && (
-          <TitleRecent>Completed Challenges</TitleRecent>
-        )}
-        {!allChallengeLoading && !allChallengeCompletedLoading && (
-          <BottomContent>
-            {completedChallenges
-              ?.sort(
-                (ach1, ach2) =>
-                  new Date(ach2)?.getTime() - new Date(ach1)?.getTime()
-              )
-              ?.map((challenge, index) => {
-                return (
-                  <ChallengeOuterContainer>
-                    <ChallengeContainer>
-                      <IconOuter>
-                        <Icon
-                          icon={getOperatorIconFor(challenge?.title)}
-                        ></Icon>
-                      </IconOuter>
-                      <Data>
-                        <Title>{challenge?.title}</Title>
-                        <Description>{challenge?.description}</Description>
-                      </Data>
-                      <RightTag>
-                        <InnerRightTag>
-                          <span
-                            style={{
-                              fontSize: "1rem",
-                              transform: "translateY(0.5px)",
-                            }}
-                          >
-                            {completedChallenges?.length - index}
-                          </span>
-                          <span
-                            style={{
-                              fontSize: ".8rem",
-                              transform: "translateY(1px)",
-                            }}
-                          >
-                            <FaTrophy />
-                          </span>
-                        </InnerRightTag>
-                      </RightTag>
-                    </ChallengeContainer>
-                  </ChallengeOuterContainer>
-                );
-              })}
           </BottomContent>
         )}
         {(allChallengeCompletedLoading || allChallengeLoading) && (
@@ -460,10 +515,18 @@ const NoContent1 = styled.div`
   width: 100%;
 `;
 
+const NextButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
 const CompletionButton = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
 `;
 
 const IconForCompletion = styled.div`
@@ -472,11 +535,22 @@ const IconForCompletion = styled.div`
   justify-content: center;
 `;
 
+const TitleForNext = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 0.75rem 0.5rem;
+  background-color: ${COLOR_ACCENT};
+`;
+
 const TitleForCompletion = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 0.5rem;
+  flex: 1;
+  padding: 0.75rem 0.5rem;
+  background-color: ${COLOR_GREEN};
 `;
 
 const ActionComplete = styled.div`
@@ -484,8 +558,6 @@ const ActionComplete = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
-  padding: 0.5rem 0.5rem;
-  background-color: ${COLOR_ACCENT};
   cursor: pointer;
 
   &:active {
@@ -516,7 +588,7 @@ const BottomContent = styled.div`
   flex: 1;
   width: 100%;
   padding: 0.25rem;
-  max-height: 20vh;
+  max-height: 70vh;
   overflow: scroll;
   flex-direction: column;
 `;
