@@ -25,7 +25,10 @@ import { TiPlus } from "react-icons/ti";
 import { Input, message, Modal, Radio, Spin } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
-import { getOperatorIconFor } from "../siege/operatorHelper";
+import {
+  getOperatorIconFor,
+  getRandomChallenge,
+} from "../siege/operatorHelper";
 import { LoadingOutlined } from "@ant-design/icons";
 import { RiSwordFill } from "react-icons/ri";
 import { PiCastleTurretFill } from "react-icons/pi";
@@ -141,7 +144,7 @@ export default function MainGames() {
   }, []);
 
   function get1RandomChallenges() {
-    let challenge = Ran;
+    let challenge = getRandomChallenge(selectedTab);
     return challenge;
   }
 
