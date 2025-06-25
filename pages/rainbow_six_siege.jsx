@@ -177,13 +177,16 @@ export default function MainGames() {
     let attackerChallengeInStorage = {};
     let defenderChallengeInStorage = {};
 
-    if (window) {
-      attackerChallengeInStorage = JSON.parse(
-        localStorage.getItem("ATTACKER_CHALLENGE") ?? {}
-      );
-      defenderChallengeInStorage = JSON.parse(
-        localStorage.getItem("DEFENDER_CHALLENGE") ?? {}
-      );
+    if (typeof window !== "undefined") {
+      try {
+        const attackerRaw = localStorage.getItem("ATTACKER_CHALLENGE");
+        const defenderRaw = localStorage.getItem("DEFENDER_CHALLENGE");
+
+        attackerChallengeInStorage = attackerRaw ? JSON.parse(attackerRaw) : {};
+        defenderChallengeInStorage = defenderRaw ? JSON.parse(defenderRaw) : {};
+      } catch (err) {
+        console.error("Error parsing localStorage JSON:", err);
+      }
     }
 
     if (selectedTab == "Attacker") {
