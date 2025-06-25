@@ -136,11 +136,24 @@ export default function MainGames() {
             textSize="1.15rem"
             icon={<TbArrowLeft />}
             color={COLOR_WHITE}
-            count={"Trophies"}
+            count={""}
             onClick={() => {
               router.push("/");
             }}
           />
+          <span style={{ marginLeft: "0rem" }}>
+            <IconCount
+              iconSize="1.15rem"
+              textSize="1.25rem"
+              tTranslateY="-.09rem"
+              icon={<FaTrophy />}
+              color={COLOR_ACCENT}
+              count={completedChallenges.length}
+              onClick={() => {
+                router.push("/");
+              }}
+            />
+          </span>
         </HLeft>
         <HRight>
           <span style={{ marginRight: ".5rem" }}>

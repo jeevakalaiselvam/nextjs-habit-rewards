@@ -11,6 +11,7 @@ export default function IconCount({
   onClick,
   translateY,
   translateX,
+  tTranslateY,
 }) {
   return (
     <Container translateY={translateY} translateX={translateX}>
@@ -28,7 +29,9 @@ export default function IconCount({
         style={{
           color: color,
           fontSize: size ? size : textSize,
-          transform: "translateY(-.15rem)",
+          transform: tTranslateY
+            ? `translateY(${tTranslateY})`
+            : `translateY(-.15rem)`,
         }}
       >
         {count}
