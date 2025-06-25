@@ -143,16 +143,18 @@ export default function MainGames() {
           />
         </HLeft>
         <HRight>
-          <IconCount
-            iconSize="1.15rem"
-            textSize="1.15rem"
-            icon={<TiPlus />}
-            color={COLOR_WHITE}
-            count={""}
-            onClick={() => {
-              setShowModalNewAch(true);
-            }}
-          />
+          <span style={{ marginRight: ".5rem" }}>
+            <IconCount
+              iconSize="1.15rem"
+              textSize="1.15rem"
+              icon={<TiPlus />}
+              color={COLOR_WHITE}
+              count={""}
+              onClick={() => {
+                setShowModalNewAch(true);
+              }}
+            />
+          </span>
           <IconCount
             iconSize="1.15rem"
             textSize="1.15rem"
