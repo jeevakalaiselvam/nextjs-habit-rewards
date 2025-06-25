@@ -389,6 +389,7 @@ export default function MainGames() {
                           style={{
                             fontSize: "1rem",
                             transform: "translateY(0.5px)",
+                            marginRight: ".25rem",
                           }}
                         >
                           {completedChallenges?.length - index}
