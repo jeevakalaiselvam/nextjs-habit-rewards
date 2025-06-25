@@ -484,9 +484,8 @@ const ActionComplete = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
-  padding: 1rem 0.5rem;
-  margin-left: 0.25rem;
-  background-color: ${COLOR_GREEN};
+  padding: 0.5rem 0.5rem;
+  background-color: ${COLOR_ACCENT};
   cursor: pointer;
 
   &:active {
@@ -499,7 +498,6 @@ const Actions = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-top: 1rem;
 `;
 
 const TopContent = styled.div`
@@ -513,11 +511,14 @@ const TopContent = styled.div`
 
 const BottomContent = styled.div`
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
+  align-items: center;
+  justify-content: flex-start;
   flex: 1;
   width: 100%;
   padding: 0.25rem;
+  max-height: 20vh;
+  overflow: scroll;
+  flex-direction: column;
 `;
 
 const Title = styled.div`
@@ -586,6 +587,7 @@ const ChallengeOuterContainer = styled.div`
   justify-content: center;
   flex-direction: column;
   width: 100%;
+  margin-bottom: 1rem;
 `;
 
 const ChallengeContainer = styled.div`
