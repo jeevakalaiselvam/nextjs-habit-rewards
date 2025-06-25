@@ -3,6 +3,7 @@ import {
   COLOR_ACCENT,
   COLOR_ACH,
   COLOR_BLACK1,
+  COLOR_BLACK2,
   COLOR_BLUE_DARK,
   COLOR_GREEN,
   COLOR_WHITE,
@@ -26,11 +27,14 @@ import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
 import { getOperatorIconFor } from "../siege/operatorHelper";
 import { LoadingOutlined } from "@ant-design/icons";
+import { RiSwordFill } from "react-icons/ri";
+import { PiCastleTurretFill } from "react-icons/pi";
 
 export default function MainGames() {
   const router = useRouter();
   const key = "rainbow_six_siege";
 
+  const [selectedTab, setSelectedTab] = useState("Attacker");
   const [challengeCompleteLoading, setChallengeCompleteLoading] =
     useState(false);
   const [challengeCreateLoading, setChallengeCreateLoading] = useState(false);
@@ -87,6 +91,12 @@ export default function MainGames() {
           setShowModalNewAch(false);
           refreshAllChallenges();
           refreshAllCompletedChallenges();
+          setNewAch({
+            name: "rainbow_six_siege",
+            title: "",
+            description: "",
+            type: "Attacker",
+          });
         });
     } catch (e) {
       console.error(e);
@@ -99,7 +109,10 @@ export default function MainGames() {
     setChallengeCompleteLoading(true);
     try {
       axios
-        .post("/api/rainbow_six_siege_completed", { ...challenge })
+        .post("/api/rainbow_six_siege_completed", {
+          ...challenge,
+          unlocked: new Date(),
+        })
         .then((response) => {
           setChallengeCompleteLoading(false);
           refreshAllChallenges();
@@ -118,7 +131,11 @@ export default function MainGames() {
   }, []);
 
   function get1RandomChallenges() {
-    const shuffled = [...allChallenges].sort(() => 0.5 - Math.random());
+    console.log(allChallenges);
+    let filteredForType = allChallenges?.filter(
+      (challenge) => challenge?.type == (selectedTab ?? "Attacker")
+    );
+    const shuffled = [...filteredForType].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, 1);
   }
 
@@ -236,6 +253,10 @@ export default function MainGames() {
             </CreateForm>
           </Modal>
         )}
+
+        {!allChallengeLoading && !allChallengeCompletedLoading && (
+          <TitleRecent>Next Challenge</TitleRecent>
+        )}
         {!allChallengeLoading && !allChallengeCompletedLoading && (
           <TopContent>
             {get1RandomChallenges()?.map((challenge) => {
@@ -277,50 +298,110 @@ export default function MainGames() {
         )}
         {!allChallengeLoading && !allChallengeCompletedLoading && (
           <BottomContent>
-            {completedChallenges?.map((challenge, index) => {
-              return (
-                <ChallengeOuterContainer>
-                  <ChallengeContainer>
-                    <IconOuter>
-                      <Icon icon={getOperatorIconFor(challenge?.title)}></Icon>
-                    </IconOuter>
-                    <Data>
-                      <Title>{challenge?.title}</Title>
-                      <Description>{challenge?.description}</Description>
-                    </Data>
-                    <RightTag>
-                      <InnerRightTag>
-                        <span
-                          style={{
-                            fontSize: "1rem",
-                            transform: "translateY(0.5px)",
-                          }}
-                        >
-                          {completedChallenges?.length - index}
-                        </span>
-                        <span
-                          style={{
-                            fontSize: ".8rem",
-                            transform: "translateY(1px)",
-                          }}
-                        >
-                          <FaTrophy />
-                        </span>
-                      </InnerRightTag>
-                    </RightTag>
-                  </ChallengeContainer>
-                </ChallengeOuterContainer>
-              );
-            })}
+            {completedChallenges
+              ?.sort(
+                (ach1, ach2) =>
+                  new Date(ach2)?.getTime() - new Date(ach1)?.getTime()
+              )
+              ?.map((challenge, index) => {
+                return (
+                  <ChallengeOuterContainer>
+                    <ChallengeContainer>
+                      <IconOuter>
+                        <Icon
+                          icon={getOperatorIconFor(challenge?.title)}
+                        ></Icon>
+                      </IconOuter>
+                      <Data>
+                        <Title>{challenge?.title}</Title>
+                        <Description>{challenge?.description}</Description>
+                      </Data>
+                      <RightTag>
+                        <InnerRightTag>
+                          <span
+                            style={{
+                              fontSize: "1rem",
+                              transform: "translateY(0.5px)",
+                            }}
+                          >
+                            {completedChallenges?.length - index}
+                          </span>
+                          <span
+                            style={{
+                              fontSize: ".8rem",
+                              transform: "translateY(1px)",
+                            }}
+                          >
+                            <FaTrophy />
+                          </span>
+                        </InnerRightTag>
+                      </RightTag>
+                    </ChallengeContainer>
+                  </ChallengeOuterContainer>
+                );
+              })}
           </BottomContent>
         )}
         {(allChallengeCompletedLoading || allChallengeLoading) && (
           <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
         )}
       </Content>
+      <VeryBottom>
+        <BottomItem
+          active={selectedTab == "Attacker"}
+          onClick={() => setSelectedTab("Attacker")}
+        >
+          <BIcon>
+            <RiSwordFill />
+          </BIcon>
+          <BTitle>Attacker</BTitle>
+        </BottomItem>
+        <BottomItem
+          active={selectedTab == "Defender"}
+          onClick={() => setSelectedTab("Defender")}
+        >
+          <BIcon>
+            <PiCastleTurretFill />
+          </BIcon>
+          <BTitle>Defender</BTitle>
+        </BottomItem>
+      </VeryBottom>
     </Container>
   );
 }
+
+const BottomItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex: 1;
+  color: ${(props) => (props.active ? COLOR_ACCENT : COLOR_WHITE)};
+  transform: translateY(-0.5rem);
+`;
+
+const BIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const BTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+`;
+
+const VeryBottom = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100px;
+  background-color: ${COLOR_BLUE_DARK};
+`;
 
 const InnerRightTag = styled.div`
   display: flex;
@@ -551,9 +632,8 @@ const Content = styled.div`
   flex: 1;
   justify-content: flex-start;
   width: 100%;
-  overflow: scroll;
-  min-height: calc(100vh - 60px);
-  max-height: calc(100vh - 60px);
+  min-height: calc(100vh - 60px - 75px);
+  max-height: calc(100vh - 60px - 75px);
   background-color: ${COLOR_BLACK1};
   padding: 1rem 0.5rem;
 `;

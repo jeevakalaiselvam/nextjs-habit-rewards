@@ -5,6 +5,7 @@ export const getOperatorIconFor = (title) => {
 
   const operatorIcons = {
     // Attackers
+    clash: "/operators/clash.svg",
     ash: "/operators/ash.svg",
     twitch: "/operators/twitch.svg",
     thermite: "/operators/thermite.svg",

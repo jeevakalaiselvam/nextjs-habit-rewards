@@ -2,9 +2,9 @@ import clientPromise from "../../../lib/db";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { name, title, description } = req.body;
+    const { name, title, description, type, unlocked } = req.body;
 
-    if (!name || !title || !description) {
+    if (!name || !title || !description || !type || !unlocked) {
       return res
         .status(400)
         .json({ error: "Name, Title, Description, Type required" });
@@ -17,6 +17,8 @@ export default async function handler(req, res) {
         name,
         title,
         description,
+        type,
+        unlocked,
       });
 
       res.status(201).json({ message: "Challenge added successfully" });
