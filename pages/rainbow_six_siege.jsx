@@ -259,7 +259,9 @@ export default function MainGames() {
             })}
           </TopContent>
         )}
-        <TitleRecent>Completed Challenges</TitleRecent>
+        {!allChallengeLoading && !allChallengeCompletedLoading && (
+          <TitleRecent>Completed Challenges</TitleRecent>
+        )}
         {!allChallengeLoading && !allChallengeCompletedLoading && (
           <BottomContent>
             {completedChallenges?.map((challenge, index) => {
@@ -333,6 +335,7 @@ const TitleRecent = styled.div`
   opacity: 0.5;
   margin-left: 0.75rem;
   padding: 0.5rem 0rem;
+  font-size: 0.9rem;
 `;
 
 const NoContent = styled.div`
