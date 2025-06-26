@@ -95,7 +95,7 @@ const SECTION_ICONS = "Icons";
 const SECTION_GAMES_ALL = "Games All";
 const SECTION_GAME = "Game";
 
-let MAX_FOR_COUNT = 10;
+let MAX_FOR_COUNT = 100;
 
 export default function Main() {
   const router = useRouter();
@@ -1374,6 +1374,7 @@ const Middle = styled.div`
   flex-direction: column;
   width: 100%;
   max-height: 70vh;
+  padding-bottom: 2rem;
   overflow: scroll;
   flex: 1;
   opacity: ${(props) => (props.showModal ? "0" : "1")};
