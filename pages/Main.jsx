@@ -1272,7 +1272,7 @@ const Middle = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  max-height: 70vh;
+  max-height: 85vh;
   padding-bottom: 2rem;
   overflow: scroll;
   flex: 1;
