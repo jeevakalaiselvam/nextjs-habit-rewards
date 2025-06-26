@@ -565,7 +565,7 @@ export const getRandomChallenge = (selected) => {
       weapons: ["M12", "SPAS-15", "LUISON"],
     },
     {
-      title: "Valyrie",
+      title: "Valkyrie",
       type: "Defender",
       primary: "Black Eye",
       secondary: [impact, nitro],
