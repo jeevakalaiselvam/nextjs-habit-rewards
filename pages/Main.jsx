@@ -1062,15 +1062,17 @@ export default function Main() {
                     >
                       <A1IconOuter>
                         <A1Icon
-                          icon={getIconBasedOnKeyword(ach?.title)}
+                          icon={
+                            ach?.name == "rainbow_six_siege"
+                              ? getIconBasedOnKeyword(ach?.title)
+                              : ach?.icon
+                          }
                         ></A1Icon>
                       </A1IconOuter>
                     </Popconfirm>
                     <A1Right>
                       <A1Title>{ach?.title}</A1Title>
-                      <A1Desc>
-                        {ach?.description} - {ach?.total}
-                      </A1Desc>
+                      <A1Desc>{ach?.description}</A1Desc>
                       <A1Progress>
                         <A1Progress1>
                           <Progress
