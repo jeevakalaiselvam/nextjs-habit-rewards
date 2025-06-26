@@ -1,4 +1,5 @@
 import moment from "moment/moment";
+import { getOperatorIconFor } from "./operatorHelper";
 
 export const ICON_MAPPER = {
   "Battlefield 2042":
@@ -38,13 +39,6 @@ const SIEGE_ICONS = {
 };
 
 export const getIconBasedOnKeyword = (keyword) => {
-  let allWordsInTitle = keyword?.toLowerCase()?.split(" ");
-  Object?.keys(SIEGE_ICONS)?.forEach((key) => {
-    allWordsInTitle?.forEach((word) => {
-      if (word == key) {
-        console.log({ allWordsInTitle, word, key, icon: SIEGE_ICONS?.[key] });
-        return SIEGE_ICONS[key];
-      }
-    });
-  });
+  console.log("KEY", keyword);
+  return getOperatorIconFor(keyword?.split(" ")?.[0]);
 };

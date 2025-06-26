@@ -1040,7 +1040,11 @@ export default function Main() {
                       okText="Edit"
                       cancelText="Delete"
                     >
-                      <A1Icon icon={ICON_MAPPER?.[ach?.name]}></A1Icon>
+                      <A1IconOuter>
+                        <A1Icon
+                          icon={getIconBasedOnKeyword(ach?.title)}
+                        ></A1Icon>
+                      </A1IconOuter>
                     </Popconfirm>
                     <A1Right>
                       <A1Title>{ach?.title}</A1Title>
@@ -1565,12 +1569,24 @@ const A1ContainerMoney = styled.div`
   background-color: ${COLOR_ACH};
 `;
 
-const A1Icon = styled.div`
+const A1IconOuter = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 70px;
   height: 70px;
+  background: #000000;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+`;
+
+const A1Icon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
   background: ${(props) => `url('${props.icon}')`};
   background-size: cover;
   background-repeat: no-repeat;
