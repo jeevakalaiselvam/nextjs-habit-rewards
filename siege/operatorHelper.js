@@ -96,23 +96,23 @@ export const getOperatorIconFor = (title) => {
   return null; // fallback or use: "/operators/default.svg"
 };
 
-const frag = "Use Frag Grenades on Defenders and get 1 kill";
-const smoke = "Use Smoke Grenades in objective and plant the Defuser";
-const stun = "Use Stun Grenades on Defenders and get 1 kill";
-const hardbreach = "Use Hard Breach to open up objective and get 1 kill";
+const frag = "Get a kill on Defenders, Use Frag Grenades as support";
+const smoke = "Get a kill on Defenders, Use Smoke Grenades as support";
+const stun = "Get a kill on Defenders, Use Stun Grenades as support";
+const hardbreach = "Get a kill on Defenders, Use Hard Breach as support";
 const breachingcharge =
-  "Use Breaching Charges to open up objective and get a kill";
-const claymore = "Setup Claymore near objective doors and get a kill";
-const emp = "Use EMP Grenades to destroy Defender gadgets and get a kill";
-const impact = "Use Impact Grenades to rotate and 1 kill";
-const barbedwire = "Use Barbed Wire to slow down Attackers and get a kill";
-const proximity = "Use Proximity Alarm to detect Attackers and get a kill";
-const nitro = "Use Nitro Cell on Attackers and get a kill";
-const shield = "Use Shield to block line of sight or entries get a kill";
+  "Get a kill on Defenders, Use Breaching Charges  as support";
+const claymore = "Get a kill on Defenders, Use Claymoreas  as support";
+const emp = "Get a kill on Defenders, Use EMP Grenades  as support";
+const impact = "Get a kill on Attackers, Use Impact Grenades as support";
+const barbedwire = "Get a kill on Attackers, Use Barbed Wire as support";
+const proximity = "Get a kill on Attackers, Use Proximity Alarm as support";
+const nitro = "Get a kill on Attackers, Use Nitro Cell as support";
+const shield = "Get a kill on Attackers, Use Shield as support";
 const bulletproof =
-  "Use Bulletproof camera to gain intel on Attackers and get a kill";
+  "Get a kill on Attackers, Use Bulletproof camera as support";
 const observation =
-  "Use Observation blocker to block important line of sight and get a kill";
+  "Get a kill on Attackers, Use Observation blocker as support";
 
 export const getRandomChallenge = (selected) => {
   let attackers = [
