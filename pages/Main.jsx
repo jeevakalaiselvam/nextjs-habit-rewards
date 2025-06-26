@@ -1631,6 +1631,7 @@ const A1Icon = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  background-size: contain;
 `;
 
 const A1Icon2 = styled.div`
