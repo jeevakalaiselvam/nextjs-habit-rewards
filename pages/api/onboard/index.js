@@ -32,14 +32,19 @@ export default async function handler(req, res) {
     try {
       const client = await clientPromise;
       const db = client.db("habittracker");
+
+      // 🔥 Delete existing achievements in the collection
+      await db.collection(value).deleteMany({});
+
+      // 🚀 Insert new achievements
       await db.collection(value).insertMany(validAchievements);
 
       res.status(201).json({
-        message: `${validAchievements.length} achievements added successfully`,
+        message: `Replaced with ${validAchievements.length} new achievements successfully`,
       });
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Failed to add achievements" });
+      res.status(500).json({ error: "Failed to update achievements" });
     }
   } else {
     res.setHeader("Allow", ["POST"]);

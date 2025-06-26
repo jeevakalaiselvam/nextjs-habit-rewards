@@ -495,7 +495,7 @@ export default function Main() {
       achAllForGame[ach?.name].push(ach);
     }
 
-    if (ach?.achieved) {
+    if (ach?.completed == ach?.total) {
       if (!achAllForGameCompleted?.[ach?.name]) {
         achAllForGameCompleted[ach?.name] = [];
         achAllForGameCompleted[ach?.name].push(ach);
@@ -1024,7 +1024,7 @@ export default function Main() {
                             fontSize: "1rem",
                           }}
                         >
-                          <TbJewishStarFilled />{" "}
+                          <FaTrophy />{" "}
                         </span>
                         <span
                           style={{
@@ -1063,7 +1063,7 @@ export default function Main() {
                       <A1IconOuter>
                         <A1Icon
                           icon={
-                            ach?.name == "rainbow_six_siege"
+                            ach?.name == "Rainbow Six Siege"
                               ? getIconBasedOnKeyword(ach?.title)
                               : ach?.icon
                           }
