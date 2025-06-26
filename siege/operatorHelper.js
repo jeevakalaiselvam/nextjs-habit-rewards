@@ -707,7 +707,7 @@ export const getRandomChallenge = (selected) => {
       ];
     }
 
-    if (defender?.secondary?.length > 0) {
+    if (defender?.secondary?.length > 0 && false) {
       let gadgetRelatedChallenges = defender?.secondary?.map((item) => {
         return {
           title: defender?.title,
