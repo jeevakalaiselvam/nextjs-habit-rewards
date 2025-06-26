@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import {
   COLOR_ACCENT,
@@ -99,11 +99,11 @@ let MAX_FOR_COUNT = 10;
 
 export default function Main() {
   const router = useRouter();
+  const [randomOperator, setRandomOperator] = useState(null);
+  const rotateCountRef = useRef(0);
+  const intervalRef = useRef(null);
   const [showRecentAchUnlock, setShowRecentAchUnlock] = useState(false);
   const [searchTerm1, setSearchTerm1] = useState("");
-  const [searchTerm2, setSearchTerm2] = useState("");
-  const [searchTerm3, setSearchTerm3] = useState("");
-  const [searchTerm4, setSearchTerm4] = useState("");
   const [loading, setLoading] = useState(false);
   const [games, setGames] = useState([]);
   const [achievements, setAchievements] = useState([]);
@@ -430,33 +430,44 @@ export default function Main() {
   let achsForGame = achievements
     ?.filter((ach) => ach?.name == selectedGame)
     ?.filter((ach) => {
-      if (
-        searchTerm1?.length == 0 &&
-        searchTerm2?.length == 0 &&
-        searchTerm3?.length == 0 &&
-        searchTerm4?.length == 0
-      ) {
+      if (searchTerm1?.length == 0) {
         return true;
       } else {
-        if (
-          (searchTerm1?.length > 0 &&
-            ach?.description
-              ?.toLowerCase()
-              ?.includes(searchTerm1?.toLowerCase())) ||
-          (searchTerm2?.length > 0 &&
-            ach?.description
-              ?.toLowerCase()
-              ?.includes(searchTerm2?.toLowerCase())) ||
-          (searchTerm3?.length > 0 &&
-            ach?.description
-              ?.toLowerCase()
-              ?.includes(searchTerm3?.toLowerCase())) ||
-          (searchTerm4?.length > 0 &&
-            ach?.description
-              ?.toLowerCase()
-              ?.includes(searchTerm4?.toLowerCase()))
-        ) {
-          return true;
+        if (searchTerm1?.includes("&")) {
+          let allKeys = searchTerm1?.split("&");
+          let shouldInclude = allKeys?.reduce((acc, item) => {
+            if (
+              ach?.title?.toLowerCase()?.includes(item?.toLowerCase()) ||
+              ach?.title?.toLowerCase()?.includes(item?.toLowerCase())
+            ) {
+              return acc && true;
+            } else {
+              return acc && false;
+            }
+          }, true);
+          return shouldInclude;
+        } else if (searchTerm1?.includes("||")) {
+          let allKeys = searchTerm1?.split("||");
+          let shouldInclude = allKeys?.reduce((acc, item) => {
+            if (
+              ach?.title?.toLowerCase()?.includes(item?.toLowerCase()) ||
+              ach?.title?.toLowerCase()?.includes(item?.toLowerCase())
+            ) {
+              return acc || true;
+            } else {
+              return acc || false;
+            }
+          }, true);
+          return shouldInclude;
+        } else {
+          if (
+            ach?.title?.toLowerCase()?.includes(searchTerm1?.toLowerCase()) ||
+            ach?.title?.toLowerCase()?.includes(searchTerm1?.toLowerCase())
+          ) {
+            return true;
+          } else {
+            return false;
+          }
         }
       }
     });
@@ -597,6 +608,39 @@ export default function Main() {
     }
   };
 
+  const getRandomOperator = () => {
+    const achsForGame = achievements
+      ?.filter((ach) => ach?.name === selectedGame)
+      ?.filter((ach) => ach?.completed !== ach?.total);
+
+    return achsForGame[Math.floor(Math.random() * achsForGame.length)];
+  };
+
+  const startRotation = () => {
+    if (!achievements?.length || !selectedGame) return;
+
+    clearInterval(intervalRef.current);
+    rotateCountRef.current = 0;
+
+    intervalRef.current = setInterval(() => {
+      const randomOp = getRandomOperator();
+      if (randomOp) setRandomOperator(randomOp);
+
+      rotateCountRef.current += 1;
+      if (rotateCountRef.current >= 30) {
+        clearInterval(intervalRef.current);
+      }
+    }, 10);
+  };
+
+  useEffect(() => {
+    if (achievements?.length && selectedGame) {
+      startRotation();
+    }
+
+    return () => clearInterval(intervalRef.current); // Cleanup on unmount
+  }, [achievements, selectedGame]);
+
   return (
     <Container>
       <Header>
@@ -681,6 +725,107 @@ export default function Main() {
           </AddIconRefresh>
         </HRight>
       </Header>
+      <BottomContainer>
+        <BottomTop>
+          <A1Container
+            opaque={randomOperator?.total == randomOperator?.completed}
+          >
+            <A1IconOuter>
+              <A1Icon
+                icon={getIconBasedOnKeyword(randomOperator?.title)}
+              ></A1Icon>
+            </A1IconOuter>
+            <A1Right>
+              <A1Title>{randomOperator?.title}</A1Title>
+              <A1Desc>
+                {randomOperator?.description} - {randomOperator?.total}
+              </A1Desc>
+              <A1Progress>
+                <A1Progress1>
+                  <Progress
+                    strokeColor={COLOR_ACCENT}
+                    percent={(
+                      (randomOperator?.completed / randomOperator?.total) *
+                      100
+                    )?.toFixed(0)}
+                    showInfo={false}
+                  />
+                </A1Progress1>
+                <A1Progress2>
+                  <span style={{ marginLeft: ".25rem" }}>
+                    <span>{randomOperator?.completed}</span>
+                    <span>/</span>
+                    <span>{randomOperator?.total}</span>
+                  </span>
+                </A1Progress2>
+              </A1Progress>
+            </A1Right>
+            {randomOperator?.completed < randomOperator?.total && (
+              <MainTag>
+                <TagPositived achieved={randomOperator?.achieved}>
+                  <InnerTag
+                    onClick={() => {
+                      addOneToAch(randomOperator);
+                    }}
+                  >
+                    <span
+                      style={{
+                        marginLeft: ".25rem",
+                        fontSize: "1rem",
+                      }}
+                    >
+                      <FaPlusCircle />
+                    </span>
+                  </InnerTag>
+                </TagPositived>
+                <TagNegative achieved={randomOperator?.achieved}>
+                  <InnerTag
+                    onClick={() => {
+                      removeOneToAch(randomOperator);
+                    }}
+                  >
+                    <span
+                      style={{
+                        marginLeft: ".25rem",
+                        fontSize: "1rem",
+                      }}
+                    >
+                      <FaMinusCircle />
+                    </span>
+                  </InnerTag>
+                </TagNegative>
+              </MainTag>
+            )}
+            {randomOperator?.completed == randomOperator?.total && (
+              <MainTag>
+                <TagCompleted achieved={randomOperator?.achieved}>
+                  <InnerTagGameDone
+                    onClick={() => {
+                      resetAchievement(randomOperator);
+                    }}
+                  >
+                    <span
+                      style={{
+                        marginLeft: ".25rem",
+                        fontSize: "1rem",
+                      }}
+                    >
+                      DONE
+                    </span>
+                  </InnerTagGameDone>
+                </TagCompleted>
+              </MainTag>
+            )}
+          </A1Container>
+        </BottomTop>
+        <BottomBottom
+          onClick={() => {
+            startRotation();
+          }}
+        >
+          RANDOM OPERATOR
+        </BottomBottom>
+      </BottomContainer>
       {showModalGames && (
         <ModalContainerGame>
           <ModalContent>
@@ -926,35 +1071,11 @@ export default function Main() {
       <BottomSmallInput>
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Search for keywords..."
           onChange={(e) => {
             setSearchTerm1(e.target.value);
           }}
           value={searchTerm1}
-        />
-        <input
-          type="text"
-          placeholder="Search..."
-          onChange={(e) => {
-            setSearchTerm2(e.target.value);
-          }}
-          value={searchTerm2}
-        />{" "}
-        <input
-          type="text"
-          placeholder="Search..."
-          onChange={(e) => {
-            setSearchTerm3(e.target.value);
-          }}
-          value={searchTerm3}
-        />
-        <input
-          type="text"
-          placeholder="Search..."
-          onChange={(e) => {
-            setSearchTerm4(e.target.value);
-          }}
-          value={searchTerm4}
         />
       </BottomSmallInput>
       <Middle showModal={showModal}>
@@ -1173,14 +1294,31 @@ export default function Main() {
     </Container>
   );
 }
-const BottomItemSmall = styled.div`
+
+const BottomTop = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
+const BottomBottom = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem;
+  background-color: ${COLOR_ACCENT};
+`;
+
+const BottomContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  flex: 1;
-  transform: translateY(0.25rem);
-  color: ${(props) => (props.active ? COLOR_ACCENT : "")};
+  width: 100%;
+  margin-top: 0.5rem;
+  background-color: ${COLOR_BLUE_DARK};
 `;
 
 const Name = styled.div`
@@ -1235,7 +1373,7 @@ const Middle = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  max-height: 83vh;
+  max-height: 70vh;
   overflow: scroll;
   flex: 1;
   opacity: ${(props) => (props.showModal ? "0" : "1")};
@@ -1904,16 +2042,15 @@ const BottomSmall = styled.div`
 const BottomSmallInput = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
   margin-top: 4px;
-  text-align: center;
 
   & input {
     outline: none;
     border: none;
     width: 100%;
-    text-align: center;
+    text-align: left;
     height: 40px;
     border-radius: 0px;
     opacity: 0.5;
