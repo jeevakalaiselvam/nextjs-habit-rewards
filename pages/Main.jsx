@@ -74,6 +74,21 @@ export default function Atom() {
     money: 1000,
   });
 
+  const completeTask = (task) => {
+    try {
+      axios
+        .put(`/api/jeevatask/${task?._id}`, {
+          ...task,
+          isCompleted: true,
+          completedAt: new Date(),
+          status: "Done",
+        })
+        .then((response) => {
+          refreshTasks();
+        });
+    } catch (error) {}
+  };
+
   const saveTask = () => {
     try {
       axios.post("/api/jeevatask", { ...taskData }).then((response) => {
@@ -171,9 +186,11 @@ export default function Atom() {
   });
 
   tasks
-    ?.filter((task) => task?.status == status)
+    ?.filter((task) => task?.status == STATUS_DONE)
     ?.forEach((task) => {
-      userCountMapper[task?.assignee].push(task);
+      if (task?.assignee == selectedAssignee) {
+        userCountMapper[selectedAssignee].push(task);
+      }
     });
 
   let countMappedOptions = allUsers?.map((user) => ({
@@ -187,7 +204,7 @@ export default function Atom() {
 
   let totalEarned = tasks.reduce((acc, task) => {
     if (task?.isCompleted) {
-      return acc + 1000;
+      return acc + (task?.assignee == "Jeeva" ? 1000 : 100);
     } else {
       return acc;
     }
@@ -195,7 +212,7 @@ export default function Atom() {
 
   let totalEarnedToday = tasks.reduce((acc, task) => {
     if (task?.isCompleted) {
-      return acc + 1000;
+      return acc + (task?.assignee == "Jeeva" ? 1000 : 100);
     } else {
       return acc;
     }
@@ -389,12 +406,7 @@ export default function Atom() {
       )}
       <Header>
         <HIcon></HIcon>
-        <HLeft>
-          <span style={{ color: COLOR_ACCENT, marginRight: "1rem" }}>
-            {totalEarnedToday} Rs
-          </span>
-          <span style={{ color: COLOR_GREEN }}>{totalEarned} Rs</span>
-        </HLeft>
+        <HLeft>Verizon Tracker</HLeft>
         <HRight>
           <IconH
             style={{ fontSize: "1.5rem", marginRight: "1rem" }}
@@ -422,20 +434,19 @@ export default function Atom() {
               <TaskCard>
                 <TaskCardTop>
                   <Popconfirm
-                    title="Actions"
-                    description="Select action on Task"
+                    title="Complete"
+                    description="Is Task Completed?"
                     onConfirm={() => {
-                      setEditMode(true);
-                      setEditTaskData({ ...task });
+                      completeTask(task);
                     }}
-                    onCancel={() => {
-                      deleteTask(task?._id);
-                    }}
-                    okText="Edit"
-                    cancelText="Delete"
+                    onCancel={() => {}}
+                    okText="Yes"
+                    cancelText="No"
                   >
                     <Money color={COLOR_GREEN}>
-                      <MoneyInner>{task?.money ?? 1000} Rs</MoneyInner>
+                      <MoneyInner>
+                        {task?.assignee == "Jeeva" ? 1000 : 100} Rs
+                      </MoneyInner>
                     </Money>
                   </Popconfirm>
 
@@ -449,9 +460,23 @@ export default function Atom() {
                     <DocLink>{task?.taskId}</DocLink>
                     <Description>{task?.description}</Description>
                   </Data>
-                  <Tag color={getColorForType(task?.type)}>
-                    <TagInner>{task?.type}</TagInner>
-                  </Tag>
+                  <Popconfirm
+                    title="Actions"
+                    description="Select action on Task"
+                    onConfirm={() => {
+                      setEditMode(true);
+                      setEditTaskData({ ...task });
+                    }}
+                    onCancel={() => {
+                      deleteTask(task?._id);
+                    }}
+                    okText="Edit"
+                    cancelText="Delete"
+                  >
+                    <Tag color={getColorForType(task?.type)}>
+                      <TagInner>{task?.type}</TagInner>
+                    </Tag>
+                  </Popconfirm>
                 </TaskCardTop>
               </TaskCard>
             );
@@ -459,8 +484,8 @@ export default function Atom() {
       </Content>
       <Bottom>
         <Select
-          size="large"
           defaultValue="Jeeva"
+          size={"medium"}
           value={selectedAssignee}
           style={{ width: "100%" }}
           onChange={(value) => {
@@ -476,7 +501,7 @@ export default function Atom() {
         >
           <span style={{ marginBottom: ".5rem" }}>
             {userCountMapper?.[selectedAssignee]?.reduce((acc, task) => {
-              return acc + (task?.status == STATUS_NEW ? 1 : 0);
+              return acc + (task?.status === STATUS_NEW ? 1 : 0);
             }, 0)}
           </span>
           <span style={{ fontSize: ".7rem" }}>New</span>
@@ -487,7 +512,7 @@ export default function Atom() {
         >
           <span style={{ marginBottom: ".5rem" }}>
             {userCountMapper?.[selectedAssignee]?.reduce((acc, task) => {
-              return acc + (task?.status == STATUS_INPROGRESS ? 1 : 0);
+              return acc + (task?.status === STATUS_INPROGRESS ? 1 : 0);
             }, 0)}
           </span>
           <span style={{ fontSize: ".7rem" }}>In Progress</span>
@@ -498,7 +523,7 @@ export default function Atom() {
         >
           <span style={{ marginBottom: ".5rem" }}>
             {userCountMapper?.[selectedAssignee]?.reduce((acc, task) => {
-              return acc + (task?.status == STATUS_WAIT ? 1 : 0);
+              return acc + (task?.status === STATUS_WAIT ? 1 : 0);
             }, 0)}
           </span>
           <span style={{ fontSize: ".7rem" }}>Wait</span>
@@ -509,15 +534,51 @@ export default function Atom() {
         >
           <span style={{ marginBottom: ".5rem" }}>
             {userCountMapper?.[selectedAssignee]?.reduce((acc, task) => {
-              return acc + (task?.status == STATUS_DONE ? 1 : 0);
+              return acc + (task?.status === STATUS_DONE ? 1 : 0);
             }, 0)}
           </span>
           <span style={{ fontSize: ".7rem" }}>Done</span>
         </BItem>
       </BottomOptions>
+      <BottomMoney>
+        <MoneySingle>
+          <span>Today</span>
+          <span>{totalEarnedToday} Rs</span>
+        </MoneySingle>
+        <MoneySingle>
+          <span>This Month</span>
+          <span>{totalEarned} Rs</span>
+        </MoneySingle>
+        <MoneySingle>
+          <span>All Time</span>
+          <span>{totalEarned} Rs</span>
+        </MoneySingle>
+      </BottomMoney>
     </Container>
   );
 }
+
+const MoneySingle = styled.div`
+  display: flex;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex: 1;
+  background-color: ${COLOR_GREEN};
+  color: ${generateDarkTextColorForLightBg(COLOR_GREEN, 50)};
+`;
+
+const BottomMoney = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.25rem;
+  background-color: ${COLOR_BACKGROUND_HEADER};
+  width: 100%;
+  padding-bottom: 1rem;
+`;
 
 const LogsModal = styled.div`
   display: flex;
@@ -809,9 +870,8 @@ const BottomOptions = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 80px;
+  height: 50px;
   width: 100%;
-  padding-bottom: 1rem;
   background-color: ${COLOR_BACKGROUND_HEADER};
 `;
 
