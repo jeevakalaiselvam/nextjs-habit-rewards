@@ -38,10 +38,15 @@ const allPriority = [
   { value: "Priority 2", label: "Priority 2" },
 ];
 
+export const STATUS_NEW = "New"
+export const STATUS_INPROGRESS = "In Progress"
+export const STATUS_DONE = "Done"
+export const STATUS_WAIT = "Wait"
+
 export default function Atom() {
   const [newLog, setNewLog] = useState("");
   const [activeTaskLogs, setActiveTaskLogs] = useState([]);
-  const [status, setStatus] = useState("New");
+  const [status, setStatus] = useState(STATUS_NEW);
   const [activeTaskLogsLoading, setActiveTaskLogsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isEditMode, setEditMode] = useState(false);
@@ -56,7 +61,7 @@ export default function Atom() {
     description: "",
     assignee: "Jeeva",
     priority: "Priority 2",
-    status: "New",
+    status: STATUS_NEW,
     money: 1000,
   });
   const [edittaskData, setEditTaskData] = useState({
@@ -64,7 +69,7 @@ export default function Atom() {
     title: "",
     description: "",
     assignee: "Jeeva",
-    status: "New",
+    status: STATUS_NEW,
     priority: "Priority 2",
     money: 1000,
   });
@@ -179,28 +184,6 @@ export default function Atom() {
       </span>
     ),
   }));
-
-  let newC = 0,
-    inProgC = 0,
-    waitC = 0,
-    doneC = 0,
-    allC = 0;
-
-  userCountMapper?.[selectedAssignee]?.forEach((task) => {
-    allC++;
-    if (task?.status == "New") {
-      newC++;
-    }
-    if (task?.status == "In Progress") {
-      inProgC++;
-    }
-    if (task?.status == "Done") {
-      doneC++;
-    }
-    if (task?.status == "Wait") {
-      waitC++;
-    }
-  });
 
   let totalEarned = tasks.reduce((acc, task) => {
     if (task?.isCompleted) {
@@ -353,16 +336,16 @@ export default function Atom() {
           <Row style={{ marginBottom: "1rem" }}>
             <Select
               value={taskMain?.status}
-              defaultValue="New"
+              defaultValue=STATUS_NEW
               style={{ width: "100%" }}
               onChange={(value) => {
                 taskMainFn((old) => ({ ...old, status: value }));
               }}
               options={[
-                { value: "New", label: "New" },
-                { value: "In Progress", label: "In Progress" },
-                { value: "Wait", label: "Wait" },
-                { value: "Done", label: "Done" },
+                { value: STATUS_NEW, label: STATUS_NEW },
+                { value: STATUS_INPROGRESS, label: STATUS_INPROGRESS },
+                { value: STATUS_WAIT, label: STATUS_WAIT },
+                { value: STATUS_DONE, label: STATUS_DONE },
               ]}
             />
           </Row>
@@ -483,23 +466,39 @@ export default function Atom() {
         />
       </Bottom>
       <BottomOptions>
-        <BItem active={status == "New"} onClick={() => setStatus("New")}>
-          <span style={{ marginBottom: ".5rem" }}>{newC}</span>
+        <BItem active={status == STATUS_NEW} onClick={() => setStatus(STATUS_NEW)}>
+          <span style={{ marginBottom: ".5rem" }}>
+            {userCountMapper?.[selectedAssignee]?.task?.reduce((acc, task) => {
+              return acc + task?.status == STATUS_NEW ? 1 : 0;
+            }, 0)}
+          </span>
           <span style={{ fontSize: ".7rem" }}>New</span>
         </BItem>
         <BItem
-          active={status == "In Progress"}
-          onClick={() => setStatus("In Progress")}
+          active={status == STATUS_INPROGRESS}
+          onClick={() => setStatus(STATUS_INPROGRESS)}
         >
-          <span style={{ marginBottom: ".5rem" }}>{inProgC}</span>
+          <span style={{ marginBottom: ".5rem" }}>
+            {userCountMapper?.[selectedAssignee]?.task?.reduce((acc, task) => {
+              return acc + task?.status == STATUS_INPROGRESS ? 1 : 0;
+            }, 0)}
+          </span>
           <span style={{ fontSize: ".7rem" }}>In Progress</span>
         </BItem>
-        <BItem active={status == "Wait"} onClick={() => setStatus("Wait")}>
-          <span style={{ marginBottom: ".5rem" }}>{waitC}</span>
+        <BItem active={status == STATUS_WAIT} onClick={() => setStatus(STATUS_WAIT)}>
+          <span style={{ marginBottom: ".5rem" }}>
+            {userCountMapper?.[selectedAssignee]?.task?.reduce((acc, task) => {
+              return acc + task?.status == STATUS_WAIT ? 1 : 0;
+            }, 0)}
+          </span>
           <span style={{ fontSize: ".7rem" }}>Wait</span>
         </BItem>
-        <BItem active={status == "Done"} onClick={() => setStatus("Done")}>
-          <span style={{ marginBottom: ".5rem" }}>{doneC}</span>
+        <BItem active={status == STATUS_DONE} onClick={() => setStatus(STATUS_DONE)}>
+          <span style={{ marginBottom: ".5rem" }}>
+            {userCountMapper?.[selectedAssignee]?.task?.reduce((acc, task) => {
+              return acc + task?.status == STATUS_DONE ? 1 : 0;
+            }, 0)}
+          </span>
           <span style={{ fontSize: ".7rem" }}>Done</span>
         </BItem>
       </BottomOptions>
