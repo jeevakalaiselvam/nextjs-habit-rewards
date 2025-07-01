@@ -219,28 +219,33 @@ export default function Atom() {
           {!activeTaskLogsLoading && activeTaskLogs?.length !== 0 && (
             <LogsModal>
               <LogsView>
-                {activeTaskLogs?.map((log) => {
-                  return (
-                    <LogEntry>
-                      <Popconfirm
-                        title="Delete Log"
-                        description="Are you sure?"
-                        onConfirm={() => {
-                          deleteLog(log?._id);
-                        }}
-                        onCancel={() => {}}
-                        okText="Delete"
-                        cancelText="Cancel"
-                      >
-                        <LogTime>{formatZTime(log?.dateTime)}</LogTime>
-                      </Popconfirm>
-                      <LogData>{log?.comment}</LogData>
-                    </LogEntry>
-                  );
-                })}
+                {activeTaskLogs
+                  ?.sort(
+                    (log1, log2) =>
+                      new Date(log2?.dateTime) - new Date(log1?.dateTime)
+                  )
+                  ?.map((log) => {
+                    return (
+                      <LogEntry>
+                        <Popconfirm
+                          title="Delete Log"
+                          description="Are you sure?"
+                          onConfirm={() => {
+                            deleteLog(log?._id);
+                          }}
+                          onCancel={() => {}}
+                          okText="Delete"
+                          cancelText="Cancel"
+                        >
+                          <LogTime>{formatZTime(log?.dateTime)}</LogTime>
+                        </Popconfirm>
+                        <LogData>{log?.comment}</LogData>
+                      </LogEntry>
+                    );
+                  })}
               </LogsView>
               <LogsAdd>
-                <Input
+                <TextArea
                   placeholder="Add Logs..."
                   value={newLog}
                   onChange={(e) => setNewLog(e.target.value)}
