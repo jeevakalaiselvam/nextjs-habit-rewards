@@ -3,35 +3,19 @@ import clientPromise from "../../../lib/db";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const {
-      type,
-      title,
-      description,
-      assignee,
-      taskId,
-      completedAt,
-      priority,
-      status,
-    } = req.body;
+    const { comment, taskId, dateTime } = req.body;
 
-    if (!type || !title || !description || !assignee) {
+    if (!comment || !taskId || !dateTime) {
       return res.status(400).json({ error: "All Fields Required" });
     }
 
     try {
       const client = await clientPromise;
       const db = client.db("habittracker");
-      await db.collection("alltasks").insertOne({
-        type,
-        title,
-        description,
-        assignee,
-        createdAt: new Date(),
-        taskId: generateShortId(type),
-        completedAt,
-        isCompleted: false,
-        priority,
-        status,
+      await db.collection("alltaskcomments").insertOne({
+        comment,
+        taskId,
+        dateTime,
       });
 
       res.status(201).json({ message: "Task added successfully" });
@@ -46,7 +30,10 @@ export default async function handler(req, res) {
 
       let allAchievements = [];
 
-      const allTasks = await db.collection("alltasks").find({}).toArray();
+      const allTasks = await db
+        .collection("alltaskcomments")
+        .find({})
+        .toArray();
 
       res.status(200).json(allTasks);
     } catch (error) {

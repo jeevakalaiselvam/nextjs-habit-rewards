@@ -9,14 +9,20 @@ import {
   generateDarkTextColorForLightBg,
 } from "../helpers/colorHelper";
 import { useEffect, useState } from "react";
-import { FaPlus, FaPlusCircle } from "react-icons/fa";
+import { FaCaretRight, FaPlus, FaPlusCircle } from "react-icons/fa";
 import { FiPlus } from "react-icons/fi";
-import { Col, Input, Modal, Row, Select, Spin } from "antd";
+import { Button, Col, Input, Modal, Popconfirm, Row, Select, Spin } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
-import { getColorForType } from "../helpers/taskHelper";
-import { TbPlaylistAdd, TbRefresh, TbRefreshDot } from "react-icons/tb";
+import { formatZTime, getColorForType } from "../helpers/taskHelper";
+import {
+  TbChartDonutFilled,
+  TbPlaylistAdd,
+  TbRefresh,
+  TbRefreshDot,
+} from "react-icons/tb";
 import { LoadingOutlined } from "@ant-design/icons";
+import { formatTimeStr } from "antd/es/statistic/utils";
 
 const allUsers = [
   { value: "Jeeva", label: "Jeeva" },
@@ -27,17 +33,39 @@ const allUsers = [
   { value: "Vendor", label: "Vendor" },
 ];
 
+const allPriority = [
+  { value: "Priority 1", label: "Priority 1" },
+  { value: "Priority 2", label: "Priority 2" },
+];
+
 export default function Atom() {
+  const [newLog, setNewLog] = useState("");
+  const [activeTaskLogs, setActiveTaskLogs] = useState([]);
+  const [status, setStatus] = useState("New");
+  const [activeTaskLogsLoading, setActiveTaskLogsLoading] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isEditMode, setEditMode] = useState(false);
+  const [showLogs, setShowLogs] = useState(false);
   const [showCreateTask, setShowCreateTask] = useState(false);
   const [selectedAssignee, setSelectedAssignee] = useState("Jeeva");
+  const [selectedTask, setSelectedTask] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [taskData, setTaskData] = useState({
     type: "Task",
     title: "",
     description: "",
     assignee: "Jeeva",
+    priority: "Priority 2",
     status: "New",
+    money: 1000,
+  });
+  const [edittaskData, setEditTaskData] = useState({
+    type: "Task",
+    title: "",
+    description: "",
+    assignee: "Jeeva",
+    status: "New",
+    priority: "Priority 2",
     money: 1000,
   });
 
@@ -45,6 +73,32 @@ export default function Atom() {
     try {
       axios.post("/api/jeevatask", { ...taskData }).then((response) => {
         refreshTasks();
+      });
+    } catch (error) {}
+  };
+
+  const editTask = (taskId) => {
+    try {
+      axios
+        .put(`/api/jeevatask/${taskId}`, { ...edittaskData })
+        .then((response) => {
+          refreshTasks();
+        });
+    } catch (error) {}
+  };
+
+  const deleteTask = (taskId) => {
+    try {
+      axios.delete(`/api/jeevatask/${taskId}`).then((response) => {
+        refreshTasks();
+      });
+    } catch (error) {}
+  };
+
+  const deleteLog = (logId) => {
+    try {
+      axios.delete(`/api/jeevacomment/${logId}`).then((response) => {
+        refreshLogsForSelectedTask(selectedTask);
       });
     } catch (error) {}
   };
@@ -62,30 +116,94 @@ export default function Atom() {
     }
   };
 
+  const refreshLogsForSelectedTask = (taskId) => {
+    try {
+      setActiveTaskLogsLoading(true);
+      axios.get(`/api/jeevacomment/${taskId}`).then((response) => {
+        const logs = response?.data ?? [];
+        setActiveTaskLogs(logs);
+        setActiveTaskLogsLoading(false);
+      });
+    } catch (error) {
+      setActiveTaskLogsLoading(false);
+    }
+  };
+
+  const saveNewLog = () => {
+    try {
+      axios
+        .post(`/api/jeevacomment/${selectedTask}`, {
+          comment: newLog,
+          taskId: selectedTask,
+        })
+        .then((response) => {
+          setNewLog("");
+          refreshLogsForSelectedTask(selectedTask);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     refreshTasks();
   }, []);
 
-  const onlySelectedAssigneeTasks = tasks?.filter(
-    (task) => task?.assignee == selectedAssignee
-  );
+  useEffect(() => {
+    if (selectedTask) {
+      refreshLogsForSelectedTask(selectedTask);
+    }
+  }, [selectedTask]);
+
+  const onlySelectedAssigneeTasks = tasks
+    ?.filter((task) => task?.assignee == selectedAssignee)
+    ?.filter((task) => task?.status == status || status == "All");
 
   let userCountMapper = {};
 
   allUsers?.forEach((user) => {
-    userCountMapper[user?.value] = 0;
+    userCountMapper[user?.value] = [];
   });
 
-  tasks?.forEach((task) => {
-    userCountMapper[task?.assignee] = userCountMapper[task?.assignee] + 1;
-  });
-
-  console.log(userCountMapper);
+  tasks
+    ?.filter((task) => task?.status == status || status == "All")
+    ?.forEach((task) => {
+      userCountMapper[task?.assignee].push(task);
+    });
 
   let countMappedOptions = allUsers?.map((user) => ({
     ...user,
-    label: `${user?.label} - ${userCountMapper?.[user?.value]}`,
+    label: (
+      <span style={{ width: "100%", display: "flex", justifyContent: "space" }}>
+        <span style={{ padding: "0 1rem", flex: 1 }}>{user?.label}</span>
+        <span style={{ padding: "0 1rem" }}>
+          {userCountMapper?.[user?.value]?.length}
+        </span>
+      </span>
+    ),
   }));
+
+  let newC = 0,
+    inProgC = 0,
+    waitC = 0,
+    doneC = 0,
+    allC = 0;
+
+  userCountMapper?.[selectedAssignee]?.forEach((task) => {
+    allC++;
+    if (task?.status == "New") {
+      newC++;
+    }
+    if (task?.status == "In Progress") {
+      inProgC++;
+    }
+    if (task?.status == "Done") {
+      doneC++;
+    }
+    if (task?.status == "Wait") {
+      waitC++;
+    }
+  });
 
   let totalEarned = tasks.reduce((acc, task) => {
     if (task?.isCompleted) {
@@ -103,32 +221,119 @@ export default function Atom() {
     }
   }, 0);
 
+  let taskMain = showCreateTask ? taskData : edittaskData;
+  let taskMainFn = showCreateTask ? setTaskData : setEditTaskData;
+
+  let countMapperForUser = {};
+
   return (
     <Container>
-      {showCreateTask && (
+      {showLogs && (
+        <Modal
+          title="View Logs"
+          open={showLogs}
+          footer={null}
+          onCancel={() => {
+            setShowLogs(false);
+          }}
+        >
+          {!activeTaskLogsLoading && activeTaskLogs?.length !== 0 && (
+            <LogsModal>
+              <LogsView>
+                {activeTaskLogs?.map((log) => {
+                  return (
+                    <LogEntry>
+                      <Popconfirm
+                        title="Delete Log"
+                        description="Are you sure?"
+                        onConfirm={() => {
+                          deleteLog(log?._id);
+                        }}
+                        onCancel={() => {}}
+                        okText="Delete"
+                        cancelText="Cancel"
+                      >
+                        <LogTime>{formatZTime(log?.dateTime)}</LogTime>
+                      </Popconfirm>
+                      <LogData>{log?.comment}</LogData>
+                    </LogEntry>
+                  );
+                })}
+              </LogsView>
+              <LogsAdd>
+                <Input
+                  placeholder="Add Logs..."
+                  value={newLog}
+                  onChange={(e) => setNewLog(e.target.value)}
+                />
+                <Button
+                  style={{ width: "100%", marginTop: ".25rem" }}
+                  onClick={() => {
+                    saveNewLog();
+                  }}
+                >
+                  SAVE
+                </Button>
+              </LogsAdd>
+            </LogsModal>
+          )}
+          {!activeTaskLogsLoading && activeTaskLogs?.length == 0 && (
+            <LogsModal>
+              <LogsView>No Logs Present !</LogsView>
+              <LogsAdd>
+                <Input
+                  placeholder="Add Logs..."
+                  value={newLog}
+                  onChange={(e) => setNewLog(e.target.value)}
+                />
+                <Button
+                  style={{ width: "100%", marginTop: ".25rem" }}
+                  onClick={() => {
+                    saveNewLog();
+                  }}
+                >
+                  SAVE
+                </Button>
+              </LogsAdd>
+            </LogsModal>
+          )}
+          {activeTaskLogsLoading && (
+            <LogsModal>
+              <Spin
+                indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
+              />
+            </LogsModal>
+          )}
+        </Modal>
+      )}
+      {(showCreateTask || isEditMode) && (
         <Modal
           title="Create Task"
-          open={showCreateTask}
+          open={showCreateTask || isEditMode}
           onOk={() => {
-            saveTask();
+            if (isEditMode) {
+              editTask(edittaskData?._id);
+            } else {
+              saveTask();
+            }
             setShowCreateTask(false);
+            setEditMode(false);
           }}
           onCancel={() => {
             setShowCreateTask(false);
+            setEditMode(false);
           }}
         >
-          <Row>
-            <span style={{ margin: ".5rem" }}>Type:</span>
-          </Row>
-          <Row>
+          <Row style={{ marginBottom: "1rem" }}>
             <Select
               defaultValue="Task"
-              value={taskData?.type}
+              value={taskMain?.type}
               style={{ width: "100%" }}
               onChange={(value) => {
-                setTaskData((old) => ({ ...old, type: value }));
+                taskMainFn((old) => ({ ...old, type: value }));
               }}
               options={[
+                { value: "Analysis", label: "Analysis" },
                 { value: "Task", label: "Task" },
                 { value: "Issue", label: "Issue" },
                 { value: "Inspire", label: "Inspire" },
@@ -137,16 +342,24 @@ export default function Atom() {
               ]}
             />
           </Row>
-          <Row>
-            <span style={{ margin: ".5rem" }}>Status:</span>
-          </Row>
-          <Row>
+          <Row style={{ marginBottom: "1rem" }}>
             <Select
-              value={taskData?.status}
+              defaultValue="Priority 2"
+              value={taskMain?.priority}
+              style={{ width: "100%" }}
+              onChange={(value) => {
+                taskMainFn((old) => ({ ...old, priority: value }));
+              }}
+              options={allPriority}
+            />
+          </Row>
+          <Row style={{ marginBottom: "1rem" }}>
+            <Select
+              value={taskMain?.status}
               defaultValue="New"
               style={{ width: "100%" }}
               onChange={(value) => {
-                setTaskData((old) => ({ ...old, status: value }));
+                taskMainFn((old) => ({ ...old, status: value }));
               }}
               options={[
                 { value: "New", label: "New" },
@@ -156,44 +369,35 @@ export default function Atom() {
               ]}
             />
           </Row>
-          <Row>
-            <span style={{ margin: ".5rem" }}>Assignee:</span>
-          </Row>
-          <Row>
+          <Row style={{ marginBottom: "1rem" }}>
             <Select
               defaultValue="Jeeva"
-              value={taskData?.assignee}
+              value={taskMain?.assignee}
               style={{ width: "100%" }}
               onChange={(value) => {
-                setTaskData((old) => ({ ...old, assignee: value }));
+                taskMainFn((old) => ({ ...old, assignee: value }));
               }}
               options={allUsers}
             />
           </Row>
-          <Row>
-            <span style={{ margin: ".5rem" }}>Title:</span>
-          </Row>
-          <Row>
+          <Row style={{ marginBottom: "1rem" }}>
             <Input
               placeholder="Enter Title..."
-              value={taskData?.title}
+              value={taskMain?.title}
               size="medium"
               onChange={(e) =>
-                setTaskData((old) => ({ ...old, title: e.target.value }))
+                taskMainFn((old) => ({ ...old, title: e.target.value }))
               }
             />
           </Row>
-          <Row>
-            <span style={{ margin: ".5rem" }}>Description:</span>
-          </Row>
-          <Row>
+          <Row style={{ marginBottom: "1rem" }}>
             <TextArea
               rows={4}
               placeholder="Enter Description..."
-              value={taskData?.description}
+              value={taskMain?.description}
               size="medium"
               onChange={(e) =>
-                setTaskData((old) => ({ ...old, description: e.target.value }))
+                taskMainFn((old) => ({ ...old, description: e.target.value }))
               }
             />
           </Row>
@@ -201,9 +405,17 @@ export default function Atom() {
       )}
       <Header>
         <HIcon></HIcon>
-        <HLeft>Work Tracker</HLeft>
+        <HLeft>
+          <span style={{ color: COLOR_ACCENT, marginRight: "1rem" }}>
+            {totalEarnedToday} Rs
+          </span>
+          <span style={{ color: COLOR_GREEN }}>{totalEarned} Rs</span>
+        </HLeft>
         <HRight>
-          <IconH style={{ fontSize: "1.5rem", marginRight: "1rem" }}>
+          <IconH
+            style={{ fontSize: "1.5rem", marginRight: "1rem" }}
+            onClick={() => setShowCreateTask(true)}
+          >
             <TbPlaylistAdd />
           </IconH>{" "}
           <IconH
@@ -216,16 +428,6 @@ export default function Atom() {
           </IconH>
         </HRight>
       </Header>
-      <Top>
-        <Today>
-          <span style={{ padding: ".25rem" }}>Today</span>
-          <span style={{ color: COLOR_GREEN }}>{totalEarnedToday} Rs</span>
-        </Today>
-        <Total>
-          <span style={{ padding: ".25rem" }}>Total</span>
-          <span style={{ color: COLOR_GREEN }}>{totalEarned} Rs</span>
-        </Total>
-      </Top>
       <Content>
         {loading && (
           <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
@@ -234,16 +436,39 @@ export default function Atom() {
           onlySelectedAssigneeTasks?.map((task) => {
             return (
               <TaskCard>
-                <Money color={COLOR_GREEN}>
-                  <MoneyInner>{task?.money ?? 1000} Rs</MoneyInner>
-                </Money>
-                <Data>
-                  <Title>{task?.title}</Title>
-                  <Description>{task?.description}</Description>
-                </Data>
-                <Tag color={getColorForType(task?.type)}>
-                  <TagInner>{task?.type}</TagInner>
-                </Tag>
+                <TaskCardTop>
+                  <Popconfirm
+                    title="Actions"
+                    description="Select action on Task"
+                    onConfirm={() => {
+                      setEditMode(true);
+                      setEditTaskData({ ...task });
+                    }}
+                    onCancel={() => {
+                      deleteTask(task?._id);
+                    }}
+                    okText="Edit"
+                    cancelText="Delete"
+                  >
+                    <Money color={COLOR_GREEN}>
+                      <MoneyInner>{task?.money ?? 1000} Rs</MoneyInner>
+                    </Money>
+                  </Popconfirm>
+
+                  <Data
+                    onClick={() => {
+                      setSelectedTask(task?.taskId);
+                      setShowLogs(true);
+                    }}
+                  >
+                    <Title>{task?.title}</Title>
+                    <DocLink>{task?.taskId}</DocLink>
+                    <Description>{task?.description}</Description>
+                  </Data>
+                  <Tag color={getColorForType(task?.type)}>
+                    <TagInner>{task?.type}</TagInner>
+                  </Tag>
+                </TaskCardTop>
               </TaskCard>
             );
           })}
@@ -260,9 +485,96 @@ export default function Atom() {
           options={countMappedOptions}
         />
       </Bottom>
+      <BottomOptions>
+        <BItem active={status == "New"} onClick={() => setStatus("New")}>
+          <span style={{ marginBottom: ".5rem" }}>{newC}</span>
+          <span style={{ fontSize: ".7rem" }}>New</span>
+        </BItem>
+        <BItem
+          active={status == "In Progress"}
+          onClick={() => setStatus("In Progress")}
+        >
+          <span style={{ marginBottom: ".5rem" }}>{inProgC}</span>
+          <span style={{ fontSize: ".7rem" }}>In Progress</span>
+        </BItem>
+        <BItem active={status == "Wait"} onClick={() => setStatus("Wait")}>
+          <span style={{ marginBottom: ".5rem" }}>{waitC}</span>
+          <span style={{ fontSize: ".7rem" }}>Wait</span>
+        </BItem>
+        <BItem active={status == "Done"} onClick={() => setStatus("Done")}>
+          <span style={{ marginBottom: ".5rem" }}>{doneC}</span>
+          <span style={{ fontSize: ".7rem" }}>Done</span>
+        </BItem>{" "}
+        <BItem active={status == "All"} onClick={() => setStatus("All")}>
+          <span style={{ marginBottom: ".5rem" }}>{allC}</span>
+          <span style={{ fontSize: ".7rem" }}>All</span>
+        </BItem>
+      </BottomOptions>
     </Container>
   );
 }
+
+const LogsModal = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 70vh;
+  width: 100%;
+  flex-direction: column;
+`;
+
+const LogTime = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  opacity: 0.5;
+  font-size: 0.8rem;
+`;
+
+const LogData = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+`;
+
+const LogEntry = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+`;
+
+const LogsView = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  min-height: 50vh;
+  max-height: 50vh;
+  width: 100%;
+  overflow: scroll;
+`;
+
+const LogsAdd = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex-direction: column;
+`;
+
+const BItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  flex: 1;
+  color: ${(props) => (props.active ? COLOR_ACCENT : COLOR_GREY)};
+  cursor: pointer;
+`;
 
 const IconH = styled.div`
   display: flex;
@@ -301,6 +613,21 @@ const Money = styled.div`
   position: relative;
   width: 30px;
   height: 80px;
+  background-color: ${(props) => props.color};
+  color: ${(props) => generateDarkTextColorForLightBg(props.color, 50)};
+`;
+
+const TagInner2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Tag2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
   background-color: ${(props) => props.color};
   color: ${(props) => generateDarkTextColorForLightBg(props.color, 50)};
 `;
@@ -350,14 +677,44 @@ const Description = styled.div`
   font-size: 0.9rem;
 `;
 
+const DocLink = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  opacity: 0.7;
+  font-size: 0.9rem;
+  color: ${COLOR_ACCENT};
+`;
+
 const TaskCard = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0rem 1rem;
+  margin: 0.5rem 0rem;
   width: 100%;
   background-color: ${COLOR_BACKGROUND};
   height: 80px;
+  cursor: pointer;
+  flex-direction: column;
+`;
+
+const TaskCardTop = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0.5rem 0rem;
+  width: 100%;
+  background-color: ${COLOR_BACKGROUND};
+  height: 80px;
+  cursor: pointer;
+`;
+
+const TaskCardBottom = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 `;
 
 const Middle = styled.div`
@@ -395,7 +752,7 @@ const Header = styled.div`
   align-items: center;
   justify-content: flex-start;
   padding: 0.5rem;
-  height: 80px;
+  height: 60px;
   width: 100%;
   background-color: ${COLOR_BACKGROUND_HEADER};
 `;
@@ -420,7 +777,6 @@ const Top = styled.div`
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
-  height: 80px;
   width: 100%;
 `;
 
@@ -436,22 +792,22 @@ const Content = styled.div`
   overflow: scroll;
 `;
 
-const BItem = styled.div`
+const Bottom = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  flex: 1;
-  color: ${(props) => (props.active ? COLOR_ACCENT : COLOR_GREY)};
-  cursor: pointer;
+  width: 100%;
+  margin-bottom: 0.5rem;
 `;
 
-const Bottom = styled.div`
+const BottomOptions = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   height: 80px;
   width: 100%;
+  padding-bottom: 1rem;
+  background-color: ${COLOR_BACKGROUND_HEADER};
 `;
 
 const Container = styled.div`

@@ -4,52 +4,26 @@ import { ObjectId } from "mongodb";
 export default async function handler(req, res) {
   const { id } = req.query;
 
-  if (req.method === "PUT") {
-    const {
-      type,
-      title,
-      description,
-      assignee,
-      taskId,
-      completedAt,
-      createdAt,
-      isCompleted,
-      priority,
-      status,
-      _id,
-    } = req.body;
+  if (req.method === "POST") {
+    const { comment, taskId } = req.body;
 
-    if (!type || !title || !description || !assignee) {
+    if (!comment || !taskId) {
       return res.status(400).json({ error: "All Fields Required" });
     }
 
     try {
       const client = await clientPromise;
       const db = client.db("habittracker");
-      const result = await db.collection("alltasks").updateOne(
-        { _id: new ObjectId(id) },
-        {
-          $set: {
-            type,
-            title,
-            description,
-            assignee,
-            createdAt,
-            taskId,
-            completedAt,
-            isCompleted,
-            priority,
-            status,
-          },
-        }
-      );
+      await db.collection("alltaskcomments").insertOne({
+        comment,
+        taskId,
+        dateTime: new Date(),
+      });
 
-      if (result.matchedCount === 0) {
-        return res.status(404).json({ error: "Task not found" });
-      }
-      res.status(200).json({ message: "Task updated successfully" });
+      res.status(201).json({ message: "Task added successfully" });
     } catch (error) {
-      res.status(500).json({ error: "Failed to update Task" });
+      console.log(error);
+      res.status(500).json({ error: "Failed to add spends" });
     }
   } else if (req.method === "DELETE") {
     try {
@@ -59,7 +33,7 @@ export default async function handler(req, res) {
       const { value } = req.query;
 
       const result = await db
-        .collection("alltasks")
+        .collection("alltaskcomments")
         .deleteOne({ _id: new ObjectId(id) });
 
       if (result.deletedCount === 1) {
@@ -70,6 +44,22 @@ export default async function handler(req, res) {
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: "Failed to delete Task" });
+    }
+  } else if (req.method === "GET") {
+    try {
+      const client = await clientPromise;
+      const db = client.db("habittracker");
+
+      let allAchievements = [];
+
+      const allTasks = await db
+        .collection("alltaskcomments")
+        .find({ taskId: id })
+        .toArray();
+
+      res.status(200).json(allTasks);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch Jeeva Task" });
     }
   } else {
     res.setHeader("Allow", ["PUT", "DELETE"]);
