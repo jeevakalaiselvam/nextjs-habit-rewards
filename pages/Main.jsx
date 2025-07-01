@@ -162,7 +162,7 @@ export default function Atom() {
 
   const onlySelectedAssigneeTasks = tasks
     ?.filter((task) => task?.assignee == selectedAssignee)
-    ?.filter((task) => task?.status == status || status == "All");
+    ?.filter((task) => task?.status == status);
 
   let userCountMapper = {};
 
@@ -171,7 +171,7 @@ export default function Atom() {
   });
 
   tasks
-    ?.filter((task) => task?.status == status || status == "All")
+    ?.filter((task) => task?.status == status)
     ?.forEach((task) => {
       userCountMapper[task?.assignee].push(task);
     });
@@ -204,8 +204,7 @@ export default function Atom() {
   let taskMain = showCreateTask ? taskData : edittaskData;
   let taskMainFn = showCreateTask ? setTaskData : setEditTaskData;
 
-  let countMapperForUser = {};
-
+  console.log(userCountMapper?.[selectedAssignee]);
   return (
     <Container>
       {showLogs && (
@@ -471,8 +470,8 @@ export default function Atom() {
           onClick={() => setStatus(STATUS_NEW)}
         >
           <span style={{ marginBottom: ".5rem" }}>
-            {userCountMapper?.[selectedAssignee]?.task?.reduce((acc, task) => {
-              return acc + task?.status == STATUS_NEW ? 1 : 0;
+            {userCountMapper?.[selectedAssignee]?.reduce((acc, task) => {
+              return acc + (task?.status == STATUS_NEW ? 1 : 0);
             }, 0)}
           </span>
           <span style={{ fontSize: ".7rem" }}>New</span>
@@ -482,8 +481,8 @@ export default function Atom() {
           onClick={() => setStatus(STATUS_INPROGRESS)}
         >
           <span style={{ marginBottom: ".5rem" }}>
-            {userCountMapper?.[selectedAssignee]?.task?.reduce((acc, task) => {
-              return acc + task?.status == STATUS_INPROGRESS ? 1 : 0;
+            {userCountMapper?.[selectedAssignee]?.reduce((acc, task) => {
+              return acc + (task?.status == STATUS_INPROGRESS ? 1 : 0);
             }, 0)}
           </span>
           <span style={{ fontSize: ".7rem" }}>In Progress</span>
@@ -493,8 +492,8 @@ export default function Atom() {
           onClick={() => setStatus(STATUS_WAIT)}
         >
           <span style={{ marginBottom: ".5rem" }}>
-            {userCountMapper?.[selectedAssignee]?.task?.reduce((acc, task) => {
-              return acc + task?.status == STATUS_WAIT ? 1 : 0;
+            {userCountMapper?.[selectedAssignee]?.reduce((acc, task) => {
+              return acc + (task?.status == STATUS_WAIT ? 1 : 0);
             }, 0)}
           </span>
           <span style={{ fontSize: ".7rem" }}>Wait</span>
@@ -504,8 +503,8 @@ export default function Atom() {
           onClick={() => setStatus(STATUS_DONE)}
         >
           <span style={{ marginBottom: ".5rem" }}>
-            {userCountMapper?.[selectedAssignee]?.task?.reduce((acc, task) => {
-              return acc + task?.status == STATUS_DONE ? 1 : 0;
+            {userCountMapper?.[selectedAssignee]?.reduce((acc, task) => {
+              return acc + (task?.status == STATUS_DONE ? 1 : 0);
             }, 0)}
           </span>
           <span style={{ fontSize: ".7rem" }}>Done</span>
