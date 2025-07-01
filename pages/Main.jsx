@@ -38,10 +38,10 @@ const allPriority = [
   { value: "Priority 2", label: "Priority 2" },
 ];
 
-export const STATUS_NEW = "New"
-export const STATUS_INPROGRESS = "In Progress"
-export const STATUS_DONE = "Done"
-export const STATUS_WAIT = "Wait"
+export const STATUS_NEW = "New";
+export const STATUS_INPROGRESS = "In Progress";
+export const STATUS_DONE = "Done";
+export const STATUS_WAIT = "Wait";
 
 export default function Atom() {
   const [newLog, setNewLog] = useState("");
@@ -336,7 +336,7 @@ export default function Atom() {
           <Row style={{ marginBottom: "1rem" }}>
             <Select
               value={taskMain?.status}
-              defaultValue=STATUS_NEW
+              defaultValue={STATUS_NEW}
               style={{ width: "100%" }}
               onChange={(value) => {
                 taskMainFn((old) => ({ ...old, status: value }));
@@ -466,7 +466,10 @@ export default function Atom() {
         />
       </Bottom>
       <BottomOptions>
-        <BItem active={status == STATUS_NEW} onClick={() => setStatus(STATUS_NEW)}>
+        <BItem
+          active={status == STATUS_NEW}
+          onClick={() => setStatus(STATUS_NEW)}
+        >
           <span style={{ marginBottom: ".5rem" }}>
             {userCountMapper?.[selectedAssignee]?.task?.reduce((acc, task) => {
               return acc + task?.status == STATUS_NEW ? 1 : 0;
@@ -485,7 +488,10 @@ export default function Atom() {
           </span>
           <span style={{ fontSize: ".7rem" }}>In Progress</span>
         </BItem>
-        <BItem active={status == STATUS_WAIT} onClick={() => setStatus(STATUS_WAIT)}>
+        <BItem
+          active={status == STATUS_WAIT}
+          onClick={() => setStatus(STATUS_WAIT)}
+        >
           <span style={{ marginBottom: ".5rem" }}>
             {userCountMapper?.[selectedAssignee]?.task?.reduce((acc, task) => {
               return acc + task?.status == STATUS_WAIT ? 1 : 0;
@@ -493,7 +499,10 @@ export default function Atom() {
           </span>
           <span style={{ fontSize: ".7rem" }}>Wait</span>
         </BItem>
-        <BItem active={status == STATUS_DONE} onClick={() => setStatus(STATUS_DONE)}>
+        <BItem
+          active={status == STATUS_DONE}
+          onClick={() => setStatus(STATUS_DONE)}
+        >
           <span style={{ marginBottom: ".5rem" }}>
             {userCountMapper?.[selectedAssignee]?.task?.reduce((acc, task) => {
               return acc + task?.status == STATUS_DONE ? 1 : 0;
