@@ -176,9 +176,6 @@ export default function Atom() {
     label: (
       <span style={{ width: "100%", display: "flex", justifyContent: "space" }}>
         <span style={{ padding: "0 1rem", flex: 1 }}>{user?.label}</span>
-        <span style={{ padding: "0 1rem" }}>
-          {userCountMapper?.[user?.value]?.length}
-        </span>
       </span>
     ),
   }));
