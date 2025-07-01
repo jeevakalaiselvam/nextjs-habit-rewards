@@ -167,7 +167,7 @@ export default function Atom() {
 
   useEffect(() => {
     refreshTasks();
-  }, []);
+  }, [selectedAssignee]);
 
   useEffect(() => {
     if (selectedTask) {
@@ -185,13 +185,11 @@ export default function Atom() {
     userCountMapper[user?.value] = [];
   });
 
-  tasks
-    ?.filter((task) => task?.status == STATUS_DONE)
-    ?.forEach((task) => {
-      if (task?.assignee == selectedAssignee) {
-        userCountMapper[selectedAssignee].push(task);
-      }
-    });
+  tasks?.forEach((task) => {
+    if (task?.assignee === selectedAssignee) {
+      userCountMapper[selectedAssignee].push(task);
+    }
+  });
 
   let countMappedOptions = allUsers?.map((user) => ({
     ...user,
