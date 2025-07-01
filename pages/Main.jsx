@@ -504,10 +504,6 @@ export default function Atom() {
         <BItem active={status == "Done"} onClick={() => setStatus("Done")}>
           <span style={{ marginBottom: ".5rem" }}>{doneC}</span>
           <span style={{ fontSize: ".7rem" }}>Done</span>
-        </BItem>{" "}
-        <BItem active={status == "All"} onClick={() => setStatus("All")}>
-          <span style={{ marginBottom: ".5rem" }}>{allC}</span>
-          <span style={{ fontSize: ".7rem" }}>All</span>
         </BItem>
       </BottomOptions>
     </Container>
