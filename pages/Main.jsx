@@ -74,14 +74,14 @@ export default function Atom() {
     money: 1000,
   });
 
-  const completeTask = (task) => {
+  const completeTask = (task, newStatus) => {
     try {
       axios
         .put(`/api/jeevatask/${task?._id}`, {
           ...task,
-          isCompleted: true,
-          completedAt: new Date(),
-          status: "Done",
+          isCompleted: newStatus == "Done" ? true : false,
+          completedAt: newStatus == "Done" ? new Date() : "",
+          status: newStatus,
         })
         .then((response) => {
           refreshTasks();
@@ -219,7 +219,36 @@ export default function Atom() {
   let taskMain = showCreateTask ? taskData : edittaskData;
   let taskMainFn = showCreateTask ? setTaskData : setEditTaskData;
 
-  console.log(userCountMapper?.[selectedAssignee]);
+  const getRightStateForTask = (task) => {
+    if (task?.status == STATUS_NEW) {
+      return STATUS_INPROGRESS;
+    }
+    if (task?.status == STATUS_INPROGRESS) {
+      return STATUS_DONE;
+    }
+    if (task?.status == STATUS_WAIT) {
+      return STATUS_DONE;
+    }
+    if (task?.status == STATUS_DONE) {
+      return STATUS_NEW;
+    }
+  };
+
+  const getLeftStateForTask = (task) => {
+    if (task?.status == STATUS_NEW) {
+      return STATUS_DONE;
+    }
+    if (task?.status == STATUS_INPROGRESS) {
+      return STATUS_WAIT;
+    }
+    if (task?.status == STATUS_WAIT) {
+      return STATUS_INPROGRESS;
+    }
+    if (task?.status == STATUS_DONE) {
+      return STATUS_INPROGRESS;
+    }
+  };
+
   return (
     <Container>
       {showLogs && (
@@ -432,14 +461,16 @@ export default function Atom() {
               <TaskCard>
                 <TaskCardTop>
                   <Popconfirm
-                    title="Complete"
-                    description="Is Task Completed?"
+                    title="Status"
+                    description="Change Status?"
                     onConfirm={() => {
-                      completeTask(task);
+                      completeTask(task, getRightStateForTask(task));
                     }}
-                    onCancel={() => {}}
-                    okText="Yes"
-                    cancelText="No"
+                    onCancel={() => {
+                      completeTask(task, getLeftStateForTask(task));
+                    }}
+                    okText={getRightStateForTask(task)}
+                    cancelText={getLeftStateForTask(task)}
                   >
                     <Money color={COLOR_GREEN}>
                       <MoneyInner>
@@ -616,8 +647,8 @@ const LogsView = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  min-height: 50vh;
-  max-height: 50vh;
+  min-height: 60vh;
+  max-height: 60vh;
   width: 100%;
   overflow: scroll;
 `;
