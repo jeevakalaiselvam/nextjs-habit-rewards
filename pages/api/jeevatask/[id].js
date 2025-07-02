@@ -16,6 +16,7 @@ export default async function handler(req, res) {
       isCompleted,
       priority,
       status,
+      ticket,
       _id,
     } = req.body;
 
@@ -40,6 +41,7 @@ export default async function handler(req, res) {
             isCompleted,
             priority,
             status,
+            ticket,
           },
         }
       );

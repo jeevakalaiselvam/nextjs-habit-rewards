@@ -12,6 +12,7 @@ export default async function handler(req, res) {
       completedAt,
       priority,
       status,
+      ticket,
     } = req.body;
 
     if (!type || !title || !description || !assignee) {
@@ -32,6 +33,7 @@ export default async function handler(req, res) {
         isCompleted: false,
         priority,
         status,
+        ticket,
       });
 
       res.status(201).json({ message: "Task added successfully" });

@@ -6,6 +6,7 @@ import {
   COLOR_BACKGROUND_HEADER,
   COLOR_GREEN,
   COLOR_GREY,
+  COLOR_RED,
   generateDarkTextColorForLightBg,
 } from "../helpers/colorHelper";
 import { useEffect, useState } from "react";
@@ -63,6 +64,7 @@ export default function Atom() {
     priority: "Priority 2",
     status: STATUS_NEW,
     money: 1000,
+    ticket: "",
   });
   const [edittaskData, setEditTaskData] = useState({
     type: "Task",
@@ -72,6 +74,7 @@ export default function Atom() {
     status: STATUS_NEW,
     priority: "Priority 2",
     money: 1000,
+    ticket: "",
   });
 
   const completeTask = (task, newStatus) => {
@@ -419,6 +422,17 @@ export default function Atom() {
             />
           </Row>
           <Row style={{ marginBottom: "1rem" }}>
+            <Input
+              addonBefore={"NTSWSR-"}
+              placeholder="Enter Ticket..."
+              value={taskMain?.ticket}
+              size="medium"
+              onChange={(e) =>
+                taskMainFn((old) => ({ ...old, ticket: e.target.value }))
+              }
+            />
+          </Row>
+          <Row style={{ marginBottom: "1rem" }}>
             <TextArea
               rows={4}
               placeholder="Enter Description..."
@@ -485,7 +499,16 @@ export default function Atom() {
                       setShowLogs(true);
                     }}
                   >
-                    <Title>{task?.title}</Title>
+                    <Title>
+                      {task?.title}
+                      <TicketInfo>
+                        {task?.ticket ? (
+                          <span>{task?.ticket}</span>
+                        ) : (
+                          <span style={{ color: COLOR_RED }}>No Ticket</span>
+                        )}
+                      </TicketInfo>
+                    </Title>
                     <DocLink>{task?.taskId}</DocLink>
                     <Description>{task?.description}</Description>
                   </Data>
@@ -760,6 +783,28 @@ const Title = styled.div`
   width: 100%;
   height: 30px;
   font-size: 0.9rem;
+  position: relative;
+`;
+
+const TicketInfo = styled.div`
+  top: 0;
+  right: 0;
+  position: absolute;
+  font-size: 0.7rem;
+  margin-right: 0.5rem;
+  margin-top: 0.25rem;
+
+  animation: smooth-blink 1.5s ease-in-out infinite;
+
+  @keyframes smooth-blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
 `;
 
 const Description = styled.div`
