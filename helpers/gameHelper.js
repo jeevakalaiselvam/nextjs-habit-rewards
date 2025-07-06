@@ -1,5 +1,13 @@
 import moment from "moment/moment";
 import { getOperatorIconFor } from "./operatorHelper";
+import {
+  COLOR_ACCENT,
+  COLOR_BRONZE,
+  COLOR_COPPER,
+  COLOR_GOLD,
+  COLOR_PLATINUM,
+  COLOR_SILVER,
+} from "./colorHelper";
 
 export const ICON_MAPPER = {
   "Battlefield 2042":
@@ -41,4 +49,19 @@ const SIEGE_ICONS = {
 export const getIconBasedOnKeyword = (keyword) => {
   console.log("KEY", keyword);
   return getOperatorIconFor(keyword?.split(" ")?.[0]);
+};
+
+export const getTrophyColor = (name) => {
+  if (name == "Gold") {
+    return COLOR_GOLD;
+  }
+  if (name == "Silver") {
+    return COLOR_SILVER;
+  }
+  if (name == "Bronze") {
+    return COLOR_COPPER;
+  }
+  if (name == "Platinum") {
+    return COLOR_PLATINUM;
+  }
 };

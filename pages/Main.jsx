@@ -37,6 +37,7 @@ import {
   GAMES_ARRAY,
   getIconBasedOnKeyword,
   getTimeFormattedForAch,
+  getTrophyColor,
   Habit,
   HABIT_ARRAY,
   ICON_MAPPER,
@@ -1065,7 +1066,12 @@ export default function Main() {
                       </A1IconOuter>
                     </Popconfirm>
                     <A1Right>
-                      <A1Title>{ach?.title}</A1Title>
+                      <A1Title>
+                        {ach?.title}
+                        <A1TrophyColor color={getTrophyColor(ach?.color)}>
+                          <FaTrophy />
+                        </A1TrophyColor>
+                      </A1Title>
                       <A1Desc>{ach?.description}</A1Desc>
                       <A1Progress>
                         <A1Progress1>
@@ -1546,10 +1552,22 @@ const A1Icon2 = styled.div`
 const A1Title = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0.25rem 1rem;
+  justify-content: flex-start;
+  padding: 0.25rem 2rem 0.25rem 1rem;
   font-size: 0.9rem;
   flex: 1;
+  width: 100%;
+  position: relative;
+`;
+
+const A1TrophyColor = styled.div`
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-30%);
+  color: ${(props) => props.color};
+  width: 20px;
+  height: 20px;
 `;
 
 const A1Desc = styled.div`
