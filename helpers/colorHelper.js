@@ -121,3 +121,56 @@ export const COLOR_GOLD = "#E7C533";
 export const COLOR_SILVER = "#999999";
 export const COLOR_COPPER = "#C46438";
 export const COLOR_PLATINUM = "#667FB2";
+
+export const calculatePsnLevel = ({ platinum, gold, silver, bronze }) => {
+  // Trophy values
+  const points = platinum * 300 + gold * 90 + silver * 30 + bronze * 15;
+
+  // Level ranges
+  const levelSteps = [
+    { levels: 99, xpPerLevel: 60 },
+    { levels: 100, xpPerLevel: 90 },
+    { levels: 100, xpPerLevel: 450 },
+    { levels: 100, xpPerLevel: 900 },
+    { levels: 100, xpPerLevel: 1800 },
+    { levels: 100, xpPerLevel: 3600 },
+    { levels: 100, xpPerLevel: 7200 },
+    { levels: 100, xpPerLevel: 14400 },
+    { levels: 100, xpPerLevel: 28800 },
+    { levels: 100, xpPerLevel: 57600 },
+  ];
+
+  let currentLevel = 1;
+  let remainingXp = points;
+
+  for (let i = 0; i < levelSteps.length; i++) {
+    const step = levelSteps[i];
+    const xpThisStep = step.levels * step.xpPerLevel;
+
+    if (remainingXp >= xpThisStep) {
+      remainingXp -= xpThisStep;
+      currentLevel += step.levels;
+    } else {
+      const levelsGained = Math.floor(remainingXp / step.xpPerLevel);
+      currentLevel += levelsGained;
+      remainingXp -= levelsGained * step.xpPerLevel;
+      const progress = remainingXp / step.xpPerLevel;
+      return {
+        totalPoints: points,
+        level: currentLevel,
+        progressPercent: +(progress * 100).toFixed(2),
+        pointsInCurrentLevel: remainingXp,
+        pointsNeededForNextLevel: step.xpPerLevel - remainingXp,
+      };
+    }
+  }
+
+  // Cap at max level
+  return {
+    totalPoints: points,
+    level: 999,
+    progressPercent: 100,
+    pointsInCurrentLevel: 0,
+    pointsNeededForNextLevel: 0,
+  };
+};

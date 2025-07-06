@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import {
+  calculatePsnLevel,
   COLOR_ACCENT,
   COLOR_ACH,
   COLOR_BLACK1,
@@ -24,6 +25,7 @@ import {
   FaCaretDown,
   FaCheck,
   FaGlobe,
+  FaHome,
   FaIcons,
   FaMinusCircle,
   FaPlus,
@@ -51,9 +53,13 @@ import {
   WORK_ARRAY,
 } from "../helpers/gameHelper";
 import {
+  TbDeviceDesktopAnalytics,
+  TbDeviceDesktopFilled,
+  TbDialpad,
   TbExposurePlus1,
   TbFlareFilled,
   TbGoGame,
+  TbHome,
   TbJewishStarFilled,
   TbKeyframeFilled,
   TbKeyframesFilled,
@@ -646,7 +652,7 @@ export default function Main() {
   }, [achievements, selectedGame]);
 
   let platinum = 0,
-    gold = -0,
+    gold = 0,
     silver = 0,
     bronze = 0;
   let gameAchievements = {};
@@ -681,17 +687,37 @@ export default function Main() {
     }
   });
 
+  const {
+    totalPoints,
+    level,
+    progressPercent,
+    pointsInCurrentLevel,
+    pointsNeededForNextLevel,
+  } = calculatePsnLevel({ platinum, gold, silver, bronze });
+
   return (
     <Container>
       <Header>
         <HLeft
           onClick={() => {
-            setSelected("RECENT");
+            setSelected("GAMES");
           }}
         >
           <span
             style={{
+              fontSize: "1.25rem",
+              marginRight: ".5rem",
+              color: COLOR_WHITE,
+            }}
+          >
+            <TbHome />
+          </span>
+        </HLeft>
+        <HCenter>
+          <span
+            style={{
               fontSize: "1.1rem",
+              marginLeft: "1.75rem",
               marginRight: ".5rem",
               color: COLOR_PLATINUM,
             }}
@@ -765,9 +791,9 @@ export default function Main() {
           >
             {bronze}
           </span>
-        </HLeft>
+        </HCenter>
         <HRight>
-          <AddIcon
+          {/* <AddIcon
             onClick={() => {
               clearFormData();
               setShowModal(true);
@@ -776,16 +802,7 @@ export default function Main() {
             <span>
               <HiOutlinePlusSm />
             </span>
-          </AddIcon>{" "}
-          <AddIcon
-            onClick={() => {
-              setSelected("GAMES");
-            }}
-          >
-            <span style={{ fontSize: "1.25rem", marginLeft: "1rem" }}>
-              <TbShield />
-            </span>
-          </AddIcon>{" "}
+          </AddIcon>{" "} */}
           <AddIconRefresh
             onClick={() => {
               refreshAchievements();
@@ -1237,9 +1254,58 @@ export default function Main() {
           </MiddleTopContainer>
         )}
       </Middle>
+      <BottomProgress>
+        <LevelHex>{level}</LevelHex>
+        <ProgressLevel>
+          <Progress percent={progressPercent} showInfo={false} />
+        </ProgressLevel>
+      </BottomProgress>
     </Container>
   );
 }
+const ProgressLevel = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  transform: translateX(-50%);
+`;
+
+const LevelHex = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(-50%);
+  width: 84px;
+  height: 43px;
+  background: #4db8ff;
+  margin: 60px auto;
+  position: absolute;
+  left: 50%;
+  top: -150%;
+
+  &:before,
+  &:after {
+    content: "";
+    position: absolute;
+    width: 0;
+    border-left: 42px solid transparent;
+    border-right: 42px solid transparent;
+  }
+
+  &:before {
+    bottom: 100%;
+    border-bottom: 27.5px solid #4db8ff;
+  }
+
+  &:after {
+    top: 100%;
+    border-top: 27.5px solid #4db8ff;
+  }
+`;
 
 const Middle = styled.div`
   display: flex;
@@ -1247,7 +1313,7 @@ const Middle = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  max-height: 85vh;
+  max-height: 80vh;
   padding-bottom: 2rem;
   overflow: scroll;
   flex: 1;
@@ -1257,164 +1323,12 @@ const Middle = styled.div`
 const BottomProgress = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
   background-color: ${COLOR_ACH};
-`;
-
-const Total = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: ${COLOR_GREEN};
-  transform: translateX(-1rem);
-`;
-
-const Change = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  font-size: 1.25rem;
-  color: ${COLOR_GREEN};
-  transform: translateX(-1rem);
-  animation: slideUp 0.5s linear forwards;
-  @keyframes slideUp {
-    from {
-      transform: translateY(-20px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0px);
-      opacity: 1;
-    }
-  }
-`;
-
-const MoneyChange = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 60%;
-  background-color: ${COLOR_BLACK1};
-  flex-direction: column;
-`;
-
-const RecentClick = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-`;
-
-const AchSmall = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 70px;
-  min-height: 70px;
-  background: ${(props) => `url('${props.image}')`};
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+  padding-bottom: 2rem;
+  height: 70px;
   position: relative;
-  cursor: pointer;
-`;
-
-const InnerCount = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  background-color: ${COLOR_GREEN};
-  color: ${generateDarkTextColorForLightBg(COLOR_GREEN)};
-`;
-
-const AchSmallContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  margin: 0.75rem;
-  position: relative;
-`;
-
-const AchTag = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: rgba(0, 0, 0, 0.25);
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 40px;
-`;
-
-const TotalAmount = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  transform: translateX(-1.25rem);
-`;
-
-const RecentItems = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  width: 100%;
-  max-height: 65vh;
-  min-height: 65vh;
-`;
-
-const RecentItemsGame = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  width: 100%;
-  max-height: 65vh;
-  min-height: 65vh;
-`;
-
-const RecentInner = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  width: 100%;
-  max-height: 55vh;
-  overflow: scroll;
-`;
-const OverviewMode = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  width: 100%;
-`;
-
-const UnlockTrigger = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 4px;
-  animation: slideUp 0.25s linear forwards;
-  @keyframes slideUp {
-    from {
-      transform: translateY(-20px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0px);
-      opacity: 1;
-    }
-  }
 `;
 
 const InnerTag = styled.div`
@@ -1968,14 +1882,13 @@ const HCenter = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 2;
+  flex: 1;
   color: ${COLOR_ACCENT};
 `;
 
 const HRight = styled.div`
   display: flex;
   align-items: center;
-  flex: 1;
   justify-content: flex-end;
 `;
 
