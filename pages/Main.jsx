@@ -8,11 +8,14 @@ import {
   COLOR_BLUE,
   COLOR_BLUE_DARK,
   COLOR_BLUE_LIGHT,
+  COLOR_COPPER,
   COLOR_GOLD,
   COLOR_GREEN,
   COLOR_GREY,
+  COLOR_PLATINUM,
   COLOR_PURPLE,
   COLOR_RED,
+  COLOR_SILVER,
   COLOR_WHITE,
   generateDarkTextColorForLightBg,
 } from "../helpers/colorHelper";
@@ -522,8 +525,6 @@ export default function Main() {
     });
   };
 
-  let onlyUnlocked = achToShow?.filter((ach) => ach?.completed == ach?.total);
-
   let onlyUnlockedWorkItems = achToShow?.filter(
     (ach) => ach?.achieved && ach?.name == "Work Tracker"
   );
@@ -644,34 +645,45 @@ export default function Main() {
     return () => clearInterval(intervalRef.current); // Cleanup on unmount
   }, [achievements, selectedGame]);
 
+  let platinum = 0,
+    gold = -0,
+    silver = 0,
+    bronze = 0;
+  let gameAchievements = {};
+  achievements?.forEach((ach) => {
+    if (!gameAchievements?.[ach?.name]) {
+      gameAchievements[ach?.name] = [];
+      gameAchievements[ach?.name].push(ach);
+    } else {
+      gameAchievements[ach?.name].push(ach);
+    }
+
+    if (ach?.completed == ach?.total) {
+      if (ach?.color == "Gold") {
+        gold++;
+      }
+      if (ach?.color == "Silver") {
+        silver++;
+      }
+      if (ach?.color == "Bronze") {
+        bronze++;
+      }
+    }
+  });
+
+  Object.keys(gameAchievements)?.forEach((game) => {
+    let total = gameAchievements?.[game]?.length;
+    let completed = gameAchievements?.[game]?.filter(
+      (item) => item?.total == item?.completed
+    )?.length;
+    if (total == completed) {
+      platinum++;
+    }
+  });
+
   return (
     <Container>
       <Header>
-        <HLeft
-          onClick={() => {
-            setSelected("GAMES");
-          }}
-        >
-          <span
-            style={{
-              fontSize: "1.3rem",
-              marginRight: ".5rem",
-              color: COLOR_GREEN,
-            }}
-          >
-            <TbPresentationFilled />
-          </span>
-          <span
-            style={{
-              fontSize: "1.25rem",
-              transform: "translateY(-2px)",
-              marginRight: "1rem",
-              color: COLOR_GREEN,
-            }}
-          >
-            {games?.length}
-          </span>
-        </HLeft>
         <HLeft
           onClick={() => {
             setSelected("RECENT");
@@ -681,7 +693,7 @@ export default function Main() {
             style={{
               fontSize: "1.1rem",
               marginRight: ".5rem",
-              color: COLOR_ACCENT,
+              color: COLOR_PLATINUM,
             }}
           >
             <FaTrophy />
@@ -690,11 +702,68 @@ export default function Main() {
             style={{
               fontSize: "1.25rem",
               transform: "translateY(-2px)",
-              marginRight: ".25rem",
-              color: COLOR_ACCENT,
+              marginRight: "1rem",
+              color: COLOR_PLATINUM,
             }}
           >
-            {onlyUnlocked?.length}
+            {platinum}
+          </span>{" "}
+          <span
+            style={{
+              fontSize: "1.1rem",
+              marginRight: ".5rem",
+              color: COLOR_GOLD,
+            }}
+          >
+            <FaTrophy />
+          </span>
+          <span
+            style={{
+              fontSize: "1.25rem",
+              transform: "translateY(-2px)",
+              marginRight: "1rem",
+              color: COLOR_GOLD,
+            }}
+          >
+            {gold}
+          </span>{" "}
+          <span
+            style={{
+              fontSize: "1.1rem",
+              marginRight: ".5rem",
+              color: COLOR_SILVER,
+            }}
+          >
+            <FaTrophy />
+          </span>
+          <span
+            style={{
+              fontSize: "1.25rem",
+              transform: "translateY(-2px)",
+              marginRight: "1rem",
+              color: COLOR_SILVER,
+            }}
+          >
+            {silver}
+          </span>{" "}
+          <span
+            style={{
+              fontSize: "1.1rem",
+              marginRight: ".5rem",
+              color: COLOR_COPPER,
+            }}
+          >
+            <FaTrophy />
+          </span>
+          <span
+            style={{
+              fontSize: "1.25rem",
+              transform: "translateY(-2px)",
+              marginRight: "1rem",
+              color: COLOR_COPPER,
+            }}
+          >
+            {bronze}
           </span>
         </HLeft>
         <HRight>
@@ -710,7 +779,7 @@ export default function Main() {
           </AddIcon>{" "}
           <AddIcon
             onClick={() => {
-              router.push("admin");
+              setSelected("GAMES");
             }}
           >
             <span style={{ fontSize: "1.25rem", marginLeft: "1rem" }}>
@@ -1562,9 +1631,9 @@ const A1Title = styled.div`
 
 const A1TrophyColor = styled.div`
   position: absolute;
-  right: 1rem;
+  right: 0.825rem;
   top: 50%;
-  transform: translateY(-30%);
+  transform: translateY(-35%);
   color: ${(props) => props.color};
   width: 20px;
   height: 20px;
