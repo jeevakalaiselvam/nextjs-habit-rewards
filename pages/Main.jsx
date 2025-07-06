@@ -1348,7 +1348,7 @@ const BottomProgress = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  background-color: ${COLOR_ACH};
+  background-color: ${COLOR_BLACK1};
   padding-bottom: 1rem;
   height: 80px;
   position: relative;
