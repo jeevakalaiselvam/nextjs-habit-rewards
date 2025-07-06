@@ -60,6 +60,7 @@ import {
   TbFlareFilled,
   TbGoGame,
   TbHome,
+  TbHourglassFilled,
   TbJewishStarFilled,
   TbKeyframeFilled,
   TbKeyframesFilled,
@@ -1255,23 +1256,36 @@ export default function Main() {
         )}
       </Middle>
       <BottomProgress>
-        <LevelHex>{level}</LevelHex>
+        <ProgresLeft>Level {level}</ProgresLeft>
         <ProgressLevel>
           <Progress percent={progressPercent} showInfo={false} />
         </ProgressLevel>
+        <ProgresRight>Level {level + 1}</ProgresRight>
       </BottomProgress>
     </Container>
   );
 }
+
+const ProgresLeft = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0rem 1rem;
+  justify-content: center;
+`;
+
+const ProgresRight = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0rem 1rem;
+`;
+
 const ProgressLevel = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 90%;
-  position: absolute;
-  left: 50%;
-  top: 30%;
-  transform: translateX(-50%);
+  flex: 1;
+  padding: 1rem;
 `;
 
 const LevelHex = styled.div`
@@ -1279,21 +1293,23 @@ const LevelHex = styled.div`
   align-items: center;
   justify-content: center;
   transform: translateX(-50%);
-  width: 84px;
-  height: 43px;
+  width: 80px;
+  height: 35px;
   background: #4db8ff;
+  color: ${generateDarkTextColorForLightBg("#4db8ff", 50)};
   margin: 60px auto;
   position: absolute;
   left: 50%;
-  top: -150%;
+  font-size: 2rem;
+  top: -200%;
 
   &:before,
   &:after {
     content: "";
     position: absolute;
     width: 0;
-    border-left: 42px solid transparent;
-    border-right: 42px solid transparent;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
   }
 
   &:before {
@@ -1313,6 +1329,7 @@ const Middle = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
+  min-height: 80vh;
   max-height: 80vh;
   padding-bottom: 2rem;
   overflow: scroll;
@@ -1440,35 +1457,6 @@ const TagCompleted = styled.div`
   font-size: 0.8rem;
 `;
 
-const TagIcon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${(props) =>
-    props.forGame
-      ? COLOR_ACCENT
-      : props?.achieved
-      ? COLOR_GREEN
-      : COLOR_ACCENT};
-  color: ${(props) =>
-    props.forGame
-      ? generateDarkTextColorForLightBg(COLOR_ACCENT)
-      : props?.achieved
-      ? generateDarkTextColorForLightBg(COLOR_GREEN)
-      : generateDarkTextColorForLightBg(COLOR_ACCENT)};
-  height: 70px;
-  font-size: 0.8rem;
-`;
-
-const TagCount = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${COLOR_BLUE};
-  color: ${(props) => generateDarkTextColorForLightBg(COLOR_BLUE)};
-  height: 70px;
-`;
-
 const NoData = styled.div`
   display: flex;
   align-items: center;
@@ -1483,15 +1471,6 @@ const A1Container = styled.div`
   width: 100%;
   margin: 0.25rem 0.25rem 0.25rem 0.25rem;
   opacity: ${(props) => (props.opaque ? 0.2 : 1)};
-  background-color: ${COLOR_ACH};
-`;
-
-const A1ContainerMoney = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin: 1rem 0rem 0rem 0rem;
   background-color: ${COLOR_ACH};
 `;
 
@@ -1737,22 +1716,6 @@ const ModalContainerGame = styled.div`
   background-color: ${COLOR_BLACK1};
 `;
 
-const Button = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  width: 90%;
-  border-radius: 4px;
-  margin: 0rem 1rem;
-  background-color: ${COLOR_BLUE};
-  color: ${generateDarkTextColorForLightBg(COLOR_BLUE)};
-
-  &:active {
-    transform: translate(-2px, 2px);
-  }
-`;
-
 const ButtonSmall = styled.div`
   display: flex;
   align-items: center;
@@ -1769,48 +1732,6 @@ const ButtonSmall = styled.div`
   }
 `;
 
-const Dot = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 6px;
-  height: 6px;
-  border-radius: 4rem;
-  transform: translate(-50%);
-  background-color: ${COLOR_BLUE};
-`;
-
-const Sections = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 1rem 0rem 2rem 0rem;
-  margin-top: 0.25rem;
-  background-color: ${(props) => COLOR_BLUE_DARK};
-`;
-
-const Section = styled.div`
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  position: relative;
-  margin: 0rem 0rem 0.25rem 0rem;
-  padding: 0rem 1rem 0.25rem 0rem;
-  border-radius: 4px 4px 0px 0px;
-  color: ${(props) => (props.selected ? COLOR_BLUE_LIGHT : COLOR_GREY)};
-  cursor: pointer;
-
-  &:hover {
-    color: ${(props) => COLOR_BLUE_LIGHT};
-  }
-`;
-
 const MiddleTopContainer = styled.div`
   display: flex;
   align-items: center;
@@ -1820,24 +1741,6 @@ const MiddleTopContainer = styled.div`
   padding: 0.1rem 0.5rem;
   flex: 1;
   opacity: ${(props) => (props.showModal ? "0" : "1")};
-`;
-
-const Bottom = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 1rem 1rem 2.5rem 1rem;
-  background-color: ${COLOR_ACH};
-`;
-
-const BottomSmall = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 1rem 1rem 2.5rem 1rem;
-  background-color: ${COLOR_ACH};
 `;
 
 const BottomSmallInput = styled.div`
