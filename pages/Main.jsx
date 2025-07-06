@@ -481,7 +481,9 @@ export default function Main() {
         ach2.completed / ach2?.total - ach1.completed / ach1?.total
     );
 
-  achsForGame = [...notCompleted, ...completed];
+  achsForGame = [...notCompleted, ...completed]?.sort(
+    (ach1, ach2) => +ach2.percentage - +ach1?.percentage
+  );
 
   let urlsForGame = {};
   let achAllForGame = {};
@@ -1020,14 +1022,6 @@ export default function Main() {
                       <InnerTagGameAbsolute>
                         <span
                           style={{
-                            transform: "translateY(1px)",
-                            fontSize: "1rem",
-                          }}
-                        >
-                          <FaTrophy />{" "}
-                        </span>
-                        <span
-                          style={{
                             marginLeft: ".25rem",
                             fontSize: "1rem",
                           }}
@@ -1168,105 +1162,9 @@ export default function Main() {
           </MiddleTopContainer>
         )}
       </Middle>
-      {false && showRecentAchUnlock && lastAch && (
-        <UnlockTrigger>
-          <A1Container>
-            <Popconfirm
-              title="Delete Achievement"
-              description="Are you sure to delete this task?"
-              onConfirm={() => {}}
-              onCancel={() => {}}
-              okText="Yes"
-              cancelText="No"
-            >
-              <A1Icon icon={urlsForGame[lastAch?.name]}></A1Icon>
-            </Popconfirm>
-
-            <A1Right>
-              <A1Title>{lastAch?.title}</A1Title>
-              <A1Desc>{lastAch?.description}</A1Desc>
-            </A1Right>
-            <Tag achieved={lastAch?.achieved}>
-              <InnerTag>{lastAch?.achieved ? "DONE" : "ACTIVE "}</InnerTag>
-            </Tag>
-          </A1Container>
-        </UnlockTrigger>
-      )}
     </Container>
   );
 }
-
-const BottomTop = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-`;
-
-const BottomBottom = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 1rem;
-  background-color: ${COLOR_ACCENT};
-`;
-
-const BottomContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  width: 100%;
-  margin-top: 0.5rem;
-  background-color: ${COLOR_BLUE_DARK};
-`;
-
-const Name = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  left: 0;
-  bottom: 50%;
-  width: 70px;
-  height: 20px;
-  transform: translate(-25%, 50%) rotate(-90deg);
-  font-size: 0.8rem;
-  background-color: ${COLOR_GREEN};
-  color: ${generateDarkTextColorForLightBg(COLOR_GREEN)};
-`;
-
-const BottomItem = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  flex: 1;
-  transform: translateY(0.25rem);
-  color: ${(props) => (props.active ? COLOR_ACCENT : "")};
-`;
-
-const BLeft = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 1rem;
-`;
-
-const BMiddle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-`;
-
-const BRight = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 1rem;
-`;
 
 const Middle = styled.div`
   display: flex;
@@ -1471,8 +1369,7 @@ const InnerTagGameAbsolute = styled.div`
   align-items: center;
   justify-content: center;
   transform: translate(32%, -50%) rotate(-90deg);
-  font-size: 1rem;
-  width: 90px;
+  width: 60px;
   height: 30px;
   background-color: ${(props) => (props.background ? props.background : "")};
   background-color: ${COLOR_ACCENT};
@@ -1494,7 +1391,7 @@ const Tag = styled.div`
       : props?.achieved
       ? generateDarkTextColorForLightBg(COLOR_GREEN)
       : generateDarkTextColorForLightBg(COLOR_ACCENT)};
-  height: 90px;
+  height: 60px;
   font-size: 0.8rem;
   position: relative;
 `;
@@ -1518,7 +1415,7 @@ const TagNegative = styled.div`
       : props?.achieved
       ? generateDarkTextColorForLightBg(COLOR_GREY)
       : generateDarkTextColorForLightBg(COLOR_GREY)};
-  height: 35px;
+  height: 40px;
   font-size: 0.8rem;
 `;
 
@@ -1534,7 +1431,7 @@ const TagPositived = styled.div`
       : props?.achieved
       ? generateDarkTextColorForLightBg(COLOR_GREY)
       : generateDarkTextColorForLightBg(COLOR_GREY)};
-  height: 35px;
+  height: 40px;
   font-size: 0.8rem;
 `;
 
@@ -1613,8 +1510,8 @@ const A1IconOuter = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 70px;
-  height: 70px;
+  width: 80px;
+  height: 80px;
   background: #000000;
   background-size: cover;
   background-repeat: no-repeat;
@@ -1625,8 +1522,8 @@ const A1Icon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   background: ${(props) => `url('${props.icon}')`};
   background-size: cover;
   background-repeat: no-repeat;
@@ -1639,7 +1536,7 @@ const A1Icon2 = styled.div`
   align-items: center;
   justify-content: center;
   width: 140px;
-  height: 90px;
+  height: 60px;
   background: ${(props) => `url('${props.icon}')`};
   background-size: cover;
   background-repeat: no-repeat;
@@ -1659,9 +1556,9 @@ const A1Desc = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0rem 1rem;
+  padding: 0rem 2rem 0rem 1rem;
   opacity: 0.7;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   flex: 3;
 `;
 
@@ -1699,7 +1596,7 @@ const A1Right = styled.div`
   align-items: flex-start;
   justify-content: center;
   flex-direction: column;
-  height: 70px;
+  height: 60px;
   flex: 1;
 `;
 

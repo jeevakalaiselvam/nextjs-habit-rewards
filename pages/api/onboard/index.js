@@ -4,30 +4,7 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     const { achievements, value } = req.body;
 
-    if (!Array.isArray(achievements) || achievements.length === 0 || !value) {
-      return res.status(400).json({
-        error: "Achievements array and value (collection name) are required",
-      });
-    }
-
-    const validAchievements = achievements
-      .filter(
-        (ach) =>
-          ach.name && ach.title && ach.description && ach.type && ach.priority
-      )
-      .map((ach) => ({
-        ...ach,
-        total: ach.total ?? 1,
-        completed: ach.completed ?? 0,
-        unlocked: new Date(),
-        achieved: false,
-      }));
-
-    if (validAchievements.length === 0) {
-      return res
-        .status(400)
-        .json({ error: "No valid achievements found in request body" });
-    }
+    const validAchievements = achievements;
 
     try {
       const client = await clientPromise;
