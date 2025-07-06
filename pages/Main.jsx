@@ -1258,6 +1258,9 @@ export default function Main() {
       <BottomProgress>
         <ProgresLeft>Level {level}</ProgresLeft>
         <ProgressLevel>
+          <span style={{ fontSize: "0.75rem" }}>
+            {pointsNeededForNextLevel} XP
+          </span>
           <Progress percent={progressPercent} showInfo={false} />
         </ProgressLevel>
         <ProgresRight>Level {level + 1}</ProgresRight>
@@ -1268,24 +1271,27 @@ export default function Main() {
 
 const ProgresLeft = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   padding: 0rem 1rem;
   justify-content: center;
+  height: 20px;
 `;
 
 const ProgresRight = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   padding: 0rem 1rem;
+  height: 20px;
 `;
 
 const ProgressLevel = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
   flex: 1;
-  padding: 1rem;
+  height: 20px;
 `;
 
 const LevelHex = styled.div`
@@ -1329,8 +1335,8 @@ const Middle = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  min-height: 80vh;
-  max-height: 80vh;
+  min-height: 78vh;
+  max-height: 78vh;
   padding-bottom: 2rem;
   overflow: scroll;
   flex: 1;
@@ -1343,8 +1349,8 @@ const BottomProgress = styled.div`
   justify-content: center;
   width: 100%;
   background-color: ${COLOR_ACH};
-  padding-bottom: 2rem;
-  height: 70px;
+  padding-bottom: 1rem;
+  height: 80px;
   position: relative;
 `;
 
