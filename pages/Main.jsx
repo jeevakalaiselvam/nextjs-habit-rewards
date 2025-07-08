@@ -10,10 +10,12 @@ import {
 } from "../helpers/colorHelper";
 import { useEffect, useState } from "react";
 import {
+  TbArrowRightSquareFilled,
   TbCirclePlus,
   TbDeviceDesktopAnalytics,
   TbFlagPlus,
   TbLayoutGridFilled,
+  TbMinus,
   TbPlus,
   TbRefresh,
 } from "react-icons/tb";
@@ -23,20 +25,28 @@ import { BACKLOG_TYPE_OPTIONS } from "../helpers/optionHelper";
 import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
 import { LoadingOutlined } from "@ant-design/icons";
+import {
+  formatTimeSpent,
+  getDateFormatted,
+  getDateFormattedName,
+  getRelativeDateString,
+} from "../helpers/timeHelper";
+import { TbArrowLeftSquareFilled } from "react-icons/tb";
 
 const TAB_BACKLOG = "TAB_BACKLOG";
 const TAB_CALENDAR = "TAB_CALENDAR";
 
 const ICON_HEIGHT = 70;
 
+let MONEY_FOR_15_MINUTES = 25;
+
 export default function App() {
-  const [selectedTab, setSelectedTab] = useState(TAB_BACKLOG);
+  const [selectedTab, setSelectedTab] = useState(TAB_CALENDAR);
   const [backlogItems, setBacklogItems] = useState([]);
   const [calendarItems, setCalendarItems] = useState([]);
   const [backlogLoading, setBacklogLoading] = useState(false);
   const [calendarLoading, setCalendarLoading] = useState(false);
   const [showBacklogCreate, setShowBackLogCreate] = useState(false);
-  const [showCalendarCreate, setShowCalendarCreate] = useState(false);
   const [isBacklogEdit, setIsBacklogEdit] = useState(false);
   const [backlogForm, setBacklogForm] = useState({
     title: "",
@@ -44,13 +54,33 @@ export default function App() {
     type: BACKLOG_TYPE_OPTIONS?.[0]?.value,
   });
 
-  const [calendarForm, setCalendarForm] = useState({});
+  const [showCalendarCreate, setShowCalendarCreate] = useState(false);
+  const [isCalendarCreateFromBacklog, setIsCalendarCreateFromBacklog] =
+    useState(false);
+  const [calendarForm, setCalendarForm] = useState({
+    type: BACKLOG_TYPE_OPTIONS?.[5]?.value,
+    id: "",
+    title: "",
+    desc: "",
+    timeSpent: 15,
+  });
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState(new Date());
 
   const resetBackLogForm = () => {
     setBacklogForm({
       title: "",
       desc: "",
       type: BACKLOG_TYPE_OPTIONS?.[0]?.value,
+    });
+  };
+
+  const resetCalendarForm = () => {
+    setBacklogForm({
+      type: BACKLOG_TYPE_OPTIONS?.[5]?.value,
+      id: "",
+      title: "",
+      desc: "",
+      timeSpent: "",
     });
   };
 
@@ -95,8 +125,16 @@ export default function App() {
   };
 
   const refreshCalendarItems = () => {
+    setCalendarForm(true);
     try {
-    } catch (e) {}
+      axios.get("/api/calendaritem").then((response) => {
+        let data = response?.data;
+        setCalendarItems(data);
+      });
+      setCalendarForm(false);
+    } catch (e) {
+      setCalendarForm(false);
+    }
   };
 
   const createBacklogItem = () => {
@@ -104,6 +142,19 @@ export default function App() {
       axios.post("/api/backlogitem", { ...backlogForm }).then((response) => {
         refreshBacklogItems();
         resetBackLogForm();
+        setIsBacklogEdit(false);
+      });
+    } catch (e) {
+      resetBackLogForm();
+      setIsBacklogEdit(false);
+    }
+  };
+
+  const createCalendarItem = () => {
+    try {
+      axios.post("/api/calendaritem", { ...calendarForm }).then((response) => {
+        refreshCalendarItems();
+        resetCalendarForm();
         setIsBacklogEdit(false);
       });
     } catch (e) {
@@ -135,9 +186,22 @@ export default function App() {
     } catch (e) {}
   };
 
-  useEffect(() => {
+  const deleteCalendarItem = (id) => {
+    try {
+      axios.delete(`/api/calendaritem/${id}`).then((response) => {
+        refreshCalendarItems();
+      });
+    } catch (e) {}
+  };
+
+  const refreshBacklogAndCalendar = () => {
     refreshBacklogItems();
-  }, []);
+    refreshCalendarItems();
+  };
+
+  useEffect(() => {
+    refreshBacklogAndCalendar();
+  }, [selectedTab]);
 
   return (
     <Container>
@@ -154,6 +218,7 @@ export default function App() {
           setShowBackLogCreate(false);
         }}
         onCancel={() => {
+          resetBackLogForm();
           setShowBackLogCreate(false);
         }}
       >
@@ -188,6 +253,81 @@ export default function App() {
             size="medium"
           />
         </Row>
+      </Modal>{" "}
+      <Modal
+        title={"Log Work"}
+        open={showCalendarCreate}
+        onOk={() => {
+          createCalendarItem();
+          setIsCalendarCreateFromBacklog(false);
+          setShowCalendarCreate(false);
+        }}
+        onCancel={() => {
+          setIsCalendarCreateFromBacklog(false);
+          setShowCalendarCreate(false);
+        }}
+      >
+        {!isCalendarCreateFromBacklog && (
+          <Row style={{ marginBottom: "1rem" }}>
+            <Select
+              defaultValue={BACKLOG_TYPE_OPTIONS?.[0]?.value}
+              value={calendarForm?.type}
+              readOnly={isCalendarCreateFromBacklog}
+              style={{ width: "100%" }}
+              onChange={(value) => {
+                setCalendarForm((old) => ({ ...old, type: value }));
+              }}
+              options={BACKLOG_TYPE_OPTIONS}
+            />
+          </Row>
+        )}
+        <Row style={{ marginBottom: "1rem" }}>
+          <Input
+            placeholder="Enter Title..."
+            readOnly={isCalendarCreateFromBacklog}
+            value={calendarForm?.desc}
+            onChange={(e) => {
+              setCalendarForm((old) => ({
+                ...old,
+                desc: e.target.value,
+              }));
+            }}
+            size="medium"
+          />
+        </Row>
+        <Row style={{ marginBottom: "1rem" }}>
+          <Minus
+            onClick={() => {
+              if (calendarForm?.timeSpent > 15) {
+                setCalendarForm((old) => ({
+                  ...old,
+                  timeSpent: calendarForm?.timeSpent - 15,
+                }));
+              }
+            }}
+          >
+            <TbMinus />
+          </Minus>
+          <TimeData>{formatTimeSpent(calendarForm?.timeSpent ?? 15)}</TimeData>
+          <Plus
+            onClick={() => {
+              setCalendarForm((old) => ({
+                ...old,
+                timeSpent: calendarForm?.timeSpent + 15,
+              }));
+            }}
+          >
+            <TbPlus />
+          </Plus>
+        </Row>
+        <Row>
+          <MoneyInfo>
+            Rs{" "}
+            {calendarForm?.timeSpent > 0
+              ? (calendarForm?.timeSpent / 15) * MONEY_FOR_15_MINUTES
+              : 0}
+          </MoneyInfo>
+        </Row>
       </Modal>
       {/* Top Section Start */}
       <Top>
@@ -216,6 +356,13 @@ export default function App() {
           <CalendarTop>
             <TLeft>Calendar</TLeft>
             <TRight>
+              <Icon
+                onClick={() => {
+                  setShowCalendarCreate(true);
+                }}
+              >
+                <TbPlus />
+              </Icon>
               <Icon
                 onClick={() => {
                   refreshCalendarItems();
@@ -251,7 +398,7 @@ export default function App() {
                     </BSTag>
                     <Popconfirm
                       title="Actions"
-                      description="Select Action on Task?"
+                      description="Select Action on Backlog Item?"
                       onConfirm={() => {
                         setBacklogForm(backlog);
                         setIsBacklogEdit(true);
@@ -265,7 +412,13 @@ export default function App() {
                     >
                       <BSLeft></BSLeft>
                     </Popconfirm>
-                    <BSRight>
+                    <BSRight
+                      onClick={() => {
+                        setShowCalendarCreate(true);
+                        setIsCalendarCreateFromBacklog(true);
+                        setCalendarForm({ ...backlog, timeSpent: 15 });
+                      }}
+                    >
                       <BSTitle>{backlog?.title}</BSTitle>
                       <BSDesc>{backlog?.desc}</BSDesc>
                     </BSRight>
@@ -282,7 +435,84 @@ export default function App() {
               })}
           </BacklogContent>
         )}
-        {selectedTab == TAB_CALENDAR && <CalendarContent></CalendarContent>}
+        {selectedTab == TAB_CALENDAR && (
+          <CalendarContent>
+            <CalendarDateChange>
+              <CalendarLeft
+                onClick={() => {
+                  setSelectedCalendarDate((old) => {
+                    let newDate = new Date();
+                    newDate.setDate(old.getDate() - 1);
+                    return newDate;
+                  });
+                }}
+              >
+                <TbArrowLeftSquareFilled />
+              </CalendarLeft>
+              <CalendarMiddle>
+                <CalMiddleTop>
+                  {getRelativeDateString(selectedCalendarDate)}
+                </CalMiddleTop>
+                <CalMiddleBottom>
+                  {getDateFormattedName(selectedCalendarDate)}
+                </CalMiddleBottom>
+              </CalendarMiddle>
+              <CalendarRight
+                onClick={() => {
+                  setSelectedCalendarDate((old) => {
+                    let newDate = new Date();
+                    newDate.setDate(old.getDate() + 1);
+                    return newDate;
+                  });
+                }}
+              >
+                <TbArrowRightSquareFilled />
+              </CalendarRight>
+            </CalendarDateChange>
+            <CalendarItemsContainer>
+              {calendarLoading && (
+                <Spin
+                  indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
+                />
+              )}
+              {!calendarLoading && calendarItems?.length == 0 && (
+                <span style={{ padding: "1rem" }}>No Calendar !</span>
+              )}
+              {!calendarLoading &&
+                calendarItems?.length > 0 &&
+                calendarItems?.map((calendar) => {
+                  return (
+                    <BacklogSingle>
+                      <Popconfirm
+                        title="Actions"
+                        description="Select Action on Calendar Item?"
+                        onConfirm={() => {
+                          deleteCalendarItem(calendar?._id);
+                        }}
+                        onCancel={() => {}}
+                        okText="Delete"
+                        cancelText="Cancel"
+                      >
+                        <BSLeft></BSLeft>
+                      </Popconfirm>
+                      <BSRight onClick={() => {}}>
+                        <BSTitle>{calendar?.title}</BSTitle>
+                        <BSDesc>{calendar?.desc}</BSDesc>
+                      </BSRight>
+                      <BSTag color={COLOR_GREEN} onClick={() => {}}>
+                        <BSTagInner>
+                          {calendar?.timeSpent > 0
+                            ? (calendar?.timeSpent / 15) * MONEY_FOR_15_MINUTES
+                            : 0}
+                        </BSTagInner>
+                      </BSTag>
+                    </BacklogSingle>
+                  );
+                })}
+            </CalendarItemsContainer>
+            <TotalToday>DATE</TotalToday>
+          </CalendarContent>
+        )}
       </Content>
       {/* Bottom Section Start */}
       <Bottom>
@@ -308,6 +538,110 @@ export default function App() {
     </Container>
   );
 }
+
+const CalMiddleTop = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  margin-bottom: 4px;
+  opacity: 0.5;
+`;
+
+const CalMiddleBottom = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const CalendarLeft = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  &:active {
+    color: ${COLOR_ACCENT};
+  }
+`;
+
+const CalendarMiddle = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+`;
+
+const CalendarRight = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+
+  &:active {
+    color: ${COLOR_ACCENT};
+  }
+`;
+
+const TotalToday = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const CalendarDateChange = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  width: 100%;
+`;
+
+const TimeData = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex: 2;
+`;
+
+const Minus = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  font-size: 2rem;
+`;
+
+const Plus = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  font-size: 2rem;
+`;
+
+const CalendarItemMoney = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: ${COLOR_GREEN};
+  width: 100px;
+  flex: 0.5;
+  font-size: 1.5rem;
+  color: ${generateDarkTextColorForLightBg(COLOR_GREEN, 50)};
+  height: ${`${ICON_HEIGHT}px`};
+`;
+
+const MoneyInfo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  width: 100%;
+  font-size: 2rem;
+  color: ${COLOR_GREEN};
+`;
 
 const BSTitle = styled.div`
   display: flex;
@@ -417,6 +751,19 @@ const CalendarContent = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
+  min-height: calc(100vh - 160px);
+  max-height: calc(100vh - 160px);
+`;
+
+const CalendarItemsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  overflow: scroll;
+  width: 100%;
+  min-height: 70vh;
+  max-height: 70vh;
 `;
 
 const BacklogTop = styled.div`

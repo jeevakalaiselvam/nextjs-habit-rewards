@@ -19,4 +19,8 @@ export const BACKLOG_TYPE_OPTIONS = [
     value: "TEAM",
     label: "TEAM",
   },
+  {
+    value: "CALL",
+    label: "CALL",
+  },
 ];

@@ -3,9 +3,9 @@ import clientPromise from "../../../lib/db";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { title, desc, type } = req.body;
+    const { title, desc, type, timeSpent } = req.body;
 
-    if (!title || !desc || !type) {
+    if (!title || !desc || !type || !timeSpent) {
       return res
         .status(400)
         .json({ error: "Title, Description, Type required" });
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
     try {
       const client = await clientPromise;
       const db = client.db("habittracker");
-      await db.collection("backlogitem").insertOne({
+      await db.collection("calendaritem").insertOne({
         title,
         desc,
         type,
@@ -23,6 +23,7 @@ export default async function handler(req, res) {
         reward: "500",
         id: generateIdForBacklog(type),
         status: "ACTIVE",
+        timeSpent,
       });
 
       res.status(201).json({ message: "Backlog added successfully" });
@@ -37,7 +38,7 @@ export default async function handler(req, res) {
 
       let backlogItems = [];
 
-      backlogItems = await db.collection("backlogitem").find({}).toArray();
+      backlogItems = await db.collection("calendaritem").find({}).toArray();
 
       res.status(200).json(backlogItems);
     } catch (error) {

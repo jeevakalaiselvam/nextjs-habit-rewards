@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   const { id } = req.query;
 
   if (req.method === "PUT") {
-    const { title, desc, type, _id, status } = req.body;
+    const { title, desc, type, _id, status, timeSpent } = req.body;
 
     if (!title || !desc || !type || !status) {
       return res
@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     try {
       const client = await clientPromise;
       const db = client.db("habittracker");
-      const result = await db.collection("backlogitem").updateOne(
+      const result = await db.collection("calendaritem").updateOne(
         { _id: new ObjectId(_id) },
         {
           $set: {
@@ -24,6 +24,7 @@ export default async function handler(req, res) {
             desc,
             type,
             status,
+            timeSpent,
           },
         }
       );
@@ -43,7 +44,7 @@ export default async function handler(req, res) {
       const { value } = req.query;
 
       const result = await db
-        .collection("backlogitem")
+        .collection("calendaritem")
         .deleteOne({ _id: new ObjectId(id) });
 
       if (result.deletedCount === 1) {
