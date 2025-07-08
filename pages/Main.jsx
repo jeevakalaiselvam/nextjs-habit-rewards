@@ -41,6 +41,14 @@ export default function App() {
     type: BACKLOG_TYPE_OPTIONS?.[0]?.value,
   });
 
+  const resetBackLogForm = () => {
+    setBacklogForm({
+      title: "",
+      desc: "",
+      type: BACKLOG_TYPE_OPTIONS?.[0]?.value,
+    });
+  };
+
   const refreshBacklogItems = () => {
     setBacklogLoading(true);
     try {
@@ -62,8 +70,13 @@ export default function App() {
     try {
       axios.post("/api/backlogitem", { ...backlogForm }).then((response) => {
         refreshBacklogItems();
+        resetBackLogForm();
+        setIsBacklogEdit(false);
       });
-    } catch (e) {}
+    } catch (e) {
+      resetBackLogForm();
+      setIsBacklogEdit(false);
+    }
   };
 
   const updateBacklogItem = () => {
@@ -72,7 +85,20 @@ export default function App() {
         .put(`/api/backlogitem/${backlogForm?._id}`, { ...backlogForm })
         .then((response) => {
           refreshBacklogItems();
+          resetBackLogForm();
+          setIsBacklogEdit(false);
         });
+    } catch (e) {
+      resetBackLogForm();
+      setIsBacklogEdit(false);
+    }
+  };
+
+  const deleteBackLogItem = (id) => {
+    try {
+      axios.delete(`/api/backlogitem/${id}`).then((response) => {
+        refreshBacklogItems();
+      });
     } catch (e) {}
   };
 
@@ -188,7 +214,9 @@ export default function App() {
                         setIsBacklogEdit(true);
                         setShowBackLogCreate(true);
                       }}
-                      onCancel={() => {}}
+                      onCancel={() => {
+                        deleteBackLogItem(backlog?._id);
+                      }}
                       okText="Edit"
                       cancelText="Delete"
                     >
@@ -301,8 +329,8 @@ const BacklogContent = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  min-height: calc(100vh - 120px);
-  max-height: calc(100vh - 120px);
+  min-height: calc(100vh - 160px);
+  max-height: calc(100vh - 160px);
   overflow: scroll;
   width: 100%;
 `;
