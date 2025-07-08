@@ -42,7 +42,7 @@ const ICON_HEIGHT = 70;
 let MONEY_FOR_15_MINUTES = 25;
 
 export default function App() {
-  const [selectedTab, setSelectedTab] = useState(TAB_CALENDAR);
+  const [selectedTab, setSelectedTab] = useState(TAB_BACKLOG);
   const [backlogFilter, setBacklogFilter] = useState("ACTIVE");
   const [backlogItems, setBacklogItems] = useState([]);
   const [calendarItems, setCalendarItems] = useState([]);
