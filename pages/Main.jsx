@@ -15,7 +15,7 @@ import {
   TbRefresh,
 } from "react-icons/tb";
 import { TbCalendarMonthFilled } from "react-icons/tb";
-import { Input, Modal, Row, Select, Spin } from "antd";
+import { Input, Modal, Popconfirm, Row, Select, Spin } from "antd";
 import { BACKLOG_TYPE_OPTIONS } from "../helpers/optionHelper";
 import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
@@ -34,6 +34,7 @@ export default function App() {
   const [calendarLoading, setCalendarLoading] = useState(false);
   const [showBacklogCreate, setShowBackLogCreate] = useState(false);
   const [showCalendarCreate, setShowCalendarCreate] = useState(false);
+  const [isBacklogEdit, setIsBacklogEdit] = useState(false);
   const [backlogForm, setBacklogForm] = useState({
     title: "",
     desc: "",
@@ -65,6 +66,16 @@ export default function App() {
     } catch (e) {}
   };
 
+  const updateBacklogItem = () => {
+    try {
+      axios
+        .put(`/api/backlogitem/${backlogForm?._id}`, { ...backlogForm })
+        .then((response) => {
+          refreshBacklogItems();
+        });
+    } catch (e) {}
+  };
+
   useEffect(() => {
     refreshBacklogItems();
   }, []);
@@ -73,10 +84,14 @@ export default function App() {
     <Container>
       {/* Modal Section Start */}
       <Modal
-        title="Add Backlog"
+        title={`${isBacklogEdit ? "Edit" : "Add"} Backlog`}
         open={showBacklogCreate}
         onOk={() => {
-          createBacklogItem();
+          if (!isBacklogEdit) {
+            createBacklogItem();
+          } else {
+            updateBacklogItem();
+          }
           setShowBackLogCreate(false);
         }}
         onCancel={() => {
@@ -86,6 +101,7 @@ export default function App() {
         <Row style={{ marginBottom: "1rem" }}>
           <Select
             defaultValue={BACKLOG_TYPE_OPTIONS?.[0]?.value}
+            value={backlogForm?.type}
             style={{ width: "100%" }}
             onChange={(value) => {
               setBacklogForm((old) => ({ ...old, type: value }));
@@ -96,6 +112,7 @@ export default function App() {
         <Row style={{ marginBottom: "1rem" }}>
           <Input
             placeholder="Enter Title..."
+            value={backlogForm?.title}
             onChange={(e) => {
               setBacklogForm((old) => ({ ...old, title: e.target.value }));
             }}
@@ -105,6 +122,7 @@ export default function App() {
         <Row style={{ marginBottom: "1rem" }}>
           <TextArea
             placeholder="Enter Description..."
+            value={backlogForm?.desc}
             onChange={(e) => {
               setBacklogForm((old) => ({ ...old, desc: e.target.value }));
             }}
@@ -162,7 +180,21 @@ export default function App() {
               backlogItems?.map((backlog) => {
                 return (
                   <BacklogSingle>
-                    <BSLeft></BSLeft>
+                    <Popconfirm
+                      title="Actions"
+                      description="Select Action on Task?"
+                      onConfirm={() => {
+                        setBacklogForm(backlog);
+                        setIsBacklogEdit(true);
+                        setShowBackLogCreate(true);
+                      }}
+                      onCancel={() => {}}
+                      okText="Edit"
+                      cancelText="Delete"
+                    >
+                      <BSLeft></BSLeft>
+                    </Popconfirm>
+
                     <BSRight>
                       <BSTitle>{backlog?.title}</BSTitle>
                       <BSDesc>{backlog?.desc}</BSDesc>
