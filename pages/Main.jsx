@@ -350,6 +350,9 @@ export default function App() {
       <Top>
         {selectedTab == TAB_BACKLOG && (
           <BacklogTop>
+            <TImage>
+              <HImage></HImage>
+            </TImage>
             <TLeft>Backlog</TLeft>
             <TRight>
               <Icon
@@ -371,6 +374,10 @@ export default function App() {
         )}
         {selectedTab == TAB_CALENDAR && (
           <CalendarTop>
+            {" "}
+            <TImage>
+              <HImage></HImage>
+            </TImage>
             <TLeft>Calendar</TLeft>
             <TRight>
               <Icon
@@ -559,6 +566,16 @@ export default function App() {
     </Container>
   );
 }
+
+const HImage = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: ${`40px`};
+  height: ${`40px`};
+  background: url("/icons/verizon.jpeg");
+  background-size: cover;
+`;
 
 const CalMiddleTop = styled.div`
   display: flex;
@@ -750,6 +767,14 @@ const Icon = styled.div`
   justify-content: center;
   font-size: 1.25rem;
   padding: 0.5rem;
+`;
+
+const TImage = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 50px;
+  height: 50px;
 `;
 
 const TLeft = styled.div`
