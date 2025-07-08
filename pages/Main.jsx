@@ -32,11 +32,12 @@ import {
   getRelativeDateString,
 } from "../helpers/timeHelper";
 import { TbArrowLeftSquareFilled } from "react-icons/tb";
+import { formatTimeStr } from "antd/es/statistic/utils";
 
 const TAB_BACKLOG = "TAB_BACKLOG";
 const TAB_CALENDAR = "TAB_CALENDAR";
 
-const ICON_HEIGHT = 70;
+const ICON_HEIGHT = 60;
 
 let MONEY_FOR_15_MINUTES = 25;
 
@@ -202,6 +203,22 @@ export default function App() {
   useEffect(() => {
     refreshBacklogAndCalendar();
   }, [selectedTab]);
+
+  let filteredCalendarItemsForToday = calendarItems?.filter((item) => {
+    console.log(
+      "CHECKING",
+      getDateFormatted(new Date(item?.created)),
+      getDateFormatted(selectedCalendarDate)
+    );
+    return (
+      getDateFormatted(new Date(item?.created)) ==
+      getDateFormatted(selectedCalendarDate)
+    );
+  });
+
+  let totalEarnedToday = filteredCalendarItemsForToday?.reduce((acc, item) => {
+    return acc + (item?.timeSpent / 15) * MONEY_FOR_15_MINUTES;
+  }, 0);
 
   return (
     <Container>
@@ -475,12 +492,13 @@ export default function App() {
                   indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
                 />
               )}
-              {!calendarLoading && calendarItems?.length == 0 && (
-                <span style={{ padding: "1rem" }}>No Calendar !</span>
-              )}
               {!calendarLoading &&
-                calendarItems?.length > 0 &&
-                calendarItems?.map((calendar) => {
+                filteredCalendarItemsForToday?.length == 0 && (
+                  <span style={{ padding: "1rem" }}>No Calendar !</span>
+                )}
+              {!calendarLoading &&
+                filteredCalendarItemsForToday?.length > 0 &&
+                filteredCalendarItemsForToday?.map((calendar) => {
                   return (
                     <BacklogSingle>
                       <Popconfirm
@@ -510,7 +528,10 @@ export default function App() {
                   );
                 })}
             </CalendarItemsContainer>
-            <TotalToday>DATE</TotalToday>
+            <TotalToday>
+              <span style={{ fontSize: "1rem" }}>Earned Today</span>
+              <span>Rs {totalEarnedToday}</span>
+            </TotalToday>
           </CalendarContent>
         )}
       </Content>
@@ -523,7 +544,7 @@ export default function App() {
           <span style={{ fontSize: "1.25rem" }}>
             <TbDeviceDesktopAnalytics />
           </span>
-          <span style={{ fontSize: ".85rem" }}>Backlog</span>
+          <span style={{ fontSize: ".8rem" }}>Backlog</span>
         </BItem>
         <BItem
           selected={selectedTab == TAB_CALENDAR}
@@ -532,7 +553,7 @@ export default function App() {
           <span style={{ fontSize: "1.25rem" }}>
             <TbCalendarMonthFilled />
           </span>
-          <span style={{ fontSize: ".85rem" }}>Calendar</span>
+          <span style={{ fontSize: ".8rem" }}>Calendar</span>
         </BItem>
       </Bottom>
     </Container>
@@ -552,6 +573,7 @@ const CalMiddleBottom = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 0.9rem;
 `;
 
 const CalendarLeft = styled.div`
@@ -569,6 +591,7 @@ const CalendarMiddle = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: center;
+  transform: translateY(-0.25rem);
   flex: 1;
 `;
 
@@ -587,13 +610,19 @@ const TotalToday = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  font-size: 2rem;
+  background-color: ${COLOR_GREEN};
+  color: ${generateDarkTextColorForLightBg(COLOR_GREEN, 50)};
+  width: 100%;
+  padding: 0.5rem 1rem;
 `;
 
 const CalendarDateChange = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   width: 100%;
 `;
 
@@ -648,6 +677,7 @@ const BSTitle = styled.div`
   align-items: center;
   justify-content: center;
   padding-left: 0.5rem;
+  font-size: 0.9rem;
   height: ${`${ICON_HEIGHT / 2}px`};
 `;
 
@@ -656,6 +686,7 @@ const BSDesc = styled.div`
   align-items: center;
   justify-content: center;
   padding-left: 0.5rem;
+  font-size: 0.9rem;
   height: ${`${ICON_HEIGHT / 2}px`};
   opacity: 0.5;
 `;
@@ -762,8 +793,8 @@ const CalendarItemsContainer = styled.div`
   flex-direction: column;
   overflow: scroll;
   width: 100%;
-  min-height: 70vh;
-  max-height: 70vh;
+  min-height: 67.5vh;
+  max-height: 67.5vh;
 `;
 
 const BacklogTop = styled.div`
