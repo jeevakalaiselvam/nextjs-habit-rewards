@@ -17,7 +17,7 @@ export default async function handler(req, res) {
         title,
         desc,
         type,
-        isCompleted: "false",
+        isCompleted: false,
         created: new Date(),
         reward: "500",
       });

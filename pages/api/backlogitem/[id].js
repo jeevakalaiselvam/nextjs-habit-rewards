@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   const { id } = req.query;
 
   if (req.method === "PUT") {
-    const { title, desc, type, _id } = req.body;
+    const { title, desc, type, _id, isCompleted } = req.body;
 
     if (!title || !desc || !type) {
       return res
@@ -23,6 +23,7 @@ export default async function handler(req, res) {
             title,
             desc,
             type,
+            isCompleted: isCompleted ?? false,
           },
         }
       );

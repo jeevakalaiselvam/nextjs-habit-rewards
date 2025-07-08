@@ -3,7 +3,9 @@ import {
   COLOR_ACCENT,
   COLOR_BLACK1,
   COLOR_BLUE_DARK,
+  COLOR_GREEN,
   COLOR_GREY,
+  generateDarkTextColorForLightBg,
 } from "../helpers/colorHelper";
 import { useEffect, useState } from "react";
 import {
@@ -49,6 +51,32 @@ export default function App() {
     });
   };
 
+  const completeBacklogItem = (backlog) => {
+    try {
+      axios
+        .put(`/api/backlogitem/${backlog?._id}`, {
+          ...backlog,
+          isCompleted: true,
+        })
+        .then((response) => {
+          refreshBacklogItems();
+        });
+    } catch (e) {}
+  };
+
+  const activateBacklogItem = (backlog) => {
+    try {
+      axios
+        .put(`/api/backlogitem/${backlog?._id}`, {
+          ...backlog,
+          isCompleted: false,
+        })
+        .then((response) => {
+          refreshBacklogItems();
+        });
+    } catch (e) {}
+  };
+
   const refreshBacklogItems = () => {
     setBacklogLoading(true);
     try {
@@ -61,6 +89,7 @@ export default function App() {
       setBacklogLoading(false);
     }
   };
+
   const refreshCalendarItems = () => {
     try {
     } catch (e) {}
@@ -169,7 +198,11 @@ export default function App() {
               >
                 <TbCirclePlus />
               </Icon>
-              <Icon>
+              <Icon
+                onClick={() => {
+                  refreshBacklogItems();
+                }}
+              >
                 <TbRefresh />
               </Icon>
             </TRight>
@@ -182,7 +215,11 @@ export default function App() {
               <Icon>
                 <TbCirclePlus />
               </Icon>
-              <Icon>
+              <Icon
+                onClick={() => {
+                  refreshCalendarItems();
+                }}
+              >
                 <TbRefresh />
               </Icon>
             </TRight>
@@ -227,6 +264,24 @@ export default function App() {
                       <BSTitle>{backlog?.title}</BSTitle>
                       <BSDesc>{backlog?.desc}</BSDesc>
                     </BSRight>
+                    <Popconfirm
+                      title="Completion"
+                      description="Task Completed?"
+                      onConfirm={() => {
+                        completeBacklogItem(backlog);
+                      }}
+                      onCancel={() => {
+                        activateBacklogItem(backlog);
+                      }}
+                      okText="Complete"
+                      cancelText="Active"
+                    >
+                      <BSTag completed={backlog?.isCompleted}>
+                        <BSTagInner completed={backlog?.isCompleted}>
+                          {backlog?.isCompleted ? "DONE" : "ACTIVE"}
+                        </BSTagInner>
+                      </BSTag>
+                    </Popconfirm>
                   </BacklogSingle>
                 );
               })}
@@ -292,6 +347,27 @@ const BSRight = styled.div`
   justify-content: center;
   flex-direction: column;
   flex: 1;
+`;
+
+const BSTag = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: ${`${ICON_HEIGHT}px`};
+  background-color: ${(props) =>
+    props.completed ? COLOR_GREEN : COLOR_ACCENT};
+  color: ${(props) =>
+    props.completed
+      ? generateDarkTextColorForLightBg(COLOR_GREEN, 50)
+      : generateDarkTextColorForLightBg(COLOR_ACCENT, 50)};
+`;
+
+const BSTagInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-90deg);
+  width: 30px;
 `;
 
 const BacklogSingle = styled.div`
