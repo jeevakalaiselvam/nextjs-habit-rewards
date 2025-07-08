@@ -37,7 +37,7 @@ import { formatTimeStr } from "antd/es/statistic/utils";
 const TAB_BACKLOG = "TAB_BACKLOG";
 const TAB_CALENDAR = "TAB_CALENDAR";
 
-const ICON_HEIGHT = 60;
+const ICON_HEIGHT = 70;
 
 let MONEY_FOR_15_MINUTES = 25;
 
@@ -695,7 +695,7 @@ const BSTitle = styled.div`
   justify-content: center;
   padding-left: 0.5rem;
   font-size: 0.9rem;
-  height: ${`${ICON_HEIGHT / 2}px`};
+  height: ${`${(ICON_HEIGHT / 5) * 2}px`};
 `;
 
 const BSDesc = styled.div`
@@ -704,7 +704,7 @@ const BSDesc = styled.div`
   justify-content: center;
   padding-left: 0.5rem;
   font-size: 0.9rem;
-  height: ${`${ICON_HEIGHT / 2}px`};
+  height: ${`${(ICON_HEIGHT / 5) * 3}px`};
   opacity: 0.5;
 `;
 
