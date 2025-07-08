@@ -20,7 +20,7 @@ import {
   TbRefresh,
 } from "react-icons/tb";
 import { TbCalendarMonthFilled } from "react-icons/tb";
-import { Input, Modal, Popconfirm, Row, Select, Spin } from "antd";
+import { Input, Modal, Popconfirm, Radio, Row, Select, Spin } from "antd";
 import { BACKLOG_TYPE_OPTIONS } from "../helpers/optionHelper";
 import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
@@ -43,6 +43,7 @@ let MONEY_FOR_15_MINUTES = 25;
 
 export default function App() {
   const [selectedTab, setSelectedTab] = useState(TAB_CALENDAR);
+  const [backlogFilter, setBacklogFilter] = useState("ACTIVE");
   const [backlogItems, setBacklogItems] = useState([]);
   const [calendarItems, setCalendarItems] = useState([]);
   const [backlogLoading, setBacklogLoading] = useState(false);
@@ -203,6 +204,10 @@ export default function App() {
   useEffect(() => {
     refreshBacklogAndCalendar();
   }, [selectedTab]);
+
+  let filteredBacklogItems = backlogItems?.filter(
+    (item) => item?.status == backlogFilter
+  );
 
   let filteredCalendarItemsForToday = calendarItems?.filter((item) => {
     console.log(
@@ -402,61 +407,92 @@ export default function App() {
       <Content>
         {selectedTab == TAB_BACKLOG && (
           <BacklogContent>
-            {backlogLoading && (
-              <Spin
-                indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
-              />
-            )}
-            {!backlogLoading && backlogItems?.length == 0 && (
-              <span style={{ padding: "1rem" }}>No Backlog !</span>
-            )}
-            {!backlogLoading &&
-              backlogItems?.length > 0 &&
-              backlogItems?.map((backlog) => {
-                return (
-                  <BacklogSingle>
-                    <BSTag color={COLOR_GREEN}>
-                      <BSTagInnerMoney color={COLOR_GREEN}>
-                        {backlog?.reward}
-                      </BSTagInnerMoney>
-                    </BSTag>
-                    <Popconfirm
-                      title="Actions"
-                      description="Select Action on Backlog Item?"
-                      onConfirm={() => {
-                        setBacklogForm(backlog);
-                        setIsBacklogEdit(true);
-                        setShowBackLogCreate(true);
-                      }}
-                      onCancel={() => {
-                        deleteBackLogItem(backlog?._id);
-                      }}
-                      okText="Edit"
-                      cancelText="Delete"
-                    >
-                      <BSLeft></BSLeft>
-                    </Popconfirm>
-                    <BSRight
-                      onClick={() => {
-                        setShowCalendarCreate(true);
-                        setIsCalendarCreateFromBacklog(true);
-                        setCalendarForm({ ...backlog, timeSpent: 15 });
-                      }}
-                    >
-                      <BSTitle>{backlog?.title}</BSTitle>
-                      <BSDesc>{backlog?.desc}</BSDesc>
-                    </BSRight>
-                    <BSTag
-                      color={getColorForStatus(backlog?.status)}
-                      onClick={() => {
-                        updateStatusForBacklog(backlog);
-                      }}
-                    >
-                      <BSTagInner>{backlog?.status}</BSTagInner>
-                    </BSTag>
-                  </BacklogSingle>
-                );
-              })}
+            <BacklogFilter>
+              <Radio.Group
+                optionType="button"
+                buttonStyle="solid"
+                style={{ display: "flex", minWidth: "100%" }}
+                onChange={(e) => {
+                  setBacklogFilter(e.target.value);
+                }}
+              >
+                <Radio
+                  style={{ flex: 1, textAlign: "center" }}
+                  value={"ACTIVE"}
+                >
+                  ACTIVE
+                </Radio>
+                <Radio
+                  style={{ flex: 1, textAlign: "center" }}
+                  value={"INPROG"}
+                >
+                  INPROG
+                </Radio>{" "}
+                <Radio style={{ flex: 1, textAlign: "center" }} value={"WAIT"}>
+                  WAIT
+                </Radio>{" "}
+                <Radio style={{ flex: 1, textAlign: "center" }} value={"DONE"}>
+                  DONE
+                </Radio>
+              </Radio.Group>
+            </BacklogFilter>
+            <BacklogContentContainer>
+              {backlogLoading && (
+                <Spin
+                  indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
+                />
+              )}
+              {!backlogLoading && filteredBacklogItems?.length == 0 && (
+                <span style={{ padding: "1rem" }}>No Backlog !</span>
+              )}
+              {!backlogLoading &&
+                filteredBacklogItems?.length > 0 &&
+                filteredBacklogItems?.map((backlog) => {
+                  return (
+                    <BacklogSingle>
+                      <BSTag color={COLOR_GREEN}>
+                        <BSTagInnerMoney color={COLOR_GREEN}>
+                          {backlog?.reward}
+                        </BSTagInnerMoney>
+                      </BSTag>
+                      <Popconfirm
+                        title="Actions"
+                        description="Select Action on Backlog Item?"
+                        onConfirm={() => {
+                          setBacklogForm(backlog);
+                          setIsBacklogEdit(true);
+                          setShowBackLogCreate(true);
+                        }}
+                        onCancel={() => {
+                          deleteBackLogItem(backlog?._id);
+                        }}
+                        okText="Edit"
+                        cancelText="Delete"
+                      >
+                        <BSLeft></BSLeft>
+                      </Popconfirm>
+                      <BSRight
+                        onClick={() => {
+                          setShowCalendarCreate(true);
+                          setIsCalendarCreateFromBacklog(true);
+                          setCalendarForm({ ...backlog, timeSpent: 15 });
+                        }}
+                      >
+                        <BSTitle>{backlog?.title}</BSTitle>
+                        <BSDesc>{backlog?.desc}</BSDesc>
+                      </BSRight>
+                      <BSTag
+                        color={getColorForStatus(backlog?.status)}
+                        onClick={() => {
+                          updateStatusForBacklog(backlog);
+                        }}
+                      >
+                        <BSTagInner>{backlog?.status}</BSTagInner>
+                      </BSTag>
+                    </BacklogSingle>
+                  );
+                })}
+            </BacklogContentContainer>
           </BacklogContent>
         )}
         {selectedTab == TAB_CALENDAR && (
@@ -799,6 +835,25 @@ const BacklogContent = styled.div`
   max-height: calc(100vh - 160px);
   overflow: scroll;
   width: 100%;
+`;
+
+const BacklogFilter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0 0.5rem 0.5rem 0.5rem;
+`;
+
+const BacklogContentContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  overflow: scroll;
+  width: 100%;
+  min-height: 85vh;
+  max-height: 85vh;
 `;
 
 const CalendarContent = styled.div`
