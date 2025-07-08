@@ -6,6 +6,7 @@ import {
   COLOR_GREEN,
   COLOR_GREY,
   generateDarkTextColorForLightBg,
+  getColorForStatus,
 } from "../helpers/colorHelper";
 import { useEffect, useState } from "react";
 import {
@@ -43,6 +44,8 @@ export default function App() {
     type: BACKLOG_TYPE_OPTIONS?.[0]?.value,
   });
 
+  const [calendarForm, setCalendarForm] = useState({});
+
   const resetBackLogForm = () => {
     setBacklogForm({
       title: "",
@@ -51,25 +54,26 @@ export default function App() {
     });
   };
 
-  const completeBacklogItem = (backlog) => {
-    try {
-      axios
-        .put(`/api/backlogitem/${backlog?._id}`, {
-          ...backlog,
-          isCompleted: true,
-        })
-        .then((response) => {
-          refreshBacklogItems();
-        });
-    } catch (e) {}
-  };
+  const updateStatusForBacklog = (backlog) => {
+    let newStatus = "ACTIVE";
 
-  const activateBacklogItem = (backlog) => {
+    if (backlog?.status == "ACTIVE") {
+      newStatus = "INPROG";
+    }
+    if (backlog?.status == "INPROG") {
+      newStatus = "WAIT";
+    }
+    if (backlog?.status == "WAIT") {
+      newStatus = "DONE";
+    }
+    if (backlog?.status == "DONE") {
+      newStatus = "ACTIVE";
+    }
     try {
       axios
         .put(`/api/backlogitem/${backlog?._id}`, {
           ...backlog,
-          isCompleted: false,
+          status: newStatus,
         })
         .then((response) => {
           refreshBacklogItems();
@@ -212,9 +216,6 @@ export default function App() {
           <CalendarTop>
             <TLeft>Calendar</TLeft>
             <TRight>
-              <Icon>
-                <TbPlus />
-              </Icon>
               <Icon
                 onClick={() => {
                   refreshCalendarItems();
@@ -243,8 +244,8 @@ export default function App() {
               backlogItems?.map((backlog) => {
                 return (
                   <BacklogSingle>
-                    <BSTag completed={true}>
-                      <BSTagInnerMoney completed={true}>
+                    <BSTag color={COLOR_GREEN}>
+                      <BSTagInnerMoney color={COLOR_GREEN}>
                         {backlog?.reward}
                       </BSTagInnerMoney>
                     </BSTag>
@@ -268,24 +269,14 @@ export default function App() {
                       <BSTitle>{backlog?.title}</BSTitle>
                       <BSDesc>{backlog?.desc}</BSDesc>
                     </BSRight>
-                    <Popconfirm
-                      title="Completion"
-                      description="Task Completed?"
-                      onConfirm={() => {
-                        completeBacklogItem(backlog);
+                    <BSTag
+                      color={getColorForStatus(backlog?.status)}
+                      onClick={() => {
+                        updateStatusForBacklog(backlog);
                       }}
-                      onCancel={() => {
-                        activateBacklogItem(backlog);
-                      }}
-                      okText="Complete"
-                      cancelText="Active"
                     >
-                      <BSTag completed={backlog?.isCompleted}>
-                        <BSTagInner completed={backlog?.isCompleted}>
-                          {backlog?.isCompleted ? "DONE" : "ACTIVE"}
-                        </BSTagInner>
-                      </BSTag>
-                    </Popconfirm>
+                      <BSTagInner>{backlog?.status}</BSTagInner>
+                    </BSTag>
                   </BacklogSingle>
                 );
               })}
@@ -356,14 +347,11 @@ const BSRight = styled.div`
 const BSTag = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
   justify-content: center;
   height: ${`${ICON_HEIGHT}px`};
-  background-color: ${(props) =>
-    props.completed ? COLOR_GREEN : COLOR_ACCENT};
-  color: ${(props) =>
-    props.completed
-      ? generateDarkTextColorForLightBg(COLOR_GREEN, 50)
-      : generateDarkTextColorForLightBg(COLOR_ACCENT, 50)};
+  background-color: ${(props) => props.color};
+  color: ${(props) => generateDarkTextColorForLightBg(props.color, 50)};
 `;
 
 const BSTagInner = styled.div`

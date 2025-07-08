@@ -1,3 +1,4 @@
+import { generateIdForBacklog } from "../../../helpers/idHelper";
 import clientPromise from "../../../lib/db";
 
 export default async function handler(req, res) {
@@ -20,12 +21,14 @@ export default async function handler(req, res) {
         isCompleted: false,
         created: new Date(),
         reward: "500",
+        id: generateIdForBacklog(type),
+        status: "ACTIVE",
       });
 
-      res.status(201).json({ message: "Achievement added successfully" });
+      res.status(201).json({ message: "Backlog added successfully" });
     } catch (error) {
       console.log(error);
-      res.status(500).json({ error: "Failed to add spends" });
+      res.status(500).json({ error: "Failed to add Backlog" });
     }
   } else if (req.method === "GET") {
     try {

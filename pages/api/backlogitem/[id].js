@@ -5,9 +5,9 @@ export default async function handler(req, res) {
   const { id } = req.query;
 
   if (req.method === "PUT") {
-    const { title, desc, type, _id, isCompleted } = req.body;
+    const { title, desc, type, _id, status } = req.body;
 
-    if (!title || !desc || !type) {
+    if (!title || !desc || !type || !status) {
       return res
         .status(400)
         .json({ error: "Title, Description, Type required" });
@@ -23,7 +23,7 @@ export default async function handler(req, res) {
             title,
             desc,
             type,
-            isCompleted: isCompleted ?? false,
+            status,
           },
         }
       );

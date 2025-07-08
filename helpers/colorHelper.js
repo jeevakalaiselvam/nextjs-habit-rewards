@@ -121,6 +121,7 @@ export const COLOR_GOLD = "#E7C533";
 export const COLOR_SILVER = "#999999";
 export const COLOR_COPPER = "#C46438";
 export const COLOR_PLATINUM = "#667FB2";
+export const COLOR_ORANGE = "#667FB2";
 
 export const calculatePsnLevel = ({ platinum, gold, silver, bronze }) => {
   // Trophy values
@@ -173,4 +174,22 @@ export const calculatePsnLevel = ({ platinum, gold, silver, bronze }) => {
     pointsInCurrentLevel: 0,
     pointsNeededForNextLevel: 0,
   };
+};
+
+export const getColorForStatus = (status) => {
+  if (status == "ACTIVE") {
+    return COLOR_RED;
+  }
+
+  if (status == "INPROG") {
+    return COLOR_ACCENT;
+  }
+
+  if (status == "WAIT") {
+    return COLOR_ORANGE;
+  }
+
+  if (status == "DONE") {
+    return COLOR_GREEN;
+  }
 };
