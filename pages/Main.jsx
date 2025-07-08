@@ -26,7 +26,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 const TAB_BACKLOG = "TAB_BACKLOG";
 const TAB_CALENDAR = "TAB_CALENDAR";
 
-const ICON_HEIGHT = 60;
+const ICON_HEIGHT = 70;
 
 export default function App() {
   const [selectedTab, setSelectedTab] = useState(TAB_BACKLOG);
@@ -196,7 +196,7 @@ export default function App() {
                   setShowBackLogCreate(true);
                 }}
               >
-                <TbCirclePlus />
+                <TbPlus />
               </Icon>
               <Icon
                 onClick={() => {
@@ -213,7 +213,7 @@ export default function App() {
             <TLeft>Calendar</TLeft>
             <TRight>
               <Icon>
-                <TbCirclePlus />
+                <TbPlus />
               </Icon>
               <Icon
                 onClick={() => {
@@ -243,6 +243,11 @@ export default function App() {
               backlogItems?.map((backlog) => {
                 return (
                   <BacklogSingle>
+                    <BSTag completed={true}>
+                      <BSTagInnerMoney completed={true}>
+                        {backlog?.reward}
+                      </BSTagInnerMoney>
+                    </BSTag>
                     <Popconfirm
                       title="Actions"
                       description="Select Action on Task?"
@@ -259,7 +264,6 @@ export default function App() {
                     >
                       <BSLeft></BSLeft>
                     </Popconfirm>
-
                     <BSRight>
                       <BSTitle>{backlog?.title}</BSTitle>
                       <BSDesc>{backlog?.desc}</BSDesc>
@@ -295,7 +299,7 @@ export default function App() {
           selected={selectedTab == TAB_BACKLOG}
           onClick={() => setSelectedTab(TAB_BACKLOG)}
         >
-          <span>
+          <span style={{ fontSize: "1.25rem" }}>
             <TbDeviceDesktopAnalytics />
           </span>
           <span style={{ fontSize: ".85rem" }}>Backlog</span>
@@ -304,7 +308,7 @@ export default function App() {
           selected={selectedTab == TAB_CALENDAR}
           onClick={() => setSelectedTab(TAB_CALENDAR)}
         >
-          <span>
+          <span style={{ fontSize: "1.25rem" }}>
             <TbCalendarMonthFilled />
           </span>
           <span style={{ fontSize: ".85rem" }}>Calendar</span>
@@ -368,6 +372,14 @@ const BSTagInner = styled.div`
   justify-content: center;
   transform: rotate(-90deg);
   width: 30px;
+`;
+
+const BSTagInnerMoney = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-90deg);
+  width: 20px;
 `;
 
 const BacklogSingle = styled.div`
