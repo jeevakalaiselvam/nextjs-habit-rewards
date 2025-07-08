@@ -48,8 +48,6 @@ body {
 .ant-input {
   border: none; /* Remove the border */
   box-shadow: none; /* Remove the box shadow */
-  font-size: 1rem;
-  height: 45px;
 }
 
 .ant-select-focused .ant-select-selector,
