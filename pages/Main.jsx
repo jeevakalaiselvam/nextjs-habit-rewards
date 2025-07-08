@@ -818,8 +818,8 @@ const CalendarItemsContainer = styled.div`
   flex-direction: column;
   overflow: scroll;
   width: 100%;
-  min-height: 67.5vh;
-  max-height: 67.5vh;
+  min-height: 67vh;
+  max-height: 67vh;
 `;
 
 const BacklogTop = styled.div`
