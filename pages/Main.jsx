@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import MainHeader from "../components/MainHeader";
+import MainContent from "../components/MainContent";
 
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
@@ -85,6 +86,7 @@ export default function Atom() {
   return (
     <Container>
       <MainHeader games={finalGames} />
+      <MainContent games={finalGames} />
     </Container>
   );
 }

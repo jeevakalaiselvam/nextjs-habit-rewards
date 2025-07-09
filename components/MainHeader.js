@@ -100,7 +100,7 @@ export default function MainHeader({ games }) {
   return (
     <Container background={image}>
       <MainWrapper>
-        <Profile></Profile>
+        {/* <Profile></Profile> */}
         <HeaderInner>
           <HeaderName>
             <Country></Country>
@@ -348,7 +348,7 @@ const Bottom = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   margin-top: 0.25rem;
   font-weight: bold;
 `;
@@ -358,9 +358,9 @@ const BottomStats = styled.div`
   align-items: center;
   justify-content: center;
   position: absolute;
-  padding: 1rem;
+  padding: 1rem 1rem 2.5rem 1rem;
   bottom: 0;
-  width: 100%;
+  width: 1500px;
 `;
 
 const Overlay = styled.div`
@@ -384,28 +384,16 @@ const MainWrapper = styled.div`
   transform: translateX(-50%);
 `;
 
-const Profile = styled.div`
-  display: flex;
-  padding: 0.5rem;
-  margin: 0.75rem 0rem;
-  align-items: center;
-  justify-content: center;
-  background-size: cover;
-  background: url("https://avatars.fastly.steamstatic.com/2d570b928b0e4b353c1a92ef43e534ee623e92ed_full.jpg");
-  width: 60px;
-  height: 60px;
-  background-size: cover;
-`;
-
 const Country = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: url("https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/PlayStation_App_Icon.jpg/960px-PlayStation_App_Icon.jpg");
-  width: 40px;
-  height: 40px;
+  background: url("https://avatars.fastly.steamstatic.com/2d570b928b0e4b353c1a92ef43e534ee623e92ed_full.jpg");
+  width: 50px;
+  height: 50px;
   background-size: cover;
   margin-right: 0.5rem;
+  cursor: pointer;
 `;
 
 const NameSection = styled.div`
@@ -456,7 +444,7 @@ const HeaderInner = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 80%;
+  width: 1300px;
   border: 4px solid #989898;
   padding: 0.5rem;
   margin: 0.5rem;
