@@ -62,7 +62,7 @@ console.log(
         completed: 0,
         unlocked: "",
         achieved: false,
-        name: "Black Myth Wukong",
+        name: "Rainbow Six Siege",
         percentage: trophy?.rarityPercent?.split("%")?.[0],
         color: trophy?.typeLabel,
       };

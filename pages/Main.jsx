@@ -794,7 +794,7 @@ export default function Main() {
           </span>
         </HCenter>
         <HRight>
-          {/* <AddIcon
+          <AddIcon
             onClick={() => {
               clearFormData();
               setShowModal(true);
@@ -803,7 +803,7 @@ export default function Main() {
             <span>
               <HiOutlinePlusSm />
             </span>
-          </AddIcon>{" "} */}
+          </AddIcon>
           <AddIconRefresh
             onClick={() => {
               refreshAchievements();
@@ -1143,13 +1143,7 @@ export default function Main() {
                       cancelText="Delete"
                     >
                       <A1IconOuter>
-                        <A1Icon
-                          icon={
-                            ach?.name == "Rainbow Six Siege"
-                              ? getIconBasedOnKeyword(ach?.title)
-                              : ach?.icon
-                          }
-                        ></A1Icon>
+                        <A1Icon icon={ach?.icon}></A1Icon>
                       </A1IconOuter>
                     </Popconfirm>
                     <A1Right>
@@ -1498,7 +1492,7 @@ const A1Icon = styled.div`
   justify-content: center;
   width: 70px;
   height: 70px;
-  background: ${(props) => `url('${props.icon}')`};
+  background: ${(props) => `url(${props.icon})`};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
