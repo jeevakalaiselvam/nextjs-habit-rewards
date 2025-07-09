@@ -366,9 +366,9 @@ const Overlay = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  height: 580px;
+  height: 600px;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.65);
 `;
 
 const MainWrapper = styled.div`
@@ -443,7 +443,7 @@ const HeaderInner = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 1300px;
+  width: 1600px;
   border: 4px solid #989898;
   padding: 0.5rem;
   margin: 0.5rem;

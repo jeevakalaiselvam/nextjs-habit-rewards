@@ -52,7 +52,6 @@ export default function Atom() {
       platinumGameData?.platinum?.forEach((ach) => {
         platinumMapper[ach?.title] = ach;
       });
-      console.log({ platinumMapper });
       let gameName = game?.achievements?.[0]?.gameName;
 
       let sortedAchsTransformed = game?.achievements
@@ -65,6 +64,7 @@ export default function Atom() {
           }
         })
         ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
+      let lastAch = sortedAchsTransformed?.[sortedAchsTransformed?.length - 1];
       let total = sortedAchsTransformed?.length;
       let completed = sortedAchsTransformed?.filter(
         (ach) => ach?.achieved == 1
@@ -72,7 +72,18 @@ export default function Atom() {
       formedGame = {
         ...game,
         ...platinumGameData,
-        achievements: [...sortedAchsTransformed],
+        achievements: [
+          ...sortedAchsTransformed,
+          {
+            ...lastAch,
+            title: `${gameName}'s Platinum`,
+            displayName: `${gameName}'s Platinum`,
+            icon: "/icons/platinum.jpg",
+            description: `Completed all Trophies in the game`,
+            label: "Rare",
+            color: "Platinum",
+          },
+        ],
       };
       return formedGame;
     });
@@ -95,7 +106,6 @@ const Container = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  min-height: 100vh;
-  max-height: 100vh;
+  background-color: #292b2d;
   color: #fefefe;
 `;
