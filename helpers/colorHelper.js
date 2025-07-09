@@ -120,6 +120,7 @@ export const COLOR_ACH = "#171b2a";
 export const COLOR_GOLD = "#CD9A46";
 export const COLOR_GOLD2 = "#E7C533";
 export const COLOR_SILVER = "#D6D6D6";
+export const COLOR_SILVER2 = "#777777";
 export const COLOR_BRONZE = "#C46438";
 export const COLOR_PLATINUM = "#7A96D1";
 
@@ -175,3 +176,11 @@ export const calculatePsnLevel = ({ platinum, gold, silver, bronze }) => {
     pointsNeededForNextLevel: 0,
   };
 };
+
+export const COLOR_RANK_S = "#667FB2";
+export const COLOR_RANK_A = "#008000";
+export const COLOR_RANK_B = "#3BD987";
+export const COLOR_RANK_C = "#A68E00";
+export const COLOR_RANK_D = "#3BD987";
+export const COLOR_RANK_E = "#FF4100";
+export const COLOR_RANK_F = "#EE0000";

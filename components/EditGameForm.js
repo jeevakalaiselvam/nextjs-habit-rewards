@@ -8,7 +8,6 @@ export default function EditGameForm({
   showEditModal,
   setShowEditModal,
   gameData,
-  setIsEditMode,
 }) {
   const [gamesLoading, setGamesLoading] = useState(false);
   const [games, setGames] = useState([]);
@@ -22,12 +21,8 @@ export default function EditGameForm({
     try {
       axios
         .put("/api/platinum/update", { ...gameForm, id: gameData?.id })
-        .then((response) => {
-          setIsEditMode(false);
-        });
-    } catch (e) {
-      setIsEditMode(false);
-    }
+        .then((response) => {});
+    } catch (e) {}
   };
 
   const handleOk = () => {

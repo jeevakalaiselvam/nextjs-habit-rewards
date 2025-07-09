@@ -65,16 +65,14 @@ export default function Atom() {
           }
         })
         ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
+      let total = sortedAchsTransformed?.length;
+      let completed = sortedAchsTransformed?.filter(
+        (ach) => ach?.achieved == 1
+      )?.length;
       formedGame = {
         ...game,
-        achievements: [
-          ...sortedAchsTransformed,
-          {
-            ...sortedAchsTransformed?.[0],
-            displayName: `${gameName} Platinum`,
-            color: "Platinum",
-          },
-        ],
+        ...platinumGameData,
+        achievements: [...sortedAchsTransformed],
       };
       return formedGame;
     });

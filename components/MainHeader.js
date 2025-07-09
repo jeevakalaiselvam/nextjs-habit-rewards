@@ -22,7 +22,7 @@ import LevelIcon from "./LevelIcon";
 
 export default function MainHeader({ games }) {
   let image =
-    "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj9oMOOyGKuaJRkvg_5PbAN9qXu382lRyXAKYi2sbMFB6sluNoXniGNBp1R03bmRX0TwZUcyuST7cBG_EbtnKOH09sgPi0fkGDl2DEgHZWHSt1aeklZ3DBT3vNpCV7QyK2xW_orCgKQo0rvkA8k6Xk8DLux6othdRKNT3m0yjTPXADHbOQ8dEW5mQpwnQ/s1600-rw/03032023-Hogwarts-Legacy.png";
+    "https://4kwallpapers.com/images/wallpapers/hogwarts-legacy-winter-1920x1200-20034.jpeg";
 
   let completed = 0;
   let allCompletion = 0;
@@ -100,7 +100,6 @@ export default function MainHeader({ games }) {
   return (
     <Container background={image}>
       <MainWrapper>
-        {/* <Profile></Profile> */}
         <HeaderInner>
           <HeaderName>
             <Country></Country>
@@ -367,7 +366,7 @@ const Overlay = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  height: 400px;
+  height: 580px;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.5);
 `;
@@ -457,9 +456,10 @@ const Container = styled.div`
   align-items: flex-start;
   justify-content: center;
   width: 100%;
-  height: 400px;
+  height: 600px;
   background: ${(props) => `url(${props.background})`};
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
+  background-color: #292b2d;
 `;
