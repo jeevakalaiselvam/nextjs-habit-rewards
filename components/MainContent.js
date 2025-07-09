@@ -3,8 +3,11 @@ import {
   COLOR_ACCENT,
   COLOR_BRONZE,
   COLOR_GOLD,
+  COLOR_GREEN,
   COLOR_SILVER,
   COLOR_SILVER2,
+  COLOR_UNLOCKED,
+  COLOR_UNLOCKED_DARK,
   generateDarkTextColorForLightBg,
 } from "../helpers/colorHelper";
 import { useState } from "react";
@@ -303,12 +306,18 @@ export default function MainContent({ games }) {
                 {selectedGame?.achievements?.map((ach, index) => {
                   console.log(ach);
                   return (
-                    <AchCard color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}>
-                      <AchIcon icon={ach?.icon}></AchIcon>
+                    <AchCard
+                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                      achieved={ach?.achieved || index == 3}
+                    >
+                      <AchIconOuter achieved={ach?.achieved || index == 3}>
+                        <AchIcon icon={ach?.icon}></AchIcon>
+                      </AchIconOuter>
                       <AchData>
                         <AchTitle>{ach?.displayName}</AchTitle>
                         <AchDesc>{ach?.description}</AchDesc>
                       </AchData>
+                      <Seperator padding={".25rem"} />
                       <AchRarity>
                         <span style={{ fontSize: "1.2rem" }}>
                           {ach?.percentage}%
@@ -409,6 +418,16 @@ const AchDesc = styled.div`
   font-size: 0.88rem;
 `;
 
+const AchIconOuter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 75px;
+  height: 75px;
+  background: ${(props) =>
+    props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
+`;
+
 const AchIcon = styled.div`
   display: flex;
   align-items: center;
@@ -432,7 +451,7 @@ const AchData = styled.div`
 const AchRarity = styled.div`
   display: flex;
   align-items: center;
-  width: 200px;
+  width: 100px;
   justify-content: flex-start;
   flex-direction: column;
 `;
@@ -451,7 +470,8 @@ const AchCard = styled.div`
   color: #333;
   width: 100%;
   padding-right: 3rem;
-  background-color: ${(props) => props.color};
+  background-color: ${(props) =>
+    props.achieved ? COLOR_UNLOCKED : props.color};
   border: 1px solid #eee;
 `;
 
