@@ -347,7 +347,7 @@ const Bottom = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   margin-top: 0.25rem;
   font-weight: bold;
 `;
@@ -359,16 +359,7 @@ const BottomStats = styled.div`
   position: absolute;
   padding: 1rem 1rem 2.5rem 1rem;
   bottom: 0;
-  width: 1500px;
-`;
-
-const Overlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 600px;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.65);
+  width: 1800px;
 `;
 
 const MainWrapper = styled.div`
@@ -451,12 +442,21 @@ const HeaderInner = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
 `;
 
+const Overlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 400px;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.65);
+`;
+
 const Container = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
   width: 100%;
-  height: 600px;
+  height: 400px;
   background: ${(props) => `url(${props.background})`};
   background-repeat: no-repeat;
   background-size: cover;
