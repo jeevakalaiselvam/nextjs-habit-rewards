@@ -62,7 +62,7 @@ console.log(
         completed: 0,
         unlocked: "",
         achieved: false,
-        name: "Witcher 3 - The Wild Hunt",
+        name: "Black Myth Wukong",
         percentage: trophy?.rarityPercent?.split("%")?.[0],
         color: trophy?.typeLabel,
       };
