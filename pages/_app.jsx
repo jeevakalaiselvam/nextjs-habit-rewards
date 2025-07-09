@@ -1,12 +1,12 @@
 // pages/_app.js
-import Head from 'next/head';
-import 'antd/dist/reset.css'; // Import Ant Design styles
-import '../styles/globals.css';
-import { Button, ConfigProvider } from 'antd';
-import { CARD_BACKGROUND, COLOR_BACKGROUND } from '../helpers/colorHelper';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import { store, persistor } from '../store/store';
+import Head from "next/head";
+import "antd/dist/reset.css"; // Import Ant Design styles
+import "../styles/globals.css";
+import { Button, ConfigProvider } from "antd";
+import { CARD_BACKGROUND, COLOR_BACKGROUND } from "../helpers/colorHelper";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "../store/store";
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -27,42 +27,42 @@ function MyApp({ Component, pageProps }) {
       <ConfigProvider
         theme={{
           token: {
-            colorPrimary: '#1890ff',
-            colorBgBase: '#100d0d',
-            colorTextBase: '#fefefe',
-            colorLink: '#1890ff',
-            colorPrimaryBorder: '#000',
+            colorPrimary: "#1890ff",
+            colorBgBase: "#100d0d",
+            colorTextBase: "#fefefe",
+            colorLink: "#1890ff",
+            colorPrimaryBorder: "#000",
             colorBgContainer: CARD_BACKGROUND,
           },
           components: {
             Select: {
-              optionFontSize: '1rem',
+              optionFontSize: "1rem",
               optionActiveBg: CARD_BACKGROUND,
               optionSelectedBg: CARD_BACKGROUND,
-              hoverBorderColor: '#000',
+              hoverBorderColor: "#000",
               colorBgBase: COLOR_BACKGROUND,
               colorBgContainer: CARD_BACKGROUND,
             },
             Button: {
-              primaryShadow: 'none',
-              defaultShadow: ' none',
-              dangerShadow: 'none',
+              primaryShadow: "none",
+              defaultShadow: " none",
+              dangerShadow: "none",
             },
             Input: {
               borderRadius: 0,
               borderWidth: 0,
-              boxShadow: 'none',
-              activeShadow: 'none',
-              hoverBorderColor: 'transparent',
-              focusBorderColor: 'transparent',
+              boxShadow: "none",
+              activeShadow: "none",
+              hoverBorderColor: "transparent",
+              focusBorderColor: "transparent",
             },
           },
         }}
       >
-        {' '}
+        {" "}
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <Component {...pageProps} />{' '}
+            <Component {...pageProps} />{" "}
           </PersistGate>
         </Provider>
       </ConfigProvider>

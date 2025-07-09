@@ -49,22 +49,16 @@ sections.forEach((section) => {
 
   trophies.push(trophy);
 });
+console.log(trophies);
 console.log(
   JSON.stringify(
     trophies?.map((trophy) => {
       return {
         title: trophy?.name,
         description: trophy?.description,
-        icon: trophy?.image,
-        type: "Games",
-        priority: "Priority 1",
-        total: 1,
-        completed: 0,
-        unlocked: "",
-        achieved: false,
-        name: "Hitman World of Assassination",
         percentage: trophy?.rarityPercent?.split("%")?.[0],
         color: trophy?.typeLabel,
+        label: trophy?.rarityLabel,
       };
     })
   )
