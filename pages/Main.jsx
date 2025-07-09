@@ -444,41 +444,13 @@ export default function Main() {
       if (searchTerm1?.length == 0) {
         return true;
       } else {
-        if (searchTerm1?.includes("&")) {
-          let allKeys = searchTerm1?.split("&");
-          let shouldInclude = allKeys?.reduce((acc, item) => {
-            if (
-              ach?.title?.toLowerCase()?.includes(item?.toLowerCase()) ||
-              ach?.title?.toLowerCase()?.includes(item?.toLowerCase())
-            ) {
-              return acc && true;
-            } else {
-              return acc && false;
-            }
-          }, true);
-          return shouldInclude;
-        } else if (searchTerm1?.includes("||")) {
-          let allKeys = searchTerm1?.split("||");
-          let shouldInclude = allKeys?.reduce((acc, item) => {
-            if (
-              ach?.title?.toLowerCase()?.includes(item?.toLowerCase()) ||
-              ach?.title?.toLowerCase()?.includes(item?.toLowerCase())
-            ) {
-              return acc || true;
-            } else {
-              return acc || false;
-            }
-          }, true);
-          return shouldInclude;
+        if (
+          ach?.title?.toLowerCase()?.includes(searchTerm1?.toLowerCase()) ||
+          ach?.description?.toLowerCase()?.includes(searchTerm1?.toLowerCase())
+        ) {
+          return true;
         } else {
-          if (
-            ach?.title?.toLowerCase()?.includes(searchTerm1?.toLowerCase()) ||
-            ach?.title?.toLowerCase()?.includes(searchTerm1?.toLowerCase())
-          ) {
-            return true;
-          } else {
-            return false;
-          }
+          return false;
         }
       }
     });
@@ -696,6 +668,18 @@ export default function Main() {
     pointsNeededForNextLevel,
   } = calculatePsnLevel({ platinum, gold, silver, bronze });
 
+  let searchFilteredGames = games?.filter((game) => {
+    if (searchTerm1?.length == 0) {
+      return true;
+    } else {
+      if (game?.name?.toLowerCase()?.includes(searchTerm1?.toLowerCase())) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  });
+
   return (
     <Container>
       <Header>
@@ -704,16 +688,32 @@ export default function Main() {
             setSelected("GAMES");
           }}
         >
-          <span
-            style={{
-              fontSize: "1.25rem",
-              marginRight: ".5rem",
-              color: COLOR_WHITE,
+          <PSIcon></PSIcon>
+          <PSName>NotRealLogan</PSName>
+        </HLeft>
+        <HRight>
+          <AddIcon
+            onClick={() => {
+              clearFormData();
+              setShowModal(true);
             }}
           >
-            <TbHome />
-          </span>
-        </HLeft>
+            <span>
+              <HiOutlinePlusSm />
+            </span>
+          </AddIcon>
+          <AddIconRefresh
+            onClick={() => {
+              refreshAchievements();
+            }}
+          >
+            <span style={{ marginLeft: "1rem" }}>
+              <TbRefresh />
+            </span>
+          </AddIconRefresh>
+        </HRight>
+      </Header>
+      <HeaderSub>
         <HCenter>
           <span
             style={{
@@ -793,28 +793,7 @@ export default function Main() {
             {bronze}
           </span>
         </HCenter>
-        <HRight>
-          <AddIcon
-            onClick={() => {
-              clearFormData();
-              setShowModal(true);
-            }}
-          >
-            <span>
-              <HiOutlinePlusSm />
-            </span>
-          </AddIcon>
-          <AddIconRefresh
-            onClick={() => {
-              refreshAchievements();
-            }}
-          >
-            <span style={{ marginLeft: "1rem" }}>
-              <TbRefresh />
-            </span>
-          </AddIconRefresh>
-        </HRight>
-      </Header>
+      </HeaderSub>
       {showModalGames && (
         <ModalContainerGame>
           <ModalContent>
@@ -1057,23 +1036,13 @@ export default function Main() {
           </ModalBottom>
         </ModalContainer>
       )}
-      <BottomSmallInput>
-        <input
-          type="text"
-          placeholder="Search for keywords..."
-          onChange={(e) => {
-            setSearchTerm1(e.target.value);
-          }}
-          value={searchTerm1}
-        />
-      </BottomSmallInput>
       <Middle showModal={showModal}>
         {!loading && games?.length > 0 && selected == "GAMES" && (
           <MiddleTopContainerGame>
             {achToShow?.length == 0 &&
               !isOverviewMode &&
               isLongAchievementsActive && <NoData>No Games</NoData>}
-            {games?.map((ach, index) => {
+            {searchFilteredGames?.map((ach, index) => {
               return (
                 <A1ContainerGame>
                   <Popconfirm
@@ -1141,6 +1110,7 @@ export default function Main() {
               selected == "GAME" &&
               selectedGame?.length > 0 &&
               achsForGame?.map((ach, index) => {
+                console.log("JEEVA", ach);
                 return (
                   <A1ContainerAch opaque={ach?.total == ach?.completed}>
                     <Popconfirm
@@ -1157,7 +1127,7 @@ export default function Main() {
                       cancelText="Delete"
                     >
                       <A1IconOuter>
-                        <A1Icon icon={ach?.icon}></A1Icon>
+                        <img src={ach?.icon} width={20} height={20}></img>
                       </A1IconOuter>
                     </Popconfirm>
                     <A1Right>
@@ -1263,6 +1233,16 @@ export default function Main() {
           </MiddleTopContainerAch>
         )}
       </Middle>
+      <BottomSmallInput>
+        <input
+          type="text"
+          placeholder="Search for keywords..."
+          onChange={(e) => {
+            setSearchTerm1(e.target.value);
+          }}
+          value={searchTerm1}
+        />
+      </BottomSmallInput>
       <BottomProgress>
         <ProgresLeft>Level {level}</ProgresLeft>
         <ProgressLevel>
@@ -1276,6 +1256,37 @@ export default function Main() {
     </Container>
   );
 }
+
+const HeaderSub = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 60px;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.25);
+`;
+
+const PSIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  background: ${(props) =>
+    `url(https://upload.wikimedia.org/wikipedia/commons/9/91/PlayStation_App_Icon.jpg)`};
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+`;
+
+const PSName = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: #fefefe;
+  margin-left: 0.5rem;
+`;
 
 const ProgresLeft = styled.div`
   display: flex;
@@ -1343,8 +1354,8 @@ const Middle = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  min-height: 78vh;
-  max-height: 78vh;
+  min-height: 70vh;
+  max-height: 70vh;
   padding-bottom: 2rem;
   overflow: scroll;
   flex: 1;
@@ -1516,7 +1527,7 @@ const A1Icon = styled.div`
   justify-content: center;
   width: 70px;
   height: 70px;
-  background: ${(props) => `url(${props.icon})`};
+  background: ${(props) => `url("${props.icon}")`};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -1773,8 +1784,8 @@ const ButtonSmall = styled.div`
 const MiddleTopContainerGame = styled.div`
   display: flex;
   align-items: flex-start;
-  justify-content: flex-start;
-  width: 100%;
+  justify-content: space-between;
+  width: 90%;
   padding: 0.1rem 0.5rem;
   flex-wrap: wrap;
   flex: 1;
@@ -1827,6 +1838,7 @@ const HLeft = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  flex: 1;
   color: ${COLOR_GREEN};
 `;
 

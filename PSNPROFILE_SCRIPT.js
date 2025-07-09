@@ -62,7 +62,7 @@ console.log(
         completed: 0,
         unlocked: "",
         achieved: false,
-        name: "Rainbow Six Siege",
+        name: "Hitman World of Assassination",
         percentage: trophy?.rarityPercent?.split("%")?.[0],
         color: trophy?.typeLabel,
       };
