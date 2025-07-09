@@ -1068,28 +1068,35 @@ export default function Main() {
         />
       </BottomSmallInput>
       <Middle showModal={showModal}>
-        {!loading && (
-          <MiddleTopContainer>
+        {!loading && games?.length > 0 && selected == "GAMES" && (
+          <MiddleTopContainerGame>
             {achToShow?.length == 0 &&
               !isOverviewMode &&
               isLongAchievementsActive && <NoData>No Games</NoData>}
-            {games?.length > 0 &&
-              selected == "GAMES" &&
-              games?.map((ach, index) => {
-                return (
-                  <A1Container>
-                    <Popconfirm
-                      title="Delete Game"
-                      description="Are you sure to delete this game?"
-                      onConfirm={() => {
-                        deleteGame(ach?._id);
-                      }}
-                      onCancel={() => {}}
-                      okText="Yes"
-                      cancelText="No"
-                    >
-                      <A1Icon2 icon={ach?.url}></A1Icon2>
-                    </Popconfirm>
+            {games?.map((ach, index) => {
+              return (
+                <A1ContainerGame>
+                  <Popconfirm
+                    title="Delete Game"
+                    description="Are you sure to delete this game?"
+                    onConfirm={() => {
+                      deleteGame(ach?._id);
+                    }}
+                    onCancel={() => {}}
+                    okText="Yes"
+                    cancelText="No"
+                  >
+                    <A1Icon2 icon={ach?.url}>
+                      <A1Icon22
+                        icon={ach?.url}
+                        onClick={() => {
+                          setSelectedGame(ach?.name);
+                          setSelected("GAME");
+                        }}
+                      ></A1Icon22>
+                    </A1Icon2>
+                  </Popconfirm>
+                  {false && (
                     <A1Right
                       onClick={(e) => {
                         setSelectedGame(ach?.name);
@@ -1099,6 +1106,8 @@ export default function Main() {
                       <A1Title>{ach?.name}</A1Title>
                       <A1Desc>{`Played ${ach?.name}`}</A1Desc>
                     </A1Right>
+                  )}
+                  {false && (
                     <Tag
                       achieved={ach?.achieved}
                       forGame={true}
@@ -1119,16 +1128,21 @@ export default function Main() {
                         </span>
                       </InnerTagGameAbsolute>
                     </Tag>
-                  </A1Container>
-                );
-              })}
+                  )}
+                </A1ContainerGame>
+              );
+            })}
+          </MiddleTopContainerGame>
+        )}
+        {
+          <MiddleTopContainerAch>
             {achsForGame?.length > 0 &&
               selectedGame !== "Work Tracker" &&
               selected == "GAME" &&
               selectedGame?.length > 0 &&
               achsForGame?.map((ach, index) => {
                 return (
-                  <A1Container opaque={ach?.total == ach?.completed}>
+                  <A1ContainerAch opaque={ach?.total == ach?.completed}>
                     <Popconfirm
                       title="Actions"
                       description="Select action for Achievement"
@@ -1230,7 +1244,7 @@ export default function Main() {
                         </TagCompleted>
                       </MainTag>
                     )}
-                  </A1Container>
+                  </A1ContainerAch>
                 );
               })}
             {achsForGame?.length == 0 &&
@@ -1239,14 +1253,14 @@ export default function Main() {
             {!selectedGame && selected == "GAME" && (
               <NoData>No Game Selected</NoData>
             )}
-          </MiddleTopContainer>
-        )}
+          </MiddleTopContainerAch>
+        }
         {loading && (
-          <MiddleTopContainer>
+          <MiddleTopContainerAch>
             <Spin
               indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
             />
-          </MiddleTopContainer>
+          </MiddleTopContainerAch>
         )}
       </Middle>
       <BottomProgress>
@@ -1464,7 +1478,17 @@ const NoData = styled.div`
   padding: 1rem;
 `;
 
-const A1Container = styled.div`
+const A1ContainerGame = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 150px;
+  height: 200px;
+  margin: 0.25rem 0.25rem 0.25rem 0.25rem;
+  opacity: ${(props) => (props.opaque ? 0.2 : 1)};
+`;
+
+const A1ContainerAch = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1503,9 +1527,22 @@ const A1Icon2 = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 140px;
-  height: 60px;
-  background: ${(props) => `url('${props.icon}')`};
+  width: 150px;
+  height: 200px;
+  background: ${(props) => `url(/icons/cover.png)`};
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+`;
+
+const A1Icon22 = styled.div`
+  position: absolute;
+  left: 0px;
+  top: 30px;
+  width: 150px;
+  height: 165px;
+  background: ${(props) => `url(${props.icon})`};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -1732,11 +1769,22 @@ const ButtonSmall = styled.div`
   }
 `;
 
-const MiddleTopContainer = styled.div`
+const MiddleTopContainerGame = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 0.1rem 0.5rem;
+  flex-wrap: wrap;
+  flex: 1;
+  opacity: ${(props) => (props.showModal ? "0" : "1")};
+`;
+
+const MiddleTopContainerAch = styled.div`
   display: flex;
   align-items: center;
-  flex-direction: column;
   justify-content: flex-start;
+  flex-direction: column;
   width: 100%;
   padding: 0.1rem 0.5rem;
   flex: 1;
