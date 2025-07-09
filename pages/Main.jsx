@@ -1534,6 +1534,7 @@ const A1Icon2 = styled.div`
   background-repeat: no-repeat;
   background-position: center;
   position: relative;
+  border-radius: 4px;
 `;
 
 const A1Icon22 = styled.div`
