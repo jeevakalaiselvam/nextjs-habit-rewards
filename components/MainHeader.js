@@ -14,10 +14,7 @@ import GoldIcon from "./GoldIcon";
 import SilverIcon from "./SilverIcon";
 import BronzeIcon from "./BronzeIcon";
 import WhiteTrophy from "./WhiteTrophy";
-import {
-  calculatePSLevel,
-  calculatePSLevelAndProgress,
-} from "../helpers/trophyHelper";
+import { calculatePSLevelAndProgress } from "../helpers/trophyHelper";
 import LevelIcon from "./LevelIcon";
 
 export default function MainHeader({ games }) {
@@ -72,11 +69,11 @@ export default function MainHeader({ games }) {
         }
       }
     });
+
     let exceptPlatinum = game?.achievements?.filter(
       (item) => item?.color !== "Platinum"
     );
-    console.log({ exceptPlatinum });
-    let total = exceptPlatinum?.length;
+
     let completed = exceptPlatinum?.filter(
       (item) => item?.achieved == 1
     )?.length;
@@ -124,7 +121,7 @@ export default function MainHeader({ games }) {
           </HeaderProfileLevel>
           <HeaderCounts>
             <Section color={COLOR_WHITE}>
-              <Top>
+              <Top onClick={() => {}}>
                 <span
                   style={{
                     transform: "translateY(-2.5px)",
@@ -411,23 +408,12 @@ const Subtext = styled.div`
   opacity: 0.95;
   padding: 0.25rem;
 `;
-const HeaderProfile = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 const HeaderName = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
   flex: 1;
-`;
-
-const HeaderLinks = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
 `;
 
 const HeaderInner = styled.div`

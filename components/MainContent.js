@@ -53,7 +53,10 @@ export default function MainContent({ games }) {
         <FRLeft>OBSIDIANLOGAN'S PROFILE</FRLeft>
         <FRRight>
           <TabLink
-            onClick={() => setSelected("PROFILE")}
+            onClick={() => {
+              setSelected("PROFILE");
+              setSelectedMode("GAMES");
+            }}
             active={selected == "PROFILE"}
             onMouseEnter={() => setActive("PROFILE")}
             onMouseLeave={() => setActive("")}
@@ -113,6 +116,7 @@ export default function MainContent({ games }) {
               <Games2Line>
                 {games?.map((game, index) => {
                   let allCompletion = 0;
+                  let total = 0;
                   let unearned = 0;
                   let platinumA = 0;
                   let goldA = 0;
@@ -161,8 +165,7 @@ export default function MainContent({ games }) {
                   let exceptPlatinum = game?.achievements?.filter(
                     (item) => item?.color !== "Platinum"
                   );
-                  let total = exceptPlatinum?.length;
-                  let completed = exceptPlatinum?.filter(
+                  let completed = game?.achievements?.filter(
                     (item) => item?.achieved == 1
                   )?.length;
                   let completion =
@@ -574,6 +577,7 @@ const Platinum = styled.div`
   flex-direction: column;
   margin-right: 0.5rem;
   color: #b9c7e5;
+  min-width: 50px;
 `;
 
 const Text = styled.div`
