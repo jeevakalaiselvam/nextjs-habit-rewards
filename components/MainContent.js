@@ -277,8 +277,9 @@ export default function MainContent({
                     let completed = game?.achievements?.filter(
                       (item) => item?.achieved == 1
                     )?.length;
-                    let completion =
-                      completed == 0 ? 0 : (completed / total) * 100;
+                    let completion = (
+                      completed == 0 ? 0 : (completed / total) * 100
+                    )?.toFixed(2);
                     allCompletion = allCompletion + completion;
                     if (total == completed) {
                       completed = completed + 1;
@@ -468,8 +469,9 @@ export default function MainContent({
                     let completed = game?.achievements?.filter(
                       (item) => item?.achieved == 1
                     )?.length;
-                    let completion =
-                      completed == 0 ? 0 : (completed / total) * 100;
+                    let completion = (
+                      completed == 0 ? 0 : (completed / total) * 100
+                    )?.toFixed(2);
                     allCompletion = allCompletion + completion;
                     if (total == completed) {
                       completed = completed + 1;
@@ -564,7 +566,7 @@ export default function MainContent({
                             <TBottom>
                               <Outer>
                                 <Inner percentage={completion}></Inner>
-                                <Text>{completion} %</Text>
+                                <Text>{completion?.toFixed(2)} %</Text>
                               </Outer>
                             </TBottom>
                           </Trophies>
@@ -683,7 +685,7 @@ export default function MainContent({
                         <TBottom>
                           <Outer>
                             <Inner percentage={completionBG}></Inner>
-                            <Text>{completionBG} %</Text>
+                            <Text>{completionBG?.toFixed(2)} %</Text>
                           </Outer>
                         </TBottom>
                       </Trophies>
@@ -706,7 +708,7 @@ export default function MainContent({
                           <Seperator padding={".25rem"} />
                           <AchRarity>
                             <span style={{ fontSize: "1.2rem" }}>
-                              {ach?.percentage}%
+                              {ach?.percentage?.toFixed(2)}%
                             </span>
                             <span style={{ fontSize: ".7rem" }}>
                               {ach?.label?.toUpperCase()}

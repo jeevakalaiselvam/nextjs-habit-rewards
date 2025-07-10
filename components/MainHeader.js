@@ -79,7 +79,9 @@ export default function MainHeader({ games }) {
     let completed = exceptPlatinum?.filter(
       (item) => item?.achieved == 1
     )?.length;
-    let completion = completed == 0 ? 0 : (completed / total) * 100;
+    let completion = (completed == 0 ? 0 : (completed / total) * 100)?.toFixed(
+      2
+    );
     allCompletion = allCompletion + completion;
     if (total == completed) {
       completed = completed + 1;
