@@ -27,8 +27,15 @@ import PlatinumIcon from "./PlatinumIcon";
 import { FaEdge } from "react-icons/fa";
 import EditGameForm from "./EditGameForm";
 import PlatinumIconS from "./PlatinumIconS";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
 
-export default function MainContent({ games }) {
+export default function MainContent({
+  games,
+  refreshData,
+  setGamesLoading,
+  gamesLoading,
+}) {
   const [selectedMode, setSelectedMode] = useState("GAMES");
   const [selectedGame, setSelectedGame] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
@@ -112,6 +119,8 @@ export default function MainContent({ games }) {
           gameData={gameData}
           showEditModal={showEditModal}
           setShowEditModal={setShowEditModal}
+          refreshData={refreshData}
+          setGamesLoading={setGamesLoading}
         />
       )}
       <FirstRow>
@@ -172,473 +181,483 @@ export default function MainContent({ games }) {
         </FRRight>
       </FirstRow>
       <SecondRow>
-        <SRLeft>
-          {selectedMode == "GAMES" && (
-            <Games>
-              <Games1Line>
-                <GamesLeft>GAMES</GamesLeft>
-                <GamesRight></GamesRight>
-              </Games1Line>
-              <Games2Line>
-                {games?.map((game, index) => {
-                  let allCompletion = 0;
-                  let total = 0;
-                  let unearned = 0;
-                  let platinumA = 0;
-                  let goldA = 0;
-                  let silverA = 0;
-                  let bronzeA = 0;
-                  let platinum = 0;
-                  let gold = 0;
-                  let silver = 0;
-                  let bronze = 0;
+        {!gamesLoading && (
+          <SRLeft>
+            {selectedMode == "GAMES" && (
+              <Games>
+                <Games1Line>
+                  <GamesLeft>GAMES</GamesLeft>
+                  <GamesRight></GamesRight>
+                </Games1Line>
+                <Games2Line>
+                  {games?.map((game, index) => {
+                    let allCompletion = 0;
+                    let total = 0;
+                    let unearned = 0;
+                    let platinumA = 0;
+                    let goldA = 0;
+                    let silverA = 0;
+                    let bronzeA = 0;
+                    let platinum = 0;
+                    let gold = 0;
+                    let silver = 0;
+                    let bronze = 0;
 
-                  game?.achievements?.forEach((ach) => {
-                    total++;
+                    game?.achievements?.forEach((ach) => {
+                      total++;
+                      if (ach?.achieved == 0) {
+                        unearned++;
+                        if (ach?.color == "Platinum") {
+                          platinumA++;
+                        }
+                        if (ach?.color == "Gold") {
+                          goldA++;
+                        }
+                        if (ach?.color == "Silver") {
+                          silverA++;
+                        }
+                        if (ach?.color == "Bronze") {
+                          bronzeA++;
+                        }
+                      } else {
+                        if (ach?.color == "Platinum") {
+                          platinum++;
+                        }
+                        if (ach?.color == "Gold") {
+                          gold++;
+                        }
+                        if (ach?.color == "Silver") {
+                          silver++;
+                        }
+                        if (ach?.color == "Bronze") {
+                          bronze++;
+                        }
+                      }
+                    });
+
+                    let completed = game?.achievements?.filter(
+                      (item) => item?.achieved == 1
+                    )?.length;
+                    let completion =
+                      completed == 0 ? 0 : (completed / total) * 100;
+                    allCompletion = allCompletion + completion;
+                    if (total == completed) {
+                      completed = completed + 1;
+                    }
+
+                    let { color, rank } =
+                      calculateRankForCompletion(completion);
+                    let lastAch = game?.achievements?.sort(
+                      (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
+                    )?.[game?.achievements?.length - 1];
+
+                    return (
+                      <GameContainer
+                        color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                      >
+                        <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
+                        <GameData>
+                          <GameTitle
+                            onClick={() => {
+                              setSelectedGame(game);
+                              setSelectedMode("GAME");
+                            }}
+                          >
+                            {game?.name}
+                          </GameTitle>
+                          <GameCompletion>
+                            {completed} of {total} Trophies
+                          </GameCompletion>
+                          <Started></Started>
+                        </GameData>
+                        <GameInfo>
+                          <Ps5
+                            onClick={() => {
+                              setShowEditModal(true);
+                              setGameData((old) => game);
+                            }}
+                          >
+                            PS5
+                          </Ps5>
+                          <Seperator></Seperator>
+                          <Rank>
+                            <span style={{ fontSize: "1.5rem", color: color }}>
+                              {rank}
+                            </span>
+                            <span style={{ fontSize: ".7rem" }}>RANK</span>
+                          </Rank>
+                          <Seperator></Seperator>
+                          <Trophies>
+                            <TTop>
+                              <TSingle>
+                                <GoldIconS />
+                                <span
+                                  style={{
+                                    transform: "translate(-.5rem,-.25rem)",
+                                    color: COLOR_GOLD,
+                                    fontSize: "1rem",
+                                  }}
+                                >
+                                  {gold}
+                                </span>
+                              </TSingle>
+                              <TSingle>
+                                <SilverIconS />
+                                <span
+                                  style={{
+                                    transform: "translate(-.5rem,-.25rem)",
+                                    color: COLOR_SILVER2,
+                                    fontSize: "1rem",
+                                  }}
+                                >
+                                  {silver}
+                                </span>
+                              </TSingle>
+                              <TSingle>
+                                <BronzeIconS />
+                                <span
+                                  style={{
+                                    transform: "translate(-.5rem,-.25rem)",
+                                    color: COLOR_BRONZE,
+                                    fontSize: "1rem",
+                                  }}
+                                >
+                                  {bronze}
+                                </span>
+                              </TSingle>
+                            </TTop>
+                            <TBottom>
+                              <Outer>
+                                <Inner percentage={completion}></Inner>
+                                <Text>{completion} %</Text>
+                              </Outer>
+                            </TBottom>
+                          </Trophies>
+                          <Seperator></Seperator>
+                          <Platinum isPlatinum={total == completed}>
+                            <span
+                              style={{ opacity: total == completed ? 1 : 0.5 }}
+                            >
+                              <PlatinumIcon />
+                            </span>
+                            <span
+                              style={{
+                                fontSize: ".7rem",
+                                marginTop: "4px",
+                                fontWeight: "bold",
+                                opacity: total == completed ? 1 : 0.75,
+                              }}
+                            >
+                              {lastAch?.percentage} %
+                            </span>
+                          </Platinum>
+                        </GameInfo>
+                      </GameContainer>
+                    );
+                  })}
+                </Games2Line>
+              </Games>
+            )}
+            {selectedMode == "GAME" && (
+              <>
+                <Game>
+                  <Game1Line>
+                    <GameLeft>
+                      {selectedGame?.name?.toUpperCase()} TROPHIES
+                    </GameLeft>
+                  </Game1Line>
+                  <GameSubLine>
+                    <GameSubLeftImage
+                      image={HEADER_IMAGE(selectedGame?.id)}
+                    ></GameSubLeftImage>
+                    <GameSubLeft>Base Game</GameSubLeft>
+                    <GameSubRight>
+                      <Ps5
+                        onClick={() => {
+                          setShowEditModal(true);
+                          setGameData((old) => selectedGame);
+                        }}
+                      >
+                        PS5
+                      </Ps5>
+                      <Seperator></Seperator>
+                      <Rank>
+                        <span style={{ fontSize: "1.5rem", color: color }}>
+                          {rank}
+                        </span>
+                        <span style={{ fontSize: ".7rem" }}>RANK</span>
+                      </Rank>
+                      <Seperator></Seperator>
+                      <Platinum isPlatinum={totalBG == completedBG}>
+                        <span
+                          style={{ opacity: totalBG == completedBG ? 1 : 0.25 }}
+                        >
+                          <PlatinumIcon />
+                        </span>
+                        <span
+                          style={{
+                            fontSize: ".7rem",
+                            marginTop: "4px",
+                            fontWeight: "bold",
+                            opacity: totalBG == completedBG ? 1 : 0.75,
+                          }}
+                        >
+                          {lastAch?.percentage} %
+                        </span>
+                      </Platinum>
+                      <Seperator></Seperator>
+                      <Trophies>
+                        <TTop>
+                          <TSingle>
+                            <GoldIconS />
+                            <span
+                              style={{
+                                transform: "translate(-.5rem,-.25rem)",
+                                color: COLOR_GOLD,
+                                fontSize: "1rem",
+                              }}
+                            >
+                              {goldBG}
+                            </span>
+                          </TSingle>
+                          <TSingle>
+                            <SilverIconS />
+                            <span
+                              style={{
+                                transform: "translate(-.5rem,-.25rem)",
+                                color: COLOR_SILVER2,
+                                fontSize: "1rem",
+                              }}
+                            >
+                              {silverBG}
+                            </span>
+                          </TSingle>
+                          <TSingle>
+                            <BronzeIconS />
+                            <span
+                              style={{
+                                transform: "translate(-.5rem,-.25rem)",
+                                color: COLOR_BRONZE,
+                                fontSize: "1rem",
+                              }}
+                            >
+                              {bronzeBG}
+                            </span>
+                          </TSingle>
+                        </TTop>
+                        <TBottom>
+                          <Outer>
+                            <Inner percentage={completionBG}></Inner>
+                            <Text>{completionBG} %</Text>
+                          </Outer>
+                        </TBottom>
+                      </Trophies>
+                    </GameSubRight>
+                  </GameSubLine>
+                  <Game2Line>
+                    {selectedGame?.achievements?.map((ach, index) => {
+                      return (
+                        <AchCard
+                          color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                          achieved={ach?.achieved}
+                        >
+                          <AchIconOuter achieved={ach?.achieved}>
+                            <AchIcon icon={ach?.icon}></AchIcon>
+                          </AchIconOuter>
+                          <AchData>
+                            <AchTitle>{ach?.displayName}</AchTitle>
+                            <AchDesc>{ach?.description}</AchDesc>
+                          </AchData>
+                          <Seperator padding={".25rem"} />
+                          <AchRarity>
+                            <span style={{ fontSize: "1.2rem" }}>
+                              {ach?.percentage}%
+                            </span>
+                            <span style={{ fontSize: ".7rem" }}>
+                              {ach?.label?.toUpperCase()}
+                            </span>
+                          </AchRarity>
+                          <Seperator padding={".25rem"} />
+                          <AchTrophy>
+                            {ach?.color == "Platinum" && <PlatinumIconS />}
+                            {ach?.color == "Gold" && <GoldIconS />}
+                            {ach?.color == "Silver" && <SilverIconS />}
+                            {ach?.color == "Bronze" && <BronzeIconS />}
+                          </AchTrophy>
+                        </AchCard>
+                      );
+                    })}
+                  </Game2Line>
+                </Game>
+                {allDLCKeys?.map((dlcKey) => {
+                  let unearnedDLC = 0;
+                  let platinumADLC = 0;
+                  let goldADLC = 0;
+                  let silverADLC = 0;
+                  let bronzeADLC = 0;
+                  let platinumDLC = 0;
+                  let goldDLC = 0;
+                  let silverDLC = 0;
+                  let bronzeDLC = 0;
+                  let totalDLC = 0;
+
+                  let dlcTrophies = selectedGame?.dlcAchievements?.filter(
+                    (ach) => ach?.dlc == dlcKey?.dlcKey
+                  );
+                  dlcTrophies?.forEach((ach) => {
+                    totalDLC++;
                     if (ach?.achieved == 0) {
-                      unearned++;
+                      unearnedDLC++;
                       if (ach?.color == "Platinum") {
-                        platinumA++;
+                        platinumADLC++;
                       }
                       if (ach?.color == "Gold") {
-                        goldA++;
+                        goldADLC++;
                       }
                       if (ach?.color == "Silver") {
-                        silverA++;
+                        silverADLC++;
                       }
                       if (ach?.color == "Bronze") {
-                        bronzeA++;
+                        bronzeADLC++;
                       }
                     } else {
                       if (ach?.color == "Platinum") {
-                        platinum++;
+                        platinumDLC++;
                       }
                       if (ach?.color == "Gold") {
-                        gold++;
+                        goldDLC++;
                       }
                       if (ach?.color == "Silver") {
-                        silver++;
+                        silverDLC++;
                       }
                       if (ach?.color == "Bronze") {
-                        bronze++;
+                        bronzeDLC++;
                       }
                     }
                   });
 
-                  let completed = game?.achievements?.filter(
+                  let completedDLC = selectedGame?.achievements?.filter(
                     (item) => item?.achieved == 1
                   )?.length;
-                  let completion =
-                    completed == 0 ? 0 : (completed / total) * 100;
-                  allCompletion = allCompletion + completion;
-                  if (total == completed) {
-                    completed = completed + 1;
-                  }
-
-                  let { color, rank } = calculateRankForCompletion(completion);
-                  let lastAch = game?.achievements?.sort(
-                    (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
-                  )?.[game?.achievements?.length - 1];
+                  let completionDLC =
+                    completedDLC == 0 ? 0 : (completedDLC / totalDLC) * 100;
 
                   return (
-                    <GameContainer
-                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                    >
-                      <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
-                      <GameData>
-                        <GameTitle
-                          onClick={() => {
-                            setSelectedGame(game);
-                            setSelectedMode("GAME");
-                          }}
-                        >
-                          {game?.name}
-                        </GameTitle>
-                        <GameCompletion>
-                          {completed} of {total} Trophies
-                        </GameCompletion>
-                        <Started></Started>
-                      </GameData>
-                      <GameInfo>
-                        <Ps5
-                          onClick={() => {
-                            setShowEditModal(true);
-                            setGameData((old) => game);
-                          }}
-                        >
-                          PS5
-                        </Ps5>
-                        <Seperator></Seperator>
-                        <Rank>
-                          <span style={{ fontSize: "1.5rem", color: color }}>
-                            {rank}
-                          </span>
-                          <span style={{ fontSize: ".7rem" }}>RANK</span>
-                        </Rank>
-                        <Seperator></Seperator>
-                        <Trophies>
-                          <TTop>
-                            <TSingle>
-                              <GoldIconS />
-                              <span
-                                style={{
-                                  transform: "translate(-.5rem,-.25rem)",
-                                  color: COLOR_GOLD,
-                                  fontSize: "1rem",
-                                }}
-                              >
-                                {gold}
-                              </span>
-                            </TSingle>
-                            <TSingle>
-                              <SilverIconS />
-                              <span
-                                style={{
-                                  transform: "translate(-.5rem,-.25rem)",
-                                  color: COLOR_SILVER2,
-                                  fontSize: "1rem",
-                                }}
-                              >
-                                {silver}
-                              </span>
-                            </TSingle>
-                            <TSingle>
-                              <BronzeIconS />
-                              <span
-                                style={{
-                                  transform: "translate(-.5rem,-.25rem)",
-                                  color: COLOR_BRONZE,
-                                  fontSize: "1rem",
-                                }}
-                              >
-                                {bronze}
-                              </span>
-                            </TSingle>
-                          </TTop>
-                          <TBottom>
-                            <Outer>
-                              <Inner percentage={completion}></Inner>
-                              <Text>{completion} %</Text>
-                            </Outer>
-                          </TBottom>
-                        </Trophies>
-                        <Seperator></Seperator>
-                        <Platinum isPlatinum={total == completed}>
-                          <span
-                            style={{ opacity: total == completed ? 1 : 0.5 }}
-                          >
-                            <PlatinumIcon />
-                          </span>
-                          <span
-                            style={{
-                              fontSize: ".7rem",
-                              marginTop: "4px",
-                              fontWeight: "bold",
-                              opacity: total == completed ? 1 : 0.75,
+                    <Game>
+                      <Game1Line>
+                        <GameLeft>DLC TROPHY PACK 1</GameLeft>
+                      </Game1Line>
+                      <GameSubLine>
+                        <GameSubLeftImage
+                          image={dlcKey?.image}
+                        ></GameSubLeftImage>
+                        <GameSubLeft>{dlcKey?.name}</GameSubLeft>
+                        <GameSubRight>
+                          <Ps5
+                            onClick={() => {
+                              setShowEditModal(true);
+                              setGameData((old) => selectedGame);
                             }}
                           >
-                            {lastAch?.percentage} %
-                          </span>
-                        </Platinum>
-                      </GameInfo>
-                    </GameContainer>
+                            PS5
+                          </Ps5>
+                          <Seperator></Seperator>
+                          <Trophies>
+                            <TTop>
+                              <TSingle>
+                                <GoldIconS />
+                                <span
+                                  style={{
+                                    transform: "translate(-.5rem,-.25rem)",
+                                    color: COLOR_GOLD,
+                                    fontSize: "1rem",
+                                  }}
+                                >
+                                  {goldDLC}
+                                </span>
+                              </TSingle>
+                              <TSingle>
+                                <SilverIconS />
+                                <span
+                                  style={{
+                                    transform: "translate(-.5rem,-.25rem)",
+                                    color: COLOR_SILVER2,
+                                    fontSize: "1rem",
+                                  }}
+                                >
+                                  {silverDLC}
+                                </span>
+                              </TSingle>
+                              <TSingle>
+                                <BronzeIconS />
+                                <span
+                                  style={{
+                                    transform: "translate(-.5rem,-.25rem)",
+                                    color: COLOR_BRONZE,
+                                    fontSize: "1rem",
+                                  }}
+                                >
+                                  {bronzeDLC}
+                                </span>
+                              </TSingle>
+                            </TTop>
+                            <TBottom>
+                              <Outer>
+                                <Inner percentage={completionDLC}></Inner>
+                                <Text>{completionDLC} %</Text>
+                              </Outer>
+                            </TBottom>
+                          </Trophies>
+                        </GameSubRight>
+                      </GameSubLine>
+                      <Game2Line>
+                        {dlcTrophies?.map((ach, index) => {
+                          return (
+                            <AchCard
+                              color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                              achieved={ach?.achieved}
+                            >
+                              <AchIconOuter achieved={ach?.achieved}>
+                                <AchIcon icon={ach?.icon}></AchIcon>
+                              </AchIconOuter>
+                              <AchData>
+                                <AchTitle>{ach?.displayName}</AchTitle>
+                                <AchDesc>{ach?.description}</AchDesc>
+                              </AchData>
+                              <Seperator padding={".25rem"} />
+                              <AchRarity>
+                                <span style={{ fontSize: "1.2rem" }}>
+                                  {ach?.percentage}%
+                                </span>
+                                <span style={{ fontSize: ".7rem" }}>
+                                  {ach?.label?.toUpperCase()}
+                                </span>
+                              </AchRarity>
+                              <Seperator padding={".25rem"} />
+                              <AchTrophy>
+                                {ach?.color == "Platinum" && <PlatinumIconS />}
+                                {ach?.color == "Gold" && <GoldIconS />}
+                                {ach?.color == "Silver" && <SilverIconS />}
+                                {ach?.color == "Bronze" && <BronzeIconS />}
+                              </AchTrophy>
+                            </AchCard>
+                          );
+                        })}
+                      </Game2Line>
+                    </Game>
                   );
                 })}
-              </Games2Line>
-            </Games>
-          )}
-          {selectedMode == "GAME" && (
-            <>
-              <Game>
-                <Game1Line>
-                  <GameLeft>
-                    {selectedGame?.name?.toUpperCase()} TROPHIES
-                  </GameLeft>
-                </Game1Line>
-                <GameSubLine>
-                  <GameSubLeftImage
-                    image={HEADER_IMAGE(selectedGame?.id)}
-                  ></GameSubLeftImage>
-                  <GameSubLeft>Base Game</GameSubLeft>
-                  <GameSubRight>
-                    <Ps5
-                      onClick={() => {
-                        setShowEditModal(true);
-                        setGameData((old) => selectedGame);
-                      }}
-                    >
-                      PS5
-                    </Ps5>
-                    <Seperator></Seperator>
-                    <Rank>
-                      <span style={{ fontSize: "1.5rem", color: color }}>
-                        {rank}
-                      </span>
-                      <span style={{ fontSize: ".7rem" }}>RANK</span>
-                    </Rank>
-                    <Seperator></Seperator>
-                    <Platinum isPlatinum={totalBG == completedBG}>
-                      <span
-                        style={{ opacity: totalBG == completedBG ? 1 : 0.25 }}
-                      >
-                        <PlatinumIcon />
-                      </span>
-                      <span
-                        style={{
-                          fontSize: ".7rem",
-                          marginTop: "4px",
-                          fontWeight: "bold",
-                          opacity: totalBG == completedBG ? 1 : 0.75,
-                        }}
-                      >
-                        {lastAch?.percentage} %
-                      </span>
-                    </Platinum>
-                    <Seperator></Seperator>
-                    <Trophies>
-                      <TTop>
-                        <TSingle>
-                          <GoldIconS />
-                          <span
-                            style={{
-                              transform: "translate(-.5rem,-.25rem)",
-                              color: COLOR_GOLD,
-                              fontSize: "1rem",
-                            }}
-                          >
-                            {goldBG}
-                          </span>
-                        </TSingle>
-                        <TSingle>
-                          <SilverIconS />
-                          <span
-                            style={{
-                              transform: "translate(-.5rem,-.25rem)",
-                              color: COLOR_SILVER2,
-                              fontSize: "1rem",
-                            }}
-                          >
-                            {silverBG}
-                          </span>
-                        </TSingle>
-                        <TSingle>
-                          <BronzeIconS />
-                          <span
-                            style={{
-                              transform: "translate(-.5rem,-.25rem)",
-                              color: COLOR_BRONZE,
-                              fontSize: "1rem",
-                            }}
-                          >
-                            {bronzeBG}
-                          </span>
-                        </TSingle>
-                      </TTop>
-                      <TBottom>
-                        <Outer>
-                          <Inner percentage={completionBG}></Inner>
-                          <Text>{completionBG} %</Text>
-                        </Outer>
-                      </TBottom>
-                    </Trophies>
-                  </GameSubRight>
-                </GameSubLine>
-                <Game2Line>
-                  {selectedGame?.achievements?.map((ach, index) => {
-                    return (
-                      <AchCard
-                        color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                        achieved={ach?.achieved}
-                      >
-                        <AchIconOuter achieved={ach?.achieved}>
-                          <AchIcon icon={ach?.icon}></AchIcon>
-                        </AchIconOuter>
-                        <AchData>
-                          <AchTitle>{ach?.displayName}</AchTitle>
-                          <AchDesc>{ach?.description}</AchDesc>
-                        </AchData>
-                        <Seperator padding={".25rem"} />
-                        <AchRarity>
-                          <span style={{ fontSize: "1.2rem" }}>
-                            {ach?.percentage}%
-                          </span>
-                          <span style={{ fontSize: ".7rem" }}>
-                            {ach?.label?.toUpperCase()}
-                          </span>
-                        </AchRarity>
-                        <Seperator padding={".25rem"} />
-                        <AchTrophy>
-                          {ach?.color == "Platinum" && <PlatinumIconS />}
-                          {ach?.color == "Gold" && <GoldIconS />}
-                          {ach?.color == "Silver" && <SilverIconS />}
-                          {ach?.color == "Bronze" && <BronzeIconS />}
-                        </AchTrophy>
-                      </AchCard>
-                    );
-                  })}
-                </Game2Line>
-              </Game>
-              {allDLCKeys?.map((dlcKey) => {
-                let unearnedDLC = 0;
-                let platinumADLC = 0;
-                let goldADLC = 0;
-                let silverADLC = 0;
-                let bronzeADLC = 0;
-                let platinumDLC = 0;
-                let goldDLC = 0;
-                let silverDLC = 0;
-                let bronzeDLC = 0;
-                let totalDLC = 0;
-
-                let dlcTrophies = selectedGame?.dlcAchievements?.filter(
-                  (ach) => ach?.dlc == dlcKey?.dlcKey
-                );
-                dlcTrophies?.forEach((ach) => {
-                  totalDLC++;
-                  if (ach?.achieved == 0) {
-                    unearnedDLC++;
-                    if (ach?.color == "Platinum") {
-                      platinumADLC++;
-                    }
-                    if (ach?.color == "Gold") {
-                      goldADLC++;
-                    }
-                    if (ach?.color == "Silver") {
-                      silverADLC++;
-                    }
-                    if (ach?.color == "Bronze") {
-                      bronzeADLC++;
-                    }
-                  } else {
-                    if (ach?.color == "Platinum") {
-                      platinumDLC++;
-                    }
-                    if (ach?.color == "Gold") {
-                      goldDLC++;
-                    }
-                    if (ach?.color == "Silver") {
-                      silverDLC++;
-                    }
-                    if (ach?.color == "Bronze") {
-                      bronzeDLC++;
-                    }
-                  }
-                });
-
-                let completedDLC = selectedGame?.achievements?.filter(
-                  (item) => item?.achieved == 1
-                )?.length;
-                let completionDLC =
-                  completedDLC == 0 ? 0 : (completedDLC / totalDLC) * 100;
-
-                return (
-                  <Game>
-                    <Game1Line>
-                      <GameLeft>DLC TROPHY PACK 1</GameLeft>
-                    </Game1Line>
-                    <GameSubLine>
-                      <GameSubLeftImage
-                        image={dlcKey?.image}
-                      ></GameSubLeftImage>
-                      <GameSubLeft>{dlcKey?.name}</GameSubLeft>
-                      <GameSubRight>
-                        <Ps5
-                          onClick={() => {
-                            setShowEditModal(true);
-                            setGameData((old) => selectedGame);
-                          }}
-                        >
-                          PS5
-                        </Ps5>
-                        <Seperator></Seperator>
-                        <Trophies>
-                          <TTop>
-                            <TSingle>
-                              <GoldIconS />
-                              <span
-                                style={{
-                                  transform: "translate(-.5rem,-.25rem)",
-                                  color: COLOR_GOLD,
-                                  fontSize: "1rem",
-                                }}
-                              >
-                                {goldDLC}
-                              </span>
-                            </TSingle>
-                            <TSingle>
-                              <SilverIconS />
-                              <span
-                                style={{
-                                  transform: "translate(-.5rem,-.25rem)",
-                                  color: COLOR_SILVER2,
-                                  fontSize: "1rem",
-                                }}
-                              >
-                                {silverDLC}
-                              </span>
-                            </TSingle>
-                            <TSingle>
-                              <BronzeIconS />
-                              <span
-                                style={{
-                                  transform: "translate(-.5rem,-.25rem)",
-                                  color: COLOR_BRONZE,
-                                  fontSize: "1rem",
-                                }}
-                              >
-                                {bronzeDLC}
-                              </span>
-                            </TSingle>
-                          </TTop>
-                          <TBottom>
-                            <Outer>
-                              <Inner percentage={completionDLC}></Inner>
-                              <Text>{completionDLC} %</Text>
-                            </Outer>
-                          </TBottom>
-                        </Trophies>
-                      </GameSubRight>
-                    </GameSubLine>
-                    <Game2Line>
-                      {dlcTrophies?.map((ach, index) => {
-                        return (
-                          <AchCard
-                            color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                            achieved={ach?.achieved}
-                          >
-                            <AchIconOuter achieved={ach?.achieved}>
-                              <AchIcon icon={ach?.icon}></AchIcon>
-                            </AchIconOuter>
-                            <AchData>
-                              <AchTitle>{ach?.displayName}</AchTitle>
-                              <AchDesc>{ach?.description}</AchDesc>
-                            </AchData>
-                            <Seperator padding={".25rem"} />
-                            <AchRarity>
-                              <span style={{ fontSize: "1.2rem" }}>
-                                {ach?.percentage}%
-                              </span>
-                              <span style={{ fontSize: ".7rem" }}>
-                                {ach?.label?.toUpperCase()}
-                              </span>
-                            </AchRarity>
-                            <Seperator padding={".25rem"} />
-                            <AchTrophy>
-                              {ach?.color == "Platinum" && <PlatinumIconS />}
-                              {ach?.color == "Gold" && <GoldIconS />}
-                              {ach?.color == "Silver" && <SilverIconS />}
-                              {ach?.color == "Bronze" && <BronzeIconS />}
-                            </AchTrophy>
-                          </AchCard>
-                        );
-                      })}
-                    </Game2Line>
-                  </Game>
-                );
-              })}
-            </>
-          )}
-        </SRLeft>
+              </>
+            )}
+          </SRLeft>
+        )}
+        {gamesLoading && (
+          <SRLeft>
+            <Spin
+              indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
+            />
+          </SRLeft>
+        )}
         <SRRight>
           <Rarest>
             <Rarest1Line>

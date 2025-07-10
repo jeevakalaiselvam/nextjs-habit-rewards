@@ -5,62 +5,15 @@ import { COLOR_ACCENT, COLOR_BLUE_DARK } from "../helpers/colorHelper";
 import EditGameForm from "./EditGameForm";
 import { useState } from "react";
 
-export default function GameCdImage({
-  game,
-  editMode,
-  platinumData,
-  setIsEditMode,
-}) {
-  const [showEditModal, setShowEditModal] = useState(false);
-
-  let gameData = platinumData?.find((data) => {
-    return data?.id == game?.id;
-  });
+export default function GameCdImage({ game }) {
+  console.log({ game });
 
   return (
     <CdImage>
-      <EditGameForm
-        showEditModal={showEditModal}
-        setShowEditModal={setShowEditModal}
-        gameData={gameData}
-        setIsEditMode={setIsEditMode}
-      />
-      <CdInnerImage cover={gameData?.cover}>
-        {editMode && (
-          <EditIcon
-            onClick={() => {
-              setShowEditModal(true);
-            }}
-          >
-            <span
-              style={{ transform: "translateY(2px)", marginRight: ".25rem" }}
-            >
-              <TbSettingsFilled />
-            </span>
-            <span>EDIT</span>
-          </EditIcon>
-        )}
-      </CdInnerImage>
+      <CdInnerImage cover={game?.cover}></CdInnerImage>
     </CdImage>
   );
 }
-
-const EditIcon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-  padding: 0.25rem 1rem;
-  z-index: 2;
-  background-color: ${COLOR_ACCENT};
-  opacity: 0.8;
-
-  &:hover {
-    opacity: 1;
-  }
-`;
 
 const CdImage = styled.div`
   display: flex;
@@ -73,6 +26,7 @@ const CdImage = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   position: relative;
+  margin: 1rem;
 `;
 
 const CdInnerImage = styled.div`

@@ -8,9 +8,9 @@ export default function EditGameForm({
   showEditModal,
   setShowEditModal,
   gameData,
+  refreshData,
+  setGamesLoading,
 }) {
-  const [gamesLoading, setGamesLoading] = useState(false);
-  const [games, setGames] = useState([]);
   const [gameForm, setGameForm] = useState({
     id: gameData?.id,
     cover: gameData?.cover,
@@ -36,7 +36,9 @@ export default function EditGameForm({
     try {
       axios
         .put("/api/platinum/update", { ...gameForm, id: gameData?.id })
-        .then((response) => {});
+        .then((response) => {
+          refreshData();
+        });
     } catch (e) {}
   };
 
@@ -47,22 +49,6 @@ export default function EditGameForm({
   const handleCancel = () => {
     setShowEditModal(false);
   };
-
-  const refreshGameData = () => {
-    setGamesLoading(true);
-    try {
-      axios.get("/api/platinum").then((response) => {
-        setGamesLoading(false);
-        setGames(response?.data);
-      });
-    } catch (e) {
-      setGamesLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    refreshGameData();
-  }, []);
 
   useEffect(() => {
     setGameForm((old) => ({

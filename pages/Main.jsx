@@ -35,10 +35,14 @@ export default function Atom() {
     }
   };
 
+  const refreshData = () => {
+    refreshSteamGames();
+    refreshPlatinumData();
+  };
+
   useEffect(() => {
     if (games?.length == 0) {
-      refreshSteamGames();
-      refreshPlatinumData();
+      refreshData();
     }
   }, []);
 
@@ -141,7 +145,12 @@ export default function Atom() {
   return (
     <Container>
       <MainHeader games={finalGames} />
-      <MainContent games={finalGames} />
+      <MainContent
+        games={finalGames}
+        refreshData={refreshData}
+        setGamesLoading={setGamesLoading}
+        gamesLoading={gamesLoading}
+      />
     </Container>
   );
 }
