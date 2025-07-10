@@ -50,17 +50,6 @@ export default function MainContent({ games }) {
   let bronzeBG = 0;
   let totalBG = 0;
 
-  let unearnedDLC1 = 0;
-  let platinumADLC1 = 0;
-  let goldADLC1 = 0;
-  let silverADLC1 = 0;
-  let bronzeADLC1 = 0;
-  let platinumDLC1 = 0;
-  let goldDLC1 = 0;
-  let silverDLC1 = 0;
-  let bronzeDLC1 = 0;
-  let totalDLC1 = 0;
-
   selectedGame?.achievements?.forEach((ach) => {
     totalBG++;
     if (ach?.achieved == 0) {
@@ -103,46 +92,18 @@ export default function MainContent({ games }) {
     (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
   )?.[selectedGame?.achievements?.length - 1];
 
-  let dlc1Trophies = selectedGame?.dlcAchievements?.filter(
-    (ach) => ach?.dlc == "DLC1"
-  );
-  dlc1Trophies?.forEach((ach) => {
-    totalDLC1++;
-    if (ach?.achieved == 0) {
-      unearnedDLC1++;
-      if (ach?.color == "Platinum") {
-        platinumADLC1++;
-      }
-      if (ach?.color == "Gold") {
-        goldADLC1++;
-      }
-      if (ach?.color == "Silver") {
-        silverADLC1++;
-      }
-      if (ach?.color == "Bronze") {
-        bronzeADLC1++;
-      }
-    } else {
-      if (ach?.color == "Platinum") {
-        platinumDLC1++;
-      }
-      if (ach?.color == "Gold") {
-        goldDLC1++;
-      }
-      if (ach?.color == "Silver") {
-        silverDLC1++;
-      }
-      if (ach?.color == "Bronze") {
-        bronzeDLC1++;
-      }
-    }
-  });
-
-  let completedDLC1 = selectedGame?.achievements?.filter(
-    (item) => item?.achieved == 1
-  )?.length;
-  let completionDLC1 =
-    completedDLC1 == 0 ? 0 : (completedDLC1 / totalDLC1) * 100;
+  const allDLCKeys = [
+    {
+      dlcKey: "DLC1",
+      name: selectedGame?.dlc1Name,
+      image: selectedGame?.dlc1Image,
+    },
+    {
+      dlcKey: "DLC2",
+      name: selectedGame?.dlc2Name,
+      image: selectedGame?.dlc2Image,
+    },
+  ];
 
   return (
     <Container>
@@ -400,6 +361,15 @@ export default function MainContent({ games }) {
                   ></GameSubLeftImage>
                   <GameSubLeft>Base Game</GameSubLeft>
                   <GameSubRight>
+                    <Ps5
+                      onClick={() => {
+                        setShowEditModal(true);
+                        setGameData((old) => selectedGame);
+                      }}
+                    >
+                      PS5
+                    </Ps5>
+                    <Seperator></Seperator>
                     <Rank>
                       <span style={{ fontSize: "1.5rem", color: color }}>
                         {rank}
@@ -508,99 +478,164 @@ export default function MainContent({ games }) {
                   })}
                 </Game2Line>
               </Game>
-              <Game>
-                <Game1Line>
-                  <GameLeft>DLC TROPHY PACK 1</GameLeft>
-                </Game1Line>
-                <GameSubLine>
-                  <GameSubLeftImage
-                    image={selectedGame?.dlc1Image}
-                  ></GameSubLeftImage>
-                  <GameSubLeft>{selectedGame?.dlc1Name}</GameSubLeft>
-                  <GameSubRight>
-                    <Trophies>
-                      <TTop>
-                        <TSingle>
-                          <GoldIconS />
-                          <span
-                            style={{
-                              transform: "translate(-.5rem,-.25rem)",
-                              color: COLOR_GOLD,
-                              fontSize: "1rem",
-                            }}
+              {allDLCKeys?.map((dlcKey) => {
+                let unearnedDLC = 0;
+                let platinumADLC = 0;
+                let goldADLC = 0;
+                let silverADLC = 0;
+                let bronzeADLC = 0;
+                let platinumDLC = 0;
+                let goldDLC = 0;
+                let silverDLC = 0;
+                let bronzeDLC = 0;
+                let totalDLC = 0;
+
+                let dlcTrophies = selectedGame?.dlcAchievements?.filter(
+                  (ach) => ach?.dlc == dlcKey?.dlcKey
+                );
+                dlcTrophies?.forEach((ach) => {
+                  totalDLC++;
+                  if (ach?.achieved == 0) {
+                    unearnedDLC++;
+                    if (ach?.color == "Platinum") {
+                      platinumADLC++;
+                    }
+                    if (ach?.color == "Gold") {
+                      goldADLC++;
+                    }
+                    if (ach?.color == "Silver") {
+                      silverADLC++;
+                    }
+                    if (ach?.color == "Bronze") {
+                      bronzeADLC++;
+                    }
+                  } else {
+                    if (ach?.color == "Platinum") {
+                      platinumDLC++;
+                    }
+                    if (ach?.color == "Gold") {
+                      goldDLC++;
+                    }
+                    if (ach?.color == "Silver") {
+                      silverDLC++;
+                    }
+                    if (ach?.color == "Bronze") {
+                      bronzeDLC++;
+                    }
+                  }
+                });
+
+                let completedDLC = selectedGame?.achievements?.filter(
+                  (item) => item?.achieved == 1
+                )?.length;
+                let completionDLC =
+                  completedDLC == 0 ? 0 : (completedDLC / totalDLC) * 100;
+
+                return (
+                  <Game>
+                    <Game1Line>
+                      <GameLeft>DLC TROPHY PACK 1</GameLeft>
+                    </Game1Line>
+                    <GameSubLine>
+                      <GameSubLeftImage
+                        image={dlcKey?.image}
+                      ></GameSubLeftImage>
+                      <GameSubLeft>{dlcKey?.name}</GameSubLeft>
+                      <GameSubRight>
+                        <Ps5
+                          onClick={() => {
+                            setShowEditModal(true);
+                            setGameData((old) => selectedGame);
+                          }}
+                        >
+                          PS5
+                        </Ps5>
+                        <Seperator></Seperator>
+                        <Trophies>
+                          <TTop>
+                            <TSingle>
+                              <GoldIconS />
+                              <span
+                                style={{
+                                  transform: "translate(-.5rem,-.25rem)",
+                                  color: COLOR_GOLD,
+                                  fontSize: "1rem",
+                                }}
+                              >
+                                {goldDLC}
+                              </span>
+                            </TSingle>
+                            <TSingle>
+                              <SilverIconS />
+                              <span
+                                style={{
+                                  transform: "translate(-.5rem,-.25rem)",
+                                  color: COLOR_SILVER2,
+                                  fontSize: "1rem",
+                                }}
+                              >
+                                {silverDLC}
+                              </span>
+                            </TSingle>
+                            <TSingle>
+                              <BronzeIconS />
+                              <span
+                                style={{
+                                  transform: "translate(-.5rem,-.25rem)",
+                                  color: COLOR_BRONZE,
+                                  fontSize: "1rem",
+                                }}
+                              >
+                                {bronzeDLC}
+                              </span>
+                            </TSingle>
+                          </TTop>
+                          <TBottom>
+                            <Outer>
+                              <Inner percentage={completionDLC}></Inner>
+                              <Text>{completionDLC} %</Text>
+                            </Outer>
+                          </TBottom>
+                        </Trophies>
+                      </GameSubRight>
+                    </GameSubLine>
+                    <Game2Line>
+                      {dlcTrophies?.map((ach, index) => {
+                        return (
+                          <AchCard
+                            color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                            achieved={ach?.achieved}
                           >
-                            {goldDLC1}
-                          </span>
-                        </TSingle>
-                        <TSingle>
-                          <SilverIconS />
-                          <span
-                            style={{
-                              transform: "translate(-.5rem,-.25rem)",
-                              color: COLOR_SILVER2,
-                              fontSize: "1rem",
-                            }}
-                          >
-                            {silverDLC1}
-                          </span>
-                        </TSingle>
-                        <TSingle>
-                          <BronzeIconS />
-                          <span
-                            style={{
-                              transform: "translate(-.5rem,-.25rem)",
-                              color: COLOR_BRONZE,
-                              fontSize: "1rem",
-                            }}
-                          >
-                            {bronzeDLC1}
-                          </span>
-                        </TSingle>
-                      </TTop>
-                      <TBottom>
-                        <Outer>
-                          <Inner percentage={completionDLC1}></Inner>
-                          <Text>{completionDLC1} %</Text>
-                        </Outer>
-                      </TBottom>
-                    </Trophies>
-                  </GameSubRight>
-                </GameSubLine>
-                <Game2Line>
-                  {dlc1Trophies?.map((ach, index) => {
-                    return (
-                      <AchCard
-                        color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                        achieved={ach?.achieved}
-                      >
-                        <AchIconOuter achieved={ach?.achieved}>
-                          <AchIcon icon={ach?.icon}></AchIcon>
-                        </AchIconOuter>
-                        <AchData>
-                          <AchTitle>{ach?.displayName}</AchTitle>
-                          <AchDesc>{ach?.description}</AchDesc>
-                        </AchData>
-                        <Seperator padding={".25rem"} />
-                        <AchRarity>
-                          <span style={{ fontSize: "1.2rem" }}>
-                            {ach?.percentage}%
-                          </span>
-                          <span style={{ fontSize: ".7rem" }}>
-                            {ach?.label?.toUpperCase()}
-                          </span>
-                        </AchRarity>
-                        <Seperator padding={".25rem"} />
-                        <AchTrophy>
-                          {ach?.color == "Platinum" && <PlatinumIconS />}
-                          {ach?.color == "Gold" && <GoldIconS />}
-                          {ach?.color == "Silver" && <SilverIconS />}
-                          {ach?.color == "Bronze" && <BronzeIconS />}
-                        </AchTrophy>
-                      </AchCard>
-                    );
-                  })}
-                </Game2Line>
-              </Game>
+                            <AchIconOuter achieved={ach?.achieved}>
+                              <AchIcon icon={ach?.icon}></AchIcon>
+                            </AchIconOuter>
+                            <AchData>
+                              <AchTitle>{ach?.displayName}</AchTitle>
+                              <AchDesc>{ach?.description}</AchDesc>
+                            </AchData>
+                            <Seperator padding={".25rem"} />
+                            <AchRarity>
+                              <span style={{ fontSize: "1.2rem" }}>
+                                {ach?.percentage}%
+                              </span>
+                              <span style={{ fontSize: ".7rem" }}>
+                                {ach?.label?.toUpperCase()}
+                              </span>
+                            </AchRarity>
+                            <Seperator padding={".25rem"} />
+                            <AchTrophy>
+                              {ach?.color == "Platinum" && <PlatinumIconS />}
+                              {ach?.color == "Gold" && <GoldIconS />}
+                              {ach?.color == "Silver" && <SilverIconS />}
+                              {ach?.color == "Bronze" && <BronzeIconS />}
+                            </AchTrophy>
+                          </AchCard>
+                        );
+                      })}
+                    </Game2Line>
+                  </Game>
+                );
+              })}
             </>
           )}
         </SRLeft>
