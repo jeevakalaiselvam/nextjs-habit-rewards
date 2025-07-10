@@ -14,7 +14,7 @@ export default function EditGameForm({
   const [gameForm, setGameForm] = useState({
     id: gameData?.id,
     cover: gameData?.cover,
-    platinum: JSON.stringify(gameData?.platinum),
+    platinum: JSON.stringify(gameData?.platinum ?? []),
     dlc1Name: gameData?.dlc1Name,
     dlc2Name: gameData?.dlc2Name,
     dlc3Name: gameData?.dlc3Name,
@@ -54,7 +54,7 @@ export default function EditGameForm({
     setGameForm((old) => ({
       id: gameData?.id,
       cover: gameData?.cover,
-      platinum: JSON.stringify(gameData?.platinum),
+      platinum: JSON.stringify(gameData?.platinum ?? []),
       dlc1Name: gameData?.dlc1Name,
       dlc2Name: gameData?.dlc2Name,
       dlc3Name: gameData?.dlc3Name,

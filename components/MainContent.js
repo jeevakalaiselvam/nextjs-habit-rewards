@@ -29,6 +29,7 @@ import EditGameForm from "./EditGameForm";
 import PlatinumIconS from "./PlatinumIconS";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
+import GameCdImage from "./GameCdImage";
 
 export default function MainContent({
   games,
@@ -99,7 +100,7 @@ export default function MainContent({
     (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
   )?.[selectedGame?.achievements?.length - 1];
 
-  const allDLCKeys = [
+  let allDLCKeys = [
     {
       dlcKey: "DLC1",
       name: selectedGame?.dlc1Name,
@@ -110,7 +111,33 @@ export default function MainContent({
       name: selectedGame?.dlc2Name,
       image: selectedGame?.dlc2Image,
     },
+    {
+      dlcKey: "DLC3",
+      name: selectedGame?.dlc2Name,
+      image: selectedGame?.dlc2Image,
+    },
+    {
+      dlcKey: "DLC4",
+      name: selectedGame?.dlc2Name,
+      image: selectedGame?.dlc2Image,
+    },
+    {
+      dlcKey: "DLC5",
+      name: selectedGame?.dlc2Name,
+      image: selectedGame?.dlc2Image,
+    },
   ];
+
+  allDLCKeys = allDLCKeys?.filter((dlc) => {
+    let allDlcKeys = selectedGame?.dlcAchievements?.map((item) => item?.dlc);
+    if (allDlcKeys?.includes(dlc?.dlcKey)) {
+      return true;
+    }
+  });
+
+  let sortedGames = games.sort((a, b) =>
+    a.localeCompare(b, undefined, { sensitivity: "base" })
+  );
 
   return (
     <Container>
@@ -137,6 +164,17 @@ export default function MainContent({
             onMouseLeave={() => setActive("")}
           >
             PROFILE
+          </TabLink>
+          <TabLink
+            onClick={() => {
+              setSelected("LIBRARY");
+              setSelectedMode("LIBRARY");
+            }}
+            active={selected == "LIBRARY"}
+            onMouseEnter={() => setActive("LIBRARY")}
+            onMouseLeave={() => setActive("")}
+          >
+            LIBRARY
           </TabLink>
         </FRRight>
         <FRRight>
@@ -190,7 +228,7 @@ export default function MainContent({
                   <GamesRight></GamesRight>
                 </Games1Line>
                 <Games2Line>
-                  {games?.map((game, index) => {
+                  {sortedGames?.map((game, index) => {
                     let allCompletion = 0;
                     let total = 0;
                     let unearned = 0;
@@ -356,6 +394,182 @@ export default function MainContent({
                     );
                   })}
                 </Games2Line>
+              </Games>
+            )}
+            {selectedMode == "LIBRARY" && (
+              <Games>
+                <Games1Line>
+                  <GamesLeft>LIBRARY</GamesLeft>
+                  <GamesRight></GamesRight>
+                </Games1Line>
+                <Games2LineCD>
+                  {sortedGames?.map((game, index) => {
+                    let allCompletion = 0;
+                    let total = 0;
+                    let unearned = 0;
+                    let platinumA = 0;
+                    let goldA = 0;
+                    let silverA = 0;
+                    let bronzeA = 0;
+                    let platinum = 0;
+                    let gold = 0;
+                    let silver = 0;
+                    let bronze = 0;
+
+                    game?.achievements?.forEach((ach) => {
+                      total++;
+                      if (ach?.achieved == 0) {
+                        unearned++;
+                        if (ach?.color == "Platinum") {
+                          platinumA++;
+                        }
+                        if (ach?.color == "Gold") {
+                          goldA++;
+                        }
+                        if (ach?.color == "Silver") {
+                          silverA++;
+                        }
+                        if (ach?.color == "Bronze") {
+                          bronzeA++;
+                        }
+                      } else {
+                        if (ach?.color == "Platinum") {
+                          platinum++;
+                        }
+                        if (ach?.color == "Gold") {
+                          gold++;
+                        }
+                        if (ach?.color == "Silver") {
+                          silver++;
+                        }
+                        if (ach?.color == "Bronze") {
+                          bronze++;
+                        }
+                      }
+                    });
+
+                    let completed = game?.achievements?.filter(
+                      (item) => item?.achieved == 1
+                    )?.length;
+                    let completion =
+                      completed == 0 ? 0 : (completed / total) * 100;
+                    allCompletion = allCompletion + completion;
+                    if (total == completed) {
+                      completed = completed + 1;
+                    }
+
+                    let { color, rank } =
+                      calculateRankForCompletion(completion);
+                    let lastAch = game?.achievements?.sort(
+                      (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
+                    )?.[game?.achievements?.length - 1];
+
+                    return (
+                      <GameContainerCD
+                        color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                      >
+                        <GameCdImage game={game} />
+                        <span style={{ marginBottom: "1rem" }}>
+                          <Ps5
+                            onClick={() => {
+                              setShowEditModal(true);
+                              setGameData((old) => game);
+                            }}
+                          >
+                            PS5
+                          </Ps5>
+                        </span>
+                        <GameData>
+                          <GameTitle
+                            onClick={() => {
+                              setSelectedGame(game);
+                              setSelectedMode("GAME");
+                            }}
+                          >
+                            {game?.name}
+                          </GameTitle>
+                          <GameCompletion>
+                            {completed} of {total} Trophies
+                          </GameCompletion>
+                          <Started></Started>
+                        </GameData>
+                        <GameInfo>
+                          <Rank>
+                            <span style={{ fontSize: "1.5rem", color: color }}>
+                              {rank}
+                            </span>
+                            <span style={{ fontSize: ".7rem" }}>RANK</span>
+                          </Rank>
+                          <Seperator></Seperator>
+                          <Trophies>
+                            <TTop>
+                              <TSingle>
+                                <GoldIconS />
+                                <span
+                                  style={{
+                                    transform: "translate(-.5rem,-.25rem)",
+                                    color: COLOR_GOLD,
+                                    fontSize: "1rem",
+                                  }}
+                                >
+                                  {gold}
+                                </span>
+                              </TSingle>
+                              <TSingle>
+                                <SilverIconS />
+                                <span
+                                  style={{
+                                    transform: "translate(-.5rem,-.25rem)",
+                                    color: COLOR_SILVER2,
+                                    fontSize: "1rem",
+                                  }}
+                                >
+                                  {silver}
+                                </span>
+                              </TSingle>
+                              <TSingle>
+                                <BronzeIconS />
+                                <span
+                                  style={{
+                                    transform: "translate(-.5rem,-.25rem)",
+                                    color: COLOR_BRONZE,
+                                    fontSize: "1rem",
+                                  }}
+                                >
+                                  {bronze}
+                                </span>
+                              </TSingle>
+                            </TTop>
+                            <TBottom>
+                              <Outer>
+                                <Inner percentage={completion}></Inner>
+                                <Text>{completion} %</Text>
+                              </Outer>
+                            </TBottom>
+                          </Trophies>
+                          <Seperator></Seperator>
+                          <Platinum isPlatinum={total == completed}>
+                            <span
+                              style={{ opacity: total == completed ? 1 : 0.5 }}
+                            >
+                              <PlatinumIcon />
+                            </span>
+                            <span
+                              style={{
+                                fontSize: ".7rem",
+                                marginTop: "4px",
+                                fontWeight: "bold",
+                                opacity: total == completed ? 1 : 0.75,
+                              }}
+                            >
+                              {lastAch?.percentage} %
+                            </span>
+                          </Platinum>
+                        </GameInfo>
+                      </GameContainerCD>
+                    );
+                  })}
+                </Games2LineCD>
               </Games>
             )}
             {selectedMode == "GAME" && (
@@ -658,58 +872,60 @@ export default function MainContent({
             />
           </SRLeft>
         )}
-        <SRRight>
-          <Rarest>
-            <Rarest1Line>
-              <GamesLeft>RAREST TROPHIES</GamesLeft>
-              <GamesRight></GamesRight>
-            </Rarest1Line>
-            <Rarest2Line></Rarest2Line>
-            <RareSelection>
-              <RItem>
-                <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
-                  {ultrarare?.length}
-                </span>
-                <span style={{ fontSize: ".7rem" }}>ULTRA RARE</span>
-              </RItem>
-              <Seperator padding={".25rem"}></Seperator>
-              <RItem>
-                <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
-                  {veryrare?.length}
-                </span>
-                <span style={{ fontSize: ".7rem" }}>VERY RARE</span>
-              </RItem>
-              <Seperator padding={".25rem"}></Seperator>
-              <RItem>
-                <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
-                  {rare?.length}
-                </span>
-                <span style={{ fontSize: ".7rem" }}>RARE</span>
-              </RItem>
-              <Seperator padding={".25rem"}></Seperator>
-              <RItem>
-                <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
-                  {uncommon?.length}
-                </span>
-                <span style={{ fontSize: ".7rem" }}>UNCOMMON</span>
-              </RItem>
-              <Seperator padding={".25rem"}></Seperator>
-              <RItem>
-                <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
-                  {common?.length}
-                </span>
-                <span style={{ fontSize: ".7rem" }}>COMMON</span>
-              </RItem>
-            </RareSelection>
-          </Rarest>
-          <Milestones>
-            <Rarest1Line>
-              <GamesLeft>TROPHY MILESTONES</GamesLeft>
-              <GamesRight></GamesRight>
-            </Rarest1Line>
-            <Rarest2Line></Rarest2Line>
-          </Milestones>
-        </SRRight>
+        {selectedMode !== "LIBRARY" && (
+          <SRRight>
+            <Rarest>
+              <Rarest1Line>
+                <GamesLeft>RAREST TROPHIES</GamesLeft>
+                <GamesRight></GamesRight>
+              </Rarest1Line>
+              <Rarest2Line></Rarest2Line>
+              <RareSelection>
+                <RItem>
+                  <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
+                    {ultrarare?.length}
+                  </span>
+                  <span style={{ fontSize: ".7rem" }}>ULTRA RARE</span>
+                </RItem>
+                <Seperator padding={".25rem"}></Seperator>
+                <RItem>
+                  <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
+                    {veryrare?.length}
+                  </span>
+                  <span style={{ fontSize: ".7rem" }}>VERY RARE</span>
+                </RItem>
+                <Seperator padding={".25rem"}></Seperator>
+                <RItem>
+                  <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
+                    {rare?.length}
+                  </span>
+                  <span style={{ fontSize: ".7rem" }}>RARE</span>
+                </RItem>
+                <Seperator padding={".25rem"}></Seperator>
+                <RItem>
+                  <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
+                    {uncommon?.length}
+                  </span>
+                  <span style={{ fontSize: ".7rem" }}>UNCOMMON</span>
+                </RItem>
+                <Seperator padding={".25rem"}></Seperator>
+                <RItem>
+                  <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
+                    {common?.length}
+                  </span>
+                  <span style={{ fontSize: ".7rem" }}>COMMON</span>
+                </RItem>
+              </RareSelection>
+            </Rarest>
+            <Milestones>
+              <Rarest1Line>
+                <GamesLeft>TROPHY MILESTONES</GamesLeft>
+                <GamesRight></GamesRight>
+              </Rarest1Line>
+              <Rarest2Line></Rarest2Line>
+            </Milestones>
+          </SRRight>
+        )}
       </SecondRow>
     </Container>
   );
@@ -1001,6 +1217,7 @@ const Rank = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: center;
+  min-width: 50px;
 `;
 
 const Seperator = styled.div`
@@ -1031,6 +1248,7 @@ const Ps5 = styled.div`
 const GameTitle = styled.div`
   display: flex;
   align-items: center;
+  width: 100%6;
   justify-content: center;
   color: #057fcc;
 `;
@@ -1051,9 +1269,8 @@ const Started = styled.div`
 `;
 const GameData = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  flex: 1;
   padding: 0rem 1rem;
   flex-direction: column;
 `;
@@ -1090,14 +1307,32 @@ const GameContainer = styled.div`
   cursor: pointer;
 `;
 
+const GameContainerCD = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: ${(props) => props.color};
+  color: #333;
+  padding: 4px;
+  border: 1px solid #ddd;
+  flex-direction: column;
+  cursor: pointer;
+  width: 400px;
+`;
+
 const Games2Line = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  overflow: scroll;
-  min-height: 50vh;
-  max-height: 50vh;
+  width: 100%;
+`;
+
+const Games2LineCD = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
   width: 100%;
 `;
 

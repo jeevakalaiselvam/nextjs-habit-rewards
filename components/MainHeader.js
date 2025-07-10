@@ -199,11 +199,6 @@ export default function MainHeader({ games }) {
           </HeaderCounts>
         </HeaderInner>
       </MainWrapper>
-      <GameCDCollection>
-        {games?.map((game) => {
-          return <GameCdImage game={game} />;
-        })}
-      </GameCDCollection>
       <Overlay></Overlay>
       <BottomStats>
         <Section>
@@ -437,13 +432,16 @@ const HeaderInner = styled.div`
 const GameCDCollection = styled.div`
   position: absolute;
   top: 50%;
-  transform: translate(-50%, -50%);
   left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   align-items: center;
   justify-content: center;
   height: 300px;
-  width: 80%;
+  min-width: 1400px;
+  flex-wrap: wrap;
+  max-width: 1400px;
+  overflow: scroll;
   z-index: 100;
 `;
 
@@ -451,7 +449,7 @@ const Overlay = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  height: 500px;
+  height: 300px;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.65);
 `;
@@ -461,7 +459,7 @@ const Container = styled.div`
   align-items: flex-start;
   justify-content: center;
   width: 100%;
-  height: 500px;
+  height: 300px;
   background: ${(props) => `url(${props.background})`};
   background-repeat: no-repeat;
   background-size: cover;
