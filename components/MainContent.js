@@ -381,7 +381,7 @@ export default function MainContent({
                           <Seperator></Seperator>
                           <Platinum isPlatinum={total == completed}>
                             <span
-                              style={{ opacity: total == completed ? 1 : 0.5 }}
+                              style={{ opacity: total == completed ? 1 : 0.25 }}
                             >
                               <PlatinumIcon />
                             </span>
@@ -561,7 +561,7 @@ export default function MainContent({
                           <Seperator></Seperator>
                           <Platinum isPlatinum={total == completed}>
                             <span
-                              style={{ opacity: total == completed ? 1 : 0.5 }}
+                              style={{ opacity: total == completed ? 1 : 0.25 }}
                             >
                               <PlatinumIcon />
                             </span>
