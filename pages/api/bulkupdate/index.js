@@ -2,7 +2,6 @@ import clientPromise from "../../../lib/db";
 
 export default async function handler(req, res) {
   const { id, total } = req.query;
-  console.log(id);
 
   if (req.method === "GET") {
     try {

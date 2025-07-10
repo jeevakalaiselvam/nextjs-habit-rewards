@@ -15,6 +15,16 @@ export default function EditGameForm({
     id: gameData?.id,
     cover: gameData?.cover,
     platinum: JSON.stringify(gameData?.platinum),
+    dlc1Name: gameData?.dlc1Name,
+    dlc2Name: gameData?.dlc2Name,
+    dlc3Name: gameData?.dlc3Name,
+    dlc4Name: gameData?.dlc4Name,
+    dlc5Name: gameData?.dlc5Name,
+    dlc1Trophies: JSON.stringify(gameData?.dlc1Trophies ?? []),
+    dlc2Trophies: JSON.stringify(gameData?.dlc2Trophies ?? []),
+    dlc3Trophies: JSON.stringify(gameData?.dlc3Trophies ?? []),
+    dlc4Trophies: JSON.stringify(gameData?.dlc4Trophies ?? []),
+    dlc5Trophies: JSON.stringify(gameData?.dlc5Trophies ?? []),
   });
 
   const updateGameData = () => {
@@ -54,6 +64,16 @@ export default function EditGameForm({
       id: gameData?.id,
       cover: gameData?.cover,
       platinum: JSON.stringify(gameData?.platinum),
+      dlc1Name: gameData?.dlc1Name,
+      dlc2Name: gameData?.dlc2Name,
+      dlc3Name: gameData?.dlc3Name,
+      dlc4Name: gameData?.dlc4Name,
+      dlc5Name: gameData?.dlc5Name,
+      dlc1Trophies: JSON.stringify(gameData?.dlc1Trophies ?? []),
+      dlc2Trophies: JSON.stringify(gameData?.dlc2Trophies ?? []),
+      dlc3Trophies: JSON.stringify(gameData?.dlc3Trophies ?? []),
+      dlc4Trophies: JSON.stringify(gameData?.dlc4Trophies ?? []),
+      dlc5Trophies: JSON.stringify(gameData?.dlc5Trophies ?? []),
     }));
   }, [gameData]);
 
@@ -76,7 +96,7 @@ export default function EditGameForm({
             setGameForm((old) => ({ ...old, id: e.target.value }))
           }
         />
-      </Row>{" "}
+      </Row>
       <Row style={{ marginBottom: "1rem" }}>
         <Input
           placeholder="Enter Cover URL..."
@@ -85,15 +105,110 @@ export default function EditGameForm({
             setGameForm((old) => ({ ...old, cover: e.target.value }))
           }
         />
-      </Row>{" "}
+      </Row>
       <Row style={{ marginBottom: "1rem" }}>
         <TextArea
-          rows={30}
+          rows={3}
           placeholder="Enter Platinum JSON..."
           type="number"
           value={gameForm?.platinum}
           onChange={(e) =>
             setGameForm((old) => ({ ...old, platinum: e.target.value }))
+          }
+        />
+      </Row>
+      <Row style={{ marginBottom: "1rem" }}>
+        <Input
+          placeholder="DLC 1 Name..."
+          value={gameForm?.dlc1Name}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, dlc1Name: e.target.value }))
+          }
+        />
+      </Row>
+      <Row style={{ marginBottom: "1rem" }}>
+        <TextArea
+          rows={3}
+          placeholder="DLC 1 Trophies..."
+          value={gameForm?.dlc1Trophies}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, dlc1Trophies: e.target.value }))
+          }
+        />
+      </Row>
+      <Row style={{ marginBottom: "1rem" }}>
+        <Input
+          placeholder="DLC 2 Name..."
+          value={gameForm?.dlc2Name}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, dlc2Name: e.target.value }))
+          }
+        />
+      </Row>
+      <Row style={{ marginBottom: "1rem" }}>
+        <TextArea
+          rows={3}
+          placeholder="DLC 2 Trophies..."
+          value={gameForm?.dlc2Trophies}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, dlc2Trophies: e.target.value }))
+          }
+        />
+      </Row>
+      <Row style={{ marginBottom: "1rem" }}>
+        <Input
+          placeholder="DLC 3 Name..."
+          value={gameForm?.dlc3Name}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, dlc3Name: e.target.value }))
+          }
+        />
+      </Row>
+      <Row style={{ marginBottom: "1rem" }}>
+        <TextArea
+          rows={3}
+          placeholder="DLC 3 Trophies..."
+          value={gameForm?.dlc3Trophies}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, dlc3Trophies: e.target.value }))
+          }
+        />
+      </Row>
+      <Row style={{ marginBottom: "1rem" }}>
+        <Input
+          placeholder="DLC 4 Name..."
+          value={gameForm?.dlc4Name}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, dlc4Name: e.target.value }))
+          }
+        />
+      </Row>
+      <Row style={{ marginBottom: "1rem" }}>
+        <TextArea
+          rows={3}
+          placeholder="DLC 4 Trophies..."
+          value={gameForm?.dlc4Trophies}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, dlc4Trophies: e.target.value }))
+          }
+        />
+      </Row>
+      <Row style={{ marginBottom: "1rem" }}>
+        <Input
+          placeholder="DLC 5 Name..."
+          value={gameForm?.dlc5Name}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, dlc5Name: e.target.value }))
+          }
+        />
+      </Row>
+      <Row style={{ marginBottom: "1rem" }}>
+        <TextArea
+          rows={3}
+          placeholder="DLC 5 Trophies..."
+          value={gameForm?.dlc5Trophies}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, dlc5Trophies: e.target.value }))
           }
         />
       </Row>

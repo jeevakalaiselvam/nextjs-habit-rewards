@@ -75,6 +75,7 @@ export const calculateRankForCompletion = (completion) => {
   if (completion < 20 && completion >= 0) {
     return { color: COLOR_RANK_F, rank: "F" };
   }
+  return { color: COLOR_RANK_F, rank: "F" };
 };
 
 export const getAchsBasedOnRarity = (games) => {

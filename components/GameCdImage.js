@@ -17,8 +17,6 @@ export default function GameCdImage({
     return data?.id == game?.id;
   });
 
-  console.log({ gameData });
-
   return (
     <CdImage>
       <EditGameForm

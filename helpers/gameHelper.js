@@ -47,7 +47,6 @@ const SIEGE_ICONS = {
 };
 
 export const getIconBasedOnKeyword = (keyword) => {
-  console.log("KEY", keyword);
   return getOperatorIconFor(keyword?.split(" ")?.[0]);
 };
 

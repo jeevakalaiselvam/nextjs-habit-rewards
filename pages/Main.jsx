@@ -49,12 +49,36 @@ export default function Atom() {
       let platinumGameData = platinumData?.find((item) => item?.id == game?.id);
       let formedGame = {};
       let platinumMapper = {};
+      let dlcMapper = {};
+
       platinumGameData?.platinum?.forEach((ach) => {
         platinumMapper[ach?.title] = ach;
       });
+
+      platinumGameData?.dlc1Trophies?.forEach((ach) => {
+        dlcMapper[ach?.title] = { ...ach, dlc: "DLC1" };
+      });
+      platinumGameData?.dlc2Trophies?.forEach((ach) => {
+        dlcMapper[ach?.title] = { ...ach, dlc: "DLC2" };
+      });
+      platinumGameData?.dlc3Trophies?.forEach((ach) => {
+        dlcMapper[ach?.title] = { ...ach, dlc: "DLC3" };
+      });
+      platinumGameData?.dlc4Trophies?.forEach((ach) => {
+        dlcMapper[ach?.title] = { ...ach, dlc: "DLC4" };
+      });
+      platinumGameData?.dlc5Trophies?.forEach((ach) => {
+        dlcMapper[ach?.title] = { ...ach, dlc: "DLC5" };
+      });
+
       let gameName = game?.achievements?.[0]?.gameName;
 
-      let sortedAchsTransformed = game?.achievements
+      let sortedPlatinumTrophies = game?.achievements
+        ?.filter((ach) => {
+          if (platinumMapper?.[ach?.displayName]) {
+            return true;
+          }
+        })
         ?.map((ach) => {
           if (platinumMapper?.[ach?.displayName]) {
             return {
@@ -64,16 +88,31 @@ export default function Atom() {
           }
         })
         ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
-      let lastAch = sortedAchsTransformed?.[sortedAchsTransformed?.length - 1];
-      let total = sortedAchsTransformed?.length;
-      let completed = sortedAchsTransformed?.filter(
-        (ach) => ach?.achieved == 1
-      )?.length;
+
+      let sortedDLCTrophies = game?.achievements
+        ?.filter((ach) => {
+          if (dlcMapper?.[ach?.displayName]) {
+            return true;
+          }
+        })
+        ?.map((ach) => {
+          if (dlcMapper?.[ach?.displayName]) {
+            return {
+              ...ach,
+              ...dlcMapper?.[ach?.displayName],
+            };
+          }
+        })
+        ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
+
+      let lastAch =
+        sortedPlatinumTrophies?.[sortedPlatinumTrophies?.length - 1];
+
       formedGame = {
         ...game,
         ...platinumGameData,
         achievements: [
-          ...sortedAchsTransformed,
+          ...sortedPlatinumTrophies,
           {
             ...lastAch,
             title: `${gameName}'s Platinum`,
@@ -84,13 +123,20 @@ export default function Atom() {
             color: "Platinum",
           },
         ],
+        dlcAchievements: [...sortedDLCTrophies],
       };
+
+      console.log(game?.name, {
+        platinumGameData,
+        dlcMapper,
+        sortedDLCTrophies,
+        formedGame,
+      });
+
       return formedGame;
     });
     setFinalGames(finalGames);
   }, [games, platinumData]);
-
-  console.log({ finalGames });
 
   return (
     <Container>

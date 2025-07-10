@@ -23,5 +23,3 @@ const achievements = Array.from(achievementElements).map((el) => {
     name: "Cyberpunk 2077",
   };
 });
-
-console.log(JSON.stringify(achievements));

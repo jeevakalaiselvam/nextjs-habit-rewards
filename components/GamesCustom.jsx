@@ -281,7 +281,6 @@ export default function Atom({
   });
 
   sortedAchs = sortedAchs?.filter((ach) => ach?.["TYPE"] == selectedCategory);
-  console.log(sortedAchs, selectedCategory);
 
   return (
     <Container>

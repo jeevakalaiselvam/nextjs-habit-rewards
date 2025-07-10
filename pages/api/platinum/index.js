@@ -2,7 +2,21 @@ import clientPromise from "../../../lib/db";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { id, cover, platinum } = req.body;
+    const {
+      id,
+      cover,
+      platinum,
+      dlc1Name,
+      dlc1Trophies,
+      dlc2Name,
+      dlc2Trophies,
+      dlc3Name,
+      dlc3Trophies,
+      dlc4Name,
+      dlc4Trophies,
+      dlc5Name,
+      dlc5Trophies,
+    } = req.body;
 
     if (!id || !cover || !platinum) {
       return res.status(400).json({ error: "Data is required" });
@@ -15,6 +29,16 @@ export default async function handler(req, res) {
         id,
         cover,
         platinum,
+        dlc1Name,
+        dlc1Trophies,
+        dlc2Name,
+        dlc2Trophies,
+        dlc3Name,
+        dlc3Trophies,
+        dlc4Name,
+        dlc4Trophies,
+        dlc5Name,
+        dlc5Trophies,
       });
 
       res.status(201).json({ message: "Game added successfully" });

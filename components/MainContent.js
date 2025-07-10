@@ -39,6 +39,59 @@ export default function MainContent({ games }) {
   const { ultrarare, veryrare, rare, uncommon, common } =
     getAchsBasedOnRarity(games);
 
+  let unearned = 0;
+  let platinumA = 0;
+  let goldA = 0;
+  let silverA = 0;
+  let bronzeA = 0;
+  let platinum = 0;
+  let gold = 0;
+  let silver = 0;
+  let bronze = 0;
+  let total = 0;
+
+  selectedGame?.achievements?.forEach((ach) => {
+    total++;
+    if (ach?.achieved == 0) {
+      unearned++;
+      if (ach?.color == "Platinum") {
+        platinumA++;
+      }
+      if (ach?.color == "Gold") {
+        goldA++;
+      }
+      if (ach?.color == "Silver") {
+        silverA++;
+      }
+      if (ach?.color == "Bronze") {
+        bronzeA++;
+      }
+    } else {
+      if (ach?.color == "Platinum") {
+        platinum++;
+      }
+      if (ach?.color == "Gold") {
+        gold++;
+      }
+      if (ach?.color == "Silver") {
+        silver++;
+      }
+      if (ach?.color == "Bronze") {
+        bronze++;
+      }
+    }
+  });
+
+  let completed = selectedGame?.achievements?.filter(
+    (item) => item?.achieved == 1
+  )?.length;
+  let completion = completed == 0 ? 0 : (completed / total) * 100;
+
+  let { color, rank } = calculateRankForCompletion(completion ?? 0);
+  let lastAch = selectedGame?.achievements?.sort(
+    (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
+  )?.[selectedGame?.achievements?.length - 1];
+
   return (
     <Container>
       {showEditModal && (
@@ -162,9 +215,6 @@ export default function MainContent({ games }) {
                     }
                   });
 
-                  let exceptPlatinum = game?.achievements?.filter(
-                    (item) => item?.color !== "Platinum"
-                  );
                   let completed = game?.achievements?.filter(
                     (item) => item?.achieved == 1
                   )?.length;
@@ -175,21 +225,10 @@ export default function MainContent({ games }) {
                     completed = completed + 1;
                   }
 
-                  let averageCompletion =
-                    allCompletion == 0 ? 0 : allCompletion / games?.length;
-
-                  let { progressPercent, level } = calculatePSLevelAndProgress(
-                    platinum,
-                    gold,
-                    silver,
-                    bronze
-                  );
-
                   let { color, rank } = calculateRankForCompletion(completion);
                   let lastAch = game?.achievements?.sort(
                     (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
                   )?.[game?.achievements?.length - 1];
-                  console.log(lastAch);
 
                   return (
                     <GameContainer
@@ -238,7 +277,7 @@ export default function MainContent({ games }) {
                                   fontSize: "1rem",
                                 }}
                               >
-                                1
+                                {gold}
                               </span>
                             </TSingle>
                             <TSingle>
@@ -250,7 +289,7 @@ export default function MainContent({ games }) {
                                   fontSize: "1rem",
                                 }}
                               >
-                                1
+                                {silver}
                               </span>
                             </TSingle>
                             <TSingle>
@@ -262,7 +301,7 @@ export default function MainContent({ games }) {
                                   fontSize: "1rem",
                                 }}
                               >
-                                1
+                                {bronze}
                               </span>
                             </TSingle>
                           </TTop>
@@ -305,15 +344,91 @@ export default function MainContent({ games }) {
                   {selectedGame?.name?.toUpperCase()} TROPHIES
                 </GameLeft>
               </Game1Line>
+              <GameSubLine>
+                <GameSubLeftImage
+                  image={HEADER_IMAGE(selectedGame?.id)}
+                ></GameSubLeftImage>
+                <GameSubLeft>Base Game</GameSubLeft>
+                <GameSubRight>
+                  <Rank>
+                    <span style={{ fontSize: "1.5rem", color: color }}>
+                      {rank}
+                    </span>
+                    <span style={{ fontSize: ".7rem" }}>RANK</span>
+                  </Rank>
+                  <Seperator></Seperator>
+                  <Platinum isPlatinum={total == completed}>
+                    <span style={{ opacity: total == completed ? 1 : 0.25 }}>
+                      <PlatinumIcon />
+                    </span>
+                    <span
+                      style={{
+                        fontSize: ".7rem",
+                        marginTop: "4px",
+                        fontWeight: "bold",
+                        opacity: total == completed ? 1 : 0.75,
+                      }}
+                    >
+                      {lastAch?.percentage} %
+                    </span>
+                  </Platinum>
+                  <Seperator></Seperator>
+                  <Trophies>
+                    <TTop>
+                      <TSingle>
+                        <GoldIconS />
+                        <span
+                          style={{
+                            transform: "translate(-.5rem,-.25rem)",
+                            color: COLOR_GOLD,
+                            fontSize: "1rem",
+                          }}
+                        >
+                          {gold}
+                        </span>
+                      </TSingle>
+                      <TSingle>
+                        <SilverIconS />
+                        <span
+                          style={{
+                            transform: "translate(-.5rem,-.25rem)",
+                            color: COLOR_SILVER2,
+                            fontSize: "1rem",
+                          }}
+                        >
+                          {silver}
+                        </span>
+                      </TSingle>
+                      <TSingle>
+                        <BronzeIconS />
+                        <span
+                          style={{
+                            transform: "translate(-.5rem,-.25rem)",
+                            color: COLOR_BRONZE,
+                            fontSize: "1rem",
+                          }}
+                        >
+                          {bronze}
+                        </span>
+                      </TSingle>
+                    </TTop>
+                    <TBottom>
+                      <Outer>
+                        <Inner percentage={completion}></Inner>
+                        <Text>{completion} %</Text>
+                      </Outer>
+                    </TBottom>
+                  </Trophies>
+                </GameSubRight>
+              </GameSubLine>
               <Game2Line>
                 {selectedGame?.achievements?.map((ach, index) => {
-                  console.log(ach);
                   return (
                     <AchCard
                       color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                      achieved={ach?.achieved || index == 3}
+                      achieved={ach?.achieved}
                     >
-                      <AchIconOuter achieved={ach?.achieved || index == 3}>
+                      <AchIconOuter achieved={ach?.achieved}>
                         <AchIcon icon={ach?.icon}></AchIcon>
                       </AchIconOuter>
                       <AchData>
@@ -399,6 +514,40 @@ export default function MainContent({ games }) {
     </Container>
   );
 }
+
+const GameSubLeftImage = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 100px;
+  background: ${(props) => `url(${props.image})`};
+  background-size: cover;
+`;
+
+const GameSubLeft = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0 1rem;
+`;
+
+const GameSubRight = styled.div`
+  display: flex;
+  align-items: center;
+  padding-right: 1rem;
+  justify-content: flex-end;
+  flex: 1;
+`;
+
+const GameSubLine = styled.div`
+  display: flex;
+  align-items: center;
+  color: #333;
+  padding: 0.75rem 0.5rem;
+  justify-content: center;
+  width: 100%;
+`;
 
 const AchTitle = styled.div`
   display: flex;
