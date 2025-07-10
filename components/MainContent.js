@@ -30,6 +30,7 @@ import PlatinumIconS from "./PlatinumIconS";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 import GameCdImage from "./GameCdImage";
+import { formatDate } from "../helpers/dateHelper";
 
 export default function MainContent({
   games,
@@ -313,12 +314,13 @@ export default function MainContent({
                           <GameLastPlayed>
                             {game?.lastPlayed == 0
                               ? "Yet to Start"
-                              : game?.lastPlayed}
+                              : formatDate(new Date(game?.lastPlayed * 1000))}
                           </GameLastPlayed>
                           <GameHours>
                             {game?.playtime == 0
                               ? "Yet to Start"
-                              : game?.playtime}{" "}
+                              : (game?.playtime / 60)?.toFixed(1)}
+                            {" Hours"}
                           </GameHours>
                           {isPlatinumNotAdded &&
                             !(gamesLoading || platinumDataLoading) && (
