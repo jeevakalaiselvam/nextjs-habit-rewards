@@ -113,18 +113,18 @@ export default function MainContent({
     },
     {
       dlcKey: "DLC3",
-      name: selectedGame?.dlc2Name,
-      image: selectedGame?.dlc2Image,
+      name: selectedGame?.dlc3Name,
+      image: selectedGame?.dlc3Image,
     },
     {
       dlcKey: "DLC4",
-      name: selectedGame?.dlc2Name,
-      image: selectedGame?.dlc2Image,
+      name: selectedGame?.dlc4Name,
+      image: selectedGame?.dlc4Image,
     },
     {
       dlcKey: "DLC5",
-      name: selectedGame?.dlc2Name,
-      image: selectedGame?.dlc2Image,
+      name: selectedGame?.dlc5Name,
+      image: selectedGame?.dlc5Image,
     },
   ];
 
@@ -1012,7 +1012,7 @@ const AchIcon = styled.div`
   width: 70px;
   height: 70px;
   background: ${(props) => `url(${props?.icon})`};
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
   margin: 4px;
 `;
