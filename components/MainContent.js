@@ -39,15 +39,13 @@ export default function MainContent({
   gamesLoading,
   platinumDataLoading,
 }) {
+  const [selectedRarity, setSelectedRarity] = useState("ULTRA RARE");
   const [selectedMode, setSelectedMode] = useState("GAMES");
   const [selectedGame, setSelectedGame] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
   const [selected, setSelected] = useState("PROFILE");
   const [active, setActive] = useState("PROFILE");
   const [gameData, setGameData] = useState({});
-
-  const { ultrarare, veryrare, rare, uncommon, common } =
-    getAchsBasedOnRarity(games);
 
   let unearnedBG = 0;
   let platinumABG = 0;
@@ -140,6 +138,33 @@ export default function MainContent({
   let sortedGames = games.sort((a, b) =>
     a?.name.localeCompare(b?.name, undefined, { sensitivity: "base" })
   );
+
+  const { ultrarare, veryrare, rare, uncommon, common } =
+    getAchsBasedOnRarity(games);
+
+  let selectedRarityAchs = [];
+
+  if (selectedRarity == "ULTRA RARE") {
+    selectedRarityAchs = ultrarare;
+  }
+
+  if (selectedRarity == "VERY RARE") {
+    selectedRarityAchs = veryrare;
+  }
+
+  if (selectedRarity == "RARE") {
+    selectedRarityAchs = rare;
+  }
+
+  if (selectedRarity == "UNCOMMON") {
+    selectedRarityAchs = uncommon;
+  }
+
+  if (selectedRarity == "COMMON") {
+    selectedRarityAchs = common;
+  }
+
+  console.log({ selectedRarityAchs });
 
   return (
     <Container>
@@ -904,37 +929,97 @@ export default function MainContent({
                 <GamesLeft>RAREST TROPHIES</GamesLeft>
                 <GamesRight></GamesRight>
               </Rarest1Line>
-              <Rarest2Line></Rarest2Line>
+              <Rarest2Line>
+                {selectedRarityAchs?.length == 0 && <span>No Trophies</span>}
+                {selectedRarityAchs?.length > 0 &&
+                  selectedRarityAchs?.map((ach, index) => {
+                    return (
+                      <AchCard
+                        color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                        achieved={ach?.achieved}
+                      >
+                        <AchIconOuter achieved={ach?.achieved}>
+                          <AchIcon icon={ach?.icon}></AchIcon>
+                        </AchIconOuter>
+                        <AchData>
+                          <AchTitle>{ach?.displayName}</AchTitle>
+                          <AchDesc>{ach?.description}</AchDesc>
+                        </AchData>
+                        <Seperator padding={".25rem"} />
+                        <AchRarity>
+                          <span style={{ fontSize: "1.2rem" }}>
+                            {ach?.percentage}%
+                          </span>
+                          <span style={{ fontSize: ".7rem" }}>
+                            {ach?.label?.toUpperCase()}
+                          </span>
+                        </AchRarity>
+                        <Seperator padding={".25rem"} />
+                        <AchTrophy>
+                          {ach?.color == "Platinum" && <PlatinumIconS />}
+                          {ach?.color == "Gold" && <GoldIconS />}
+                          {ach?.color == "Silver" && <SilverIconS />}
+                          {ach?.color == "Bronze" && <BronzeIconS />}
+                        </AchTrophy>
+                      </AchCard>
+                    );
+                  })}
+              </Rarest2Line>
               <RareSelection>
-                <RItem>
+                <RItem
+                  active={selectedRarity == "ULTRA RARE"}
+                  onClick={() => {
+                    setSelectedRarity("ULTRA RARE");
+                  }}
+                >
                   <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
                     {ultrarare?.length}
                   </span>
                   <span style={{ fontSize: ".7rem" }}>ULTRA RARE</span>
                 </RItem>
                 <Seperator padding={".25rem"}></Seperator>
-                <RItem>
+                <RItem
+                  active={selectedRarity == "VERY RARE"}
+                  onClick={() => {
+                    setSelectedRarity("VERY RARE");
+                  }}
+                >
                   <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
                     {veryrare?.length}
                   </span>
                   <span style={{ fontSize: ".7rem" }}>VERY RARE</span>
                 </RItem>
                 <Seperator padding={".25rem"}></Seperator>
-                <RItem>
+                <RItem
+                  active={selectedRarity == "RARE"}
+                  onClick={() => {
+                    setSelectedRarity("RARE");
+                  }}
+                >
                   <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
                     {rare?.length}
                   </span>
                   <span style={{ fontSize: ".7rem" }}>RARE</span>
                 </RItem>
                 <Seperator padding={".25rem"}></Seperator>
-                <RItem>
+                <RItem
+                  active={selectedRarity == "UNCOMMON"}
+                  onClick={() => {
+                    setSelectedRarity("UNCOMMON");
+                  }}
+                >
                   <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
                     {uncommon?.length}
                   </span>
                   <span style={{ fontSize: ".7rem" }}>UNCOMMON</span>
                 </RItem>
                 <Seperator padding={".25rem"}></Seperator>
-                <RItem>
+                <RItem
+                  active={selectedRarity == "COMMON"}
+                  onClick={() => {
+                    setSelectedRarity("COMMON");
+                  }}
+                >
                   <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
                     {common?.length}
                   </span>
@@ -1104,6 +1189,8 @@ const RItem = styled.div`
   justify-content: center;
   flex: 1;
   flex-direction: column;
+  cursor: pointer;
+  opacity: ${(props) => (props.active ? 1 : 0.5)};
 `;
 
 const RareSelection = styled.div`
@@ -1122,8 +1209,9 @@ const Rarest2Line = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   overflow: scroll;
-  min-height: 200px;
-  max-height: 200px;
+  min-height: 600px;
+  max-height: 600px;
+  padding: 0.5rem 0.5rem;
   width: 100%;
   color: #333;
 `;
