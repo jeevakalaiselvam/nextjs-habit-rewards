@@ -181,6 +181,7 @@ export default function MainContent({ games }) {
                   let bronze = 0;
 
                   game?.achievements?.forEach((ach) => {
+                    total++;
                     if (ach?.achieved == 0) {
                       unearned++;
                       if (ach?.color == "Platinum") {
@@ -198,19 +199,15 @@ export default function MainContent({ games }) {
                     } else {
                       if (ach?.color == "Platinum") {
                         platinum++;
-                        total++;
                       }
                       if (ach?.color == "Gold") {
                         gold++;
-                        total++;
                       }
                       if (ach?.color == "Silver") {
                         silver++;
-                        total++;
                       }
                       if (ach?.color == "Bronze") {
                         bronze++;
-                        total++;
                       }
                     }
                   });
