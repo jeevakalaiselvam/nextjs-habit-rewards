@@ -403,7 +403,7 @@ export default function MainContent({
                                 opacity: total == completed ? 1 : 0.75,
                               }}
                             >
-                              {lastAch?.percentage} %
+                              {lastAch?.percentage?.toFixed(2)} %
                             </span>
                           </Platinum>
                         </GameInfo>
