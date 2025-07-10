@@ -309,6 +309,16 @@ export default function MainContent({
                           <GameCompletion>
                             {completed} of {total} Trophies
                           </GameCompletion>
+                          <GameLastPlayed>
+                            {game?.lastPlayed == 0
+                              ? "Yet to Start"
+                              : game?.lastPlayed}
+                          </GameLastPlayed>
+                          <GameHours>
+                            {game?.playtime == 0
+                              ? "Yet to Start"
+                              : game?.playtime}{" "}
+                          </GameHours>
                           {isPlatinumNotAdded &&
                             !(gamesLoading || platinumDataLoading) && (
                               <Warning> PLATINUM DATA MISSING !</Warning>
@@ -1284,12 +1294,30 @@ const Warning = styled.div`
   }
 `;
 
+const GameLastPlayed = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem 0.125rem 0;
+  color: #666666;
+`;
+
+const GameHours = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem 0.125rem 0;
+  color: #666666;
+`;
+
 const GameCompletion = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
-  padding: 0.25rem 0.5rem 0.5rem 0;
+  padding: 0.25rem 0.5rem 0.25rem 0;
   color: #666666;
 `;
 
