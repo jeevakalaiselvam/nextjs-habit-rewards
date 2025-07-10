@@ -384,7 +384,7 @@ export default function MainContent({
                             <TBottom>
                               <Outer>
                                 <Inner percentage={completion}></Inner>
-                                <Text>{completion} %</Text>
+                                <Text>{completion?.toFixed(2)} %</Text>
                               </Outer>
                             </TBottom>
                           </Trophies>
@@ -403,7 +403,7 @@ export default function MainContent({
                                 opacity: total == completed ? 1 : 0.75,
                               }}
                             >
-                              {lastAch?.percentage?.toFixed(2)} %
+                              {Number(lastAch?.percentage)?.toFixed(2)} %
                             </span>
                           </Platinum>
                         </GameInfo>
