@@ -431,7 +431,7 @@ export default function MainContent({
                                 opacity: total == completed ? 1 : 0.75,
                               }}
                             >
-                              {Number(lastAch?.percentage)?.toFixed(2)} %
+                              {Number(lastAch?.percentage)} %
                             </span>
                           </Platinum>
                         </GameInfo>
@@ -735,7 +735,7 @@ export default function MainContent({
                           <Seperator padding={".25rem"} />
                           <AchRarity>
                             <span style={{ fontSize: "1.2rem" }}>
-                              {ach?.percentage?.toFixed(2)}%
+                              {ach?.percentage}%
                             </span>
                             <span style={{ fontSize: ".7rem" }}>
                               {ach?.label?.toUpperCase()}
