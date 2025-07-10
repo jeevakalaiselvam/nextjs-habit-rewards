@@ -43,7 +43,7 @@ export default function MainContent({
   const [selectedMode, setSelectedMode] = useState("GAMES");
   const [selectedGame, setSelectedGame] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selected, setSelected] = useState("PROFILE");
+  const [selected, setSelected] = useState("LIBRARY");
   const [active, setActive] = useState("PROFILE");
   const [gameData, setGameData] = useState({});
 
@@ -192,7 +192,7 @@ export default function MainContent({
           >
             PROFILE
           </TabLink>
-          {/* <TabLink
+          <TabLink
             onClick={() => {
               setSelected("LIBRARY");
               setSelectedMode("LIBRARY");
@@ -202,7 +202,7 @@ export default function MainContent({
             onMouseLeave={() => setActive("")}
           >
             LIBRARY
-          </TabLink> */}
+          </TabLink>
         </FRRight>
         <FRRight>
           <TabLink
@@ -529,7 +529,7 @@ export default function MainContent({
                             PS5
                           </Ps5>
                         </span>
-                        <GameData>
+                        <GameDataCD>
                           <GameTitle
                             onClick={() => {
                               setSelectedGame(game);
@@ -538,12 +538,12 @@ export default function MainContent({
                           >
                             {game?.name}
                           </GameTitle>
-                          <GameCompletion>
+                          <GameCompletionCD>
                             {completed} of {total} Trophies
-                          </GameCompletion>
+                          </GameCompletionCD>
                           <Started></Started>
-                        </GameData>
-                        <GameInfo>
+                        </GameDataCD>
+                        <GameInfoCD>
                           <Rank>
                             <span style={{ fontSize: "1.5rem", color: color }}>
                               {rank}
@@ -615,7 +615,7 @@ export default function MainContent({
                               {lastAch?.percentage} %
                             </span>
                           </Platinum>
-                        </GameInfo>
+                        </GameInfoCD>
                       </GameContainerCD>
                     );
                   })}
@@ -1413,6 +1413,15 @@ const GameCompletion = styled.div`
   color: #666666;
 `;
 
+const GameCompletionCD = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  padding: 0.5rem;
+  color: #666666;
+`;
+
 const Started = styled.div`
   display: flex;
   align-items: center;
@@ -1424,6 +1433,22 @@ const GameData = styled.div`
   justify-content: center;
   padding: 0rem 1rem;
   flex-direction: column;
+`;
+
+const GameDataCD = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0rem 1rem;
+  flex-direction: column;
+`;
+
+const GameInfoCD = styled.div`
+  display: flex;
+  flex: 2;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.5rem;
 `;
 
 const GameInfo = styled.div`
