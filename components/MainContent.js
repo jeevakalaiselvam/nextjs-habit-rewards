@@ -385,7 +385,7 @@ export default function MainContent({
                             <TBottom>
                               <Outer>
                                 <Inner percentage={completion}></Inner>
-                                <Text>{completion?.toFixed(2)} %</Text>
+                                <Text>{completion} %</Text>
                               </Outer>
                             </TBottom>
                           </Trophies>
@@ -566,7 +566,7 @@ export default function MainContent({
                             <TBottom>
                               <Outer>
                                 <Inner percentage={completion}></Inner>
-                                <Text>{completion?.toFixed(2)} %</Text>
+                                <Text>{completion} %</Text>
                               </Outer>
                             </TBottom>
                           </Trophies>
