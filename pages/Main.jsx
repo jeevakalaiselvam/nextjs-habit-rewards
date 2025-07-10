@@ -159,6 +159,7 @@ export default function Atom() {
         refreshData={refreshData}
         setGamesLoading={setGamesLoading}
         gamesLoading={gamesLoading}
+        platinumDataLoading={platinumDataLoading}
       />
     </Container>
   );

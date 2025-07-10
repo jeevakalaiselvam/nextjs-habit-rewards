@@ -36,6 +36,7 @@ export default function MainContent({
   refreshData,
   setGamesLoading,
   gamesLoading,
+  platinumDataLoading,
 }) {
   const [selectedMode, setSelectedMode] = useState("GAMES");
   const [selectedGame, setSelectedGame] = useState("");
@@ -308,9 +309,10 @@ export default function MainContent({
                           <GameCompletion>
                             {completed} of {total} Trophies
                           </GameCompletion>
-                          {isPlatinumNotAdded && (
-                            <Warning> PLATINUM DATA MISSING !</Warning>
-                          )}
+                          {isPlatinumNotAdded &&
+                            !(gamesLoading || platinumDataLoading) && (
+                              <Warning> PLATINUM DATA MISSING !</Warning>
+                            )}
                           <Started></Started>
                         </GameData>
                         <GameInfo>
