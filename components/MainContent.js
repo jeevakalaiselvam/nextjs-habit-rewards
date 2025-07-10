@@ -136,7 +136,7 @@ export default function MainContent({
   });
 
   let sortedGames = games.sort((a, b) =>
-    a.localeCompare(b, undefined, { sensitivity: "base" })
+    a?.name.localeCompare(b?.name, undefined, { sensitivity: "base" })
   );
 
   return (
