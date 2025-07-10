@@ -165,7 +165,7 @@ export default function MainContent({
           >
             PROFILE
           </TabLink>
-          <TabLink
+          {/* <TabLink
             onClick={() => {
               setSelected("LIBRARY");
               setSelectedMode("LIBRARY");
@@ -175,7 +175,7 @@ export default function MainContent({
             onMouseLeave={() => setActive("")}
           >
             LIBRARY
-          </TabLink>
+          </TabLink> */}
         </FRRight>
         <FRRight>
           <TabLink
@@ -289,6 +289,8 @@ export default function MainContent({
                       (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
                     )?.[game?.achievements?.length - 1];
 
+                    let isPlatinumNotAdded = game?.achievements?.length == 1;
+
                     return (
                       <GameContainer
                         color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
@@ -306,6 +308,9 @@ export default function MainContent({
                           <GameCompletion>
                             {completed} of {total} Trophies
                           </GameCompletion>
+                          {isPlatinumNotAdded && (
+                            <Warning> PLATINUM DATA MISSING !</Warning>
+                          )}
                           <Started></Started>
                         </GameData>
                         <GameInfo>
@@ -1257,6 +1262,26 @@ const GameTitle = styled.div`
   color: #057fcc;
 `;
 
+const Warning = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem 0.5rem 0;
+  color: red;
+  animation: blinkSmooth 1.5s ease-in-out infinite;
+
+  @keyframes blinkSmooth {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+`;
+
 const GameCompletion = styled.div`
   display: flex;
   align-items: center;
@@ -1273,7 +1298,7 @@ const Started = styled.div`
 `;
 const GameData = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 0rem 1rem;
   flex-direction: column;
