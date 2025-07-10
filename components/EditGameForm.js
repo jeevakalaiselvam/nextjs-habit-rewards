@@ -20,6 +20,11 @@ export default function EditGameForm({
     dlc3Name: gameData?.dlc3Name,
     dlc4Name: gameData?.dlc4Name,
     dlc5Name: gameData?.dlc5Name,
+    dlc1Image: gameData?.dlc1Image,
+    dlc2Image: gameData?.dlc2Image,
+    dlc3Image: gameData?.dlc3Image,
+    dlc4Image: gameData?.dlc4Image,
+    dlc5Image: gameData?.dlc5Image,
     dlc1Trophies: JSON.stringify(gameData?.dlc1Trophies ?? []),
     dlc2Trophies: JSON.stringify(gameData?.dlc2Trophies ?? []),
     dlc3Trophies: JSON.stringify(gameData?.dlc3Trophies ?? []),
@@ -69,6 +74,11 @@ export default function EditGameForm({
       dlc3Name: gameData?.dlc3Name,
       dlc4Name: gameData?.dlc4Name,
       dlc5Name: gameData?.dlc5Name,
+      dlc1Image: gameData?.dlc1Image,
+      dlc2Image: gameData?.dlc2Image,
+      dlc3Image: gameData?.dlc3Image,
+      dlc4Image: gameData?.dlc4Image,
+      dlc5Image: gameData?.dlc5Image,
       dlc1Trophies: JSON.stringify(gameData?.dlc1Trophies ?? []),
       dlc2Trophies: JSON.stringify(gameData?.dlc2Trophies ?? []),
       dlc3Trophies: JSON.stringify(gameData?.dlc3Trophies ?? []),
@@ -125,6 +135,15 @@ export default function EditGameForm({
             setGameForm((old) => ({ ...old, dlc1Name: e.target.value }))
           }
         />
+      </Row>{" "}
+      <Row style={{ marginBottom: "1rem" }}>
+        <Input
+          placeholder="DLC 1 Image..."
+          value={gameForm?.dlc1Image}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, dlc1Image: e.target.value }))
+          }
+        />
       </Row>
       <Row style={{ marginBottom: "1rem" }}>
         <TextArea
@@ -142,6 +161,15 @@ export default function EditGameForm({
           value={gameForm?.dlc2Name}
           onChange={(e) =>
             setGameForm((old) => ({ ...old, dlc2Name: e.target.value }))
+          }
+        />
+      </Row>
+      <Row style={{ marginBottom: "1rem" }}>
+        <Input
+          placeholder="DLC 2 Image..."
+          value={gameForm?.dlc2Image}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, dlc2Image: e.target.value }))
           }
         />
       </Row>
@@ -165,6 +193,15 @@ export default function EditGameForm({
         />
       </Row>
       <Row style={{ marginBottom: "1rem" }}>
+        <Input
+          placeholder="DLC 3 Image..."
+          value={gameForm?.dlc3Image}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, dlc3Image: e.target.value }))
+          }
+        />
+      </Row>
+      <Row style={{ marginBottom: "1rem" }}>
         <TextArea
           rows={3}
           placeholder="DLC 3 Trophies..."
@@ -184,6 +221,15 @@ export default function EditGameForm({
         />
       </Row>
       <Row style={{ marginBottom: "1rem" }}>
+        <Input
+          placeholder="DLC 4 Image..."
+          value={gameForm?.dlc4Image}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, dlc4Image: e.target.value }))
+          }
+        />
+      </Row>
+      <Row style={{ marginBottom: "1rem" }}>
         <TextArea
           rows={3}
           placeholder="DLC 4 Trophies..."
@@ -199,6 +245,15 @@ export default function EditGameForm({
           value={gameForm?.dlc5Name}
           onChange={(e) =>
             setGameForm((old) => ({ ...old, dlc5Name: e.target.value }))
+          }
+        />
+      </Row>
+      <Row style={{ marginBottom: "1rem" }}>
+        <Input
+          placeholder="DLC 5 Image..."
+          value={gameForm?.dlc5Image}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, dlc5Image: e.target.value }))
           }
         />
       </Row>

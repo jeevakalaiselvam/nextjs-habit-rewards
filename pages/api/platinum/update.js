@@ -19,6 +19,11 @@ export default async function handler(req, res) {
       dlc4Trophies,
       dlc5Name,
       dlc5Trophies,
+      dlc1Image,
+      dlc2Image,
+      dlc3Image,
+      dlc4Image,
+      dlc5Image,
     } = req.body;
 
     let parsedPlatinum;
@@ -59,6 +64,11 @@ export default async function handler(req, res) {
             dlc4Trophies: parseddlc4Trophies,
             dlc5Name,
             dlc5Trophies: parseddlc5Trophies,
+            dlc1Image,
+            dlc2Image,
+            dlc3Image,
+            dlc4Image,
+            dlc5Image,
           },
         },
         { upsert: true }

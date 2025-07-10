@@ -16,6 +16,11 @@ export default async function handler(req, res) {
       dlc4Trophies,
       dlc5Name,
       dlc5Trophies,
+      dlc1Image,
+      dlc2Image,
+      dlc3Image,
+      dlc4Image,
+      dlc5Image,
     } = req.body;
 
     if (!id || !cover || !platinum) {
@@ -39,6 +44,11 @@ export default async function handler(req, res) {
         dlc4Trophies,
         dlc5Name,
         dlc5Trophies,
+        dlc1Image,
+        dlc2Image,
+        dlc3Image,
+        dlc4Image,
+        dlc5Image,
       });
 
       res.status(201).json({ message: "Game added successfully" });
