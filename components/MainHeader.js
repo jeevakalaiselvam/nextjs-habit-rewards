@@ -212,10 +212,10 @@ export default function MainHeader({ games }) {
           <Top>{completed}</Top>
           <Bottom>COMPLETED GAMES</Bottom>
         </Section>
-        <Section>
-          <Top>{averageCompletion}</Top>
+        {/* <Section>
+          <Top>{0}</Top>
           <Bottom>COMPLETION</Bottom>
-        </Section>
+        </Section> */}
         <Section color={COLOR_PLATINUM}>
           <Top>
             {platinumA}
