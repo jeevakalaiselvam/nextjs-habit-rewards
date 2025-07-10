@@ -112,6 +112,13 @@ export default function Atom() {
       let lastAch =
         sortedPlatinumTrophies?.[sortedPlatinumTrophies?.length - 1];
 
+      let total = sortedPlatinumTrophies?.length;
+      let completed = sortedPlatinumTrophies?.filter(
+        (ach) => ach?.achieved == "1"
+      )?.length;
+      let isCompleted = total == completed;
+      console.log(game?.name, total, completed, isCompleted);
+
       formedGame = {
         ...game,
         ...platinumGameData,
@@ -125,7 +132,8 @@ export default function Atom() {
             description: `Completed all Trophies in the game`,
             label: "Rare",
             color: "Platinum",
-            achieved: 0,
+            achieved:
+              sortedPlatinumTrophies?.length == 0 ? 0 : isCompleted ? 1 : 0,
           },
         ],
         dlcAchievements: [...sortedDLCTrophies],
