@@ -36,6 +36,7 @@ export default function MainHeader({ games }) {
   let total = 0;
 
   games?.forEach((game) => {
+    console.log("GAME", game?.name, game?.achievements);
     game?.achievements?.forEach((ach) => {
       if (ach?.achieved == 0) {
         unearned++;

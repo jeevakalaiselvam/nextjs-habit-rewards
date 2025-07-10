@@ -125,6 +125,7 @@ export default function Atom() {
             description: `Completed all Trophies in the game`,
             label: "Rare",
             color: "Platinum",
+            achieved: 0,
           },
         ],
         dlcAchievements: [...sortedDLCTrophies],

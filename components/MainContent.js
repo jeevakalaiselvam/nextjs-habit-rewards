@@ -466,6 +466,10 @@ export default function MainContent({
 
                     return (
                       <GameContainerCD
+                        onClick={() => {
+                          setSelectedGame(game);
+                          setSelectedMode("GAME");
+                        }}
                         color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                       >
                         <GameCdImage game={game} />
@@ -1317,7 +1321,7 @@ const GameContainerCD = styled.div`
   border: 1px solid #ddd;
   flex-direction: column;
   cursor: pointer;
-  width: 400px;
+  width: 350px;
 `;
 
 const Games2Line = styled.div`
