@@ -135,3 +135,8 @@ body {
       -ms-user-select: none; /* IE10+ */
           user-select: none; /* Standard */
 }
+
+.ant-collapse {
+    border: none;
+    border-radius: 8px;
+}
