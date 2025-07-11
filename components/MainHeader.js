@@ -389,4 +389,5 @@ const Container = styled.div`
   background-color: #292b2d;
   position: relative;
   z-index: 1;
+  color: #fefefe;
 `;

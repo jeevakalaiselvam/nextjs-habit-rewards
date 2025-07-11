@@ -1216,23 +1216,23 @@ const GameContainerCD = styled.div`
 const Games2Line = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-direction: column;
   width: 100%;
 `;
 
 const Games = styled.div`
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  width: 100%;
   color: #fefefe;
   font-size: 0.9rem;
   min-height: calc(81vh);
   max-height: calc(81vh);
   overflow: scroll;
-  border: 1px solid #ddd;
+  padding-top: 2rem;
 `;
 
 const SRLeft = styled.div`
@@ -1241,16 +1241,6 @@ const SRLeft = styled.div`
   justify-content: center;
   flex-direction: column;
   flex: 2;
-`;
-
-const SecondRow = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  background-color: #f7f7f7;
-  width: 100%;
-  padding: 1rem;
-  color: #44484b;
 `;
 
 const Container = styled.div`
