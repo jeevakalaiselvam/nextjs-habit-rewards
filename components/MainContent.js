@@ -504,8 +504,6 @@ export default function MainContent({
     }),
   ];
 
-  console.log({ items });
-
   return (
     <Container>
       {showEditModal && (
@@ -517,211 +515,204 @@ export default function MainContent({
           setGamesLoading={setGamesLoading}
         />
       )}
-      <SecondRow>
-        {!gamesLoading && (
-          <SRLeft>
-            {selectedMode == "GAMES" && (
-              <Games>
-                <Games1Line>
-                  <GamesLeft>GAMES</GamesLeft>
-                  <GamesRight></GamesRight>
-                </Games1Line>
-                <Games2Line>
-                  {sortedGames?.map((game, index) => {
-                    let allCompletion = 0;
-                    let total = 0;
-                    let unearned = 0;
-                    let platinumA = 0;
-                    let goldA = 0;
-                    let silverA = 0;
-                    let bronzeA = 0;
-                    let platinum = 0;
-                    let gold = 0;
-                    let silver = 0;
-                    let bronze = 0;
+      {!gamesLoading && (
+        <SRLeft>
+          {selectedMode == "GAMES" && (
+            <Games>
+              <Games2Line>
+                {sortedGames?.map((game, index) => {
+                  let allCompletion = 0;
+                  let total = 0;
+                  let unearned = 0;
+                  let platinumA = 0;
+                  let goldA = 0;
+                  let silverA = 0;
+                  let bronzeA = 0;
+                  let platinum = 0;
+                  let gold = 0;
+                  let silver = 0;
+                  let bronze = 0;
 
-                    game?.achievements?.forEach((ach) => {
-                      total++;
-                      if (ach?.achieved == 0) {
-                        unearned++;
-                        if (ach?.color == "Platinum") {
-                          platinumA++;
-                        }
-                        if (ach?.color == "Gold") {
-                          goldA++;
-                        }
-                        if (ach?.color == "Silver") {
-                          silverA++;
-                        }
-                        if (ach?.color == "Bronze") {
-                          bronzeA++;
-                        }
-                      } else {
-                        if (ach?.color == "Platinum") {
-                          platinum++;
-                        }
-                        if (ach?.color == "Gold") {
-                          gold++;
-                        }
-                        if (ach?.color == "Silver") {
-                          silver++;
-                        }
-                        if (ach?.color == "Bronze") {
-                          bronze++;
-                        }
+                  game?.achievements?.forEach((ach) => {
+                    total++;
+                    if (ach?.achieved == 0) {
+                      unearned++;
+                      if (ach?.color == "Platinum") {
+                        platinumA++;
                       }
-                    });
-
-                    let completed = game?.achievements?.filter(
-                      (item) => item?.achieved == 1
-                    )?.length;
-                    let completion = (
-                      completed == 0 ? 0 : (completed / total) * 100
-                    )?.toFixed(2);
-                    allCompletion = allCompletion + completion;
-                    if (total == completed) {
-                      completed = completed + 1;
+                      if (ach?.color == "Gold") {
+                        goldA++;
+                      }
+                      if (ach?.color == "Silver") {
+                        silverA++;
+                      }
+                      if (ach?.color == "Bronze") {
+                        bronzeA++;
+                      }
+                    } else {
+                      if (ach?.color == "Platinum") {
+                        platinum++;
+                      }
+                      if (ach?.color == "Gold") {
+                        gold++;
+                      }
+                      if (ach?.color == "Silver") {
+                        silver++;
+                      }
+                      if (ach?.color == "Bronze") {
+                        bronze++;
+                      }
                     }
+                  });
 
-                    let { color, rank } =
-                      calculateRankForCompletion(completion);
-                    let lastAch = game?.achievements?.sort(
-                      (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
-                    )?.[game?.achievements?.length - 1];
+                  let completed = game?.achievements?.filter(
+                    (item) => item?.achieved == 1
+                  )?.length;
+                  let completion = (
+                    completed == 0 ? 0 : (completed / total) * 100
+                  )?.toFixed(2);
+                  allCompletion = allCompletion + completion;
+                  if (total == completed) {
+                    completed = completed + 1;
+                  }
 
-                    let isPlatinumNotAdded = game?.achievements?.length == 1;
+                  let { color, rank } = calculateRankForCompletion(completion);
+                  let lastAch = game?.achievements?.sort(
+                    (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
+                  )?.[game?.achievements?.length - 1];
 
-                    return (
-                      <GameContainer
-                        onClick={() => {
-                          setSelectedGame(game);
-                          setSelectedMode("GAME");
-                        }}
-                        color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                      >
-                        <GameLeftCard>
-                          <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
-                        </GameLeftCard>
-                        <GameRightCard>
-                          <GRTop>
-                            <GameData>
-                              <GameTitle
-                                onClick={() => {
-                                  setSelectedGame(game);
-                                  setSelectedMode("GAME");
+                  let isPlatinumNotAdded = game?.achievements?.length == 1;
+
+                  return (
+                    <GameContainer
+                      onClick={() => {
+                        setSelectedGame(game);
+                        setSelectedMode("GAME");
+                      }}
+                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                    >
+                      <GameLeftCard>
+                        <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
+                      </GameLeftCard>
+                      <GameRightCard>
+                        <GRTop>
+                          <GameData>
+                            <GameTitle
+                              onClick={() => {
+                                setSelectedGame(game);
+                                setSelectedMode("GAME");
+                              }}
+                            >
+                              {game?.name}
+                            </GameTitle>
+                            <GameCompletion>
+                              {completed} of {total} Trophies
+                            </GameCompletion>
+                          </GameData>
+                        </GRTop>
+                        <GRBottom>
+                          <GameInfo>
+                            <Trophies>
+                              <TTop>
+                                <TSingle>
+                                  <GoldIconS />
+                                  <span
+                                    style={{
+                                      transform: "translate(-.5rem,-.25rem)",
+                                      color: COLOR_GOLD,
+                                      fontSize: "1rem",
+                                    }}
+                                  >
+                                    {gold}
+                                  </span>
+                                </TSingle>
+                                <TSingle>
+                                  <SilverIconS />
+                                  <span
+                                    style={{
+                                      transform: "translate(-.5rem,-.25rem)",
+                                      color: COLOR_SILVER2,
+                                      fontSize: "1rem",
+                                    }}
+                                  >
+                                    {silver}
+                                  </span>
+                                </TSingle>
+                                <TSingle>
+                                  <BronzeIconS />
+                                  <span
+                                    style={{
+                                      transform: "translate(-.5rem,-.25rem)",
+                                      color: COLOR_BRONZE,
+                                      fontSize: "1rem",
+                                    }}
+                                  >
+                                    {bronze}
+                                  </span>
+                                </TSingle>
+                              </TTop>
+                              <TBottom>
+                                <Outer>
+                                  <Inner percentage={completion}></Inner>
+                                  <Text>{completion} %</Text>
+                                </Outer>
+                              </TBottom>
+                            </Trophies>
+                            <Seperator></Seperator>
+                            <Platinum isPlatinum={total == completed}>
+                              <span
+                                style={{
+                                  opacity: total == completed ? 1 : 0.25,
                                 }}
                               >
-                                {game?.name}
-                              </GameTitle>
-                              <GameCompletion>
-                                {completed} of {total} Trophies
-                              </GameCompletion>
-                            </GameData>
-                          </GRTop>
-                          <GRBottom>
-                            <GameInfo>
-                              <Trophies>
-                                <TTop>
-                                  <TSingle>
-                                    <GoldIconS />
-                                    <span
-                                      style={{
-                                        transform: "translate(-.5rem,-.25rem)",
-                                        color: COLOR_GOLD,
-                                        fontSize: "1rem",
-                                      }}
-                                    >
-                                      {gold}
-                                    </span>
-                                  </TSingle>
-                                  <TSingle>
-                                    <SilverIconS />
-                                    <span
-                                      style={{
-                                        transform: "translate(-.5rem,-.25rem)",
-                                        color: COLOR_SILVER2,
-                                        fontSize: "1rem",
-                                      }}
-                                    >
-                                      {silver}
-                                    </span>
-                                  </TSingle>
-                                  <TSingle>
-                                    <BronzeIconS />
-                                    <span
-                                      style={{
-                                        transform: "translate(-.5rem,-.25rem)",
-                                        color: COLOR_BRONZE,
-                                        fontSize: "1rem",
-                                      }}
-                                    >
-                                      {bronze}
-                                    </span>
-                                  </TSingle>
-                                </TTop>
-                                <TBottom>
-                                  <Outer>
-                                    <Inner percentage={completion}></Inner>
-                                    <Text>{completion} %</Text>
-                                  </Outer>
-                                </TBottom>
-                              </Trophies>
-                              <Seperator></Seperator>
-                              <Platinum isPlatinum={total == completed}>
-                                <span
-                                  style={{
-                                    opacity: total == completed ? 1 : 0.25,
-                                  }}
-                                >
-                                  <PlatinumIcon />
-                                </span>
-                                <span
-                                  style={{
-                                    fontSize: ".7rem",
-                                    marginTop: "4px",
-                                    fontWeight: "bold",
-                                    opacity: total == completed ? 1 : 0.75,
-                                  }}
-                                >
-                                  {Number(lastAch?.percentage)} %
-                                </span>
-                              </Platinum>
-                              <Seperator></Seperator>
-                              <Rank>
-                                <span
-                                  style={{ fontSize: "1.5rem", color: color }}
-                                >
-                                  {rank}
-                                </span>
-                                <span style={{ fontSize: ".7rem" }}>RANK</span>
-                              </Rank>
-                            </GameInfo>
-                          </GRBottom>
-                        </GameRightCard>
-                      </GameContainer>
-                    );
-                  })}
-                </Games2Line>
-              </Games>
-            )}
-            {selectedMode == "GAME" && (
-              <>
-                <MainAccordion>
-                  <Collapse
-                    style={{ width: "100%" }}
-                    items={items}
-                    activeKey={activeAccKey}
-                    defaultActiveKey={"baseGame"}
-                    onChange={(key) => {
-                      setAccActiveKey(key);
-                    }}
-                  />
-                </MainAccordion>
-              </>
-            )}
-          </SRLeft>
-        )}
-      </SecondRow>
+                                <PlatinumIcon />
+                              </span>
+                              <span
+                                style={{
+                                  fontSize: ".7rem",
+                                  marginTop: "4px",
+                                  fontWeight: "bold",
+                                  opacity: total == completed ? 1 : 0.75,
+                                }}
+                              >
+                                {Number(lastAch?.percentage)} %
+                              </span>
+                            </Platinum>
+                            <Seperator></Seperator>
+                            <Rank>
+                              <span
+                                style={{ fontSize: "1.5rem", color: color }}
+                              >
+                                {rank}
+                              </span>
+                              <span style={{ fontSize: ".7rem" }}>RANK</span>
+                            </Rank>
+                          </GameInfo>
+                        </GRBottom>
+                      </GameRightCard>
+                    </GameContainer>
+                  );
+                })}
+              </Games2Line>
+            </Games>
+          )}
+          {selectedMode == "GAME" && (
+            <>
+              <MainAccordion>
+                <Collapse
+                  style={{ width: "100%" }}
+                  items={items}
+                  activeKey={activeAccKey}
+                  defaultActiveKey={"baseGame"}
+                  onChange={(key) => {
+                    setAccActiveKey(key);
+                  }}
+                />
+              </MainAccordion>
+            </>
+          )}
+        </SRLeft>
+      )}
     </Container>
   );
 }
@@ -739,9 +730,9 @@ const MainAccordion = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh);
   flex-direction: column;
-  max-height: 100vh;
+  max-height: calc(100vh);
 `;
 
 const GameLeftCard = styled.div`
@@ -924,6 +915,8 @@ const Game2Line = styled.div`
   width: 100%;
   max-height: 70vh;
   min-height: 70vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
   padding-bottom: 1rem;
 `;
 
@@ -1179,7 +1172,7 @@ const GameInfo = styled.div`
   display: flex;
   flex: 2;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: flex-start;
 `;
 
 const GameImage = styled.div`
@@ -1223,25 +1216,8 @@ const GameContainerCD = styled.div`
 const Games2Line = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   flex-direction: column;
-  width: 100%;
-`;
-
-const Games2LineCD = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  width: 100%;
-`;
-
-const Games1Line = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #336291;
-  padding: 0.75rem 0.5rem;
-  justify-content: center;
   width: 100%;
 `;
 
@@ -1253,40 +1229,10 @@ const Games = styled.div`
   width: 100%;
   color: #fefefe;
   font-size: 0.9rem;
-  min-height: calc(100vh - 150px);
+  min-height: calc(81vh);
+  max-height: calc(81vh);
   overflow: scroll;
-  max-height: calc(100vh - 150px);
   border: 1px solid #ddd;
-`;
-
-const GamesLeft = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex: 1;
-`;
-
-const GameLeft = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex: 1;
-`;
-
-const GamesRight = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex: 1;
-`;
-
-const SRRight = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  flex: 1.1;
-  padding: 0.5rem;
 `;
 
 const SRLeft = styled.div`
@@ -1295,7 +1241,6 @@ const SRLeft = styled.div`
   justify-content: center;
   flex-direction: column;
   flex: 2;
-  padding: 0.5rem;
 `;
 
 const SecondRow = styled.div`
