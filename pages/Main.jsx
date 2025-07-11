@@ -119,25 +119,38 @@ export default function Atom() {
       let isCompleted = total == completed;
       console.log(game?.name, total, completed, isCompleted);
 
-      formedGame = {
-        ...game,
-        ...platinumGameData,
-        achievements: [
-          ...sortedPlatinumTrophies,
-          {
-            ...lastAch,
-            title: `${gameName}'s Platinum`,
-            displayName: `${gameName}'s Platinum`,
-            icon: "/icons/platinum.jpg",
-            description: `Completed all Trophies in the game`,
-            label: "Rare",
-            color: "Platinum",
-            achieved:
-              sortedPlatinumTrophies?.length == 0 ? 0 : isCompleted ? 1 : 0,
-          },
-        ],
-        dlcAchievements: [...sortedDLCTrophies],
-      };
+      let alreadyHavePlatinum = sortedPlatinumTrophies
+        ?.map((item) => item?.color)
+        ?.includes("Platinum");
+
+      if (alreadyHavePlatinum) {
+        formedGame = {
+          ...game,
+          ...platinumGameData,
+          achievements: [...sortedPlatinumTrophies],
+          dlcAchievements: [...sortedDLCTrophies],
+        };
+      } else {
+        formedGame = {
+          ...game,
+          ...platinumGameData,
+          achievements: [
+            ...sortedPlatinumTrophies,
+            {
+              ...lastAch,
+              title: `${gameName}'s Platinum`,
+              displayName: `${gameName}'s Platinum`,
+              icon: "/icons/platinum.jpg",
+              description: `Completed all Trophies in the game`,
+              label: "Rare",
+              color: "Platinum",
+              achieved:
+                sortedPlatinumTrophies?.length == 0 ? 0 : isCompleted ? 1 : 0,
+            },
+          ],
+          dlcAchievements: [...sortedDLCTrophies],
+        };
+      }
 
       console.log(game?.name, {
         platinumGameData,
