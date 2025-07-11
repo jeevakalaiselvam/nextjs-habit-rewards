@@ -700,7 +700,12 @@ export default function MainContent({
             <>
               <MainAccordion>
                 <Collapse
-                  style={{ width: "100%" }}
+                  style={{
+                    width: "100%",
+                    background: "#FEFEFE",
+                    padding: "0rem",
+                    margin: "0rem",
+                  }}
                   items={items}
                   activeKey={activeAccKey}
                   defaultActiveKey={"baseGame"}
@@ -729,10 +734,10 @@ const MainAccordion = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 100%;
-  min-height: calc(100vh);
   flex-direction: column;
-  max-height: calc(100vh);
+  width: 100%;
+  min-height: calc(80vh);
+  max-height: calc(80vh);
 `;
 
 const GameLeftCard = styled.div`
@@ -814,7 +819,7 @@ const GameSubLine = styled.div`
   display: flex;
   align-items: center;
   color: #333;
-  padding: 0.75rem 0.5rem;
+  padding: 2rem 0.5rem 0rem 0rem;
   justify-content: center;
   width: 100%;
 `;
@@ -905,6 +910,7 @@ const GameHeader = styled.div`
   align-items: flex-start;
   justify-content: center;
   width: 100%;
+  background: "#FEFEFE";
 `;
 
 const Game2Line = styled.div`
@@ -1229,8 +1235,8 @@ const Games = styled.div`
   flex-direction: column;
   color: #fefefe;
   font-size: 0.9rem;
-  min-height: calc(81vh);
-  max-height: calc(81vh);
+  min-height: calc(70vh);
+  max-height: calc(70vh);
   overflow: scroll;
   padding-top: 2rem;
 `;
@@ -1251,5 +1257,5 @@ const Container = styled.div`
   width: 100%;
   border-radius: 4px;
   transform: translateY(-2rem);
-  background-color: #292b2d;
+  background-color: #f5f5f7;
 `;

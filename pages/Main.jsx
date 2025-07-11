@@ -197,6 +197,6 @@ const Container = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  background-color: #292b2d;
+  background-color: #f5f5f7;
   position: relative;
 `;
