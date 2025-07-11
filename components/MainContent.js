@@ -181,7 +181,7 @@ export default function MainContent({
         <FRItem>P</FRItem>
         <FRLeft>OBSIDIANLOGAN'S PROFILE</FRLeft>
         <FRRight>
-          <TabLink
+          {/* <TabLink
             onClick={() => {
               setSelected("PROFILE");
               setSelectedMode("GAMES");
@@ -191,7 +191,7 @@ export default function MainContent({
             onMouseLeave={() => setActive("")}
           >
             PROFILE
-          </TabLink>
+          </TabLink> */}
           <TabLink
             onClick={() => {
               setSelected("LIBRARY");
@@ -201,7 +201,7 @@ export default function MainContent({
             onMouseEnter={() => setActive("LIBRARY")}
             onMouseLeave={() => setActive("")}
           >
-            LIBRARY
+            PROFILE
           </TabLink>
         </FRRight>
         <FRRight>
