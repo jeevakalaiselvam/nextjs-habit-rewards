@@ -124,18 +124,16 @@ export default function MainHeader({
           <LevelIconWrapper>
             <LevelIcon />
           </LevelIconWrapper>
-          <Tooltip title="Example">
-            <LevelData>
-              <LevelData1>{level}</LevelData1>
-              <LevelData2 color={COLOR_GOLD + "55"}>
-                <LevelInner
-                  color={COLOR_GOLD}
-                  percent={progressPercent}
-                ></LevelInner>
-              </LevelData2>
-              <ToNext>{remainingXP} XP</ToNext>
-            </LevelData>
-          </Tooltip>
+          <LevelData>
+            <LevelData1>{level}</LevelData1>
+            <LevelData2 color={COLOR_GOLD + "55"}>
+              <LevelInner
+                color={COLOR_GOLD}
+                percent={progressPercent}
+              ></LevelInner>
+            </LevelData2>
+            <ToNext>{remainingXP} XP</ToNext>
+          </LevelData>
         </HeaderProfileLevel>
       </HeaderName>
       <HeaderCounts>
