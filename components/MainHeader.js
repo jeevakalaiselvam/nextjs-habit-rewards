@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { HEADER_IMAGE } from "../helpers/urlHelper";
 import { FaTrophy } from "react-icons/fa";
 import {
+  COLOR_ACCENT,
+  COLOR_BLUE_DARK,
   COLOR_BRONZE,
   COLOR_GOLD,
   COLOR_GOLD2,
@@ -17,8 +19,9 @@ import WhiteTrophy from "./WhiteTrophy";
 import { calculatePSLevelAndProgress } from "../helpers/trophyHelper";
 import LevelIcon from "./LevelIcon";
 import GameCdImage from "./GameCdImage";
+import { TbRefresh } from "react-icons/tb";
 
-export default function MainHeader({ games }) {
+export default function MainHeader({ games, setRefreshing, refreshing }) {
   let image =
     "https://4kwallpapers.com/images/wallpapers/hogwarts-legacy-winter-1920x1200-20034.jpeg";
 
@@ -100,170 +103,118 @@ export default function MainHeader({ games }) {
 
   return (
     <Container background={image}>
-      <MainWrapper>
-        <HeaderInner>
-          <HeaderName>
-            <Country></Country>
-            <NameSection>
-              <Name>ObsidianLogan</Name>
-              <Subtext>Love to collect trophies!</Subtext>
-            </NameSection>
-          </HeaderName>
-          <HeaderProfileLevel>
-            <LevelIconWrapper>
-              <LevelIcon />
-            </LevelIconWrapper>
-            <LevelData>
-              <LevelData1>{level}</LevelData1>
-              <LevelData2 color={COLOR_GOLD + "55"}>
-                <LevelInner
-                  color={COLOR_GOLD}
-                  percent={progressPercent}
-                ></LevelInner>
-              </LevelData2>
-            </LevelData>
-          </HeaderProfileLevel>
-          <HeaderCounts>
-            <Section color={COLOR_WHITE}>
-              <Top onClick={() => {}}>
-                <span
-                  style={{
-                    transform: "translateY(-2.5px)",
-                    marginRight: ".25rem",
-                  }}
-                >
-                  <WhiteTrophy />
-                </span>
-                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
-                  {total}
-                </span>
-              </Top>
-            </Section>
-            <Section color={COLOR_PLATINUM}>
-              <Top>
-                <span
-                  style={{
-                    transform: "translateY(-2.5px)",
-                    marginRight: ".25rem",
-                  }}
-                >
-                  <PlatinumIcon />
-                </span>
-                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
-                  {platinum}
-                </span>
-              </Top>
-            </Section>
-            <Section color={COLOR_GOLD}>
-              <Top>
-                <span
-                  style={{
-                    transform: "translateY(-2.5px)",
-                    marginRight: ".25rem",
-                  }}
-                >
-                  <GoldIcon />
-                </span>
-                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
-                  {gold}
-                </span>
-              </Top>
-            </Section>
-            <Section color={COLOR_SILVER}>
-              <Top>
-                <span
-                  style={{
-                    transform: "translateY(-2.5px)",
-                    marginRight: ".25rem",
-                  }}
-                >
-                  <SilverIcon />
-                </span>
-                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
-                  {silver}
-                </span>
-              </Top>
-            </Section>
-            <Section color={COLOR_BRONZE}>
-              <Top>
-                <span
-                  style={{
-                    transform: "translateY(-2.5px)",
-                    marginRight: ".25rem",
-                  }}
-                >
-                  <BronzeIcon />
-                </span>
-                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
-                  {bronze}
-                </span>
-              </Top>
-            </Section>
-          </HeaderCounts>
-        </HeaderInner>
-      </MainWrapper>
       <Overlay></Overlay>
-      <BottomStats>
-        <Section>
-          <Top>{games?.length}</Top>
-          <Bottom>TOTAL GAMES</Bottom>
+      <HeaderName>
+        <Country></Country>
+        <NameSection>
+          <Name>ObsidianLogan</Name>
+          <Subtext>Love to collect trophies!</Subtext>
+        </NameSection>
+        <HeaderProfileLevel>
+          <LevelIconWrapper>
+            <LevelIcon />
+          </LevelIconWrapper>
+          <LevelData>
+            <LevelData1>{level}</LevelData1>
+            <LevelData2 color={COLOR_GOLD + "55"}>
+              <LevelInner
+                color={COLOR_GOLD}
+                percent={progressPercent}
+              ></LevelInner>
+            </LevelData2>
+          </LevelData>
+        </HeaderProfileLevel>
+      </HeaderName>
+      <HeaderCounts>
+        <Section color={COLOR_WHITE}>
+          <Top onClick={() => {}}>
+            <span
+              style={{
+                transform: "translateY(-2.5px)",
+                marginRight: ".25rem",
+              }}
+            >
+              <WhiteTrophy />
+            </span>
+            <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+              {total}
+            </span>
+          </Top>
         </Section>
-        <Section>
-          <Top>{completed}</Top>
-          <Bottom>COMPLETED GAMES</Bottom>
-        </Section>
-        {/* <Section>
-          <Top>{0}</Top>
-          <Bottom>COMPLETION</Bottom>
-        </Section> */}
         <Section color={COLOR_PLATINUM}>
           <Top>
-            {platinumA}
             <span
-              style={{ transform: "translateY(-2.75px)", marginLeft: ".25rem" }}
+              style={{
+                transform: "translateY(-2.5px)",
+                marginRight: ".25rem",
+              }}
             >
               <PlatinumIcon />
             </span>
+            <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+              {platinum}
+            </span>
           </Top>
-          <Bottom>PLATINUM AVAILABLE</Bottom>
         </Section>
         <Section color={COLOR_GOLD}>
           <Top>
-            {goldA}
             <span
-              style={{ transform: "translateY(-2.75px)", marginLeft: ".25rem" }}
+              style={{
+                transform: "translateY(-2.5px)",
+                marginRight: ".25rem",
+              }}
             >
               <GoldIcon />
             </span>
+            <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+              {gold}
+            </span>
           </Top>
-          <Bottom>GOLD AVAILABLE</Bottom>
         </Section>
         <Section color={COLOR_SILVER}>
           <Top>
-            {silverA}
             <span
-              style={{ transform: "translateY(-2.75px)", marginLeft: ".25rem" }}
+              style={{
+                transform: "translateY(-2.5px)",
+                marginRight: ".25rem",
+              }}
             >
               <SilverIcon />
             </span>
+            <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+              {silver}
+            </span>
           </Top>
-          <Bottom>SILVER AVAILABLE</Bottom>
         </Section>
         <Section color={COLOR_BRONZE}>
           <Top>
-            {bronzeA}
             <span
-              style={{ transform: "translateY(-2.75px)", marginLeft: ".25rem" }}
+              style={{
+                transform: "translateY(-2.5px)",
+                marginRight: ".25rem",
+              }}
             >
               <BronzeIcon />
             </span>
+            <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+              {bronze}
+            </span>
           </Top>
-          <Bottom>BRONZE AVAILABLE</Bottom>
         </Section>
-      </BottomStats>
+      </HeaderCounts>
     </Container>
   );
 }
+
+const Overlay = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
+  background-color: rgba(0, 0, 0, 0.65);
+  width: 100%;
+  height: 100px;
+`;
 
 const LevelIconWrapper = styled.div`
   display: flex;
@@ -316,14 +267,17 @@ const HeaderProfileLevel = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 2rem;
+  margin-left: 1rem;
+  justify-self: flex-end;
 `;
 
 const HeaderCounts = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 2;
   flex: 1;
+  padding: 0.25rem;
 `;
 
 const Section = styled.div`
@@ -344,35 +298,20 @@ const Top = styled.div`
   font-weight: 300;
 `;
 
-const Bottom = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  margin-top: 0.25rem;
-  font-weight: bold;
-`;
-
 const BottomStats = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
   padding: 1rem 1rem 2.5rem 1rem;
-  bottom: 0;
-  width: 1800px;
+  width: 100%;
 `;
 
 const MainWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
-  top: 0;
-  left: 50%;
-  width: 100%;
+  flex-direction: column;
   z-index: 1;
-  transform: translateX(-50%);
 `;
 
 const Country = styled.div`
@@ -380,9 +319,10 @@ const Country = styled.div`
   align-items: center;
   justify-content: center;
   background: url("https://avatars.fastly.steamstatic.com/2d570b928b0e4b353c1a92ef43e534ee623e92ed_full.jpg");
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   background-size: cover;
+  margin-left: 0.5rem;
   margin-right: 0.5rem;
   cursor: pointer;
 `;
@@ -417,44 +357,10 @@ const HeaderName = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  flex: 1;
-`;
-
-const HeaderInner = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 1600px;
-  border: 4px solid #989898;
-  padding: 0.5rem;
-  margin: 0.5rem;
-  border-radius: 2px;
-  background-color: rgba(0, 0, 0, 0.5);
-`;
-
-const GameCDCollection = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 300px;
-  min-width: 1400px;
-  flex-wrap: wrap;
-  max-width: 1400px;
-  overflow: scroll;
-  z-index: 100;
-`;
-
-const Overlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 300px;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.65);
+  height: 60px;
+  z-index: 2;
+  /* background-color: ${COLOR_BLUE_DARK}; */
 `;
 
 const Container = styled.div`
@@ -462,10 +368,12 @@ const Container = styled.div`
   align-items: flex-start;
   justify-content: center;
   width: 100%;
-  height: 300px;
+  flex-direction: column;
   background: ${(props) => `url(${props.background})`};
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
   background-color: #292b2d;
+  position: relative;
+  z-index: 1;
 `;

@@ -169,11 +169,7 @@ export default function Atom() {
 
   return (
     <Container>
-      <MainHeader
-        games={finalGames}
-        setRefreshing={setRefreshing}
-        refeshing={refeshing}
-      />
+      <MainHeader games={finalGames} />
       <MainContent
         games={finalGames}
         refreshData={refreshData}
@@ -181,9 +177,39 @@ export default function Atom() {
         gamesLoading={gamesLoading}
         platinumDataLoading={platinumDataLoading}
       />
+      <RefreshButton
+        onClick={() => {
+          setRefreshing(true);
+          if (window) {
+            window.location.reload();
+          }
+        }}
+      >
+        <span style={{ transform: "translateY(2px)", marginRight: ".5rem" }}>
+          <TbRefresh />
+        </span>
+        <span>{refeshing ? "Refreshing..." : "Refresh"}</span>
+      </RefreshButton>
     </Container>
   );
 }
+
+const RefreshButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: fixed;
+  right: 1rem;
+  top: 1rem;
+  background-color: ${COLOR_ACCENT};
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  z-index: 100;
+
+  &:active {
+    transform: translateY(0.25rem);
+  }
+`;
 
 const Container = styled.div`
   display: flex;

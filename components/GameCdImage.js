@@ -20,8 +20,9 @@ const CdImage = styled.div`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  width: 200px;
-  height: 250px;
+  width: 100px;
+  height: 325px;
+  background-color: red;
   background: url("/icons/cover.png");
   background-size: contain;
   background-repeat: no-repeat;
@@ -30,8 +31,8 @@ const CdImage = styled.div`
 `;
 
 const CdInnerImage = styled.div`
-  width: 194px; /* scaled down from 388px by 25% */
-  height: 210px; /* scaled down from 420px by 25% */
+  width: 200px; /* scaled down from 388px by 25% */
+  height: 300px; /* scaled down from 420px by 25% */
   position: absolute;
   top: 38px; /* scaled down from 76px by 25% */
   left: 0.75px; /* scaled down from 1px by 25% */
