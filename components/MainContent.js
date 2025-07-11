@@ -697,24 +697,20 @@ export default function MainContent({
             </Games>
           )}
           {selectedMode == "GAME" && (
-            <>
-              <MainAccordion>
-                <Collapse
-                  style={{
-                    width: "100%",
-                    background: "#FEFEFE",
-                    padding: "0rem",
-                    margin: "0rem",
-                  }}
-                  items={items}
-                  activeKey={activeAccKey}
-                  defaultActiveKey={"baseGame"}
-                  onChange={(key) => {
-                    setAccActiveKey(key);
-                  }}
-                />
-              </MainAccordion>
-            </>
+            <MainAccordion>
+              <Collapse
+                style={{
+                  width: "100%",
+                  marginTop: "1rem",
+                }}
+                items={items}
+                activeKey={activeAccKey}
+                defaultActiveKey={"baseGame"}
+                onChange={(key) => {
+                  setAccActiveKey(key);
+                }}
+              />
+            </MainAccordion>
           )}
         </SRLeft>
       )}
@@ -734,6 +730,7 @@ const MainAccordion = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  padding-top: 1rem;
   flex-direction: column;
   width: 100%;
   min-height: calc(80vh);
@@ -819,7 +816,7 @@ const GameSubLine = styled.div`
   display: flex;
   align-items: center;
   color: #333;
-  padding: 2rem 0.5rem 0rem 0rem;
+  padding: 0rem 0.5rem 0rem 0rem;
   justify-content: center;
   width: 100%;
 `;
@@ -1246,7 +1243,6 @@ const SRLeft = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  flex: 2;
 `;
 
 const Container = styled.div`
