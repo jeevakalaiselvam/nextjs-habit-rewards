@@ -31,7 +31,7 @@ import PlatinumIconS from "./PlatinumIconS";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 import GameCdImage from "./GameCdImage";
-import { formatDate } from "../helpers/dateHelper";
+import { formatDate, formatDate1, formatDate2 } from "../helpers/dateHelper";
 
 export default function MainContent({
   games,
@@ -756,6 +756,16 @@ export default function MainContent({
                             <AchTitle>{ach?.displayName}</AchTitle>
                             <AchDesc>{ach?.description}</AchDesc>
                           </AchData>
+                          {ach?.achieved == 1 && (
+                            <Unlocked>
+                              <UnlockedT1>
+                                {formatDate1(new Date(ach?.unlocktime * 1000))}
+                              </UnlockedT1>
+                              <UnlockedT2>
+                                {formatDate2(new Date(ach?.unlocktime * 1000))}
+                              </UnlockedT2>
+                            </Unlocked>
+                          )}
                           <Seperator padding={".25rem"} />
                           <AchRarity>
                             <span style={{ fontSize: "1.2rem" }}>
@@ -1064,6 +1074,30 @@ export default function MainContent({
     </Container>
   );
 }
+
+const Unlocked = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100px;
+  color: #579428;
+`;
+
+const UnlockedT1 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+`;
+
+const UnlockedT2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  padding-top: 0.25rem;
+`;
 
 const PlayButton = styled.div`
   display: flex;
