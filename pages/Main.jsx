@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import MainHeader from "../components/MainHeader";
 import MainContent from "../components/MainContent";
+import { TbRefresh } from "react-icons/tb";
+import { COLOR_ACCENT } from "../helpers/colorHelper";
 
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
@@ -10,6 +12,7 @@ export default function Atom() {
   const [games, setGames] = useState([]);
   const [platinumData, setPlatinumData] = useState([]);
   const [finalGames, setFinalGames] = useState([]);
+  const [refeshing, setRefreshing] = useState(false);
 
   const refreshSteamGames = () => {
     setGamesLoading(true);
@@ -174,9 +177,39 @@ export default function Atom() {
         gamesLoading={gamesLoading}
         platinumDataLoading={platinumDataLoading}
       />
+      <RefreshButton
+        onClick={() => {
+          setRefreshing(true);
+          if (window) {
+            window.location.reload();
+          }
+        }}
+      >
+        <span style={{ transform: "translateY(2px)", marginRight: ".5rem" }}>
+          <TbRefresh />
+        </span>
+        <span>{refeshing ? "Refreshing..." : "Refresh"}</span>
+      </RefreshButton>
     </Container>
   );
 }
+
+const RefreshButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: fixed;
+  right: 1rem;
+  top: 1rem;
+  background-color: ${COLOR_ACCENT};
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  z-index: 100;
+
+  &:active {
+    transform: translateY(0.25rem);
+  }
+`;
 
 const Container = styled.div`
   display: flex;
@@ -186,4 +219,5 @@ const Container = styled.div`
   width: 100%;
   background-color: #292b2d;
   color: #fefefe;
+  position: relative;
 `;

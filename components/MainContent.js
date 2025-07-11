@@ -13,7 +13,8 @@ import {
 import { useState } from "react";
 import { HEADER_IMAGE } from "../helpers/urlHelper";
 import { MdOutlineModeEditOutline } from "react-icons/md";
-import { TbEdit } from "react-icons/tb";
+import { TbEdit, TbPlayCard } from "react-icons/tb";
+import { HiPlay } from "react-icons/hi2";
 import {
   calculatePSLevelAndProgress,
   calculateRankForCompletion,
@@ -321,6 +322,10 @@ export default function MainContent({
 
                     return (
                       <GameContainer
+                        onClick={() => {
+                          setSelectedGame(game);
+                          setSelectedMode("GAME");
+                        }}
                         color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                       >
                         <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
@@ -631,9 +636,28 @@ export default function MainContent({
                     </GameLeft>
                   </Game1Line>
                   <GameSubLine>
-                    <GameSubLeftImage
-                      image={HEADER_IMAGE(selectedGame?.id)}
-                    ></GameSubLeftImage>
+                    <GameSubLeftImage image={HEADER_IMAGE(selectedGame?.id)}>
+                      <PlayButton
+                        onClick={() => {
+                          if (window) {
+                            window.location.href =
+                              "steam://rungameid/" + selectedGame?.id;
+                          }
+                        }}
+                      >
+                        <span
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <HiPlay />
+                        </span>
+                      </PlayButton>
+                    </GameSubLeftImage>
                     <GameSubLeft>Base Game</GameSubLeft>
                     <GameSubRight>
                       <Ps5
@@ -1041,6 +1065,24 @@ export default function MainContent({
   );
 }
 
+const PlayButton = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  padding: 0.1rem;
+  background-color: ${COLOR_GREEN};
+  color: ${generateDarkTextColorForLightBg(COLOR_GREEN, 50)};
+  opacity: 0.85;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 1;
+  }
+`;
+
 const GameSubLeftImage = styled.div`
   display: flex;
   align-items: center;
@@ -1049,6 +1091,7 @@ const GameSubLeftImage = styled.div`
   height: 100px;
   background: ${(props) => `url(${props.image})`};
   background-size: cover;
+  position: relative;
 `;
 
 const GameSubLeft = styled.div`
