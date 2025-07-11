@@ -156,13 +156,6 @@ export default function Atom() {
         };
       }
 
-      console.log(game?.name, {
-        platinumGameData,
-        dlcMapper,
-        sortedDLCTrophies,
-        formedGame,
-      });
-
       return formedGame;
     });
     setFinalGames(finalGames);

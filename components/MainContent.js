@@ -374,8 +374,10 @@ export default function MainContent({
       let completionDLC =
         completedDLC == 0 ? 0 : (completedDLC / totalDLC) * 100;
 
+      console.log("FOR DLC,", { dlcKey }, dlcTrophies, activeAccKey);
+
       return {
-        key: dlcKey,
+        key: dlcKey?.dlcKey,
         label: (
           <GameHeader>
             <GameSubLine>
@@ -464,7 +466,7 @@ export default function MainContent({
         ),
         children: (
           <Game2Line>
-            {dlcTrophies?.achievements?.map((ach, index) => {
+            {dlcTrophies?.map((ach, index) => {
               return (
                 <AchCard
                   color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
