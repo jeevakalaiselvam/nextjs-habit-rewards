@@ -1235,8 +1235,8 @@ const Games = styled.div`
   flex-direction: column;
   color: #fefefe;
   font-size: 0.9rem;
-  min-height: calc(70vh);
-  max-height: calc(70vh);
+  min-height: calc(87vh);
+  max-height: calc(87vh);
   overflow: scroll;
   padding-top: 2rem;
 `;
