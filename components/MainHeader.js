@@ -21,7 +21,12 @@ import LevelIcon from "./LevelIcon";
 import GameCdImage from "./GameCdImage";
 import { TbRefresh } from "react-icons/tb";
 
-export default function MainHeader({ games, setRefreshing, refreshing }) {
+export default function MainHeader({
+  games,
+  selectedMode,
+  setSelectedMode,
+  refreshData,
+}) {
   let image =
     "https://4kwallpapers.com/images/wallpapers/hogwarts-legacy-winter-1920x1200-20034.jpeg";
 
@@ -106,11 +111,19 @@ export default function MainHeader({ games, setRefreshing, refreshing }) {
       <Overlay></Overlay>
       <HeaderName>
         <Country></Country>
-        <NameSection>
+        <NameSection
+          onClick={() => {
+            setSelectedMode("GAMES");
+          }}
+        >
           <Name>ObsidianLogan</Name>
           <Subtext>Love to collect trophies!</Subtext>
         </NameSection>
-        <HeaderProfileLevel>
+        <HeaderProfileLevel
+          onClick={() => {
+            refreshData();
+          }}
+        >
           <LevelIconWrapper>
             <LevelIcon />
           </LevelIconWrapper>

@@ -13,6 +13,7 @@ export default function Atom() {
   const [platinumData, setPlatinumData] = useState([]);
   const [finalGames, setFinalGames] = useState([]);
   const [refeshing, setRefreshing] = useState(false);
+  const [selectedMode, setSelectedMode] = useState("GAMES");
 
   const refreshSteamGames = () => {
     setGamesLoading(true);
@@ -170,9 +171,12 @@ export default function Atom() {
   return (
     <Container>
       <MainHeader
+        refreshData={refreshData}
         games={finalGames}
         setRefreshing={setRefreshing}
         refeshing={refeshing}
+        setSelectedMode={setSelectedMode}
+        selectedMode={selectedMode}
       />
       <MainContent
         games={finalGames}
@@ -180,6 +184,8 @@ export default function Atom() {
         setGamesLoading={setGamesLoading}
         gamesLoading={gamesLoading}
         platinumDataLoading={platinumDataLoading}
+        setSelectedMode={setSelectedMode}
+        selectedMode={selectedMode}
       />
     </Container>
   );
