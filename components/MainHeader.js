@@ -20,6 +20,7 @@ import { calculatePSLevelAndProgress } from "../helpers/trophyHelper";
 import LevelIcon from "./LevelIcon";
 import GameCdImage from "./GameCdImage";
 import { TbRefresh } from "react-icons/tb";
+import { Tooltip } from "antd";
 
 export default function MainHeader({
   games,
@@ -99,12 +100,8 @@ export default function MainHeader({
   let averageCompletion =
     allCompletion == 0 ? 0 : allCompletion / games?.length;
 
-  let { progressPercent, level } = calculatePSLevelAndProgress(
-    platinum,
-    gold,
-    silver,
-    bronze
-  );
+  let { progressPercent, level, xpForNextLevel, remainingXP } =
+    calculatePSLevelAndProgress(platinum, gold, silver, bronze);
 
   return (
     <Container background={image}>
@@ -127,15 +124,18 @@ export default function MainHeader({
           <LevelIconWrapper>
             <LevelIcon />
           </LevelIconWrapper>
-          <LevelData>
-            <LevelData1>{level}</LevelData1>
-            <LevelData2 color={COLOR_GOLD + "55"}>
-              <LevelInner
-                color={COLOR_GOLD}
-                percent={progressPercent}
-              ></LevelInner>
-            </LevelData2>
-          </LevelData>
+          <Tooltip title="Example">
+            <LevelData>
+              <LevelData1>{level}</LevelData1>
+              <LevelData2 color={COLOR_GOLD + "55"}>
+                <LevelInner
+                  color={COLOR_GOLD}
+                  percent={progressPercent}
+                ></LevelInner>
+              </LevelData2>
+              <ToNext>{remainingXP} XP</ToNext>
+            </LevelData>
+          </Tooltip>
         </HeaderProfileLevel>
       </HeaderName>
       <HeaderCounts>
@@ -219,6 +219,14 @@ export default function MainHeader({
   );
 }
 
+const ToNext = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  padding: 0.25rem;
+`;
+
 const Overlay = styled.div`
   position: absolute;
   left: 0;
@@ -240,6 +248,7 @@ const LevelData = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   flex-direction: column;
 `;
 

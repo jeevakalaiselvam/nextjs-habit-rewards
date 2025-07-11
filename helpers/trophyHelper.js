@@ -10,46 +10,87 @@ import {
 } from "./colorHelper";
 
 export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
+  // Trophy points
   const platinumPoints = 300;
   const goldPoints = 90;
   const silverPoints = 30;
   const bronzePoints = 15;
 
-  const totalPoints =
+  // Calculate total XP
+  const totalXP =
     platinum * platinumPoints +
     gold * goldPoints +
     silver * silverPoints +
     bronze * bronzePoints;
 
-  const levelThresholds = [
-    0, 3000, 6000, 10500, 16000, 23000, 31500, 41500, 53000, 66500, 100000,
+  // Level bands and XP per level
+  const bands = [
+    { startLevel: 1, endLevel: 99, xpPerLevel: 60 },
+    { startLevel: 100, endLevel: 199, xpPerLevel: 90 },
+    { startLevel: 200, endLevel: 299, xpPerLevel: 450 },
+    { startLevel: 300, endLevel: 399, xpPerLevel: 900 },
+    { startLevel: 400, endLevel: 499, xpPerLevel: 1350 },
+    { startLevel: 500, endLevel: 599, xpPerLevel: 1800 },
+    { startLevel: 600, endLevel: 699, xpPerLevel: 2250 },
+    { startLevel: 700, endLevel: 799, xpPerLevel: 2700 },
+    { startLevel: 800, endLevel: 899, xpPerLevel: 3150 },
+    { startLevel: 900, endLevel: 999, xpPerLevel: 3600 },
   ];
 
+  let accumulatedXP = 0;
   let level = 1;
-  let progress = 0;
+  let xpIntoLevel = 0;
+  let xpForNextLevel = bands[0].xpPerLevel;
+  let foundBand = false;
 
-  for (let i = 0; i < levelThresholds.length - 1; i++) {
-    const currentMin = levelThresholds[i];
-    const nextMin = levelThresholds[i + 1];
+  for (const band of bands) {
+    const levelsInBand = band.endLevel - band.startLevel + 1;
+    const bandXP = levelsInBand * band.xpPerLevel;
 
-    if (totalPoints < nextMin) {
-      level =
-        i * 100 +
-        Math.floor(((totalPoints - currentMin) / (nextMin - currentMin)) * 100);
-      progress = ((totalPoints - currentMin) / (nextMin - currentMin)) * 100;
+    if (totalXP < accumulatedXP + bandXP) {
+      // Player is in this band
+      const xpInBand = totalXP - accumulatedXP;
+      const levelsPassed = Math.floor(xpInBand / band.xpPerLevel);
+      level = band.startLevel + levelsPassed;
+
+      xpIntoLevel = xpInBand % band.xpPerLevel;
+      xpForNextLevel = band.xpPerLevel;
+
+      foundBand = true;
       break;
+    } else {
+      accumulatedXP += bandXP;
     }
   }
 
-  if (totalPoints >= 100000) {
+  if (!foundBand) {
+    // Total XP exceeds all defined bands
     level = 999;
-    progress = 100;
+    xpIntoLevel = 0;
+    xpForNextLevel = null;
   }
 
+  // Special case for zero XP → level 1
+  if (totalXP === 0) {
+    level = 1;
+    xpIntoLevel = 0;
+    xpForNextLevel = bands[0].xpPerLevel;
+  }
+
+  const progressPercent = xpForNextLevel
+    ? Math.min((xpIntoLevel / xpForNextLevel) * 100, 100)
+    : 100;
+
+  const remainingXP =
+    xpForNextLevel !== null ? xpForNextLevel - xpIntoLevel : null;
+
   return {
-    totalPoints,
-    level: Math.min(level, 999),
-    progressPercent: Math.min(progress.toFixed(2), 100),
+    totalXP,
+    level,
+    progressPercent: parseFloat(progressPercent.toFixed(2)),
+    xpIntoLevel,
+    xpForNextLevel,
+    remainingXP,
   };
 };
 
