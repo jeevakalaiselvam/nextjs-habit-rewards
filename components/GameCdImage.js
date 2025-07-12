@@ -21,21 +21,19 @@ const CdImage = styled.div`
   justify-content: center;
   cursor: pointer;
   width: 100px;
-  height: 325px;
-  background-color: red;
+  height: 126px;
   background: url("/icons/cover.png");
   background-size: contain;
   background-repeat: no-repeat;
   position: relative;
-  margin: 1rem;
 `;
 
 const CdInnerImage = styled.div`
-  width: 200px; /* scaled down from 388px by 25% */
-  height: 300px; /* scaled down from 420px by 25% */
+  width: 97px;
+  height: 105px;
   position: absolute;
-  top: 38px; /* scaled down from 76px by 25% */
-  left: 0.75px; /* scaled down from 1px by 25% */
+  top: 20px;
+  left: 1px;
   background: ${(props) => `url(${props.cover})`};
   background-size: cover;
   background-repeat: no-repeat;

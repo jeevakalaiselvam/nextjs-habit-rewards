@@ -620,7 +620,7 @@ export default function MainContent({
                       color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                     >
                       <GameLeftCard>
-                        <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
+                        <GameCdImage game={game} />
                       </GameLeftCard>
                       <GameRightCard>
                         <GRTop>
@@ -769,8 +769,6 @@ const GameLeftCard = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 100px;
 `;
 
 const GameRightCard = styled.div`
