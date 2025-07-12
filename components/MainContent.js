@@ -712,6 +712,7 @@ const GameTitleHeader = styled.div`
   justify-content: center;
   flex-direction: column;
   width: 100%;
+  transform: translateX(-1rem);
 `;
 
 const MainAccordion = styled.div`
@@ -720,7 +721,7 @@ const MainAccordion = styled.div`
   justify-content: flex-start;
   padding-top: 1rem;
   flex-direction: column;
-  width: 100%;
+  width: 95%;
   min-height: calc(80vh);
   max-height: calc(80vh);
 `;
@@ -777,6 +778,7 @@ const GameSubLeftImage = styled.div`
   align-items: center;
   justify-content: center;
   width: 100px;
+  transform: translateX(-1rem);
   height: 100px;
   background: ${(props) => `url(${props.image})`};
   background-size: cover;
