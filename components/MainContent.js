@@ -290,7 +290,20 @@ export default function MainContent({
                 achieved={ach?.achieved}
               >
                 <AchIconOuter achieved={ach?.achieved}>
-                  <AchIcon icon={ach?.icon}></AchIcon>
+                  <AchIcon
+                    icon={ach?.icon}
+                    onClick={() => {
+                      if (window !== "undefined") {
+                        const searchQuery = `${
+                          ach?.displayName
+                        } achievement ${encodeURIComponent(ach?.gameName)} `;
+                        window.open(
+                          `https://www.google.com/search?q=${searchQuery}`
+                        );
+                        // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                      }
+                    }}
+                  ></AchIcon>
                 </AchIconOuter>
                 <AchData>
                   <AchTitle>{ach?.displayName}</AchTitle>
@@ -473,7 +486,20 @@ export default function MainContent({
                   achieved={ach?.achieved}
                 >
                   <AchIconOuter achieved={ach?.achieved}>
-                    <AchIcon icon={ach?.icon}></AchIcon>
+                    <AchIcon
+                      icon={ach?.icon}
+                      onClick={() => {
+                        if (window !== "undefined") {
+                          const searchQuery = `${
+                            ach?.displayName
+                          } achievement ${encodeURIComponent(ach?.gameName)} `;
+                          window.open(
+                            `https://www.google.com/search?q=${searchQuery}`
+                          );
+                          // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                        }
+                      }}
+                    ></AchIcon>
                   </AchIconOuter>
                   <AchData>
                     <AchTitle>{ach?.displayName}</AchTitle>
