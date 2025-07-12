@@ -178,27 +178,8 @@ export default function MainContent({
       label: (
         <GameHeader>
           <GameSubLine>
-            <GameSubLeftImage image={HEADER_IMAGE(selectedGame?.id)}>
-              <PlayButton
-                onClick={() => {
-                  if (window) {
-                    window.location.href =
-                      "steam://rungameid/" + selectedGame?.id;
-                  }
-                }}
-              >
-                <span
-                  style={{
-                    width: "20px",
-                    height: "20px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <HiPlay />
-                </span>
-              </PlayButton>
+            <GameSubLeftImage>
+              <GameCdImage game={{ cover: selectedGame?.cover }} />
             </GameSubLeftImage>
             <GameTitleHeader>
               <GameSubLeft>Base Game</GameSubLeft>
@@ -387,34 +368,13 @@ export default function MainContent({
       let completionDLC =
         completedDLC == 0 ? 0 : (completedDLC / totalDLC) * 100;
 
-      console.log("FOR DLC,", { dlcKey }, dlcTrophies, activeAccKey);
-
       return {
         key: dlcKey?.dlcKey,
         label: (
           <GameHeader>
             <GameSubLine>
-              <GameSubLeftImage image={HEADER_IMAGE(selectedGame?.id)}>
-                <PlayButton
-                  onClick={() => {
-                    if (window) {
-                      window.location.href =
-                        "steam://rungameid/" + selectedGame?.id;
-                    }
-                  }}
-                >
-                  <span
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <HiPlay />
-                  </span>
-                </PlayButton>
+              <GameSubLeftImage>
+                <GameCdImage game={{ cover: dlcKey?.image }} />
               </GameSubLeftImage>
               <GameTitleHeader>
                 <GameSubLeft>{dlcKey?.name}</GameSubLeft>
@@ -934,6 +894,7 @@ const GameHeader = styled.div`
   justify-content: center;
   width: 100%;
   background: "#FEFEFE";
+  padding: 0.5rem;
 `;
 
 const Game2Line = styled.div`

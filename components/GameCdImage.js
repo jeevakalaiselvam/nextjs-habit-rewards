@@ -6,8 +6,6 @@ import EditGameForm from "./EditGameForm";
 import { useState } from "react";
 
 export default function GameCdImage({ game }) {
-  console.log({ game });
-
   return (
     <CdImage>
       <CdInnerImage cover={game?.cover}></CdInnerImage>
@@ -23,6 +21,7 @@ const CdImage = styled.div`
   width: 100px;
   height: 126px;
   background: url("/icons/cover.png");
+  background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
   position: relative;
