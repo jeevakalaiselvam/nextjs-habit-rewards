@@ -88,12 +88,6 @@ export default function Atom() {
 
       let sortedPlatinumTrophies = game?.achievements
         ?.map((ach) => {
-          console.log(
-            "--FOR",
-            ach?.displayName,
-            "--setting--",
-            platinumMapper[ach?.displayName]?.description
-          );
           return {
             ...ach,
             label: getRarityBasedOnRarity(ach?.percentage),
@@ -113,23 +107,23 @@ export default function Atom() {
       )?.length;
       let isCompleted = total == completed;
 
-      let alreadyHavePlatinum = sortedPlatinumTrophies
-        ?.map((item) => item?.color)
-        ?.includes("Platinum");
-
-      if (alreadyHavePlatinum) {
-        formedGame = {
-          ...game,
-          ...platinumGameData,
-          achievements: [...sortedPlatinumTrophies],
-        };
-      } else {
-        formedGame = {
-          ...game,
-          ...platinumGameData,
-          achievements: [...sortedPlatinumTrophies],
-        };
-      }
+      formedGame = {
+        ...game,
+        ...platinumGameData,
+        achievements: [
+          ...sortedPlatinumTrophies,
+          {
+            displayName: `${game?.name} Platinum`,
+            description: `Achieved all Trophies in game`,
+            hiddenDesc: `${game?.name}`,
+            percentage: lastAch?.percentage,
+            label: getRarityBasedOnRarity(lastAch?.percentage),
+            color: "Platinum",
+            achieved: isCompleted ? 1 : 0,
+            icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
+          },
+        ],
+      };
 
       return formedGame;
     });

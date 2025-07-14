@@ -764,7 +764,7 @@ export default function MainContent({
                           <AchData>
                             <AchTitle>{ach?.displayName}</AchTitle>
                             <AchDesc>
-                              {desc2 ? desc2 : desc3 ? desc3 : desc2}
+                              {desc2 ? desc2 : desc3 ? desc3 : desc1}
                             </AchDesc>
                           </AchData>
                           {ach?.achieved == 1 && (
