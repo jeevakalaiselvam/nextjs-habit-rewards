@@ -5,6 +5,10 @@ import MainHeader from "../components/MainHeader";
 import MainContent from "../components/MainContent";
 import { TbRefresh } from "react-icons/tb";
 import { COLOR_ACCENT } from "../helpers/colorHelper";
+import {
+  getColorBasedOnRarity,
+  getRarityBasedOnRarity,
+} from "../helpers/achHelper";
 
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
@@ -62,6 +66,8 @@ export default function Atom() {
         platinumMapper[ach?.title] = ach;
       });
 
+      console.log({ platinumMapper });
+
       platinumGameData?.dlc1Trophies?.forEach((ach) => {
         dlcMapper[ach?.title] = { ...ach, dlc: "DLC1" };
       });
@@ -81,34 +87,20 @@ export default function Atom() {
       let gameName = game?.achievements?.[0]?.gameName;
 
       let sortedPlatinumTrophies = game?.achievements
-        ?.filter((ach) => {
-          if (platinumMapper?.[ach?.displayName]) {
-            return true;
-          }
-        })
         ?.map((ach) => {
-          if (platinumMapper?.[ach?.displayName]) {
-            return {
-              ...ach,
-              ...platinumMapper?.[ach?.displayName],
-            };
-          }
-        })
-        ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
-
-      let sortedDLCTrophies = game?.achievements
-        ?.filter((ach) => {
-          if (dlcMapper?.[ach?.displayName]) {
-            return true;
-          }
-        })
-        ?.map((ach) => {
-          if (dlcMapper?.[ach?.displayName]) {
-            return {
-              ...ach,
-              ...dlcMapper?.[ach?.displayName],
-            };
-          }
+          console.log(
+            "--FOR",
+            ach?.displayName,
+            "--setting--",
+            platinumMapper[ach?.displayName]?.description
+          );
+          return {
+            ...ach,
+            label: getRarityBasedOnRarity(ach?.percentage),
+            color: getColorBasedOnRarity(ach?.percentage),
+            title: ach?.displayName,
+            hiddenDesc: platinumMapper[ach?.displayName]?.description,
+          };
         })
         ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
 
@@ -120,7 +112,6 @@ export default function Atom() {
         (ach) => ach?.achieved == "1"
       )?.length;
       let isCompleted = total == completed;
-      console.log(game?.name, total, completed, isCompleted);
 
       let alreadyHavePlatinum = sortedPlatinumTrophies
         ?.map((item) => item?.color)
@@ -131,36 +122,14 @@ export default function Atom() {
           ...game,
           ...platinumGameData,
           achievements: [...sortedPlatinumTrophies],
-          dlcAchievements: [...sortedDLCTrophies],
         };
       } else {
         formedGame = {
           ...game,
           ...platinumGameData,
-          achievements: [
-            ...sortedPlatinumTrophies,
-            {
-              ...lastAch,
-              title: `${gameName}'s Platinum`,
-              displayName: `${gameName}'s Platinum`,
-              icon: "/icons/platinum.jpg",
-              description: `Completed all Trophies in the game`,
-              label: "Rare",
-              color: "Platinum",
-              achieved:
-                sortedPlatinumTrophies?.length == 0 ? 0 : isCompleted ? 1 : 0,
-            },
-          ],
-          dlcAchievements: [...sortedDLCTrophies],
+          achievements: [...sortedPlatinumTrophies],
         };
       }
-
-      console.log(game?.name, {
-        platinumGameData,
-        dlcMapper,
-        sortedDLCTrophies,
-        formedGame,
-      });
 
       return formedGame;
     });

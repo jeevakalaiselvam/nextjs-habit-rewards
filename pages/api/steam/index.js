@@ -1,4 +1,5 @@
 import {
+  FETCH_ALL_ACHIEVEMENTS_GLOBAL,
   FETCH_ALL_ACHIEVEMENTS_SCHEMA,
   FETCH_ALL_GAMES,
   STEAM_ALL_ACHIEVEMENTS_PLAYER,
@@ -12,6 +13,7 @@ const handler = async (req, res) => {
       let finalGamesResponse = {};
 
       //Get All Games for the current User
+      console.log("CALLING- ", FETCH_ALL_GAMES);
       const gamesResponse = await axios.get(FETCH_ALL_GAMES);
       const gamesData = gamesResponse.data;
       finalGamesResponse = gamesData?.response?.games?.map((game) => {
@@ -44,6 +46,35 @@ const handler = async (req, res) => {
       //Filter Games without Achievements
       finalGamesResponse = finalGamesResponse.filter(
         (game) => game?.achievements.length > 0
+      );
+
+      //Combine Global Achievement Status
+      finalGamesResponse = await Promise.all(
+        finalGamesResponse?.map(async (game) => {
+          const globalAchievementsResponse = await axios.get(
+            FETCH_ALL_ACHIEVEMENTS_GLOBAL(game?.id)
+          );
+          const globalAchievementsData = globalAchievementsResponse.data;
+          const globalAchievements =
+            globalAchievementsData.achievementpercentages.achievements;
+          let newAchievements = game?.achievements?.map((achievement) => {
+            const achievementFound = globalAchievements?.find(
+              (achievementInner) => {
+                return achievementInner.name === achievement?.name;
+              }
+            );
+            const newAchievement = {
+              ...achievement,
+              percentage: achievementFound?.percent || 0,
+            };
+            return newAchievement;
+          });
+          const newGame = {
+            ...game,
+            achievements: newAchievements,
+          };
+          return newGame;
+        })
       );
 
       //Add Player Achievement Progress
