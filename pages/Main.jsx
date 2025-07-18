@@ -114,7 +114,7 @@ export default function Atom() {
         achievements: [
           ...sortedPlatinumTrophies,
           {
-            displayName: `${game?.name} Platinum`,
+            displayName: `Platinum`,
             description: `Achieved all Trophies in game`,
             hiddenDesc: `${game?.name}`,
             percentage: lastAch?.percentage,

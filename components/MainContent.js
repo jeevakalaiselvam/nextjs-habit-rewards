@@ -368,6 +368,12 @@ export default function MainContent({
             <Games>
               <Game2Line>
                 {selectedGame?.achievements?.map((ach, index) => {
+                  let desc1 = ach?.hiddenDesc;
+                  let desc2 = ach?.description;
+                  let desc3 = ach?.hiddenDesc?.split(
+                    "Hidden achievement:"
+                  )?.[1];
+
                   return (
                     <AchCard
                       color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
@@ -397,7 +403,7 @@ export default function MainContent({
                           higher={ach?.description?.length > MAX_DESC}
                           medium={ach?.description?.length > MEDIUM_DESC}
                         >
-                          {ach?.description}
+                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
                         </AchDesc>
                       </AchData>
                       <Seperator padding={".25rem"} />
@@ -942,8 +948,8 @@ const Games = styled.div`
   flex-direction: column;
   color: #fefefe;
   font-size: 0.9rem;
-  min-height: calc(87vh);
-  max-height: calc(87vh);
+  min-height: calc(90vh);
+  max-height: calc(90vh);
   overflow: scroll;
   padding-top: 2rem;
 `;
