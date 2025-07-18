@@ -170,327 +170,7 @@ export default function MainContent({
     selectedRarityAchs = common;
   }
 
-  console.log({});
-
-  const items = [
-    {
-      key: "baseGame",
-      label: (
-        <GameHeader>
-          <GameSubLine>
-            <GameSubLeftImage>
-              <GameCdImage game={{ cover: selectedGame?.cover }} />
-            </GameSubLeftImage>
-            <GameTitleHeader>
-              <GameSubLeft>Base Game</GameSubLeft>
-              <GameSubRight>
-                <Rank>
-                  <span style={{ fontSize: "1.5rem", color: color }}>
-                    {rank}
-                  </span>
-                  <span style={{ fontSize: ".7rem" }}>RANK</span>
-                </Rank>
-                <Seperator></Seperator>
-                <Trophies>
-                  <TTop>
-                    <TSingle>
-                      <GoldIconS />
-                      <span
-                        style={{
-                          transform: "translate(-.5rem,-.25rem)",
-                          color: COLOR_GOLD,
-                          fontSize: "1rem",
-                        }}
-                      >
-                        {goldBG}
-                      </span>
-                    </TSingle>
-                    <TSingle>
-                      <SilverIconS />
-                      <span
-                        style={{
-                          transform: "translate(-.5rem,-.25rem)",
-                          color: COLOR_SILVER2,
-                          fontSize: "1rem",
-                        }}
-                      >
-                        {silverBG}
-                      </span>
-                    </TSingle>
-                    <TSingle>
-                      <BronzeIconS />
-                      <span
-                        style={{
-                          transform: "translate(-.5rem,-.25rem)",
-                          color: COLOR_BRONZE,
-                          fontSize: "1rem",
-                        }}
-                      >
-                        {bronzeBG}
-                      </span>
-                    </TSingle>
-                  </TTop>
-                  <TBottom>
-                    <Outer>
-                      <Inner percentage={completionBG}></Inner>
-                      <Text>{completionBG?.toFixed(2)} %</Text>
-                    </Outer>
-                  </TBottom>
-                </Trophies>
-                <Seperator></Seperator>
-                <Platinum isPlatinum={totalBG == completedBG}>
-                  <span
-                    style={{
-                      opacity: totalBG == completedBG ? 1 : 0.25,
-                    }}
-                  >
-                    <PlatinumIcon />
-                  </span>
-                  <span
-                    style={{
-                      fontSize: ".7rem",
-                      marginTop: "4px",
-                      fontWeight: "bold",
-                      opacity: totalBG == completedBG ? 1 : 0.75,
-                    }}
-                  >
-                    {lastAch?.percentage} %
-                  </span>
-                </Platinum>
-              </GameSubRight>
-            </GameTitleHeader>
-          </GameSubLine>
-        </GameHeader>
-      ),
-      children: (
-        <Game2Line>
-          {selectedGame?.achievements?.map((ach, index) => {
-            return (
-              <AchCard
-                color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                achieved={ach?.achieved}
-              >
-                <AchIconOuter achieved={ach?.achieved}>
-                  <AchIcon
-                    icon={ach?.icon}
-                    onClick={() => {
-                      if (window !== "undefined") {
-                        const searchQuery = `${
-                          ach?.displayName
-                        } achievement ${encodeURIComponent(ach?.gameName)} `;
-                        window.open(
-                          `https://www.google.com/search?q=${searchQuery}`
-                        );
-                        // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                      }
-                    }}
-                  ></AchIcon>
-                </AchIconOuter>
-                <AchData>
-                  <AchTitle>{ach?.displayName}</AchTitle>
-                  <AchDesc
-                    higher={ach?.description?.length > MAX_DESC}
-                    medium={ach?.description?.length > MEDIUM_DESC}
-                  >
-                    {ach?.description}
-                  </AchDesc>
-                </AchData>
-                <Seperator padding={".25rem"} />
-                <AchRarity>
-                  <span style={{ fontSize: ".8rem" }}>{ach?.percentage}%</span>
-                  <span style={{ fontSize: ".6rem" }}>
-                    {ach?.label?.toUpperCase()}
-                  </span>
-                </AchRarity>
-                <Seperator padding={".25rem"} />
-                <AchTrophy>
-                  {ach?.color == "Platinum" && <PlatinumIconS />}
-                  {ach?.color == "Gold" && <GoldIconS />}
-                  {ach?.color == "Silver" && <SilverIconS />}
-                  {ach?.color == "Bronze" && <BronzeIconS />}
-                </AchTrophy>
-              </AchCard>
-            );
-          })}
-        </Game2Line>
-      ),
-    },
-    ...allDLCKeys?.map((dlcKey) => {
-      let unearnedDLC = 0;
-      let platinumADLC = 0;
-      let goldADLC = 0;
-      let silverADLC = 0;
-      let bronzeADLC = 0;
-      let platinumDLC = 0;
-      let goldDLC = 0;
-      let silverDLC = 0;
-      let bronzeDLC = 0;
-      let totalDLC = 0;
-
-      let dlcTrophies = selectedGame?.dlcAchievements?.filter(
-        (ach) => ach?.dlc == dlcKey?.dlcKey
-      );
-      dlcTrophies?.forEach((ach) => {
-        totalDLC++;
-        if (ach?.achieved == 0) {
-          unearnedDLC++;
-          if (ach?.color == "Platinum") {
-            platinumADLC++;
-          }
-          if (ach?.color == "Gold") {
-            goldADLC++;
-          }
-          if (ach?.color == "Silver") {
-            silverADLC++;
-          }
-          if (ach?.color == "Bronze") {
-            bronzeADLC++;
-          }
-        } else {
-          if (ach?.color == "Platinum") {
-            platinumDLC++;
-          }
-          if (ach?.color == "Gold") {
-            goldDLC++;
-          }
-          if (ach?.color == "Silver") {
-            silverDLC++;
-          }
-          if (ach?.color == "Bronze") {
-            bronzeDLC++;
-          }
-        }
-      });
-
-      let completedDLC = selectedGame?.achievements?.filter(
-        (item) => item?.achieved == 1
-      )?.length;
-      let completionDLC =
-        completedDLC == 0 ? 0 : (completedDLC / totalDLC) * 100;
-
-      return {
-        key: dlcKey?.dlcKey,
-        label: (
-          <GameHeader>
-            <GameSubLine>
-              <GameSubLeftImage>
-                <GameCdImage game={{ cover: dlcKey?.image }} />
-              </GameSubLeftImage>
-              <GameTitleHeader>
-                <GameSubLeft>{dlcKey?.name}</GameSubLeft>
-                <GameSubRight>
-                  <Rank>
-                    <span style={{ fontSize: "1.5rem", color: color }}>
-                      {rank}
-                    </span>
-                    <span style={{ fontSize: ".7rem" }}>RANK</span>
-                  </Rank>
-                  <Seperator></Seperator>
-                  <Trophies>
-                    <TTop>
-                      <TSingle>
-                        <GoldIconS />
-                        <span
-                          style={{
-                            transform: "translate(-.5rem,-.25rem)",
-                            color: COLOR_GOLD,
-                            fontSize: "1rem",
-                          }}
-                        >
-                          {goldDLC}
-                        </span>
-                      </TSingle>
-                      <TSingle>
-                        <SilverIconS />
-                        <span
-                          style={{
-                            transform: "translate(-.5rem,-.25rem)",
-                            color: COLOR_SILVER2,
-                            fontSize: "1rem",
-                          }}
-                        >
-                          {silverDLC}
-                        </span>
-                      </TSingle>
-                      <TSingle>
-                        <BronzeIconS />
-                        <span
-                          style={{
-                            transform: "translate(-.5rem,-.25rem)",
-                            color: COLOR_BRONZE,
-                            fontSize: "1rem",
-                          }}
-                        >
-                          {bronzeDLC}
-                        </span>
-                      </TSingle>
-                    </TTop>
-                    <TBottom>
-                      <Outer>
-                        <Inner percentage={completionDLC}></Inner>
-                        <Text>{completionDLC} %</Text>
-                      </Outer>
-                    </TBottom>
-                  </Trophies>
-                </GameSubRight>
-              </GameTitleHeader>
-            </GameSubLine>
-          </GameHeader>
-        ),
-        children: (
-          <Game2Line>
-            {dlcTrophies?.map((ach, index) => {
-              return (
-                <AchCard
-                  color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                  achieved={ach?.achieved}
-                >
-                  <AchIconOuter achieved={ach?.achieved}>
-                    <AchIcon
-                      icon={ach?.icon}
-                      onClick={() => {
-                        if (window !== "undefined") {
-                          const searchQuery = `${
-                            ach?.displayName
-                          } achievement ${encodeURIComponent(ach?.gameName)} `;
-                          window.open(
-                            `https://www.google.com/search?q=${searchQuery}`
-                          );
-                          // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                        }
-                      }}
-                    ></AchIcon>
-                  </AchIconOuter>
-                  <AchData>
-                    <AchTitle>{ach?.displayName}</AchTitle>
-                    <AchDesc higher={ach?.description?.length > MAX_DESC}>
-                      {ach?.description}
-                    </AchDesc>
-                  </AchData>
-                  <Seperator padding={".25rem"} />
-                  <AchRarity>
-                    <span style={{ fontSize: ".8rem" }}>
-                      {ach?.percentage}%
-                    </span>
-                    <span style={{ fontSize: ".6rem" }}>
-                      {ach?.label?.toUpperCase()}
-                    </span>
-                  </AchRarity>
-                  <Seperator padding={".25rem"} />
-                  <AchTrophy>
-                    {ach?.color == "Platinum" && <PlatinumIconS />}
-                    {ach?.color == "Gold" && <GoldIconS />}
-                    {ach?.color == "Silver" && <SilverIconS />}
-                    {ach?.color == "Bronze" && <BronzeIconS />}
-                  </AchTrophy>
-                </AchCard>
-              );
-            })}
-          </Game2Line>
-        ),
-      };
-    }),
-  ];
+  console.log({ selectedGame });
 
   return (
     <Container>
@@ -685,20 +365,62 @@ export default function MainContent({
             </Games>
           )}
           {selectedMode == "GAME" && (
-            <MainAccordion>
-              <Collapse
-                style={{
-                  width: "100%",
-                  marginTop: "1rem",
-                }}
-                items={items}
-                activeKey={activeAccKey}
-                defaultActiveKey={"baseGame"}
-                onChange={(key) => {
-                  setAccActiveKey(key);
-                }}
-              />
-            </MainAccordion>
+            <Games>
+              <Game2Line>
+                {selectedGame?.achievements?.map((ach, index) => {
+                  return (
+                    <AchCard
+                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                      achieved={ach?.achieved}
+                    >
+                      <AchIconOuter achieved={ach?.achieved}>
+                        <AchIcon
+                          icon={ach?.icon}
+                          onClick={() => {
+                            if (window !== "undefined") {
+                              const searchQuery = `${
+                                ach?.displayName
+                              } achievement ${encodeURIComponent(
+                                ach?.gameName
+                              )} `;
+                              window.open(
+                                `https://www.google.com/search?q=${searchQuery}`
+                              );
+                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                            }
+                          }}
+                        ></AchIcon>
+                      </AchIconOuter>
+                      <AchData>
+                        <AchTitle>{ach?.displayName}</AchTitle>
+                        <AchDesc
+                          higher={ach?.description?.length > MAX_DESC}
+                          medium={ach?.description?.length > MEDIUM_DESC}
+                        >
+                          {ach?.description}
+                        </AchDesc>
+                      </AchData>
+                      <Seperator padding={".25rem"} />
+                      <AchRarity>
+                        <span style={{ fontSize: ".8rem" }}>
+                          {ach?.percentage}%
+                        </span>
+                        <span style={{ fontSize: ".6rem" }}>
+                          {ach?.label?.toUpperCase()}
+                        </span>
+                      </AchRarity>
+                      <Seperator padding={".25rem"} />
+                      <AchTrophy>
+                        {ach?.color == "Platinum" && <PlatinumIconS />}
+                        {ach?.color == "Gold" && <GoldIconS />}
+                        {ach?.color == "Silver" && <SilverIconS />}
+                        {ach?.color == "Bronze" && <BronzeIconS />}
+                      </AchTrophy>
+                    </AchCard>
+                  );
+                })}
+              </Game2Line>
+            </Games>
           )}
         </SRLeft>
       )}
@@ -852,7 +574,6 @@ const AchIcon = styled.div`
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;
-  margin: 4px;
 `;
 
 const AchData = styled.div`
@@ -905,8 +626,8 @@ const Game2Line = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  max-height: 70vh;
-  min-height: 70vh;
+  max-height: 100vh;
+  min-height: 100vh;
   overflow-x: hidden;
   overflow-y: scroll;
   padding-bottom: 1rem;

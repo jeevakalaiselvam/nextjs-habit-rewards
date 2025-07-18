@@ -5,6 +5,10 @@ import MainHeader from "../components/MainHeader";
 import MainContent from "../components/MainContent";
 import { TbRefresh } from "react-icons/tb";
 import { COLOR_ACCENT } from "../helpers/colorHelper";
+import {
+  getColorBasedOnRarity,
+  getRarityBasedOnRarity,
+} from "../helpers/achHelper";
 
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
