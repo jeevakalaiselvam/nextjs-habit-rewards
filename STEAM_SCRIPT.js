@@ -1,25 +1,20 @@
-const achievementElements = document.querySelectorAll(".steamdb_achievement");
+const achievements = [];
 
-const achievements = Array.from(achievementElements).map((el) => {
-  const title = el.querySelector("h3")?.innerText?.trim() || "";
-  const description =
-    el.querySelector(".steamdb_achievement_spoiler")?.innerText?.trim() || "";
-  const icon = el.querySelector("img")?.src || "";
-  const globalUnlockRate =
-    el.querySelector(".steamdb_achievement_unlock_global")?.innerText?.trim() ||
-    "";
+document.querySelectorAll(".steamdb_achievement").forEach((el) => {
+  const title = el.querySelector("h3")?.textContent.trim() || "";
+  const description = el.querySelector("h5")?.textContent.trim() || "";
+  const img = el.querySelector("img")?.src || "";
+  const globalPct =
+    el
+      .querySelector(".steamdb_achievement_unlock_global")
+      ?.textContent.trim() || "";
 
-  return {
+  achievements.push({
     title,
     description,
-    icon,
-    globalUnlockRate,
-    type: "Games",
-    priority: "Priority 1",
-    total: 1,
-    completed: 0,
-    unlocked: "",
-    achieved: false,
-    name: "Cyberpunk 2077",
-  };
+    img,
+    globalPct,
+  });
 });
+
+console.log(JSON.stringify(achievements));
