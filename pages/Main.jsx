@@ -16,6 +16,7 @@ export default function Atom() {
   const [games, setGames] = useState([]);
   const [platinumData, setPlatinumData] = useState([]);
   const [finalGames, setFinalGames] = useState([]);
+  const [selectedMode, setSelectedMode] = useState("GAMES");
   const [refeshing, setRefreshing] = useState(false);
 
   const refreshSteamGames = () => {
@@ -120,7 +121,7 @@ export default function Atom() {
             label: getRarityBasedOnRarity(lastAch?.percentage),
             color: "Platinum",
             achieved: isCompleted ? 1 : 0,
-            icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
+            icon: "../icons/platinum.jpg",
           },
         ],
       };
@@ -132,27 +133,20 @@ export default function Atom() {
 
   return (
     <Container>
-      <MainHeader games={finalGames} />
+      <MainHeader
+        games={finalGames}
+        setSelectedMode={setSelectedMode}
+        refreshData={refreshData}
+      />
       <MainContent
         games={finalGames}
+        selectedMode={selectedMode}
         refreshData={refreshData}
         setGamesLoading={setGamesLoading}
         gamesLoading={gamesLoading}
+        setSelectedMode={setSelectedMode}
         platinumDataLoading={platinumDataLoading}
       />
-      <RefreshButton
-        onClick={() => {
-          setRefreshing(true);
-          if (window) {
-            window.location.reload();
-          }
-        }}
-      >
-        <span style={{ transform: "translateY(2px)", marginRight: ".5rem" }}>
-          <TbRefresh />
-        </span>
-        <span>{refeshing ? "Refreshing..." : "Refresh"}</span>
-      </RefreshButton>
     </Container>
   );
 }
