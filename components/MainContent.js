@@ -792,6 +792,22 @@ export default function MainContent({
                             {ach?.color == "Gold" && <GoldIconS />}
                             {ach?.color == "Silver" && <SilverIconS />}
                             {ach?.color == "Bronze" && <BronzeIconS />}
+                            <span
+                              style={{
+                                fontSize: ".35rem",
+                                transform: "translate(-.33rem,-.33rem)",
+                                opacity: 0.5,
+                              }}
+                            >
+                              {ach?.color == "Platinum"
+                                ? 300
+                                : ach?.color == "Gold"
+                                ? 90
+                                : ach?.color == "Silver"
+                                ? 30
+                                : 15}{" "}
+                              XP
+                            </span>
                           </AchTrophy>
                         </AchCard>
                       );
@@ -1067,6 +1083,7 @@ const AchTrophy = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  flex-direction: column;
   transform: scale(2) translate(1rem, 0.25rem);
 `;
 
