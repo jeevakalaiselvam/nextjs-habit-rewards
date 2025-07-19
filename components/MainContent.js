@@ -407,20 +407,26 @@ export default function MainContent({
                         </AchDesc>
                       </AchData>
                       <Seperator padding={".25rem"} />
-                      <AchRarity>
-                        <span style={{ fontSize: ".8rem" }}>
-                          {ach?.percentage}%
-                        </span>
-                        <span style={{ fontSize: ".6rem" }}>
-                          {ach?.label?.toUpperCase()}
-                        </span>
-                      </AchRarity>
-                      <Seperator padding={".25rem"} />
                       <AchTrophy>
-                        {ach?.color == "Platinum" && <PlatinumIconS />}
-                        {ach?.color == "Gold" && <GoldIconS />}
-                        {ach?.color == "Silver" && <SilverIconS />}
-                        {ach?.color == "Bronze" && <BronzeIconS />}
+                        <span
+                          style={{
+                            fontSize: ".5rem",
+                            transform: "translate(0.25rem, 0rem)",
+                          }}
+                        >
+                          {ach?.color == "Platinum" && <PlatinumIconS />}
+                          {ach?.color == "Gold" && <GoldIconS />}
+                          {ach?.color == "Silver" && <SilverIconS />}
+                          {ach?.color == "Bronze" && <BronzeIconS />}{" "}
+                        </span>
+                        <AchRarity>
+                          <span style={{ fontSize: ".5rem" }}>
+                            {ach?.percentage}%
+                          </span>
+                          <span style={{ fontSize: ".35rem" }}>
+                            {ach?.label?.toUpperCase()}
+                          </span>
+                        </AchRarity>
                       </AchTrophy>
                     </AchCard>
                   );
@@ -603,7 +609,8 @@ const AchTrophy = styled.div`
   align-items: center;
   width: 50px;
   justify-content: flex-start;
-  transform: scale(1.25) translate(0.75rem, 0.25rem);
+  flex-direction: column;
+  transform: scale(1.25);
 `;
 
 const AchCard = styled.div`
