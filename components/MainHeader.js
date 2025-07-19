@@ -91,12 +91,8 @@ export default function MainHeader({ games }) {
   let averageCompletion =
     allCompletion == 0 ? 0 : allCompletion / games?.length;
 
-  let { progressPercent, level } = calculatePSLevelAndProgress(
-    platinum,
-    gold,
-    silver,
-    bronze
-  );
+  let { progressPercent, level, xpForNextLevel, remainingXP } =
+    calculatePSLevelAndProgress(platinum, gold, silver, bronze);
 
   return (
     <Container background={image}>
@@ -113,13 +109,21 @@ export default function MainHeader({ games }) {
             <LevelIconWrapper>
               <LevelIcon />
             </LevelIconWrapper>
-            <LevelData>
+            <LevelData style={{ transform: "translateY(-.5rem)" }}>
               <LevelData1>{level}</LevelData1>
               <LevelData2 color={COLOR_GOLD + "55"}>
                 <LevelInner
                   color={COLOR_GOLD}
                   percent={progressPercent}
                 ></LevelInner>
+                <span
+                  style={{
+                    fontSize: ".65rem",
+                    transform: "translateY(.9rem)",
+                  }}
+                >
+                  {remainingXP} XP
+                </span>
               </LevelData2>
             </LevelData>
           </HeaderProfileLevel>
