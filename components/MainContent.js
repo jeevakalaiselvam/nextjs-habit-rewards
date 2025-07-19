@@ -566,7 +566,7 @@ const AchIconOuter = styled.div`
   justify-content: center;
   width: 75px;
   height: 75px;
-  margin-left: 1rem;
+  margin-left: 0.25rem;
   background: ${(props) =>
     props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
 `;
@@ -575,8 +575,8 @@ const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 70px;
-  height: 70px;
+  width: 72px;
+  height: 72px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;
@@ -959,6 +959,7 @@ const SRLeft = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  width: 100%;
 `;
 
 const Container = styled.div`
