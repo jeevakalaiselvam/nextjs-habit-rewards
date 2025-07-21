@@ -341,6 +341,7 @@ export default function MainContent({
                                   marginTop: "4px",
                                   fontWeight: "bold",
                                   opacity: total == completed ? 1 : 0.75,
+                                  transform: "translateX(.25rem)",
                                 }}
                               >
                                 {Number(lastAch?.percentage)} %
@@ -440,26 +441,6 @@ export default function MainContent({
   );
 }
 
-const GameTitleHeader = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  width: 100%;
-  transform: translateX(-1rem);
-`;
-
-const MainAccordion = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding-top: 1rem;
-  flex-direction: column;
-  width: 95%;
-  min-height: calc(80vh);
-  max-height: calc(80vh);
-`;
-
 const GameLeftCard = styled.div`
   display: flex;
   align-items: center;
@@ -468,10 +449,11 @@ const GameLeftCard = styled.div`
 
 const GameRightCard = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   flex: 1;
   flex-direction: column;
+  transform: translateX(-0.5rem);
 `;
 
 const GRTop = styled.div`
@@ -485,60 +467,6 @@ const GRTop = styled.div`
 const GRBottom = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
-`;
-
-const PlayButton = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  padding: 0.1rem;
-  background-color: ${COLOR_GREEN};
-  color: ${generateDarkTextColorForLightBg(COLOR_GREEN, 50)};
-  opacity: 0.85;
-  cursor: pointer;
-
-  &:hover {
-    opacity: 1;
-  }
-`;
-
-const GameSubLeftImage = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100px;
-  transform: translateX(-1rem);
-  height: 100px;
-  background: ${(props) => `url(${props.image})`};
-  background-size: cover;
-  position: relative;
-`;
-
-const GameSubLeft = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-  padding: 0 1rem;
-`;
-
-const GameSubRight = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  width: 100%;
-`;
-
-const GameSubLine = styled.div`
-  display: flex;
-  align-items: center;
-  color: #333;
-  padding: 0rem 0.5rem 0rem 0rem;
   justify-content: center;
   width: 100%;
 `;
@@ -624,15 +552,6 @@ const AchCard = styled.div`
   border: 1px solid #eee;
 `;
 
-const GameHeader = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  width: 100%;
-  background: "#FEFEFE";
-  padding: 0.5rem;
-`;
-
 const Game2Line = styled.div`
   display: flex;
   align-items: center;
@@ -646,98 +565,11 @@ const Game2Line = styled.div`
   padding-bottom: 1rem;
 `;
 
-const Game1Line = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #336291;
-  color: #fefefe;
-  padding: 0.75rem 0.5rem;
-  justify-content: center;
-  width: 100%;
-`;
-
-const Game = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  width: 100%;
-  color: #fefefe;
-  font-size: 0.9rem;
-  border: 1px solid #ddd;
-`;
-
-const RItem = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  flex-direction: column;
-  cursor: pointer;
-  opacity: ${(props) => (props.active ? 1 : 0.5)};
-`;
-
-const RareSelection = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #4486c6;
-  width: 100%;
-  padding: 1rem;
-  background-color: #f5f5f7;
-`;
-
-const Rarest2Line = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  overflow: scroll;
-  min-height: 600px;
-  max-height: 600px;
-  padding: 0.5rem 0.5rem;
-  width: 100%;
-  color: #333;
-`;
-
-const Rarest1Line = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #336291;
-  padding: 0.75rem 0.5rem;
-  justify-content: center;
-  width: 100%;
-`;
-
-const Rarest = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  width: 100%;
-  color: #fefefe;
-  font-size: 0.9rem;
-  border: 1px solid #ddd;
-`;
-
-const Milestones = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  width: 100%;
-  color: #fefefe;
-  font-size: 0.9rem;
-  border: 1px solid #ddd;
-  margin-top: 1rem;
-`;
-
 const Platinum = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  margin-right: 0.5rem;
   color: #b9c7e5;
   min-width: 50px;
 `;
@@ -793,6 +625,7 @@ const TTop = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
 `;
 
 const TBottom = styled.div`
@@ -807,6 +640,7 @@ const Trophies = styled.div`
   flex-direction: column;
   justify-content: center;
   padding: 0 1rem;
+  min-width: 150px;
 `;
 
 const Rank = styled.div`
@@ -891,7 +725,7 @@ const GameData = styled.div`
   flex-direction: column;
   height: 30px;
   width: 100%;
-  padding: 0rem 1rem;
+  padding: 0rem 1rem 0rem 1.5rem;
 `;
 
 const GameInfo = styled.div`
@@ -926,19 +760,6 @@ const GameContainer = styled.div`
   cursor: pointer;
 `;
 
-const GameContainerCD = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  background-color: ${(props) => props.color};
-  color: #333;
-  padding: 4px;
-  border: 1px solid #ddd;
-  flex-direction: column;
-  cursor: pointer;
-  width: 350px;
-`;
-
 const Games2Line = styled.div`
   display: flex;
   align-items: center;
@@ -955,10 +776,11 @@ const Games = styled.div`
   flex-direction: column;
   color: #fefefe;
   font-size: 0.9rem;
-  min-height: calc(90vh);
-  max-height: calc(90vh);
+  min-height: calc(87.25vh);
+  max-height: calc(87.25vh);
   overflow: scroll;
   padding-top: 2rem;
+  padding-bottom: 2rem;
 `;
 
 const SRLeft = styled.div`

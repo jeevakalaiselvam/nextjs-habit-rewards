@@ -137,21 +137,6 @@ export default function MainHeader({
         </HeaderProfileLevel>
       </HeaderName>
       <HeaderCounts>
-        <Section color={COLOR_WHITE}>
-          <Top onClick={() => {}}>
-            <span
-              style={{
-                transform: "translateY(-2.5px)",
-                marginRight: ".25rem",
-              }}
-            >
-              <WhiteTrophy />
-            </span>
-            <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
-              {total}
-            </span>
-          </Top>
-        </Section>
         <Section color={COLOR_PLATINUM}>
           <Top>
             <span
@@ -296,6 +281,7 @@ const HeaderCounts = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 2;
+  width: 100%;
   flex: 1;
   padding: 0.25rem;
 `;
@@ -385,7 +371,7 @@ const HeaderName = styled.div`
 
 const Container = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   width: 100%;
   flex-direction: column;
