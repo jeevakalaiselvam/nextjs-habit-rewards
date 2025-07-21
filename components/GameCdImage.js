@@ -38,4 +38,5 @@ const CdInnerImage = styled.div`
   background: ${(props) => `url(${props.cover})`};
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center center;
 `;

@@ -41,7 +41,7 @@ export default function MainContent({
   platinumDataLoading,
 }) {
   const [selectedRarity, setSelectedRarity] = useState("ULTRA RARE");
-  const [selectedMode, setSelectedMode] = useState("GAMES");
+  const [selectedMode, setSelectedMode] = useState("LIBRARY");
   const [selectedGame, setSelectedGame] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
   const [selected, setSelected] = useState("LIBRARY");
