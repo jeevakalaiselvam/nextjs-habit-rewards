@@ -191,7 +191,7 @@ export default function MainContent({
             onMouseEnter={() => setActive("LIBRARY")}
             onMouseLeave={() => setActive("")}
           >
-            PROFILE
+            GAMES
           </TabLink>
         </FRRight>
         <FRRight>
