@@ -125,6 +125,7 @@ export const COLOR_BRONZE = "#C46438";
 export const COLOR_PLATINUM = "#7A96D1";
 export const COLOR_UNLOCKED = "#ECF8EA";
 export const COLOR_UNLOCKED_DARK = "#61BF19";
+export const COLOR_UNLOCKED_TEXT = "#31640aff";
 
 export const calculatePsnLevel = ({ platinum, gold, silver, bronze }) => {
   // Trophy values

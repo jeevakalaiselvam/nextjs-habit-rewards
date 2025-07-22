@@ -8,6 +8,7 @@ import {
   COLOR_SILVER2,
   COLOR_UNLOCKED,
   COLOR_UNLOCKED_DARK,
+  COLOR_UNLOCKED_TEXT,
   generateDarkTextColorForLightBg,
 } from "../helpers/colorHelper";
 import { useState } from "react";
@@ -380,6 +381,11 @@ export default function MainContent({
                       color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                       achieved={ach?.achieved}
                     >
+                      {ach?.achieved == 1 && (
+                        <Unlocked>
+                          {formatDate(new Date(ach?.unlocktime * 1000))}
+                        </Unlocked>
+                      )}
                       <AchIconOuter achieved={ach?.achieved}>
                         <AchIcon
                           icon={ach?.icon}
@@ -541,6 +547,18 @@ const AchTrophy = styled.div`
   transform: scale(1.25);
 `;
 
+const Unlocked = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+  padding: 0.25rem;
+  font-size: 0.65rem;
+  bottom: 0;
+  color: ${COLOR_UNLOCKED_TEXT};
+`;
+
 const AchCard = styled.div`
   display: flex;
   align-items: center;
@@ -550,6 +568,8 @@ const AchCard = styled.div`
   background-color: ${(props) =>
     props.achieved ? COLOR_UNLOCKED : props.color};
   border: 1px solid #eee;
+  padding-bottom: ${(props) => (props.achieved ? "1rem" : "0rem")};
+  position: relative;
 `;
 
 const Game2Line = styled.div`
