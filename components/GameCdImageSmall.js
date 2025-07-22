@@ -5,23 +5,28 @@ import { COLOR_ACCENT, COLOR_BLUE_DARK } from "../helpers/colorHelper";
 import EditGameForm from "./EditGameForm";
 import { useState } from "react";
 
-export default function GameCdImage({ game }) {
-  console.log({ game });
-
+export default function GameCdImageSmall({ game, scale = 1 }) {
   return (
-    <CdImage>
-      <CdInnerImage cover={game?.cover}></CdInnerImage>
+    <CdImage scale={scale}>
+      <CdInnerImage scale={scale} cover={game?.cover} />
     </CdImage>
   );
 }
+
+const BASE_WIDTH = 150;
+const BASE_HEIGHT = 187.5;
+const BASE_INNER_WIDTH = 145.5;
+const BASE_INNER_HEIGHT = 157.5;
+const BASE_TOP = 28.5;
+const BASE_LEFT = 0.5625;
 
 const CdImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  width: 200px;
-  height: 250px;
+  width: ${(props) => props.scale * BASE_WIDTH}px;
+  height: ${(props) => props.scale * BASE_HEIGHT}px;
   background: url("/icons/cover.png");
   background-size: contain;
   background-repeat: no-repeat;
@@ -29,11 +34,11 @@ const CdImage = styled.div`
 `;
 
 const CdInnerImage = styled.div`
-  width: 194px; /* scaled down from 388px by 25% */
-  height: 210px; /* scaled down from 420px by 25% */
+  width: ${(props) => props.scale * BASE_INNER_WIDTH}px;
+  height: ${(props) => props.scale * BASE_INNER_HEIGHT}px;
   position: absolute;
-  top: 38px; /* scaled down from 76px by 25% */
-  left: 0.75px; /* scaled down from 1px by 25% */
+  top: ${(props) => props.scale * BASE_TOP}px;
+  left: ${(props) => props.scale * BASE_LEFT}px;
   background: ${(props) => `url(${props.cover})`};
   background-size: cover;
   background-repeat: no-repeat;

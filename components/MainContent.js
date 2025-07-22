@@ -32,6 +32,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 import GameCdImage from "./GameCdImage";
 import { formatDate, formatDate1, formatDate2 } from "../helpers/dateHelper";
+import GameCdImageSmall from "./GameCdImageSmall";
 
 export default function MainContent({
   games,
@@ -41,12 +42,13 @@ export default function MainContent({
   platinumDataLoading,
 }) {
   const [selectedRarity, setSelectedRarity] = useState("ULTRA RARE");
-  const [selectedMode, setSelectedMode] = useState("LIBRARY");
+  const [selectedMode, setSelectedMode] = useState("GAMES");
   const [selectedGame, setSelectedGame] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
   const [selected, setSelected] = useState("LIBRARY");
   const [active, setActive] = useState("PROFILE");
   const [gameData, setGameData] = useState({});
+  const [gameSearch, setGameSearch] = useState("");
 
   let unearnedBG = 0;
   let platinumABG = 0;
@@ -167,6 +169,10 @@ export default function MainContent({
 
   console.log({ selectedRarityAchs });
 
+  sortedGames = sortedGames?.filter((game) =>
+    game?.name?.toLowerCase()?.includes(gameSearch?.toLowerCase())
+  );
+
   return (
     <Container>
       {showEditModal && (
@@ -179,16 +185,36 @@ export default function MainContent({
         />
       )}
       <FirstRow>
+        <GameSearch>
+          <input
+            placeholder="Search Games..."
+            value={gameSearch}
+            onChange={(e) => setGameSearch(e.target.value)}
+          />
+        </GameSearch>
+      </FirstRow>
+      <FirstRow>
         <FRItem>P</FRItem>
         <FRLeft>OBSIDIANLOGAN'S PROFILE</FRLeft>
         <FRRight>
           <TabLink
             onClick={() => {
-              setSelected("LIBRARY");
-              setSelectedMode("LIBRARY");
+              setSelected("LIBRARY_ICONS");
+              setSelectedMode("LIBRARY_ICONS");
             }}
-            active={selected == "LIBRARY"}
-            onMouseEnter={() => setActive("LIBRARY")}
+            active={selected == "LIBRARY_ICONS"}
+            onMouseEnter={() => setActive("LIBRARY_ICONS")}
+            onMouseLeave={() => setActive("")}
+          >
+            LIBRARY
+          </TabLink>
+          <TabLink
+            onClick={() => {
+              setSelected("GAMES");
+              setSelectedMode("GAMES");
+            }}
+            active={selected == "GAMES"}
+            onMouseEnter={() => setActive("GAMES")}
             onMouseLeave={() => setActive("")}
           >
             GAMES
@@ -615,6 +641,189 @@ export default function MainContent({
                   })}
                 </Games2LineCD>
               </Games>
+            )}{" "}
+            {selectedMode == "LIBRARY_ICONS" && (
+              <Games>
+                <Games1Line>
+                  <GamesLeft>LIBRARY</GamesLeft>
+                  <GamesRight></GamesRight>
+                </Games1Line>
+                <Games2LineCD>
+                  {sortedGames?.map((game, index) => {
+                    let allCompletion = 0;
+                    let total = 0;
+                    let unearned = 0;
+                    let platinumA = 0;
+                    let goldA = 0;
+                    let silverA = 0;
+                    let bronzeA = 0;
+                    let platinum = 0;
+                    let gold = 0;
+                    let silver = 0;
+                    let bronze = 0;
+
+                    game?.achievements?.forEach((ach) => {
+                      total++;
+                      if (ach?.achieved == 0) {
+                        unearned++;
+                        if (ach?.color == "Platinum") {
+                          platinumA++;
+                        }
+                        if (ach?.color == "Gold") {
+                          goldA++;
+                        }
+                        if (ach?.color == "Silver") {
+                          silverA++;
+                        }
+                        if (ach?.color == "Bronze") {
+                          bronzeA++;
+                        }
+                      } else {
+                        if (ach?.color == "Platinum") {
+                          platinum++;
+                        }
+                        if (ach?.color == "Gold") {
+                          gold++;
+                        }
+                        if (ach?.color == "Silver") {
+                          silver++;
+                        }
+                        if (ach?.color == "Bronze") {
+                          bronze++;
+                        }
+                      }
+                    });
+
+                    let completed = game?.achievements?.filter(
+                      (item) => item?.achieved == 1
+                    )?.length;
+                    let completion = (
+                      completed == 0 ? 0 : (completed / total) * 100
+                    )?.toFixed(2);
+                    allCompletion = allCompletion + completion;
+                    if (total == completed) {
+                      completed = completed + 1;
+                    }
+
+                    let { color, rank } =
+                      calculateRankForCompletion(completion);
+                    let lastAch = game?.achievements?.sort(
+                      (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
+                    )?.[game?.achievements?.length - 1];
+
+                    return (
+                      <GameContainerCD
+                        onClick={() => {
+                          setSelectedGame(game);
+                          setSelectedMode("GAME");
+                        }}
+                        color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                      >
+                        <GameCdImageSmall game={game} scale={1.1} />
+                        <span
+                          style={{ marginBottom: "1rem", marginTop: "1rem" }}
+                        >
+                          <Ps5
+                            onClick={() => {
+                              setShowEditModal(true);
+                              setGameData((old) => game);
+                            }}
+                          >
+                            PS5
+                          </Ps5>
+                        </span>
+                        <GameDataCD>
+                          <GameTitle
+                            onClick={() => {
+                              setSelectedGame(game);
+                              setSelectedMode("GAME");
+                            }}
+                          >
+                            {game?.name}
+                          </GameTitle>
+                          <GameCompletionCD>
+                            {completed} of {total} Trophies
+                          </GameCompletionCD>
+                          <Started></Started>
+                        </GameDataCD>
+                        <GameInfoCD>
+                          <Rank>
+                            <span style={{ fontSize: "1.5rem", color: color }}>
+                              {rank}
+                            </span>
+                            <span style={{ fontSize: ".7rem" }}>RANK</span>
+                          </Rank>
+                          <Seperator></Seperator>
+                          <Trophies>
+                            <TTop>
+                              <TSingle>
+                                <GoldIconS />
+                                <span
+                                  style={{
+                                    transform: "translate(-.5rem,-.25rem)",
+                                    color: COLOR_GOLD,
+                                    fontSize: "1rem",
+                                  }}
+                                >
+                                  {gold}
+                                </span>
+                              </TSingle>
+                              <TSingle>
+                                <SilverIconS />
+                                <span
+                                  style={{
+                                    transform: "translate(-.5rem,-.25rem)",
+                                    color: COLOR_SILVER2,
+                                    fontSize: "1rem",
+                                  }}
+                                >
+                                  {silver}
+                                </span>
+                              </TSingle>
+                              <TSingle>
+                                <BronzeIconS />
+                                <span
+                                  style={{
+                                    transform: "translate(-.5rem,-.25rem)",
+                                    color: COLOR_BRONZE,
+                                    fontSize: "1rem",
+                                  }}
+                                >
+                                  {bronze}
+                                </span>
+                              </TSingle>
+                            </TTop>
+                            <TBottom>
+                              <Outer>
+                                <Inner percentage={completion}></Inner>
+                                <Text>{completion} %</Text>
+                              </Outer>
+                            </TBottom>
+                          </Trophies>
+                          <Seperator></Seperator>
+                          <Platinum isPlatinum={total == completed}>
+                            <span
+                              style={{ opacity: total == completed ? 1 : 0.25 }}
+                            >
+                              <PlatinumIcon />
+                            </span>
+                            <span
+                              style={{
+                                fontSize: ".7rem",
+                                marginTop: "4px",
+                                fontWeight: "bold",
+                                opacity: total == completed ? 1 : 0.75,
+                              }}
+                            >
+                              {lastAch?.percentage} %
+                            </span>
+                          </Platinum>
+                        </GameInfoCD>
+                      </GameContainerCD>
+                    );
+                  })}
+                </Games2LineCD>
+              </Games>
             )}
             {selectedMode == "GAME" && (
               <>
@@ -809,7 +1018,7 @@ export default function MainContent({
             />
           </SRLeft>
         )}
-        {selectedMode !== "LIBRARY" && (
+        {selectedMode !== "LIBRARY" && selectedMode !== "LIBRARY_ICONS" && (
           <SRRight>
             <Rarest>
               <Rarest1Line>
@@ -820,6 +1029,12 @@ export default function MainContent({
                 {selectedRarityAchs?.length == 0 && <span>No Trophies</span>}
                 {selectedRarityAchs?.length > 0 &&
                   selectedRarityAchs?.map((ach, index) => {
+                    let desc1 = ach?.hiddenDesc;
+                    let desc2 = ach?.description;
+                    let desc3 = ach?.hiddenDesc?.split(
+                      "Hidden achievement:"
+                    )?.[1];
+
                     return (
                       <AchCard
                         color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
@@ -830,7 +1045,10 @@ export default function MainContent({
                         </AchIconOuter>
                         <AchData>
                           <AchTitle>{ach?.displayName}</AchTitle>
-                          <AchDesc>{ach?.description}</AchDesc>
+                          <AchDesc>
+                            {" "}
+                            {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                          </AchDesc>
                         </AchData>
                         <Seperator padding={".25rem"} />
                         <AchRarity>
@@ -1548,6 +1766,30 @@ const FRRight = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
+`;
+
+const GameSearch = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
+  & input {
+    width: 100%;
+    outline: none;
+    border: none;
+    padding: 0.5rem 1rem;
+  }
+`;
+
+const CollectionRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e7e7e7;
+  padding: 1rem;
+  width: 100%;
+  color: #44484b;
 `;
 
 const FirstRow = styled.div`
