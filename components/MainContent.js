@@ -719,7 +719,7 @@ export default function MainContent({
                         }}
                         color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                       >
-                        <GameCdImageSmall game={game} scale={1.25} />
+                        <GameCdImageSmall game={game} scale={1.5} />
                       </GameContainerCD>
                     );
                   })}
