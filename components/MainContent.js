@@ -1541,7 +1541,7 @@ const Inner = styled.div`
   position: absolute;
   left: 0;
   top: 0;
-  height: 12px;
+  height: 14px;
   background-color: #336291;
   width: ${(props) => `${props.percentage}%`};
 `;
