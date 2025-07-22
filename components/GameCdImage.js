@@ -21,7 +21,6 @@ const CdImage = styled.div`
   width: 100px;
   height: 126px;
   background: url("/icons/cover.png");
-  background-position: center center;
   background-size: contain;
   background-repeat: no-repeat;
   position: relative;
@@ -36,4 +35,5 @@ const CdInnerImage = styled.div`
   background: ${(props) => `url(${props.cover})`};
   background-size: cover;
   background-repeat: no-repeat;
+  background-position: center;
 `;
