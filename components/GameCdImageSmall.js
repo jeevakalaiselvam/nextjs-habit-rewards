@@ -5,10 +5,10 @@ import { COLOR_ACCENT, COLOR_BLUE_DARK } from "../helpers/colorHelper";
 import EditGameForm from "./EditGameForm";
 import { useState } from "react";
 
-export default function GameCdImageSmall({ game, scale = 1 }) {
+export default function GameCdImageSmall({ cover, scale = 1 }) {
   return (
     <CdImage scale={scale}>
-      <CdInnerImage scale={scale} cover={game?.cover} />
+      <CdInnerImage scale={scale} cover={cover} />
     </CdImage>
   );
 }

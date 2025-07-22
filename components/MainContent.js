@@ -43,11 +43,11 @@ export default function MainContent({
 }) {
   const [gameHovered, setGameHovered] = useState("");
   const [selectedRarity, setSelectedRarity] = useState("ULTRA RARE");
-  const [selectedMode, setSelectedMode] = useState("GAMES");
+  const [selectedMode, setSelectedMode] = useState("LIBRARY");
   const [selectedGame, setSelectedGame] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
   const [selected, setSelected] = useState("LIBRARY");
-  const [active, setActive] = useState("PROFILE");
+  const [active, setActive] = useState("LIBRARY");
   const [gameData, setGameData] = useState({});
   const [gameSearch, setGameSearch] = useState("");
 
@@ -174,6 +174,28 @@ export default function MainContent({
     game?.name?.toLowerCase()?.includes(gameSearch?.toLowerCase())
   );
 
+  let allUnlocked = [];
+  let notUnlocked = [];
+
+  games?.forEach((game) => {
+    console.log(game);
+    game?.achievements?.forEach((ach) => {
+      if (ach?.achieved == 1) {
+        allUnlocked.push(ach);
+      } else {
+        notUnlocked.push(ach);
+      }
+    });
+  });
+
+  allUnlocked = allUnlocked?.sort(
+    (ach1, ach2) => ach2?.unlocktime - ach1?.unlocktime
+  );
+
+  notUnlocked = notUnlocked?.sort(
+    (ach1, ach2) => ach2?.percentage - ach1?.percentage
+  );
+
   return (
     <Container>
       {showEditModal && (
@@ -200,11 +222,11 @@ export default function MainContent({
         <FRRight>
           <TabLink
             onClick={() => {
-              setSelected("LIBRARY_NEW");
-              setSelectedMode("LIBRARY_NEW");
+              setSelected("LIBRARY");
+              setSelectedMode("LIBRARY");
             }}
-            active={selected == "LIBRARY_NEW"}
-            onMouseEnter={() => setActive("LIBRARY_NEW")}
+            active={selectedMode == "LIBRARY"}
+            onMouseEnter={() => setActive("LIBRARY")}
             onMouseLeave={() => setActive("")}
           >
             LIBRARY
@@ -234,9 +256,9 @@ export default function MainContent({
         </FRRight>
         <FRRight>
           <TabLink
-            onClick={() => setSelected("TROPHY LOG")}
-            active={selected == "TROPHY LOG"}
-            onMouseEnter={() => setActive("TROPHY LOG")}
+            onClick={() => setSelectedMode("TROPHY_LOG")}
+            active={selectedMode == "TROPHY_LOG"}
+            onMouseEnter={() => setActive("TROPHY_LOG")}
             onMouseLeave={() => setActive("")}
           >
             TROPHY LOG
@@ -244,9 +266,9 @@ export default function MainContent({
         </FRRight>
         <FRRight>
           <TabLink
-            onClick={() => setSelected("TROPHY ADVISOR")}
-            active={selected == "TROPHY ADVISOR"}
-            onMouseEnter={() => setActive("TROPHY ADVISOR")}
+            onClick={() => setSelectedMode("TROPHY_ADVISOR")}
+            active={selectedMode == "TROPHY_ADVISOR"}
+            onMouseEnter={() => setActive("TROPHY_ADVISOR")}
             onMouseLeave={() => setActive("")}
           >
             TROPHY ADVISOR
@@ -254,8 +276,8 @@ export default function MainContent({
         </FRRight>
         <FRRight>
           <TabLink
-            onClick={() => setSelected("STATS")}
-            active={selected == "STATS"}
+            onClick={() => setSelectedMode("STATS")}
+            active={selectedMode == "STATS"}
             onMouseEnter={() => setActive("STATS")}
             onMouseLeave={() => setActive("")}
           >
@@ -264,8 +286,8 @@ export default function MainContent({
         </FRRight>
         <FRRight>
           <TabLink
-            onClick={() => setSelected("LEVEL HISTORY")}
-            active={selected == "LEVEL HISTORY"}
+            onClick={() => setSelectedMode("LEVEL HISTORY")}
+            active={selectedMode == "LEVEL HISTORY"}
             onMouseEnter={() => setActive("LEVEL HISTORY")}
             onMouseLeave={() => setActive("")}
           >
@@ -276,6 +298,147 @@ export default function MainContent({
       <SecondRow>
         {!gamesLoading && (
           <SRLeft>
+            {selectedMode == "TROPHY_LOG" && (
+              <Game2Line>
+                {allUnlocked?.map((ach, index) => {
+                  let desc1 = ach?.hiddenDesc;
+                  let desc2 = ach?.description;
+                  let desc3 = ach?.hiddenDesc?.split(
+                    "Hidden achievement:"
+                  )?.[1];
+                  return (
+                    <AchCard
+                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                      achieved={ach?.achieved}
+                    >
+                      <GameSubLeftImageSmall
+                        image={HEADER_IMAGE(ach?.gameId)}
+                      />
+                      <span style={{ marginLeft: "1rem" }}></span>
+                      <AchIconOuter achieved={ach?.achieved}>
+                        <AchIcon
+                          icon={ach?.icon}
+                          onClick={() => {
+                            if (window !== "undefined") {
+                              const searchQuery = `${
+                                ach?.displayName
+                              } achievement ${encodeURIComponent(
+                                ach?.gameName
+                              )} `;
+                              window.open(
+                                `https://www.google.com/search?q=${searchQuery}`
+                              );
+                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                            }
+                          }}
+                        ></AchIcon>
+                      </AchIconOuter>
+                      <AchData>
+                        <AchTitle>{ach?.displayName}</AchTitle>
+                        <AchDesc>
+                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                        </AchDesc>
+                      </AchData>
+                      <span style={{ padding: "0rem 1rem", opacity: 0.75 }}>
+                        #{allUnlocked?.length - index}
+                      </span>
+                      <Seperator padding={".25rem"} />
+                      {ach?.achieved == 1 && (
+                        <Unlocked>
+                          <UnlockedT1>
+                            {formatDate1(new Date(ach?.unlocktime * 1000))}
+                          </UnlockedT1>
+                          <UnlockedT2>
+                            {formatDate2(new Date(ach?.unlocktime * 1000))}
+                          </UnlockedT2>
+                        </Unlocked>
+                      )}
+                      <Seperator padding={".25rem"} />
+                      <AchRarity>
+                        <span style={{ fontSize: "1.2rem" }}>
+                          {ach?.percentage}%
+                        </span>
+                        <span style={{ fontSize: ".7rem" }}>
+                          {ach?.label?.toUpperCase()}
+                        </span>
+                      </AchRarity>
+                      <Seperator padding={".25rem"} />
+                      <AchTrophy>
+                        {ach?.color == "Platinum" && <PlatinumIconS />}
+                        {ach?.color == "Gold" && <GoldIconS />}
+                        {ach?.color == "Silver" && <SilverIconS />}
+                        {ach?.color == "Bronze" && <BronzeIconS />}
+                      </AchTrophy>
+                    </AchCard>
+                  );
+                })}
+              </Game2Line>
+            )}
+            {selectedMode == "TROPHY_ADVISOR" && (
+              <Game2Line>
+                {notUnlocked?.map((ach, index) => {
+                  let desc1 = ach?.hiddenDesc;
+                  let desc2 = ach?.description;
+                  let desc3 = ach?.hiddenDesc?.split(
+                    "Hidden achievement:"
+                  )?.[1];
+                  return (
+                    <AchCard
+                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                      achieved={ach?.achieved}
+                    >
+                      <GameSubLeftImageSmall
+                        image={HEADER_IMAGE(ach?.gameId)}
+                      />
+                      <span style={{ marginLeft: "1rem" }}></span>
+                      <AchIconOuter achieved={ach?.achieved}>
+                        <AchIcon
+                          icon={ach?.icon}
+                          onClick={() => {
+                            if (window !== "undefined") {
+                              const searchQuery = `${
+                                ach?.displayName
+                              } achievement ${encodeURIComponent(
+                                ach?.gameName
+                              )} `;
+                              window.open(
+                                `https://www.google.com/search?q=${searchQuery}`
+                              );
+                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                            }
+                          }}
+                        ></AchIcon>
+                      </AchIconOuter>
+                      <AchData>
+                        <AchTitle>{ach?.displayName}</AchTitle>
+                        <AchDesc>
+                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                        </AchDesc>
+                      </AchData>
+                      <span style={{ padding: "0rem 1rem", opacity: 0.75 }}>
+                        #{index + 1}
+                      </span>
+                      <Seperator padding={".25rem"} />
+                      <AchRarity>
+                        <span style={{ fontSize: "1.2rem" }}>
+                          {ach?.percentage}%
+                        </span>
+                        <span style={{ fontSize: ".7rem" }}>
+                          {ach?.label?.toUpperCase()}
+                        </span>
+                      </AchRarity>
+                      <Seperator padding={".25rem"} />
+                      <AchTrophy>
+                        {ach?.color == "Platinum" && <PlatinumIconS />}
+                        {ach?.color == "Gold" && <GoldIconS />}
+                        {ach?.color == "Silver" && <SilverIconS />}
+                        {ach?.color == "Bronze" && <BronzeIconS />}
+                      </AchTrophy>
+                    </AchCard>
+                  );
+                })}
+              </Game2Line>
+            )}
             {selectedMode == "GAMES" && (
               <Games>
                 <Games1Line>
@@ -551,7 +714,9 @@ export default function MainContent({
                         color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                       >
                         <GameCdImage game={game} />
-                        <span style={{ marginBottom: "1rem" }}>
+                        <span
+                          style={{ marginBottom: "1rem", marginTop: "1rem" }}
+                        >
                           <Ps5
                             onClick={() => {
                               setShowEditModal(true);
@@ -653,7 +818,7 @@ export default function MainContent({
                   })}
                 </Games2LineCD>
               </Games>
-            )}{" "}
+            )}
             {selectedMode == "LIBRARY_ICONS" && (
               <Games>
                 <Games1Line>
@@ -737,7 +902,7 @@ export default function MainContent({
                   })}
                 </Games2LineCD>
               </Games>
-            )}{" "}
+            )}
             {selectedMode == "LIBRARY_NEW" && (
               <Games>
                 <Games1Line>
@@ -1073,129 +1238,142 @@ export default function MainContent({
             />
           </SRLeft>
         )}
-        {selectedMode !== "LIBRARY" && selectedMode !== "LIBRARY_NEW" && (
-          <SRRight>
-            <Rarest>
-              <Rarest1Line>
-                <GamesLeft>RAREST TROPHIES</GamesLeft>
-                <GamesRight></GamesRight>
-              </Rarest1Line>
-              <Rarest2Line>
-                {selectedRarityAchs?.length == 0 && <span>No Trophies</span>}
-                {selectedRarityAchs?.length > 0 &&
-                  selectedRarityAchs?.map((ach, index) => {
-                    let desc1 = ach?.hiddenDesc;
-                    let desc2 = ach?.description;
-                    let desc3 = ach?.hiddenDesc?.split(
-                      "Hidden achievement:"
-                    )?.[1];
+        {selectedMode !== "LIBRARY" &&
+          selectedMode !== "LIBRARY_NEW" &&
+          selectedMode !== "TROPHY_LOG" &&
+          selectedMode !== "TROPHY_ADVISOR" && (
+            <SRRight>
+              <Rarest>
+                <Rarest1Line>
+                  <GamesLeft>RAREST TROPHIES</GamesLeft>
+                  <GamesRight></GamesRight>
+                </Rarest1Line>
+                <Rarest2Line>
+                  {selectedRarityAchs?.length == 0 && <span>No Trophies</span>}
+                  {selectedRarityAchs?.length > 0 &&
+                    selectedRarityAchs?.map((ach, index) => {
+                      let desc1 = ach?.hiddenDesc;
+                      let desc2 = ach?.description;
+                      let desc3 = ach?.hiddenDesc?.split(
+                        "Hidden achievement:"
+                      )?.[1];
 
-                    return (
-                      <AchCard
-                        color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                        achieved={ach?.achieved}
-                      >
-                        <AchIconOuter achieved={ach?.achieved}>
-                          <AchIcon icon={ach?.icon}></AchIcon>
-                        </AchIconOuter>
-                        <AchData>
-                          <AchTitle>{ach?.displayName}</AchTitle>
-                          <AchDesc>
-                            {" "}
-                            {desc2 ? desc2 : desc3 ? desc3 : desc1}
-                          </AchDesc>
-                        </AchData>
-                        <Seperator padding={".25rem"} />
-                        <AchRarity>
-                          <span style={{ fontSize: "1.2rem" }}>
-                            {ach?.percentage}%
-                          </span>
-                          <span style={{ fontSize: ".7rem" }}>
-                            {ach?.label?.toUpperCase()}
-                          </span>
-                        </AchRarity>
-                        <Seperator padding={".25rem"} />
-                        <AchTrophy>
-                          {ach?.color == "Platinum" && <PlatinumIconS />}
-                          {ach?.color == "Gold" && <GoldIconS />}
-                          {ach?.color == "Silver" && <SilverIconS />}
-                          {ach?.color == "Bronze" && <BronzeIconS />}
-                        </AchTrophy>
-                      </AchCard>
-                    );
-                  })}
-              </Rarest2Line>
-              <RareSelection>
-                <RItem
-                  active={selectedRarity == "ULTRA RARE"}
-                  onClick={() => {
-                    setSelectedRarity("ULTRA RARE");
-                  }}
-                >
-                  <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
-                    {ultrarare?.length}
-                  </span>
-                  <span style={{ fontSize: ".7rem" }}>ULTRA RARE</span>
-                </RItem>
-                <Seperator padding={".25rem"}></Seperator>
-                <RItem
-                  active={selectedRarity == "VERY RARE"}
-                  onClick={() => {
-                    setSelectedRarity("VERY RARE");
-                  }}
-                >
-                  <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
-                    {veryrare?.length}
-                  </span>
-                  <span style={{ fontSize: ".7rem" }}>VERY RARE</span>
-                </RItem>
-                <Seperator padding={".25rem"}></Seperator>
-                <RItem
-                  active={selectedRarity == "RARE"}
-                  onClick={() => {
-                    setSelectedRarity("RARE");
-                  }}
-                >
-                  <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
-                    {rare?.length}
-                  </span>
-                  <span style={{ fontSize: ".7rem" }}>RARE</span>
-                </RItem>
-                <Seperator padding={".25rem"}></Seperator>
-                <RItem
-                  active={selectedRarity == "UNCOMMON"}
-                  onClick={() => {
-                    setSelectedRarity("UNCOMMON");
-                  }}
-                >
-                  <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
-                    {uncommon?.length}
-                  </span>
-                  <span style={{ fontSize: ".7rem" }}>UNCOMMON</span>
-                </RItem>
-                <Seperator padding={".25rem"}></Seperator>
-                <RItem
-                  active={selectedRarity == "COMMON"}
-                  onClick={() => {
-                    setSelectedRarity("COMMON");
-                  }}
-                >
-                  <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
-                    {common?.length}
-                  </span>
-                  <span style={{ fontSize: ".7rem" }}>COMMON</span>
-                </RItem>
-              </RareSelection>
-            </Rarest>
-            <Milestones>
-              <Rarest1Line>
-                <GamesLeft>TROPHY MILESTONES</GamesLeft>
-                <GamesRight></GamesRight>
-              </Rarest1Line>
-              <Rarest2Line></Rarest2Line>
-            </Milestones>
-          </SRRight>
-        )}
+                      return (
+                        <AchCard
+                          color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                          achieved={ach?.achieved}
+                        >
+                          <AchIconOuter achieved={ach?.achieved}>
+                            <AchIcon icon={ach?.icon}></AchIcon>
+                          </AchIconOuter>
+                          <AchData>
+                            <AchTitle>{ach?.displayName}</AchTitle>
+                            <AchDesc>
+                              {" "}
+                              {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                            </AchDesc>
+                          </AchData>
+                          <Seperator padding={".25rem"} />
+                          <AchRarity>
+                            <span style={{ fontSize: "1.2rem" }}>
+                              {ach?.percentage}%
+                            </span>
+                            <span style={{ fontSize: ".7rem" }}>
+                              {ach?.label?.toUpperCase()}
+                            </span>
+                          </AchRarity>
+                          <Seperator padding={".25rem"} />
+                          <AchTrophy>
+                            {ach?.color == "Platinum" && <PlatinumIconS />}
+                            {ach?.color == "Gold" && <GoldIconS />}
+                            {ach?.color == "Silver" && <SilverIconS />}
+                            {ach?.color == "Bronze" && <BronzeIconS />}
+                          </AchTrophy>
+                        </AchCard>
+                      );
+                    })}
+                </Rarest2Line>
+                <RareSelection>
+                  <RItem
+                    active={selectedRarity == "ULTRA RARE"}
+                    onClick={() => {
+                      setSelectedRarity("ULTRA RARE");
+                    }}
+                  >
+                    <span
+                      style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}
+                    >
+                      {ultrarare?.length}
+                    </span>
+                    <span style={{ fontSize: ".7rem" }}>ULTRA RARE</span>
+                  </RItem>
+                  <Seperator padding={".25rem"}></Seperator>
+                  <RItem
+                    active={selectedRarity == "VERY RARE"}
+                    onClick={() => {
+                      setSelectedRarity("VERY RARE");
+                    }}
+                  >
+                    <span
+                      style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}
+                    >
+                      {veryrare?.length}
+                    </span>
+                    <span style={{ fontSize: ".7rem" }}>VERY RARE</span>
+                  </RItem>
+                  <Seperator padding={".25rem"}></Seperator>
+                  <RItem
+                    active={selectedRarity == "RARE"}
+                    onClick={() => {
+                      setSelectedRarity("RARE");
+                    }}
+                  >
+                    <span
+                      style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}
+                    >
+                      {rare?.length}
+                    </span>
+                    <span style={{ fontSize: ".7rem" }}>RARE</span>
+                  </RItem>
+                  <Seperator padding={".25rem"}></Seperator>
+                  <RItem
+                    active={selectedRarity == "UNCOMMON"}
+                    onClick={() => {
+                      setSelectedRarity("UNCOMMON");
+                    }}
+                  >
+                    <span
+                      style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}
+                    >
+                      {uncommon?.length}
+                    </span>
+                    <span style={{ fontSize: ".7rem" }}>UNCOMMON</span>
+                  </RItem>
+                  <Seperator padding={".25rem"}></Seperator>
+                  <RItem
+                    active={selectedRarity == "COMMON"}
+                    onClick={() => {
+                      setSelectedRarity("COMMON");
+                    }}
+                  >
+                    <span
+                      style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}
+                    >
+                      {common?.length}
+                    </span>
+                    <span style={{ fontSize: ".7rem" }}>COMMON</span>
+                  </RItem>
+                </RareSelection>
+              </Rarest>
+              <Milestones>
+                <Rarest1Line>
+                  <GamesLeft>TROPHY MILESTONES</GamesLeft>
+                  <GamesRight></GamesRight>
+                </Rarest1Line>
+                <Rarest2Line></Rarest2Line>
+              </Milestones>
+            </SRRight>
+          )}
       </SecondRow>
     </Container>
   );
@@ -1209,11 +1387,12 @@ const CoverData = styled.div`
   position: absolute;
   left: 0rem;
   bottom: 0.5rem;
-  width: 100%;
+  width: 98%;
   z-index: 2;
   padding: 0.5rem 1rem;
   transition: 0.25s all ease-in;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: #fefefedd;
+  border-radius: 0 0 2px 2px;
 `;
 
 const Case = styled.div`
@@ -1285,6 +1464,16 @@ const PlayButton = styled.div`
   &:hover {
     opacity: 1;
   }
+`;
+const GameSubLeftImageSmall = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 200px;
+  height: 100px;
+  background: ${(props) => `url(${props.image})`};
+  background-size: cover;
+  position: relative;
 `;
 
 const GameSubLeftImage = styled.div`
@@ -1736,9 +1925,11 @@ const GameContainerCD = styled.div`
   justify-content: flex-start;
   background-color: ${(props) => props.color};
   color: #333;
-  padding: 4px;
+  padding: 8px;
   flex-direction: column;
+  border: 1px solid #ddd;
   cursor: pointer;
+  width: 350px;
 `;
 
 const Games2Line = styled.div`
@@ -1752,7 +1943,7 @@ const Games2Line = styled.div`
 const Games2LineCD = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
   width: 100%;
 `;
