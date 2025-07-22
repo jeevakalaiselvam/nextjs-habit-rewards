@@ -145,7 +145,7 @@ export default function MainHeader({
                 marginRight: ".25rem",
               }}
             >
-              <PlatinumIcon />
+              <WhiteTrophy />
             </span>
             <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
               {total}
