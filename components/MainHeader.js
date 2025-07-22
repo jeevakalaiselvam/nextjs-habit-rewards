@@ -210,11 +210,11 @@ export default function MainHeader({ games }) {
       <BottomStats>
         <Section>
           <Top>{games?.length}</Top>
-          <Bottom>TOTAL GAMES</Bottom>
+          <Bottom>GAMES</Bottom>
         </Section>
         <Section>
           <Top>{completed}</Top>
-          <Bottom>COMPLETED GAMES</Bottom>
+          <Bottom>PLATINUM GAMES</Bottom>
         </Section>
         {/* <Section>
           <Top>{0}</Top>
@@ -224,7 +224,7 @@ export default function MainHeader({ games }) {
           <Top>
             {platinumA}
             <span
-              style={{ transform: "translateY(-2.75px)", marginLeft: ".25rem" }}
+              style={{ transform: "translateY(-2.75px)", marginLeft: ".5rem" }}
             >
               <PlatinumIcon />
             </span>
@@ -235,7 +235,7 @@ export default function MainHeader({ games }) {
           <Top>
             {goldA}
             <span
-              style={{ transform: "translateY(-2.75px)", marginLeft: ".25rem" }}
+              style={{ transform: "translateY(-2.75px)", marginLeft: ".5rem" }}
             >
               <GoldIcon />
             </span>
@@ -246,7 +246,7 @@ export default function MainHeader({ games }) {
           <Top>
             {silverA}
             <span
-              style={{ transform: "translateY(-2.75px)", marginLeft: ".25rem" }}
+              style={{ transform: "translateY(-2.75px)", marginLeft: ".5rem" }}
             >
               <SilverIcon />
             </span>
@@ -257,7 +257,7 @@ export default function MainHeader({ games }) {
           <Top>
             {bronzeA}
             <span
-              style={{ transform: "translateY(-2.75px)", marginLeft: ".25rem" }}
+              style={{ transform: "translateY(-2.75px)", marginLeft: ".5rem" }}
             >
               <BronzeIcon />
             </span>
