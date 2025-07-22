@@ -113,7 +113,7 @@ export default function EditGameForm({
           }
         />
       </Row>
-      <Row style={{ marginBottom: "1rem" }}>
+      {/* <Row style={{ marginBottom: "1rem" }}>
         <Input
           placeholder="DLC 1 Name..."
           value={gameForm?.dlc1Name}
@@ -252,7 +252,7 @@ export default function EditGameForm({
             setGameForm((old) => ({ ...old, dlc5Trophies: e.target.value }))
           }
         />
-      </Row>
+      </Row> */}
     </Modal>
   );
 }
