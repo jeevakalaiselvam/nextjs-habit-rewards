@@ -41,6 +41,7 @@ export default function MainContent({
   gamesLoading,
   platinumDataLoading,
 }) {
+  const [gameHovered, setGameHovered] = useState("");
   const [selectedRarity, setSelectedRarity] = useState("ULTRA RARE");
   const [selectedMode, setSelectedMode] = useState("GAMES");
   const [selectedGame, setSelectedGame] = useState("");
@@ -199,6 +200,17 @@ export default function MainContent({
         <FRRight>
           <TabLink
             onClick={() => {
+              setSelected("LIBRARY_NEW");
+              setSelectedMode("LIBRARY_NEW");
+            }}
+            active={selected == "LIBRARY_NEW"}
+            onMouseEnter={() => setActive("LIBRARY_NEW")}
+            onMouseLeave={() => setActive("")}
+          >
+            LIBRARY
+          </TabLink>
+          {/* <TabLink
+            onClick={() => {
               setSelected("LIBRARY_ICONS");
               setSelectedMode("LIBRARY_ICONS");
             }}
@@ -218,7 +230,7 @@ export default function MainContent({
             onMouseLeave={() => setActive("")}
           >
             GAMES
-          </TabLink>
+          </TabLink> */}
         </FRRight>
         <FRRight>
           <TabLink
@@ -725,6 +737,158 @@ export default function MainContent({
                   })}
                 </Games2LineCD>
               </Games>
+            )}{" "}
+            {selectedMode == "LIBRARY_NEW" && (
+              <Games>
+                <Games1Line>
+                  <GamesLeft>LIBRARY</GamesLeft>
+                  <GamesRight></GamesRight>
+                </Games1Line>
+                <Games2LineCD>
+                  {games.map((game, idx) => {
+                    let allCompletion = 0;
+                    let total = 0;
+                    let unearned = 0;
+                    let platinumA = 0;
+                    let goldA = 0;
+                    let silverA = 0;
+                    let bronzeA = 0;
+                    let platinum = 0;
+                    let gold = 0;
+                    let silver = 0;
+                    let bronze = 0;
+
+                    game?.achievements?.forEach((ach) => {
+                      total++;
+                      if (ach?.achieved == 0) {
+                        unearned++;
+                        if (ach?.color == "Platinum") {
+                          platinumA++;
+                        }
+                        if (ach?.color == "Gold") {
+                          goldA++;
+                        }
+                        if (ach?.color == "Silver") {
+                          silverA++;
+                        }
+                        if (ach?.color == "Bronze") {
+                          bronzeA++;
+                        }
+                      } else {
+                        if (ach?.color == "Platinum") {
+                          platinum++;
+                        }
+                        if (ach?.color == "Gold") {
+                          gold++;
+                        }
+                        if (ach?.color == "Silver") {
+                          silver++;
+                        }
+                        if (ach?.color == "Bronze") {
+                          bronze++;
+                        }
+                      }
+                    });
+
+                    let completed = game?.achievements?.filter(
+                      (item) => item?.achieved == 1
+                    )?.length;
+                    let completion = (
+                      completed == 0 ? 0 : (completed / total) * 100
+                    )?.toFixed(2);
+                    allCompletion = allCompletion + completion;
+                    if (total == completed) {
+                      completed = completed + 1;
+                    }
+
+                    let { color, rank } =
+                      calculateRankForCompletion(completion);
+                    let lastAch = game?.achievements?.sort(
+                      (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
+                    )?.[game?.achievements?.length - 1];
+
+                    let completedBG = game?.achievements?.filter(
+                      (item) => item?.achieved == 1
+                    )?.length;
+                    let completionBG =
+                      completedBG == 0 ? 0 : (completedBG / totalBG) * 100;
+
+                    return (
+                      <Case
+                        key={idx}
+                        onClick={() => {
+                          setSelectedGame(game);
+                          setSelectedMode("GAME");
+                        }}
+                        onMouseEnter={() => {
+                          setGameHovered(game?.id);
+                        }}
+                        onMouseLeave={() => {
+                          setGameHovered("");
+                        }}
+                      >
+                        {gameHovered == game?.id && (
+                          <CoverData>
+                            <GameSubRight>
+                              <Trophies>
+                                <TTop>
+                                  <TSingle>
+                                    <GoldIconS />
+                                    <span
+                                      style={{
+                                        transform: "translate(-.5rem,-.25rem)",
+                                        color: COLOR_GOLD,
+                                        fontSize: "1rem",
+                                      }}
+                                    >
+                                      {goldBG}
+                                    </span>
+                                  </TSingle>
+                                  <TSingle>
+                                    <SilverIconS />
+                                    <span
+                                      style={{
+                                        transform: "translate(-.5rem,-.25rem)",
+                                        color: COLOR_SILVER2,
+                                        fontSize: "1rem",
+                                      }}
+                                    >
+                                      {silverBG}
+                                    </span>
+                                  </TSingle>
+                                  <TSingle>
+                                    <BronzeIconS />
+                                    <span
+                                      style={{
+                                        transform: "translate(-.5rem,-.25rem)",
+                                        color: COLOR_BRONZE,
+                                        fontSize: "1rem",
+                                      }}
+                                    >
+                                      {bronzeBG}
+                                    </span>
+                                  </TSingle>
+                                </TTop>
+                                <TBottom>
+                                  <Outer>
+                                    <Inner percentage={completion}></Inner>
+                                    <Text>{completion} %</Text>
+                                  </Outer>
+                                </TBottom>
+                              </Trophies>
+                            </GameSubRight>
+                          </CoverData>
+                        )}
+                        <Template
+                          src="/icons/ps5_cover.png"
+                          alt="PS5 case template"
+                        />
+                        <Cover src={game.cover} alt={game.name} />
+                      </Case>
+                    );
+                  })}
+                </Games2LineCD>
+              </Games>
             )}
             {selectedMode == "GAME" && (
               <>
@@ -735,29 +899,19 @@ export default function MainContent({
                     </GameLeft>
                   </Game1Line>
                   <GameSubLine>
-                    <GameSubLeftImage image={HEADER_IMAGE(selectedGame?.id)}>
-                      <PlayButton
-                        onClick={() => {
-                          if (window) {
-                            window.location.href =
-                              "steam://rungameid/" + selectedGame?.id;
-                          }
-                        }}
-                      >
-                        <span
-                          style={{
-                            width: "20px",
-                            height: "20px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <HiPlay />
-                        </span>
-                      </PlayButton>
-                    </GameSubLeftImage>
-                    <GameSubLeft>Base Game</GameSubLeft>
+                    <Case
+                      onClick={() => {
+                        setSelectedGame(selectedGame);
+                        setSelectedMode("GAME");
+                      }}
+                    >
+                      <Template
+                        src="/icons/ps5_cover.png"
+                        alt="PS5 case template"
+                      />
+                      <Cover src={selectedGame.cover} alt={selectedGame.name} />
+                    </Case>
+                    <GameSubLeft>{selectedGame?.name}</GameSubLeft>
                     <GameSubRight>
                       <Ps5
                         onClick={() => {
@@ -919,7 +1073,7 @@ export default function MainContent({
             />
           </SRLeft>
         )}
-        {selectedMode !== "LIBRARY" && selectedMode !== "LIBRARY_ICONS" && (
+        {selectedMode !== "LIBRARY" && selectedMode !== "LIBRARY_NEW" && (
           <SRRight>
             <Rarest>
               <Rarest1Line>
@@ -1047,6 +1201,50 @@ export default function MainContent({
   );
 }
 
+// Styles
+const CoverData = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 0rem;
+  bottom: 0.5rem;
+  width: 100%;
+  z-index: 2;
+  padding: 0.5rem 1rem;
+  transition: 0.25s all ease-in;
+  background-color: rgba(0, 0, 0, 0.5);
+`;
+
+const Case = styled.div`
+  position: relative;
+  width: 200px;
+  height: 270px;
+  perspective: 800px;
+  margin: 1rem;
+  position: relative;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
+const Template = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+`;
+
+const Cover = styled.img`
+  position: absolute;
+  top: 42px;
+  left: 0px;
+  width: calc(100% - 4px);
+  height: calc(100% - 52px);
+  object-fit: cover;
+  border-radius: 2px;
+`;
+
 const Unlocked = styled.div`
   display: flex;
   align-items: center;
@@ -1110,8 +1308,7 @@ const GameSubLeft = styled.div`
 const GameSubRight = styled.div`
   display: flex;
   align-items: center;
-  padding-right: 1rem;
-  justify-content: flex-end;
+  justify-content: center;
   flex: 1;
 `;
 
@@ -1209,6 +1406,7 @@ const Game2Line = styled.div`
   flex-direction: column;
   overflow: scroll;
   width: 100%;
+  padding: 0rem 1.5rem;
 `;
 
 const Game1Line = styled.div`
