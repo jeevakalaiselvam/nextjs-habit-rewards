@@ -232,7 +232,18 @@ export default function MainContent({
             onMouseEnter={() => setActive("LIBRARY_NEW")}
             onMouseLeave={() => setActive("")}
           >
-            LIBRARY
+            DISCS
+          </TabLink>
+          <TabLink
+            onClick={() => {
+              setSelected("LIBRARY");
+              setSelectedMode("LIBRARY");
+            }}
+            active={selectedMode == "LIBRARY"}
+            onMouseEnter={() => setActive("LIBRARY")}
+            onMouseLeave={() => setActive("")}
+          >
+            PROGRESS
           </TabLink>
           {/* <TabLink
             onClick={() => {
@@ -645,7 +656,7 @@ export default function MainContent({
                   <GamesLeft>LIBRARY</GamesLeft>
                   <GamesRight></GamesRight>
                 </Games1Line>
-                <Games2LineCD>
+                <Games2LineCDL>
                   {sortedGames?.map((game, index) => {
                     let allCompletion = 0;
                     let total = 0;
@@ -819,93 +830,9 @@ export default function MainContent({
                       </GameContainerCD>
                     );
                   })}
-                </Games2LineCD>
+                </Games2LineCDL>
               </Games>
             )}
-            {selectedMode == "LIBRARY_ICONS" && (
-              <Games>
-                <Games1Line>
-                  <GamesLeft>LIBRARY</GamesLeft>
-                  <GamesRight></GamesRight>
-                </Games1Line>
-                <Games2LineCD>
-                  {sortedGames?.map((game, index) => {
-                    let allCompletion = 0;
-                    let total = 0;
-                    let unearned = 0;
-                    let platinumA = 0;
-                    let goldA = 0;
-                    let silverA = 0;
-                    let bronzeA = 0;
-                    let platinum = 0;
-                    let gold = 0;
-                    let silver = 0;
-                    let bronze = 0;
-
-                    game?.achievements?.forEach((ach) => {
-                      total++;
-                      if (ach?.achieved == 0) {
-                        unearned++;
-                        if (ach?.color == "Platinum") {
-                          platinumA++;
-                        }
-                        if (ach?.color == "Gold") {
-                          goldA++;
-                        }
-                        if (ach?.color == "Silver") {
-                          silverA++;
-                        }
-                        if (ach?.color == "Bronze") {
-                          bronzeA++;
-                        }
-                      } else {
-                        if (ach?.color == "Platinum") {
-                          platinum++;
-                        }
-                        if (ach?.color == "Gold") {
-                          gold++;
-                        }
-                        if (ach?.color == "Silver") {
-                          silver++;
-                        }
-                        if (ach?.color == "Bronze") {
-                          bronze++;
-                        }
-                      }
-                    });
-
-                    let completed = game?.achievements?.filter(
-                      (item) => item?.achieved == 1
-                    )?.length;
-                    let completion = (
-                      completed == 0 ? 0 : (completed / total) * 100
-                    )?.toFixed(2);
-                    allCompletion = allCompletion + completion;
-                    if (total == completed) {
-                      completed = completed + 1;
-                    }
-
-                    let { color, rank } =
-                      calculateRankForCompletion(completion);
-                    let lastAch = game?.achievements?.sort(
-                      (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
-                    )?.[game?.achievements?.length - 1];
-
-                    return (
-                      <GameContainerCD
-                        onClick={() => {
-                          setSelectedGame(game);
-                          setSelectedMode("GAME");
-                        }}
-                        color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                      >
-                        <GameCdImageSmall game={game} scale={1.5} />
-                      </GameContainerCD>
-                    );
-                  })}
-                </Games2LineCD>
-              </Games>
-            )}{" "}
             {selectedMode == "LIBRARY_NEW" && (
               <Games>
                 <Games1Line>
@@ -1408,7 +1335,7 @@ const Case = styled.div`
   position: relative;
   &:hover {
     cursor: pointer;
-    transform: scale(1.1);
+    transform: scale(1.025);
   }
 `;
 
@@ -1942,6 +1869,14 @@ const Games2Line = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
+  width: 100%;
+`;
+
+const Games2LineCDL = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
   width: 100%;
 `;
 
