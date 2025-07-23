@@ -4,6 +4,7 @@ import {
   COLOR_BRONZE,
   COLOR_GOLD,
   COLOR_GREEN,
+  COLOR_GREY,
   COLOR_SILVER,
   COLOR_SILVER2,
   COLOR_UNLOCKED,
@@ -25,7 +26,7 @@ import GoldIconS from "./GoldIconS";
 import SilverIconS from "./SilverIconS";
 import BronzeIconS from "./BronzeIconS";
 import PlatinumIcon from "./PlatinumIcon";
-import { FaEdge } from "react-icons/fa";
+import { FaEdge, FaPlay } from "react-icons/fa";
 import EditGameForm from "./EditGameForm";
 import PlatinumIconS from "./PlatinumIconS";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -232,7 +233,7 @@ export default function MainContent({
             onMouseEnter={() => setActive("LIBRARY_NEW")}
             onMouseLeave={() => setActive("")}
           >
-            DISCS
+            PROFILE
           </TabLink>
           <TabLink
             onClick={() => {
@@ -1006,6 +1007,15 @@ export default function MainContent({
                         alt="PS5 case template"
                       />
                       <Cover src={selectedGame.cover} alt={selectedGame.name} />
+                      <Run
+                        onClick={() => {
+                          if (window) {
+                            window.location.href = `steam://run/${selectedGame?.id}`;
+                          }
+                        }}
+                      >
+                        <FaPlay />
+                      </Run>
                     </Case>
                     <GameSubLeft>{selectedGame?.name}</GameSubLeft>
                     <GameSubRight>
@@ -1344,6 +1354,20 @@ const Template = styled.img`
   height: 100%;
   object-fit: contain;
   display: block;
+`;
+
+const Run = styled.div`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 1rem;
+  color: ${COLOR_GREY};
+  opacity: 0.75;
+
+  &:hover {
+    opacity: 1;
+    color: ${COLOR_GREEN};
+  }
 `;
 
 const Cover = styled.img`
