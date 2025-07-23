@@ -7,7 +7,7 @@ import { useState } from "react";
 
 export default function GameCdImageSmall({ cover, scale = 1 }) {
   return (
-    <CdImage scale={scale}>
+    <CdImage scale={scale} draggable>
       <CdInnerImage scale={scale} cover={cover} />
     </CdImage>
   );

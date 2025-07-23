@@ -33,6 +33,9 @@ import { Spin } from "antd";
 import GameCdImage from "./GameCdImage";
 import { formatDate, formatDate1, formatDate2 } from "../helpers/dateHelper";
 import GameCdImageSmall from "./GameCdImageSmall";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import DragPs5Games from "./StackedGameList";
+import StackedGameList from "./StackedGameList";
 
 export default function MainContent({
   games,
@@ -43,11 +46,11 @@ export default function MainContent({
 }) {
   const [gameHovered, setGameHovered] = useState("");
   const [selectedRarity, setSelectedRarity] = useState("ULTRA RARE");
-  const [selectedMode, setSelectedMode] = useState("LIBRARY");
+  const [selectedMode, setSelectedMode] = useState("LIBRARY_NEW");
   const [selectedGame, setSelectedGame] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selected, setSelected] = useState("LIBRARY");
-  const [active, setActive] = useState("LIBRARY");
+  const [selected, setSelected] = useState("LIBRARY_NEW");
+  const [active, setActive] = useState("LIBRARY_NEW");
   const [gameData, setGameData] = useState({});
   const [gameSearch, setGameSearch] = useState("");
 
@@ -222,11 +225,11 @@ export default function MainContent({
         <FRRight>
           <TabLink
             onClick={() => {
-              setSelected("LIBRARY");
-              setSelectedMode("LIBRARY");
+              setSelected("LIBRARY_NEW");
+              setSelectedMode("LIBRARY_NEW");
             }}
-            active={selectedMode == "LIBRARY"}
-            onMouseEnter={() => setActive("LIBRARY")}
+            active={selectedMode == "LIBRARY_NEW"}
+            onMouseEnter={() => setActive("LIBRARY_NEW")}
             onMouseLeave={() => setActive("")}
           >
             LIBRARY
@@ -902,7 +905,7 @@ export default function MainContent({
                   })}
                 </Games2LineCD>
               </Games>
-            )}
+            )}{" "}
             {selectedMode == "LIBRARY_NEW" && (
               <Games>
                 <Games1Line>
@@ -980,6 +983,7 @@ export default function MainContent({
 
                     return (
                       <Case
+                        draggable
                         key={idx}
                         onClick={() => {
                           setSelectedGame(game);
@@ -992,7 +996,7 @@ export default function MainContent({
                           setGameHovered("");
                         }}
                       >
-                        {gameHovered == game?.id && (
+                        {gameHovered == game?.id && false && (
                           <CoverData>
                             <GameSubRight>
                               <Trophies>
@@ -1404,6 +1408,7 @@ const Case = styled.div`
   position: relative;
   &:hover {
     cursor: pointer;
+    transform: scale(1.1);
   }
 `;
 
@@ -1945,7 +1950,7 @@ const Games2LineCD = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-wrap: wrap;
-  width: 100%;
+  width: 93%;
 `;
 
 const Games1Line = styled.div`
