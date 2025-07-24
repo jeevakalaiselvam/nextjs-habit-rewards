@@ -816,7 +816,7 @@ export default function MainContent({
               </Games>
             )}
             {selectedMode == "LIBRARY" && (
-              <Games>
+              <GamesCD>
                 <Games1Line>
                   <GamesLeft>LIBRARY</GamesLeft>
                   <GamesRight></GamesRight>
@@ -996,7 +996,7 @@ export default function MainContent({
                     );
                   })}
                 </Games2LineCDL>
-              </Games>
+              </GamesCD>
             )}
             {selectedMode == "LIBRARY_NEW" && (
               <GamesCD>
