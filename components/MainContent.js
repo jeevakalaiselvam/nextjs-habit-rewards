@@ -1,9 +1,11 @@
 import styled from "styled-components";
 import {
   COLOR_ACCENT,
+  COLOR_BLUE,
   COLOR_BRONZE,
   COLOR_GOLD,
   COLOR_GREEN,
+  COLOR_GREEN2,
   COLOR_GREY,
   COLOR_SILVER,
   COLOR_SILVER2,
@@ -11,7 +13,7 @@ import {
   COLOR_UNLOCKED_DARK,
   generateDarkTextColorForLightBg,
 } from "../helpers/colorHelper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HEADER_IMAGE } from "../helpers/urlHelper";
 import { MdOutlineModeEditOutline } from "react-icons/md";
 import { TbEdit, TbPlayCard } from "react-icons/tb";
@@ -32,7 +34,12 @@ import PlatinumIconS from "./PlatinumIconS";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 import GameCdImage from "./GameCdImage";
-import { formatDate, formatDate1, formatDate2 } from "../helpers/dateHelper";
+import {
+  formatDate,
+  formatDate1,
+  formatDate2,
+  timeAgoInGame,
+} from "../helpers/dateHelper";
 import GameCdImageSmall from "./GameCdImageSmall";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import DragPs5Games from "./StackedGameList";
@@ -54,6 +61,7 @@ export default function MainContent({
   const [active, setActive] = useState("LIBRARY_NEW");
   const [gameData, setGameData] = useState({});
   const [gameSearch, setGameSearch] = useState("");
+  const [activeAch, setActiveAch] = useState(0);
 
   let unearnedBG = 0;
   let platinumABG = 0;
@@ -200,6 +208,21 @@ export default function MainContent({
     (ach1, ach2) => ach2?.percentage - ach1?.percentage
   );
 
+  useEffect(() => {
+    let timer = setInterval(() => {
+      setActiveAch((old) => {
+        if (old == allUnlocked?.length - 1) {
+          return 0;
+        } else {
+          return old + 1;
+        }
+      });
+    }, [2000]);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
+
   return (
     <Container>
       {showEditModal && (
@@ -246,28 +269,6 @@ export default function MainContent({
           >
             PROGRESS
           </TabLink>
-          {/* <TabLink
-            onClick={() => {
-              setSelected("LIBRARY_ICONS");
-              setSelectedMode("LIBRARY_ICONS");
-            }}
-            active={selected == "LIBRARY_ICONS"}
-            onMouseEnter={() => setActive("LIBRARY_ICONS")}
-            onMouseLeave={() => setActive("")}
-          >
-            LIBRARY
-          </TabLink>
-          <TabLink
-            onClick={() => {
-              setSelected("GAMES");
-              setSelectedMode("GAMES");
-            }}
-            active={selected == "GAMES"}
-            onMouseEnter={() => setActive("GAMES")}
-            onMouseLeave={() => setActive("")}
-          >
-            GAMES
-          </TabLink> */}
         </FRRight>
         <FRRight>
           <TabLink
@@ -310,6 +311,56 @@ export default function MainContent({
           </TabLink>
         </FRRight>
       </FirstRow>
+      <RecentAchs>
+        {allUnlocked?.slice(0, 20)?.map((ach, index) => {
+          let desc1 = ach?.hiddenDesc;
+          let desc2 = ach?.description;
+          let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
+          return (
+            <RecentAch
+              color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+              achieved={ach?.achieved}
+            >
+              <AchIconOuter achieved={ach?.achieved}>
+                <AchIcon icon={ach?.icon}></AchIcon>
+              </AchIconOuter>{" "}
+              <DataContainer active={index === activeAch}>
+                <AchData active={index === activeAch}>
+                  <AchTitle>{ach?.displayName}</AchTitle>
+                  <AchDesc> {desc2 ? desc2 : desc3 ? desc3 : desc1}</AchDesc>
+                  {ach?.achieved == 1 && (
+                    <AchUnlocked>
+                      <UnlockedT1>
+                        <span style={{ color: COLOR_GREEN2 }}>
+                          {timeAgoInGame(new Date(ach?.unlocktime * 1000))}
+                        </span>
+                        <span style={{ margin: "0rem .25rem" }}>in</span>
+                        <span style={{ color: COLOR_BLUE }}>
+                          {ach?.gameName}
+                        </span>
+                      </UnlockedT1>
+                    </AchUnlocked>
+                  )}
+                </AchData>
+                <Seperator padding={".25rem"} />{" "}
+                <AchRarity active={index === activeAch}>
+                  <span style={{ fontSize: "1.2rem" }}>{ach?.percentage}%</span>
+                  <span style={{ fontSize: ".7rem" }}>
+                    {ach?.label?.toUpperCase()}
+                  </span>
+                </AchRarity>
+                <Seperator padding={".25rem"} />
+                <AchTrophy active={index === activeAch}>
+                  {ach?.color == "Platinum" && <PlatinumIconS />}
+                  {ach?.color == "Gold" && <GoldIconS />}
+                  {ach?.color == "Silver" && <SilverIconS />}
+                  {ach?.color == "Bronze" && <BronzeIconS />}
+                </AchTrophy>
+              </DataContainer>
+            </RecentAch>
+          );
+        })}
+      </RecentAchs>
       <SecondRow>
         {!gamesLoading && (
           <SRLeft>
@@ -1404,35 +1455,7 @@ const UnlockedT2 = styled.div`
   padding-top: 0.25rem;
 `;
 
-const PlayButton = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  padding: 0.1rem;
-  background-color: ${COLOR_GREEN};
-  color: ${generateDarkTextColorForLightBg(COLOR_GREEN, 50)};
-  opacity: 0.85;
-  cursor: pointer;
-
-  &:hover {
-    opacity: 1;
-  }
-`;
 const GameSubLeftImageSmall = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 200px;
-  height: 100px;
-  background: ${(props) => `url(${props.image})`};
-  background-size: cover;
-  position: relative;
-`;
-
-const GameSubLeftImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1472,7 +1495,8 @@ const AchTitle = styled.div`
   padding-left: 0.5rem;
   color: #4486c6;
   justify-content: flex-start;
-  height: 35px;
+  flex: 2;
+  font-size: 0.9rem;
   width: 100%;
 `;
 
@@ -1481,10 +1505,21 @@ const AchDesc = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   padding-left: 0.5rem;
-  height: 35px;
+  flex: 2;
   width: 100%;
   opacity: 0.75;
-  font-size: 0.88rem;
+  font-size: 0.8rem;
+`;
+
+const AchUnlocked = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-left: 0.5rem;
+  flex: 1;
+  width: 100%;
+  opacity: 0.75;
+  font-size: 0.8rem;
 `;
 
 const AchIconOuter = styled.div`
@@ -1514,6 +1549,19 @@ const AchData = styled.div`
   justify-content: center;
   flex-direction: column;
   flex: 1;
+  min-width: 300px;
+  height: 70px;
+`;
+
+const DataContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-width: ${(props) => (props.active ? "600px" : "0px")};
+  max-width: ${(props) => (props.active ? "600px" : "0px")};
+  transition: all 0.5s ease-in;
+  overflow: hidden;
 `;
 
 const AchRarity = styled.div`
@@ -1529,7 +1577,8 @@ const AchTrophy = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  transform: scale(2) translate(1rem, 0.25rem);
+  min-width: 50px;
+  transform: scale(2) translate(0.25rem, 0.25rem);
 `;
 
 const AchCard = styled.div`
@@ -1538,7 +1587,6 @@ const AchCard = styled.div`
   justify-content: flex-start;
   color: #333;
   width: 100%;
-  padding-right: 3rem;
   background-color: ${(props) =>
     props.achieved ? COLOR_UNLOCKED : props.color};
   border: 1px solid #eee;
@@ -2044,6 +2092,17 @@ const CollectionRow = styled.div`
   color: #44484b;
 `;
 
+const RecentAchs = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #e7e7e7;
+  padding: 1rem;
+  width: 100%;
+  overflow: scroll;
+  color: #44484b;
+`;
+
 const FirstRow = styled.div`
   display: flex;
   align-items: center;
@@ -2052,6 +2111,12 @@ const FirstRow = styled.div`
   padding: 1rem;
   width: 100%;
   color: #44484b;
+`;
+
+const OuterAchContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 `;
 
 const Container = styled.div`
@@ -2063,4 +2128,15 @@ const Container = styled.div`
   border-radius: 4px;
   transform: translateY(-2rem);
   background-color: #292b2d;
+`;
+
+const RecentAch = styled.div`
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-right: 0.5rem;
+  background-color: #f5f5f7;
+  border: 2px solid #e3e3e6;
+  transition: 0.5s all ease;
 `;

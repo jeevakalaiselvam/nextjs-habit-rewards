@@ -38,7 +38,7 @@ export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
   ];
 
   let accumulatedXP = 0;
-  let level = 1;
+  let level = 0;
   let xpIntoLevel = 0;
   let xpForNextLevel = bands[0].xpPerLevel;
   let foundBand = false;

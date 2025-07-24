@@ -109,6 +109,7 @@ export const COLOR_GREY = "#717f8d";
 export const COLOR_WHITE = "#FEFEFE";
 export const COLOR_RED = "#FE6662";
 export const COLOR_GREEN = "#3BD987";
+export const COLOR_GREEN2 = "#579428";
 export const COLOR_BLUE = "#5474FD";
 export const COLOR_BLUE_DARK = "#0d1a28";
 export const COLOR_BLUE_LIGHT = "#52b8da";
