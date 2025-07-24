@@ -46,6 +46,7 @@ import LevelIcon from "./LevelIcon";
 import LevelUpIcon from "./LevelUpIcon";
 import LevelProgressChart from "./LevelProgressChart";
 import MultiProgressChart from "./MultiProgressChart";
+import BarProgressChart from "./BarProgressChart";
 
 export default function MainContent({
   games,
@@ -233,8 +234,14 @@ export default function MainContent({
     selectedMode !== "TROPHY_ADVISOR" &&
     selectedMode !== "STATS";
 
-  const { levelAchs, dailyUnlocks, monthlyUnlocks, dailyTypeBreakdown } =
-    calculateLevelForAchs(games);
+  const {
+    levelAchs,
+    dailyUnlocks,
+    monthlyUnlocks,
+    dailyTypeBreakdown,
+    hourlyUnlocks,
+    weeklyUnlocks,
+  } = calculateLevelForAchs(games);
 
   return (
     <Container>
@@ -1231,7 +1238,7 @@ export default function MainContent({
                   <StatInformation games={games} />
                 </StatWrapper>
               </Games>
-            )}{" "}
+            )}
             {selectedMode == "STATS" && (
               <Games>
                 <Games1Line>
@@ -1245,7 +1252,7 @@ export default function MainContent({
                   />
                 </StatWrapper2>
               </Games>
-            )}{" "}
+            )}
             {selectedMode == "STATS" && (
               <Games>
                 <Games1Line>
@@ -1259,6 +1266,31 @@ export default function MainContent({
                   />
                 </StatWrapper2>
               </Games>
+            )}
+            {selectedMode == "STATS" && (
+              <GamesR>
+                <GameLineTime>
+                  <Games1Line>
+                    <GamesLeft>TROPHIES BY TIME</GamesLeft>
+                    <GamesRight></GamesRight>
+                  </Games1Line>
+                  <StatWrapper2>
+                    <BarProgressChart
+                      dailyUnlocks={hourlyUnlocks}
+                      size={1200}
+                    />
+                  </StatWrapper2>
+                </GameLineTime>
+                <GameLineHours>
+                  <Games1Line>
+                    <GamesLeft>TROPHIES BY DAY</GamesLeft>
+                    <GamesRight></GamesRight>
+                  </Games1Line>
+                  <StatWrapper2>
+                    <BarProgressChart dailyUnlocks={weeklyUnlocks} size={500} />
+                  </StatWrapper2>
+                </GameLineHours>
+              </GamesR>
             )}
           </SRLeft>
         )}
@@ -2118,6 +2150,41 @@ const Games = styled.div`
   margin-bottom: 1rem;
 `;
 
+const GamesR = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 98%;
+  color: #fefefe;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  margin-bottom: 1rem;
+`;
+
+const GameLineTime = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fefefe;
+  flex-direction: column;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  flex: 1;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+`;
+
+const GameLineHours = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #fefefe;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  margin-bottom: 1rem;
+`;
+
 const GamesLeft = styled.div`
   display: flex;
   align-items: center;
@@ -2293,5 +2360,5 @@ const StatWrapper2 = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
-  padding: 1rem;
+  padding: 1rem 0rem;
 `;
