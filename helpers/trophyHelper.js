@@ -9,6 +9,13 @@ import {
   COLOR_RANK_S,
 } from "./colorHelper";
 
+const trophyPoints = {
+  bronze: 15,
+  silver: 30,
+  gold: 90,
+  platinum: 300,
+};
+
 export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
   // Trophy points
   const platinumPoints = 300;
@@ -92,6 +99,54 @@ export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
     xpForNextLevel,
     remainingXP,
   };
+};
+
+export const calculateLevelForAchs = (games) => {
+  let allAchievements = games
+    .flatMap((game) =>
+      game.achievements.map((ach) => ({ ...ach, gameId: game.id }))
+    )
+    ?.filter((ach) => ach?.achieved == 1)
+    .sort(
+      (a, b) => new Date(a.unlocktime * 1000) - new Date(b.unlocktime * 1000)
+    );
+
+  console.log({ allAchievements });
+
+  let platinum = 0,
+    gold = 0,
+    silver = 0,
+    bronze = 0;
+  let previousLevel = 0;
+  const levelAchs = [];
+
+  for (const ach of allAchievements) {
+    // Increase respective count
+    if (ach.color === "Bronze") bronze++;
+    else if (ach.color === "Silver") silver++;
+    else if (ach.color === "Gold") gold++;
+    else if (ach.color === "Platinum") platinum++;
+
+    const { level } = calculatePSLevelAndProgress(
+      platinum,
+      gold,
+      silver,
+      bronze
+    );
+
+    // Check if level increased
+    if (level > previousLevel) {
+      levelAchs.push({
+        ...ach,
+        levelReached: level,
+        totalXP: calculatePSLevelAndProgress(platinum, gold, silver, bronze)
+          .totalXP,
+      });
+      previousLevel = level;
+    }
+  }
+
+  return { levelAchs };
 };
 
 export const calculateRankForCompletion = (completion) => {

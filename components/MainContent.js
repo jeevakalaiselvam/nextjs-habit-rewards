@@ -19,6 +19,7 @@ import { MdOutlineModeEditOutline } from "react-icons/md";
 import { TbEdit, TbPlayCard } from "react-icons/tb";
 import { HiPlay } from "react-icons/hi2";
 import {
+  calculateLevelForAchs,
   calculatePSLevelAndProgress,
   calculateRankForCompletion,
   getAchsBasedOnRarity,
@@ -41,6 +42,8 @@ import {
   timeAgoInGame,
 } from "../helpers/dateHelper";
 import StatInformation from "./StatInformation";
+import LevelIcon from "./LevelIcon";
+import LevelUpIcon from "./LevelUpIcon";
 
 export default function MainContent({
   games,
@@ -224,8 +227,13 @@ export default function MainContent({
     selectedMode !== "LIBRARY" &&
     selectedMode !== "LIBRARY_NEW" &&
     selectedMode !== "TROPHY_LOG" &&
+    selectedMode !== "LEVEL_HISTORY" &&
     selectedMode !== "TROPHY_ADVISOR" &&
     selectedMode !== "STATS";
+
+  const { levelAchs } = calculateLevelForAchs(games);
+
+  console.log({ levelAchs });
 
   return (
     <Container>
@@ -306,9 +314,9 @@ export default function MainContent({
         </FRRight>
         <FRRight>
           <TabLink
-            onClick={() => setSelectedMode("LEVEL HISTORY")}
-            active={selectedMode == "LEVEL HISTORY"}
-            onMouseEnter={() => setActive("LEVEL HISTORY")}
+            onClick={() => setSelectedMode("LEVEL_HISTORY")}
+            active={selectedMode == "LEVEL_HISTORY"}
+            onMouseEnter={() => setActive("LEVEL_HISTORY")}
             onMouseLeave={() => setActive("")}
           >
             LEVEL HISTORY
@@ -375,6 +383,92 @@ export default function MainContent({
         )}
         {!gamesLoading && (
           <SRLeft>
+            {selectedMode == "LEVEL_HISTORY" && (
+              <Game2Line>
+                {levelAchs?.reverse().map((ach, index) => {
+                  let desc1 = ach?.hiddenDesc;
+                  let desc2 = ach?.description;
+                  let desc3 = ach?.hiddenDesc?.split(
+                    "Hidden achievement:"
+                  )?.[1];
+                  return (
+                    <AchCard
+                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                      achieved={ach?.achieved}
+                    >
+                      <GameSubLeftImageSmall
+                        image={HEADER_IMAGE(ach?.gameId)}
+                      />
+                      <span style={{ marginLeft: "1rem" }}></span>
+                      <AchIconOuter achieved={ach?.achieved}>
+                        <AchIcon
+                          icon={ach?.icon}
+                          onClick={() => {
+                            if (window !== "undefined") {
+                              const searchQuery = `${
+                                ach?.displayName
+                              } achievement ${encodeURIComponent(
+                                ach?.gameName
+                              )} `;
+                              window.open(
+                                `https://www.google.com/search?q=${searchQuery}`
+                              );
+                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                            }
+                          }}
+                        ></AchIcon>
+                      </AchIconOuter>
+                      <AchData>
+                        <AchTitle>{ach?.displayName}</AchTitle>
+                        <AchDesc>
+                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                        </AchDesc>
+                      </AchData>
+                      <AchTrophy2>
+                        <LevelUpIcon />
+                      </AchTrophy2>
+                      <span
+                        style={{
+                          fontSize: "1.25rem",
+                          padding: "1rem 0.5rem",
+                          opacity: 0.75,
+                          transform: "translate(-.66rem,.4rem)",
+                        }}
+                      >
+                        {ach?.levelReached}
+                      </span>
+                      <Seperator padding={".25rem"} />
+                      {ach?.achieved == 1 && (
+                        <Unlocked>
+                          <UnlockedT1>
+                            {formatDate1(new Date(ach?.unlocktime * 1000))}
+                          </UnlockedT1>
+                          <UnlockedT2>
+                            {formatDate2(new Date(ach?.unlocktime * 1000))}
+                          </UnlockedT2>
+                        </Unlocked>
+                      )}
+                      <Seperator padding={".25rem"} />
+                      <AchRarity>
+                        <span style={{ fontSize: "1.2rem" }}>
+                          {ach?.percentage}%
+                        </span>
+                        <span style={{ fontSize: ".7rem" }}>
+                          {ach?.label?.toUpperCase()}
+                        </span>
+                      </AchRarity>
+                      <Seperator padding={".25rem"} />
+                      <AchTrophy>
+                        {ach?.color == "Platinum" && <PlatinumIconS />}
+                        {ach?.color == "Gold" && <GoldIconS />}
+                        {ach?.color == "Silver" && <SilverIconS />}
+                        {ach?.color == "Bronze" && <BronzeIconS />}
+                      </AchTrophy>
+                    </AchCard>
+                  );
+                })}
+              </Game2Line>
+            )}
             {selectedMode == "TROPHY_LOG" && (
               <Game2Line>
                 {allUnlocked?.map((ach, index) => {
@@ -1125,7 +1219,7 @@ export default function MainContent({
                   </Game2Line>
                 </Game>
               </>
-            )}{" "}
+            )}
             {selectedMode == "STATS" && (
               <StatWrapper>
                 <StatInformation games={games} />
@@ -1557,6 +1651,15 @@ const AchTrophy = styled.div`
   flex-direction: column;
   min-width: 50px;
   transform: scale(2) translate(0.25rem, 0.25rem);
+`;
+
+const AchTrophy2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  min-width: 50px;
+  transform: scale(1) translate(0.25rem, 0.25rem);
 `;
 
 const AchCard = styled.div`
