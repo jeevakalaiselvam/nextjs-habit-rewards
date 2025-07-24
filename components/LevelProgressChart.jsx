@@ -10,14 +10,14 @@ import {
 import { COLOR_GOLD } from "../helpers/colorHelper";
 import styled from "styled-components";
 
-export default function LevelProgressChart({ dailyUnlocks }) {
+export default function LevelProgressChart({ dailyUnlocks, size }) {
   const data = dailyUnlocks;
 
   return (
     <Container>
       <Inner>
         <LineChart
-          width={1800}
+          width={size ? size : 1800}
           height={200}
           data={data}
           margin={{

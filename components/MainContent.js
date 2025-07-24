@@ -45,6 +45,7 @@ import StatInformation from "./StatInformation";
 import LevelIcon from "./LevelIcon";
 import LevelUpIcon from "./LevelUpIcon";
 import LevelProgressChart from "./LevelProgressChart";
+import MultiProgressChart from "./MultiProgressChart";
 
 export default function MainContent({
   games,
@@ -232,9 +233,8 @@ export default function MainContent({
     selectedMode !== "TROPHY_ADVISOR" &&
     selectedMode !== "STATS";
 
-  const { levelAchs, dailyUnlocks } = calculateLevelForAchs(games);
-
-  console.log({ levelAchs });
+  const { levelAchs, dailyUnlocks, monthlyUnlocks, dailyTypeBreakdown } =
+    calculateLevelForAchs(games);
 
   return (
     <Container>
@@ -1222,9 +1222,43 @@ export default function MainContent({
               </>
             )}
             {selectedMode == "STATS" && (
-              <StatWrapper>
-                <StatInformation games={games} />
-              </StatWrapper>
+              <Games>
+                <Games1Line>
+                  <GamesLeft>MAIN STATISTICS</GamesLeft>
+                  <GamesRight></GamesRight>
+                </Games1Line>
+                <StatWrapper>
+                  <StatInformation games={games} />
+                </StatWrapper>
+              </Games>
+            )}{" "}
+            {selectedMode == "STATS" && (
+              <Games>
+                <Games1Line>
+                  <GamesLeft>MONTHLY ACTIVITY</GamesLeft>
+                  <GamesRight></GamesRight>
+                </Games1Line>
+                <StatWrapper2>
+                  <LevelProgressChart
+                    dailyUnlocks={monthlyUnlocks}
+                    size={1700}
+                  />
+                </StatWrapper2>
+              </Games>
+            )}{" "}
+            {selectedMode == "STATS" && (
+              <Games>
+                <Games1Line>
+                  <GamesLeft>TROPHY PROGRESSION</GamesLeft>
+                  <GamesRight></GamesRight>
+                </Games1Line>
+                <StatWrapper2>
+                  <MultiProgressChart
+                    size={1675}
+                    dailyTypeBreakdown={dailyTypeBreakdown}
+                  />
+                </StatWrapper2>
+              </Games>
             )}
           </SRLeft>
         )}
@@ -2077,10 +2111,11 @@ const Games = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  width: 100%;
+  width: 98%;
   color: #fefefe;
   font-size: 0.9rem;
   border: 1px solid #ddd;
+  margin-bottom: 1rem;
 `;
 
 const GamesLeft = styled.div`
@@ -2250,4 +2285,13 @@ const StatWrapper = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
+`;
+
+const StatWrapper2 = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 1rem;
 `;

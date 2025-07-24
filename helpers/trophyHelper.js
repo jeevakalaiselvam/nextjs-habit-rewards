@@ -103,13 +103,12 @@ export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
 };
 
 export const calculateLevelForAchs = (games) => {
-  // Flatten and filter all unlocked achievements
   let allAchievements = games
     .flatMap((game) =>
       game.achievements.map((ach) => ({ ...ach, gameId: game.id }))
     )
     .filter((ach) => ach?.achieved == 1 && ach.unlocktime)
-    .sort((a, b) => a.unlocktime - b.unlocktime); // unlocktime is already in UNIX seconds
+    .sort((a, b) => a.unlocktime - b.unlocktime);
 
   let platinum = 0,
     gold = 0,
@@ -119,7 +118,6 @@ export const calculateLevelForAchs = (games) => {
   const levelAchs = [];
 
   for (const ach of allAchievements) {
-    // Count trophies
     if (ach.color === "Bronze") bronze++;
     else if (ach.color === "Silver") silver++;
     else if (ach.color === "Gold") gold++;
@@ -132,7 +130,6 @@ export const calculateLevelForAchs = (games) => {
       bronze
     );
 
-    // Track if level changed
     if (level > previousLevel) {
       levelAchs.push({
         ...ach,
@@ -143,16 +140,21 @@ export const calculateLevelForAchs = (games) => {
     }
   }
 
-  // Get last 30 days unlock data
+  // --- Daily Unlocks with Type Breakdown (last 45 days) ---
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const dataMap = {};
+  const dailyMap = {};
 
   for (let i = 45; i >= 0; i--) {
     const date = new Date(today);
     date.setDate(today.getDate() - (i - 1));
     const key = formatDate3(date);
-    dataMap[key] = 0;
+    dailyMap[key] = {
+      Bronze: 0,
+      Silver: 0,
+      Gold: 0,
+      Platinum: 0,
+    };
   }
 
   allAchievements.forEach((ach) => {
@@ -160,17 +162,45 @@ export const calculateLevelForAchs = (games) => {
     date.setHours(0, 0, 0, 0);
     date.setDate(date.getDate() + 1);
     const key = formatDate3(date);
-    if (key in dataMap) {
-      dataMap[key]++;
+    if (dailyMap[key] && ach.color in dailyMap[key]) {
+      dailyMap[key][ach.color]++;
     }
   });
 
-  const dailyUnlocks = Object.entries(dataMap).map(([date, count]) => ({
+  const dailyUnlocks = Object.entries(dailyMap).map(([date, types]) => ({
     date,
+    ...types,
+    count: types.Bronze + types.Silver + types.Gold + types.Platinum,
+  }));
+
+  const dailyTypeBreakdown = Object.entries(dailyMap).map(([date, types]) => ({
+    date,
+    ...types,
+  }));
+
+  // --- Monthly Unlocks ---
+  const monthlyMap = {};
+
+  allAchievements.forEach((ach) => {
+    const date = new Date(ach.unlocktime * 1000);
+    const key = `${date.toLocaleString("en-US", { month: "short" })}-${String(
+      date.getFullYear()
+    ).slice(-2)}`;
+    if (!monthlyMap[key]) monthlyMap[key] = 0;
+    monthlyMap[key]++;
+  });
+
+  const monthlyUnlocks = Object.entries(monthlyMap).map(([month, count]) => ({
+    date: month,
     count,
   }));
 
-  return { levelAchs, dailyUnlocks };
+  return {
+    levelAchs,
+    dailyUnlocks,
+    dailyTypeBreakdown,
+    monthlyUnlocks,
+  };
 };
 
 export const calculateRankForCompletion = (completion) => {
