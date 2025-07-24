@@ -261,7 +261,7 @@ export default function MainContent({
                       color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                     >
                       <GameLeftCard>
-                        <GameCdImage game={game} scale={1.065} />
+                        <GameCdImage game={game} scale={1.7} />
                       </GameLeftCard>
                     </GameContainer>
                   );
@@ -797,6 +797,9 @@ const Games2LineR = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-wrap: wrap;
+  min-height: calc(87.25vh);
+  max-height: calc(87.25vh);
+  overflow: scroll;
   width: 100%;
 `;
 
