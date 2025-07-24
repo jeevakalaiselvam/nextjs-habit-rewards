@@ -1,14 +1,29 @@
 import styled from "styled-components";
-import { HEADER_IMAGE } from "../helpers/urlHelper";
-import { TbSettingsFilled } from "react-icons/tb";
-import { COLOR_ACCENT, COLOR_BLUE_DARK } from "../helpers/colorHelper";
-import EditGameForm from "./EditGameForm";
-import { useState } from "react";
 
-export default function GameCdImage({ game }) {
+export default function GameCdImage({ game, scale = 1 }) {
+  const baseWidth = 100;
+  const baseHeight = 126;
+
+  const innerBaseWidth = 97;
+  const innerBaseHeight = 105;
+
+  const scaledWidth = baseWidth * scale;
+  const scaledHeight = baseHeight * scale;
+
+  const scaledInnerWidth = innerBaseWidth * scale;
+  const scaledInnerHeight = innerBaseHeight * scale;
+
   return (
-    <CdImage>
-      <CdInnerImage cover={game?.cover}></CdInnerImage>
+    <CdImage style={{ width: scaledWidth, height: scaledHeight }}>
+      <CdInnerImage
+        style={{
+          width: scaledInnerWidth,
+          height: scaledInnerHeight,
+          top: 20 * scale,
+          left: 1 * scale,
+        }}
+        cover={game?.cover}
+      />
     </CdImage>
   );
 }
@@ -18,8 +33,6 @@ const CdImage = styled.div`
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  width: 100px;
-  height: 126px;
   background: url("/icons/cover.png");
   background-size: contain;
   background-repeat: no-repeat;
@@ -27,13 +40,10 @@ const CdImage = styled.div`
 `;
 
 const CdInnerImage = styled.div`
-  width: 97px;
-  height: 105px;
   position: absolute;
-  top: 20px;
-  left: 1px;
   background: ${(props) => `url(${props.cover})`};
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+  border-radius: 4px;
 `;
