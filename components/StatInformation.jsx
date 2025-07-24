@@ -2,10 +2,22 @@ import React from "react";
 import styled from "styled-components";
 import CustomPieChart from "./CustomPieChart";
 import {
+  COLOR_0_20,
+  COLOR_20_40,
+  COLOR_40_60,
+  COLOR_60_80,
+  COLOR_80_100,
   COLOR_BRONZE,
   COLOR_COMMON,
   COLOR_GOLD,
   COLOR_PLATINUM,
+  COLOR_RANK_A,
+  COLOR_RANK_B,
+  COLOR_RANK_C,
+  COLOR_RANK_D,
+  COLOR_RANK_E,
+  COLOR_RANK_F,
+  COLOR_RANK_S,
   COLOR_RARE,
   COLOR_SILVER,
   COLOR_SILVER2,
@@ -16,8 +28,28 @@ import {
 import { getAchsBasedOnRarity } from "../helpers/trophyHelper";
 
 export default function StatInformation({ games }) {
-  const { ultrarare, veryrare, rare, uncommon, common, averageRarity } =
-    getAchsBasedOnRarity(games);
+  const {
+    ultrarare,
+    veryrare,
+    rare,
+    uncommon,
+    common,
+    averageRarity,
+    avg_80_100,
+    avg_60_80,
+    avg_40_60,
+    avg_20_40,
+    avg_0_20,
+    averationCompletion,
+    srank,
+    arank,
+    brank,
+    crank,
+    drank,
+    erank,
+    frank,
+    averageRank,
+  } = getAchsBasedOnRarity(games);
 
   let completed = 0;
   let allCompletion = 0;
@@ -179,6 +211,84 @@ export default function StatInformation({ games }) {
     },
   ];
 
+  let averageDataPoints = [
+    {
+      id: 0,
+      label: "80% - 100%",
+      value: avg_80_100,
+      color: COLOR_80_100,
+    },
+    {
+      id: 1,
+      label: "60% - 80%",
+      value: avg_60_80,
+      color: COLOR_60_80,
+    },
+    {
+      id: 2,
+      label: "40% - 60%",
+      value: avg_40_60,
+      color: COLOR_40_60,
+    },
+    {
+      id: 3,
+      label: "20% - 40%",
+      value: avg_20_40,
+      color: COLOR_20_40,
+    },
+    {
+      id: 4,
+      label: "0% - 20%",
+      value: avg_0_20,
+      color: COLOR_0_20,
+    },
+  ];
+
+  let rankDataPoints = [
+    {
+      id: 0,
+      label: "S",
+      value: srank,
+      color: COLOR_RANK_S,
+    },
+    {
+      id: 1,
+      label: "A",
+      value: arank,
+      color: COLOR_RANK_A,
+    },
+    {
+      id: 2,
+      label: "B",
+      value: brank,
+      color: COLOR_RANK_B,
+    },
+    {
+      id: 3,
+      label: "C",
+      value: crank,
+      color: COLOR_RANK_C,
+    },
+    {
+      id: 4,
+      label: "D",
+      value: drank,
+      color: COLOR_RANK_D,
+    },
+    {
+      id: 5,
+      label: "E",
+      value: erank,
+      color: COLOR_RANK_E,
+    },
+    {
+      id: 6,
+      label: "F",
+      value: frank,
+      color: COLOR_RANK_F,
+    },
+  ];
+
   return (
     <StatWrapper>
       <StatWrapperInner>
@@ -201,30 +311,18 @@ export default function StatInformation({ games }) {
       <StatWrapperInner>
         <CustomPieChart
           data={rarityDataPoints}
-          center={"Average"}
+          center={"Rarity"}
           centerCount={`${averageRarity} %`}
         />
         <CustomPieChart
-          data={[
-            {
-              label: "Steam",
-              value: games?.length,
-              color: "#0088FE",
-            },
-          ]}
-          center={"Games"}
-          centerCount={games?.length}
+          data={averageDataPoints}
+          center={"Average"}
+          centerCount={averationCompletion}
         />{" "}
         <CustomPieChart
-          data={[
-            {
-              label: "Steam",
-              value: games?.length,
-              color: "#0088FE",
-            },
-          ]}
-          center={"Games"}
-          centerCount={games?.length}
+          data={rankDataPoints}
+          center={"Average"}
+          centerCount={averageRank}
         />
       </StatWrapperInner>
     </StatWrapper>

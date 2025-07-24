@@ -20,7 +20,7 @@ export default function DonutChart({ data, center, centerCount }) {
           series={[
             {
               innerRadius: 50,
-              outerRadius: 100,
+              outerRadius: 80,
               data: pieData,
               arcLabel: "",
             },
@@ -74,7 +74,7 @@ const StripeContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.125rem;
   width: 100%;
   cursor: pointer;
   height: 30px;

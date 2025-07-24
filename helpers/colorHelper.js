@@ -133,6 +133,12 @@ export const COLOR_RARE = "#EC7C00";
 export const COLOR_UNCOMMON = "#FFB100";
 export const COLOR_COMMON = "#FFEA00";
 
+export const COLOR_80_100 = "#02451F";
+export const COLOR_60_80 = "#016616";
+export const COLOR_40_60 = "#017B13";
+export const COLOR_20_40 = "#139610";
+export const COLOR_0_20 = "#20B21C";
+
 export const calculatePsnLevel = ({ platinum, gold, silver, bronze }) => {
   // Trophy values
   const points = platinum * 300 + gold * 90 + silver * 30 + bronze * 15;

@@ -126,16 +126,39 @@ export const getAchsBasedOnRarity = (games) => {
     uncommon = [],
     common = [];
 
-  let completed = [];
+  let avg_80_100 = 0,
+    avg_60_80 = 0,
+    avg_40_60 = 0,
+    avg_20_40 = 0,
+    avg_0_20 = 0;
+
+  let srank = 0,
+    arank = 0,
+    brank = 0,
+    crank = 0,
+    drank = 0,
+    erank = 0,
+    frank = 0;
+
+  let completedAchs = [];
 
   let totalRarity = 0;
   let averageRarity = 0;
+  let totalCompletion = 0;
+  let averationCompletion = 0;
+  let averageRank = "";
 
   let allAchs = [];
   games?.forEach((game) => {
+    let completion = 0;
+    let total = 0;
+    let completed = 0;
+
     game?.achievements?.forEach((ach) => {
+      total++;
       if (ach?.achieved == 1) {
-        completed.push(ach);
+        completed++;
+        completedAchs.push(ach);
         totalRarity = totalRarity + Number(ach?.percentage);
         if (ach?.label == "Uncommon") {
           uncommon.push(ach);
@@ -154,9 +177,75 @@ export const getAchsBasedOnRarity = (games) => {
         }
       }
     });
+
+    if (completed == 0) {
+      completion = 0;
+    } else {
+      completion = ((completed / total) * 100)?.toFixed(2);
+    }
+
+    if (completion == 100) {
+      srank++;
+    }
+    if (completion < 100 && completion >= 90) {
+      arank++;
+    }
+    if (completion < 90 && completion >= 80) {
+      brank++;
+    }
+    if (completion < 80 && completion >= 70) {
+      crank++;
+    }
+    if (completion < 70 && completion >= 50) {
+      drank++;
+    }
+    if (completion < 50 && completion >= 20) {
+      erank++;
+    }
+    if (completion < 20 && completion >= 0) {
+      frank++;
+    }
+
+    totalCompletion += completion;
+
+    if (completion > 0 && completion < 20) {
+      avg_0_20++;
+    } else if (completion >= 20 && completion < 40) {
+      avg_20_40++;
+    } else if (completion >= 40 && completion < 60) {
+      avg_40_60++;
+    } else if (completion >= 60 && completion < 80) {
+      avg_60_80++;
+    } else if (completion >= 80 && completion <= 100) {
+      avg_80_100++;
+    }
   });
 
-  averageRarity = totalRarity / completed?.length;
+  averageRarity = totalRarity / completedAchs?.length;
+  averationCompletion = totalCompletion / games?.length;
+
+  if (averationCompletion == 100) {
+    averageRank = "S";
+  }
+  if (averationCompletion < 100 && averationCompletion >= 90) {
+    averageRank = "A";
+  }
+  if (averationCompletion < 90 && averationCompletion >= 80) {
+    averageRank = "B";
+  }
+  if (averationCompletion < 80 && averationCompletion >= 70) {
+    averageRank = "C";
+  }
+  if (averationCompletion < 70 && averationCompletion >= 50) {
+    averageRank = "D";
+  }
+  if (averationCompletion < 50 && averationCompletion >= 20) {
+    averageRank = "E";
+  }
+  if (averationCompletion < 20 && averationCompletion >= 0) {
+    averageRank = "F";
+  }
+
   return {
     ultrarare,
     veryrare,
@@ -164,5 +253,19 @@ export const getAchsBasedOnRarity = (games) => {
     uncommon,
     common,
     averageRarity: averageRarity?.toFixed(1),
+    averationCompletion: averationCompletion?.toFixed(1),
+    avg_80_100,
+    avg_60_80,
+    avg_40_60,
+    avg_20_40,
+    avg_0_20,
+    srank,
+    arank,
+    brank,
+    crank,
+    drank,
+    erank,
+    frank,
+    averageRank,
   };
 };
