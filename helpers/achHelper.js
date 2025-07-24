@@ -21,3 +21,7 @@ export const getRarityBasedOnRarity = (percentage) => {
     return "Common";
   }
 };
+
+export const formatNumberWithCommas = (number) => {
+  return number.toLocaleString();
+};
