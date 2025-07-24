@@ -44,6 +44,7 @@ import {
 import StatInformation from "./StatInformation";
 import LevelIcon from "./LevelIcon";
 import LevelUpIcon from "./LevelUpIcon";
+import LevelProgressChart from "./LevelProgressChart";
 
 export default function MainContent({
   games,
@@ -231,7 +232,7 @@ export default function MainContent({
     selectedMode !== "TROPHY_ADVISOR" &&
     selectedMode !== "STATS";
 
-  const { levelAchs } = calculateLevelForAchs(games);
+  const { levelAchs, dailyUnlocks } = calculateLevelForAchs(games);
 
   console.log({ levelAchs });
 
@@ -384,7 +385,10 @@ export default function MainContent({
         {!gamesLoading && (
           <SRLeft>
             {selectedMode == "LEVEL_HISTORY" && (
-              <Game2Line>
+              <LevelProgressChart dailyUnlocks={dailyUnlocks} />
+            )}
+            {selectedMode == "LEVEL_HISTORY" && (
+              <Game2LineLH>
                 {levelAchs?.reverse().map((ach, index) => {
                   let desc1 = ach?.hiddenDesc;
                   let desc2 = ach?.description;
@@ -392,10 +396,7 @@ export default function MainContent({
                     "Hidden achievement:"
                   )?.[1];
                   return (
-                    <AchCard
-                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                      achieved={ach?.achieved}
-                    >
+                    <AchCard color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}>
                       <GameSubLeftImageSmall
                         image={HEADER_IMAGE(ach?.gameId)}
                       />
@@ -467,7 +468,7 @@ export default function MainContent({
                     </AchCard>
                   );
                 })}
-              </Game2Line>
+              </Game2LineLH>
             )}
             {selectedMode == "TROPHY_LOG" && (
               <Game2Line>
@@ -1681,6 +1682,16 @@ const Game2Line = styled.div`
   overflow: scroll;
   width: 100%;
   padding: 0.25rem 0.25rem;
+`;
+
+const Game2LineLH = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  overflow: scroll;
+  width: 100%;
+  padding: 0.25rem 1rem;
 `;
 
 const Game1Line = styled.div`

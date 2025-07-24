@@ -36,6 +36,20 @@ export const formatDate1 = (date) => {
 
   return `${day} ${month} ${year}`;
 };
+
+export const formatDate3 = (date) => {
+  const getOrdinal = (n) => {
+    const s = ["th", "st", "nd", "rd"];
+    const v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  };
+
+  const day = getOrdinal(date.getDate());
+  const month = date.toLocaleString("en-US", { month: "short" });
+  const year = date.getFullYear();
+
+  return `${day} ${month}`;
+};
 export const formatDate2 = (date) => {
   return date.toLocaleTimeString("en-US", {
     hour: "numeric",

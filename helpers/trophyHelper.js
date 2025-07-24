@@ -8,6 +8,7 @@ import {
   COLOR_RANK_F,
   COLOR_RANK_S,
 } from "./colorHelper";
+import { formatDate1, formatDate3 } from "./dateHelper";
 
 const trophyPoints = {
   bronze: 15,
@@ -102,16 +103,13 @@ export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
 };
 
 export const calculateLevelForAchs = (games) => {
+  // Flatten and filter all unlocked achievements
   let allAchievements = games
     .flatMap((game) =>
       game.achievements.map((ach) => ({ ...ach, gameId: game.id }))
     )
-    ?.filter((ach) => ach?.achieved == 1)
-    .sort(
-      (a, b) => new Date(a.unlocktime * 1000) - new Date(b.unlocktime * 1000)
-    );
-
-  console.log({ allAchievements });
+    .filter((ach) => ach?.achieved == 1 && ach.unlocktime)
+    .sort((a, b) => a.unlocktime - b.unlocktime); // unlocktime is already in UNIX seconds
 
   let platinum = 0,
     gold = 0,
@@ -121,32 +119,58 @@ export const calculateLevelForAchs = (games) => {
   const levelAchs = [];
 
   for (const ach of allAchievements) {
-    // Increase respective count
+    // Count trophies
     if (ach.color === "Bronze") bronze++;
     else if (ach.color === "Silver") silver++;
     else if (ach.color === "Gold") gold++;
     else if (ach.color === "Platinum") platinum++;
 
-    const { level } = calculatePSLevelAndProgress(
+    const { level, totalXP } = calculatePSLevelAndProgress(
       platinum,
       gold,
       silver,
       bronze
     );
 
-    // Check if level increased
+    // Track if level changed
     if (level > previousLevel) {
       levelAchs.push({
         ...ach,
         levelReached: level,
-        totalXP: calculatePSLevelAndProgress(platinum, gold, silver, bronze)
-          .totalXP,
+        totalXP,
       });
       previousLevel = level;
     }
   }
 
-  return { levelAchs };
+  // Get last 30 days unlock data
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const dataMap = {};
+
+  for (let i = 45; i >= 0; i--) {
+    const date = new Date(today);
+    date.setDate(today.getDate() - (i - 1));
+    const key = formatDate3(date);
+    dataMap[key] = 0;
+  }
+
+  allAchievements.forEach((ach) => {
+    const date = new Date(ach.unlocktime * 1000);
+    date.setHours(0, 0, 0, 0);
+    date.setDate(date.getDate() + 1);
+    const key = formatDate3(date);
+    if (key in dataMap) {
+      dataMap[key]++;
+    }
+  });
+
+  const dailyUnlocks = Object.entries(dataMap).map(([date, count]) => ({
+    date,
+    count,
+  }));
+
+  return { levelAchs, dailyUnlocks };
 };
 
 export const calculateRankForCompletion = (completion) => {
