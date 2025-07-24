@@ -87,6 +87,7 @@ const PieCircleCenterCount = styled.div`
   position: absolute;
   top: 45%;
   left: 50%;
+  font-size: 1.25rem;
   transform: translate(-50%, -50%);
 `;
 
@@ -120,7 +121,7 @@ const PieCircle = styled.div`
 
 const PieLeft = styled.div`
   width: 300px;
-  height: 300px;
+  padding: 1rem 0rem;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -129,7 +130,7 @@ const PieLeft = styled.div`
 
 const PieRight = styled.div`
   width: 150px;
-  height: 300px;
+  padding: 1rem 0rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;

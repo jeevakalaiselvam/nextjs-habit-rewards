@@ -127,6 +127,12 @@ export const COLOR_PLATINUM = "#7A96D1";
 export const COLOR_UNLOCKED = "#ECF8EA";
 export const COLOR_UNLOCKED_DARK = "#61BF19";
 
+export const COLOR_ULTRA_RARE = "#CD2103";
+export const COLOR_VERY_RARE = "#D84A02";
+export const COLOR_RARE = "#EC7C00";
+export const COLOR_UNCOMMON = "#FFB100";
+export const COLOR_COMMON = "#FFEA00";
+
 export const calculatePsnLevel = ({ platinum, gold, silver, bronze }) => {
   // Trophy values
   const points = platinum * 300 + gold * 90 + silver * 30 + bronze * 15;

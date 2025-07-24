@@ -3,15 +3,20 @@ import styled from "styled-components";
 import CustomPieChart from "./CustomPieChart";
 import {
   COLOR_BRONZE,
+  COLOR_COMMON,
   COLOR_GOLD,
   COLOR_PLATINUM,
+  COLOR_RARE,
   COLOR_SILVER,
   COLOR_SILVER2,
+  COLOR_ULTRA_RARE,
+  COLOR_UNCOMMON,
+  COLOR_VERY_RARE,
 } from "../helpers/colorHelper";
 import { getAchsBasedOnRarity } from "../helpers/trophyHelper";
 
 export default function StatInformation({ games }) {
-  const { ultrarare, veryrare, rare, uncommon, common } =
+  const { ultrarare, veryrare, rare, uncommon, common, averageRarity } =
     getAchsBasedOnRarity(games);
 
   let completed = 0;
@@ -141,6 +146,38 @@ export default function StatInformation({ games }) {
       color: COLOR_BRONZE,
     },
   ];
+  let rarityDataPoints = [
+    {
+      id: 0,
+      label: "Ultra Rare",
+      value: ultrarare?.length,
+      color: COLOR_ULTRA_RARE,
+    },
+    {
+      id: 1,
+      label: "Very Rare",
+      value: veryrare?.length,
+      color: COLOR_VERY_RARE,
+    },
+    {
+      id: 2,
+      label: "Rare",
+      value: rare?.length,
+      color: COLOR_RARE,
+    },
+    {
+      id: 3,
+      label: "Uncommon",
+      value: uncommon?.length,
+      color: COLOR_UNCOMMON,
+    },
+    {
+      id: 4,
+      label: "Common",
+      value: common?.length,
+      color: COLOR_COMMON,
+    },
+  ];
 
   return (
     <StatWrapper>
@@ -163,9 +200,9 @@ export default function StatInformation({ games }) {
       </StatWrapperInner>
       <StatWrapperInner>
         <CustomPieChart
-          data={trophyDataPoints}
-          center={"Points"}
-          centerCount={games?.length}
+          data={rarityDataPoints}
+          center={"Average"}
+          centerCount={`${averageRarity} %`}
         />
         <CustomPieChart
           data={[

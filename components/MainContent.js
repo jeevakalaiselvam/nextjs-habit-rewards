@@ -260,7 +260,7 @@ export default function MainContent({
             onMouseEnter={() => setActive("LIBRARY_NEW")}
             onMouseLeave={() => setActive("")}
           >
-            PROFILE
+            LIBRARY
           </TabLink>
           <TabLink
             onClick={() => {

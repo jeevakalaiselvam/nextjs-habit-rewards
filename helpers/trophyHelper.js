@@ -126,10 +126,17 @@ export const getAchsBasedOnRarity = (games) => {
     uncommon = [],
     common = [];
 
+  let completed = [];
+
+  let totalRarity = 0;
+  let averageRarity = 0;
+
   let allAchs = [];
   games?.forEach((game) => {
     game?.achievements?.forEach((ach) => {
       if (ach?.achieved == 1) {
+        completed.push(ach);
+        totalRarity = totalRarity + Number(ach?.percentage);
         if (ach?.label == "Uncommon") {
           uncommon.push(ach);
         }
@@ -148,5 +155,14 @@ export const getAchsBasedOnRarity = (games) => {
       }
     });
   });
-  return { ultrarare, veryrare, rare, uncommon, common };
+
+  averageRarity = totalRarity / completed?.length;
+  return {
+    ultrarare,
+    veryrare,
+    rare,
+    uncommon,
+    common,
+    averageRarity: averageRarity?.toFixed(1),
+  };
 };
