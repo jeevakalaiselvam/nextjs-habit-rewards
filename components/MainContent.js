@@ -57,11 +57,11 @@ export default function MainContent({
 }) {
   const [gameHovered, setGameHovered] = useState("");
   const [selectedRarity, setSelectedRarity] = useState("COMMON");
-  const [selectedMode, setSelectedMode] = useState("STATS");
+  const [selectedMode, setSelectedMode] = useState("LIBRARY_NEW");
   const [selectedGame, setSelectedGame] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selected, setSelected] = useState("STATS");
-  const [active, setActive] = useState("STATS");
+  const [selected, setSelected] = useState("LIBRARY_NEW");
+  const [active, setActive] = useState("LIBRARY_NEW");
   const [gameData, setGameData] = useState({});
   const [gameSearch, setGameSearch] = useState("");
   const [activeAch, setActiveAch] = useState(0);
