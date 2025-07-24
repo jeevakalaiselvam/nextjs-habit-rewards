@@ -999,7 +999,7 @@ export default function MainContent({
               </Games>
             )}
             {selectedMode == "LIBRARY_NEW" && (
-              <Games>
+              <GamesCD>
                 <Games1Line>
                   <GamesLeft>LIBRARY</GamesLeft>
                   <GamesRight></GamesRight>
@@ -1149,7 +1149,7 @@ export default function MainContent({
                     );
                   })}
                 </Games2LineCD>
-              </Games>
+              </GamesCD>
             )}
             {selectedMode == "GAME" && (
               <>
@@ -2136,6 +2136,18 @@ const Games1Line = styled.div`
   padding: 0.75rem 0.5rem;
   justify-content: center;
   width: 100%;
+`;
+
+const GamesCD = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  color: #fefefe;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  margin-bottom: 1rem;
 `;
 
 const Games = styled.div`
