@@ -17,8 +17,8 @@ export default function LevelProgressChart({ dailyUnlocks, size }) {
     <Container>
       <Inner>
         <LineChart
-          width={size ? size : 1800}
-          height={200}
+          width={size ? size : 1500}
+          height={400}
           data={data}
           margin={{
             top: 10,

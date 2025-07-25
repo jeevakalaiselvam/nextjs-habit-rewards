@@ -57,11 +57,11 @@ export default function MainContent({
 }) {
   const [gameHovered, setGameHovered] = useState("");
   const [selectedRarity, setSelectedRarity] = useState("COMMON");
-  const [selectedMode, setSelectedMode] = useState("LIBRARY_NEW");
+  const [selectedMode, setSelectedMode] = useState("GAMES");
   const [selectedGame, setSelectedGame] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selected, setSelected] = useState("LIBRARY_NEW");
-  const [active, setActive] = useState("LIBRARY_NEW");
+  const [selected, setSelected] = useState("GAMES");
+  const [active, setActive] = useState("GAMES");
   const [gameData, setGameData] = useState({});
   const [gameSearch, setGameSearch] = useState("");
   const [activeAch, setActiveAch] = useState(0);
@@ -214,17 +214,17 @@ export default function MainContent({
   useEffect(() => {
     let timer = setInterval(() => {
       setActiveAch((old) => {
-        if (old <= allUnlocked?.length - 1) {
-          return 0;
-        } else {
+        if (old < allUnlocked?.length - 1) {
           return old + 1;
+        } else {
+          return 0;
         }
       });
     }, [3000]);
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [games]);
 
   let shouldShowRight =
     selectedMode !== "LIBRARY" &&
@@ -269,16 +269,16 @@ export default function MainContent({
         <FRRight>
           <TabLink
             onClick={() => {
-              setSelected("LIBRARY_NEW");
-              setSelectedMode("LIBRARY_NEW");
+              setSelected("GAMES");
+              setSelectedMode("GAMES");
             }}
-            active={selectedMode == "LIBRARY_NEW"}
-            onMouseEnter={() => setActive("LIBRARY_NEW")}
+            active={selectedMode == "GAMES"}
+            onMouseEnter={() => setActive("GAMES")}
             onMouseLeave={() => setActive("")}
           >
-            LIBRARY
+            PROFILE
           </TabLink>
-          <TabLink
+          {/* <TabLink
             onClick={() => {
               setSelected("LIBRARY");
               setSelectedMode("LIBRARY");
@@ -288,7 +288,7 @@ export default function MainContent({
             onMouseLeave={() => setActive("")}
           >
             PROGRESS
-          </TabLink>
+          </TabLink> */}
         </FRRight>
         <FRRight>
           <TabLink
@@ -392,7 +392,7 @@ export default function MainContent({
         {!gamesLoading && (
           <SRLeft>
             {selectedMode == "LEVEL_HISTORY" && (
-              <LevelProgressChart dailyUnlocks={dailyUnlocks} />
+              <LevelProgressChart dailyUnlocks={dailyUnlocks} size={2250} />
             )}
             {selectedMode == "LEVEL_HISTORY" && (
               <Game2LineLH>
@@ -1240,32 +1240,32 @@ export default function MainContent({
               </Games>
             )}
             {selectedMode == "STATS" && (
-              <Games>
-                <Games1Line>
-                  <GamesLeft>MONTHLY ACTIVITY</GamesLeft>
-                  <GamesRight></GamesRight>
-                </Games1Line>
-                <StatWrapper2>
-                  <LevelProgressChart
-                    dailyUnlocks={monthlyUnlocks}
-                    size={1700}
-                  />
-                </StatWrapper2>
-              </Games>
-            )}
-            {selectedMode == "STATS" && (
-              <Games>
-                <Games1Line>
-                  <GamesLeft>TROPHY PROGRESSION</GamesLeft>
-                  <GamesRight></GamesRight>
-                </Games1Line>
-                <StatWrapper2>
-                  <MultiProgressChart
-                    size={1675}
-                    dailyTypeBreakdown={dailyTypeBreakdown}
-                  />
-                </StatWrapper2>
-              </Games>
+              <GamesR>
+                <GameLineTime>
+                  <Games1Line>
+                    <GamesLeft>MONTHLY ACTIVITY</GamesLeft>
+                    <GamesRight></GamesRight>
+                  </Games1Line>
+                  <StatWrapper2>
+                    <LevelProgressChart
+                      dailyUnlocks={monthlyUnlocks}
+                      size={1000}
+                    />
+                  </StatWrapper2>
+                </GameLineTime>
+                <GameLineHours>
+                  <Games1Line>
+                    <GamesLeft>TROPHY PROGRESSION</GamesLeft>
+                    <GamesRight></GamesRight>
+                  </Games1Line>
+                  <StatWrapper2>
+                    <MultiProgressChart
+                      size={1000}
+                      dailyTypeBreakdown={dailyTypeBreakdown}
+                    />
+                  </StatWrapper2>
+                </GameLineHours>
+              </GamesR>
             )}
             {selectedMode == "STATS" && (
               <GamesR>
@@ -1277,7 +1277,7 @@ export default function MainContent({
                   <StatWrapper2>
                     <BarProgressChart
                       dailyUnlocks={hourlyUnlocks}
-                      size={1200}
+                      size={1600}
                     />
                   </StatWrapper2>
                 </GameLineTime>
@@ -1287,7 +1287,7 @@ export default function MainContent({
                     <GamesRight></GamesRight>
                   </Games1Line>
                   <StatWrapper2>
-                    <BarProgressChart dailyUnlocks={weeklyUnlocks} size={500} />
+                    <BarProgressChart dailyUnlocks={weeklyUnlocks} size={400} />
                   </StatWrapper2>
                 </GameLineHours>
               </GamesR>
@@ -1296,101 +1296,103 @@ export default function MainContent({
         )}
         {shouldShowRight && (
           <SRRight>
-            <Milestones>
-              <Rarest1Line>
-                <GamesLeft>GAME</GamesLeft>
-                <GamesRight></GamesRight>
-              </Rarest1Line>
-              <Rarest3Line>
-                <GameSubLine>
-                  <GameCdImage scale={1} game={selectedGame} />
-                  <GameSubRight>
-                    <Ps5
-                      onClick={() => {
-                        setShowEditModal(true);
-                        setGameData((old) => selectedGame);
-                      }}
-                    >
-                      PS5
-                    </Ps5>
-                    <Seperator></Seperator>
-                    <Rank>
-                      <span style={{ fontSize: "1.5rem", color: color }}>
-                        {rank}
-                      </span>
-                      <span style={{ fontSize: ".7rem" }}>RANK</span>
-                    </Rank>
-                    <Seperator></Seperator>
-                    <Platinum isPlatinum={totalBG == completedBG}>
-                      <span
-                        style={{
-                          opacity: totalBG == completedBG ? 1 : 0.25,
+            {selectedMode == "GAME" && (
+              <Milestones>
+                <Rarest1Line>
+                  <GamesLeft>GAME</GamesLeft>
+                  <GamesRight></GamesRight>
+                </Rarest1Line>
+                <Rarest3Line>
+                  <GameSubLine>
+                    <GameCdImage scale={1} game={selectedGame} />
+                    <GameSubRight>
+                      <Ps5
+                        onClick={() => {
+                          setShowEditModal(true);
+                          setGameData((old) => selectedGame);
                         }}
                       >
-                        <PlatinumIcon />
-                      </span>
-                      <span
-                        style={{
-                          fontSize: ".7rem",
-                          marginTop: "4px",
-                          fontWeight: "bold",
-                          opacity: totalBG == completedBG ? 1 : 0.75,
-                        }}
-                      >
-                        {lastAch?.percentage} %
-                      </span>
-                    </Platinum>
-                    <Seperator></Seperator>
-                    <Trophies>
-                      <TTop>
-                        <TSingle>
-                          <GoldIconS />
-                          <span
-                            style={{
-                              transform: "translate(-.5rem,-.25rem)",
-                              color: COLOR_GOLD,
-                              fontSize: "1rem",
-                            }}
-                          >
-                            {goldBG}
-                          </span>
-                        </TSingle>
-                        <TSingle>
-                          <SilverIconS />
-                          <span
-                            style={{
-                              transform: "translate(-.5rem,-.25rem)",
-                              color: COLOR_SILVER2,
-                              fontSize: "1rem",
-                            }}
-                          >
-                            {silverBG}
-                          </span>
-                        </TSingle>
-                        <TSingle>
-                          <BronzeIconS />
-                          <span
-                            style={{
-                              transform: "translate(-.5rem,-.25rem)",
-                              color: COLOR_BRONZE,
-                              fontSize: "1rem",
-                            }}
-                          >
-                            {bronzeBG}
-                          </span>
-                        </TSingle>
-                      </TTop>
-                      <TBottom>
-                        <Outer>
-                          <Inner percentage={completionBG}></Inner>
-                          <Text>{completionBG?.toFixed(2)} %</Text>
-                        </Outer>
-                      </TBottom>
-                    </Trophies>
-                  </GameSubRight>
-                </GameSubLine>
-              </Rarest3Line>
-            </Milestones>
+                        PS5
+                      </Ps5>
+                      <Seperator></Seperator>
+                      <Rank>
+                        <span style={{ fontSize: "1.5rem", color: color }}>
+                          {rank}
+                        </span>
+                        <span style={{ fontSize: ".7rem" }}>RANK</span>
+                      </Rank>
+                      <Seperator></Seperator>
+                      <Platinum isPlatinum={totalBG == completedBG}>
+                        <span
+                          style={{
+                            opacity: totalBG == completedBG ? 1 : 0.25,
+                          }}
+                        >
+                          <PlatinumIcon />
+                        </span>
+                        <span
+                          style={{
+                            fontSize: ".7rem",
+                            marginTop: "4px",
+                            fontWeight: "bold",
+                            opacity: totalBG == completedBG ? 1 : 0.75,
+                          }}
+                        >
+                          {lastAch?.percentage} %
+                        </span>
+                      </Platinum>
+                      <Seperator></Seperator>
+                      <Trophies>
+                        <TTop>
+                          <TSingle>
+                            <GoldIconS />
+                            <span
+                              style={{
+                                transform: "translate(-.5rem,-.25rem)",
+                                color: COLOR_GOLD,
+                                fontSize: "1rem",
+                              }}
+                            >
+                              {goldBG}
+                            </span>
+                          </TSingle>
+                          <TSingle>
+                            <SilverIconS />
+                            <span
+                              style={{
+                                transform: "translate(-.5rem,-.25rem)",
+                                color: COLOR_SILVER2,
+                                fontSize: "1rem",
+                              }}
+                            >
+                              {silverBG}
+                            </span>
+                          </TSingle>
+                          <TSingle>
+                            <BronzeIconS />
+                            <span
+                              style={{
+                                transform: "translate(-.5rem,-.25rem)",
+                                color: COLOR_BRONZE,
+                                fontSize: "1rem",
+                              }}
+                            >
+                              {bronzeBG}
+                            </span>
+                          </TSingle>
+                        </TTop>
+                        <TBottom>
+                          <Outer>
+                            <Inner percentage={completionBG}></Inner>
+                            <Text>{completionBG?.toFixed(2)} %</Text>
+                          </Outer>
+                        </TBottom>
+                      </Trophies>
+                    </GameSubRight>
+                  </GameSubLine>
+                </Rarest3Line>
+              </Milestones>
+            )}
             <Rarest>
               <Rarest1Line>
                 <GamesLeft>RAREST TROPHIES</GamesLeft>
@@ -2169,8 +2171,6 @@ const GamesR = styled.div`
   width: 98%;
   color: #fefefe;
   font-size: 0.9rem;
-  border: 1px solid #ddd;
-  margin-bottom: 1rem;
 `;
 
 const GameLineTime = styled.div`
@@ -2341,7 +2341,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
-  width: 1800px;
+  width: 100%;
   border-radius: 4px;
   transform: translateY(-2rem);
   background-color: #292b2d;

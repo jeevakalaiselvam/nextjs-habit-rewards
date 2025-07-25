@@ -22,7 +22,7 @@ export default function BarProgressChart({ dailyUnlocks, size }) {
       <Inner>
         <BarChart
           width={size ? size : 500}
-          height={300}
+          height={400}
           data={data}
           margin={{
             top: 5,
