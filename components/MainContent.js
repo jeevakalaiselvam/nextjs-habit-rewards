@@ -1229,19 +1229,21 @@ export default function MainContent({
               </>
             )}
             {selectedMode == "STATS" && (
-              <Games>
-                <Games1Line>
-                  <GamesLeft>MAIN STATISTICS</GamesLeft>
-                  <GamesRight></GamesRight>
-                </Games1Line>
-                <StatWrapper>
-                  <StatInformation games={games} />
-                </StatWrapper>
-              </Games>
+              <GamesR>
+                <GameLineHours>
+                  <Games1Line>
+                    <GamesLeft>MAIN STATISTICS</GamesLeft>
+                    <GamesRight></GamesRight>
+                  </Games1Line>
+                  <StatWrapper>
+                    <StatInformation games={games} />
+                  </StatWrapper>
+                </GameLineHours>
+              </GamesR>
             )}
             {selectedMode == "STATS" && (
               <GamesR>
-                <GameLineTime>
+                <GameLineHours>
                   <Games1Line>
                     <GamesLeft>MONTHLY ACTIVITY</GamesLeft>
                     <GamesRight></GamesRight>
@@ -1249,10 +1251,14 @@ export default function MainContent({
                   <StatWrapper2>
                     <LevelProgressChart
                       dailyUnlocks={monthlyUnlocks}
-                      size={1000}
+                      size={1350}
                     />
                   </StatWrapper2>
-                </GameLineTime>
+                </GameLineHours>
+              </GamesR>
+            )}
+            {selectedMode == "STATS" && (
+              <GamesR>
                 <GameLineHours>
                   <Games1Line>
                     <GamesLeft>TROPHY PROGRESSION</GamesLeft>
@@ -1260,7 +1266,7 @@ export default function MainContent({
                   </Games1Line>
                   <StatWrapper2>
                     <MultiProgressChart
-                      size={1000}
+                      size={1350}
                       dailyTypeBreakdown={dailyTypeBreakdown}
                     />
                   </StatWrapper2>
@@ -1269,7 +1275,7 @@ export default function MainContent({
             )}
             {selectedMode == "STATS" && (
               <GamesR>
-                <GameLineTime>
+                <GameLineHours>
                   <Games1Line>
                     <GamesLeft>TROPHIES BY TIME</GamesLeft>
                     <GamesRight></GamesRight>
@@ -1277,17 +1283,24 @@ export default function MainContent({
                   <StatWrapper2>
                     <BarProgressChart
                       dailyUnlocks={hourlyUnlocks}
-                      size={1600}
+                      size={1350}
                     />
                   </StatWrapper2>
-                </GameLineTime>
+                </GameLineHours>
+              </GamesR>
+            )}
+            {selectedMode == "STATS" && (
+              <GamesR>
                 <GameLineHours>
                   <Games1Line>
                     <GamesLeft>TROPHIES BY DAY</GamesLeft>
                     <GamesRight></GamesRight>
                   </Games1Line>
                   <StatWrapper2>
-                    <BarProgressChart dailyUnlocks={weeklyUnlocks} size={400} />
+                    <BarProgressChart
+                      dailyUnlocks={weeklyUnlocks}
+                      size={1350}
+                    />
                   </StatWrapper2>
                 </GameLineHours>
               </GamesR>
@@ -2325,7 +2338,7 @@ const FirstRow = styled.div`
   align-items: center;
   justify-content: center;
   background-color: #e7e7e7;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   width: 100%;
   color: #44484b;
 `;
@@ -2341,7 +2354,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
-  width: 100%;
+  width: 1400px;
   border-radius: 4px;
   transform: translateY(-2rem);
   background-color: #292b2d;

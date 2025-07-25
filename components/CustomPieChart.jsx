@@ -138,7 +138,7 @@ const PieRight = styled.div`
 `;
 
 const MainContainer = styled.div`
-  width: 500px;
+  width: 415px;
   display: flex;
   align-items: center;
   justify-content: center;

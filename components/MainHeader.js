@@ -364,7 +364,7 @@ const BottomStats = styled.div`
   position: absolute;
   padding: 1rem 1rem 2.5rem 1rem;
   bottom: 0;
-  width: 1800px;
+  width: 1400px;
 `;
 
 const MainWrapper = styled.div`

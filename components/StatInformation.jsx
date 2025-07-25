@@ -334,7 +334,7 @@ const StatWrapper = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
-  width: 100%;
+  width: 1350px;
 `;
 
 const StatWrapperInner = styled.div`

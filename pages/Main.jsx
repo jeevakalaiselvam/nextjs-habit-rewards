@@ -151,7 +151,7 @@ export default function Atom() {
         <span style={{ transform: "translateY(2px)", marginRight: ".5rem" }}>
           <TbRefresh />
         </span>
-        <span>{refeshing ? "Refreshing..." : "Refresh"}</span>
+        <span>{refeshing ? "Updating Profile..." : "Update Profile"}</span>
       </RefreshButton>
     </Container>
   );
@@ -162,7 +162,7 @@ const RefreshButton = styled.div`
   align-items: center;
   justify-content: flex-start;
   position: fixed;
-  right: 1rem;
+  right: 2rem;
   top: 1rem;
   background-color: ${COLOR_ACCENT};
   padding: 0.25rem 0.5rem;
