@@ -120,6 +120,7 @@ export default function Atom() {
             label: getRarityBasedOnRarity(lastAch?.percentage),
             color: "Platinum",
             achieved: isCompleted ? 1 : 0,
+            unlocktime: lastAch?.unlocktime,
             icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
           },
         ],

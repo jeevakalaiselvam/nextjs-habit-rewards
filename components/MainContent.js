@@ -1317,7 +1317,7 @@ export default function MainContent({
                 </Rarest1Line>
                 <Rarest3Line>
                   <GameSubLine>
-                    <GameCdImage scale={1} game={selectedGame} />
+                    <GameImage url={HEADER_IMAGE(selectedGame?.id)}></GameImage>
                     <GameSubRight>
                       <Ps5
                         onClick={() => {
@@ -1632,6 +1632,7 @@ const GameSubRight = styled.div`
   align-items: center;
   justify-content: center;
   flex: 1;
+  margin-left: 1rem;
 `;
 
 const GameSubLine = styled.div`
