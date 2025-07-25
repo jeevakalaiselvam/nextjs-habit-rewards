@@ -39,6 +39,7 @@ import {
   formatDate,
   formatDate1,
   formatDate2,
+  formatDate3,
   timeAgoInGame,
 } from "../helpers/dateHelper";
 import StatInformation from "./StatInformation";
@@ -243,6 +244,8 @@ export default function MainContent({
     weeklyUnlocks,
   } = calculateLevelForAchs(games);
 
+  console.log({ levelAchs });
+
   return (
     <Container>
       {showEditModal && (
@@ -392,7 +395,13 @@ export default function MainContent({
         {!gamesLoading && (
           <SRLeft>
             {selectedMode == "LEVEL_HISTORY" && (
-              <LevelProgressChart dailyUnlocks={dailyUnlocks} size={2250} />
+              <LevelProgressChart
+                dailyUnlocks={levelAchs?.map((ach) => ({
+                  date: formatDate3(new Date(ach?.unlocktime * 1000)),
+                  Level: ach?.levelReached,
+                }))}
+                size={1350}
+              />
             )}
             {selectedMode == "LEVEL_HISTORY" && (
               <Game2LineLH>

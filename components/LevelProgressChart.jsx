@@ -34,7 +34,7 @@ export default function LevelProgressChart({ dailyUnlocks, size }) {
           <Tooltip />
           <Line
             type="monotone"
-            dataKey="count"
+            dataKey="Level"
             stroke={COLOR_GOLD}
             fill={COLOR_GOLD}
           />
