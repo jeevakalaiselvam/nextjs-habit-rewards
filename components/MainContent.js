@@ -400,7 +400,7 @@ export default function MainContent({
                   date: formatDate3(new Date(ach?.unlocktime * 1000)),
                   Level: ach?.levelReached,
                 }))}
-                size={1350}
+                size={1550}
               />
             )}
             {selectedMode == "LEVEL_HISTORY" && (
@@ -1260,7 +1260,7 @@ export default function MainContent({
                   <StatWrapper2>
                     <LevelProgressChart
                       dailyUnlocks={monthlyUnlocks}
-                      size={1350}
+                      size={1550}
                     />
                   </StatWrapper2>
                 </GameLineHours>
@@ -1275,7 +1275,7 @@ export default function MainContent({
                   </Games1Line>
                   <StatWrapper2>
                     <MultiProgressChart
-                      size={1350}
+                      size={1550}
                       dailyTypeBreakdown={dailyTypeBreakdown}
                     />
                   </StatWrapper2>
@@ -1292,7 +1292,7 @@ export default function MainContent({
                   <StatWrapper2>
                     <BarProgressChart
                       dailyUnlocks={hourlyUnlocks}
-                      size={1350}
+                      size={1550}
                     />
                   </StatWrapper2>
                 </GameLineHours>
@@ -1308,7 +1308,7 @@ export default function MainContent({
                   <StatWrapper2>
                     <BarProgressChart
                       dailyUnlocks={weeklyUnlocks}
-                      size={1350}
+                      size={1550}
                     />
                   </StatWrapper2>
                 </GameLineHours>
@@ -2363,7 +2363,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
-  width: 1400px;
+  width: 1600px;
   border-radius: 4px;
   transform: translateY(-2rem);
   background-color: #292b2d;
