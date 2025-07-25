@@ -1890,7 +1890,6 @@ const Text = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background-color: #bababa;
   position: absolute;
   font-size: 0.7rem;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3), -1px -1px 1px rgba(0, 0, 0, 0.3),

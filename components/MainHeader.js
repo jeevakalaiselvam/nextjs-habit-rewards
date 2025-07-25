@@ -18,7 +18,7 @@ import { calculatePSLevelAndProgress } from "../helpers/trophyHelper";
 import LevelIcon from "./LevelIcon";
 import GameCdImage from "./GameCdImage";
 
-export default function MainHeader({ games }) {
+export default function MainHeader({ games, gamesLoading }) {
   let image =
     "https://4kwallpapers.com/images/wallpapers/hogwarts-legacy-winter-1920x1200-20034.jpeg";
 
@@ -105,28 +105,30 @@ export default function MainHeader({ games }) {
               <Subtext>Love to collect trophies!</Subtext>
             </NameSection>
           </HeaderName>
-          <HeaderProfileLevel>
-            <LevelIconWrapper>
-              <LevelIcon />
-            </LevelIconWrapper>
-            <LevelData style={{ transform: "translateY(-.5rem)" }}>
-              <LevelData1>{level}</LevelData1>
-              <LevelData2 color={COLOR_GOLD + "55"}>
-                <LevelInner
-                  color={COLOR_GOLD}
-                  percent={progressPercent}
-                ></LevelInner>
-                <span
-                  style={{
-                    fontSize: ".65rem",
-                    transform: "translateY(.9rem)",
-                  }}
-                >
-                  {remainingXP} XP
-                </span>
-              </LevelData2>
-            </LevelData>
-          </HeaderProfileLevel>
+          {!gamesLoading && (
+            <HeaderProfileLevel>
+              <LevelIconWrapper>
+                <LevelIcon />
+              </LevelIconWrapper>
+              <LevelData style={{ transform: "translateY(-.5rem)" }}>
+                <LevelData1>{level}</LevelData1>
+                <LevelData2 color={COLOR_GOLD + "55"}>
+                  <LevelInner
+                    color={COLOR_GOLD}
+                    percent={progressPercent}
+                  ></LevelInner>
+                  <span
+                    style={{
+                      fontSize: ".65rem",
+                      transform: "translateY(.9rem)",
+                    }}
+                  >
+                    {remainingXP} XP
+                  </span>
+                </LevelData2>
+              </LevelData>
+            </HeaderProfileLevel>
+          )}
           <HeaderCounts>
             <Section color={COLOR_WHITE}>
               <Top onClick={() => {}}>
