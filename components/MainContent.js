@@ -387,12 +387,7 @@ export default function MainContent({
                 <GameRightCard>
                   <GRTop>
                     <GameData>
-                      <GameTitle
-                        onClick={() => {
-                          setSelectedGame(game);
-                          setSelectedMode("GAME");
-                        }}
-                      >
+                      <GameTitle onClick={() => {}}>
                         {selectedGame?.name}
                       </GameTitle>
                       <GameCompletion>
