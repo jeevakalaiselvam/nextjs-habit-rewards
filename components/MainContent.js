@@ -260,9 +260,121 @@ export default function MainContent({
                       }}
                       color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                     >
-                      <GameLeftCard>
-                        <GameCdImage game={game} scale={1.065} />
-                      </GameLeftCard>
+                      <GameInfoInner>
+                        <GameRightCard>
+                          <GRTop>
+                            <GameData>
+                              <GameTitle
+                                onClick={() => {
+                                  setSelectedGame(game);
+                                  setSelectedMode("GAME");
+                                }}
+                              >
+                                {game?.name}
+                              </GameTitle>
+                              <GameCompletion>
+                                {completed} of {total} Trophies
+                              </GameCompletion>
+                            </GameData>
+                          </GRTop>
+                          <GRBottom>
+                            <GameInfo>
+                              <Trophies>
+                                <TTop>
+                                  <TSingle>
+                                    <GoldIconS />
+                                    <span
+                                      style={{
+                                        transform: "translate(-.5rem,-.25rem)",
+                                        color: COLOR_GOLD,
+                                        fontSize: "1rem",
+                                      }}
+                                    >
+                                      {gold}
+                                    </span>
+                                  </TSingle>
+                                  <TSingle>
+                                    <SilverIconS />
+                                    <span
+                                      style={{
+                                        transform: "translate(-.5rem,-.25rem)",
+                                        color: COLOR_SILVER2,
+                                        fontSize: "1rem",
+                                      }}
+                                    >
+                                      {silver}
+                                    </span>
+                                  </TSingle>
+                                  <TSingle>
+                                    <BronzeIconS />
+                                    <span
+                                      style={{
+                                        transform: "translate(-.5rem,-.25rem)",
+                                        color: COLOR_BRONZE,
+                                        fontSize: "1rem",
+                                      }}
+                                    >
+                                      {bronze}
+                                    </span>
+                                  </TSingle>
+                                </TTop>
+                                <TBottom>
+                                  <Outer>
+                                    <Inner
+                                      percentage={Number(completion)?.toFixed(
+                                        1
+                                      )}
+                                    ></Inner>
+                                    <Text>
+                                      {Number(completion)?.toFixed(1)} %
+                                    </Text>
+                                  </Outer>
+                                </TBottom>
+                              </Trophies>
+                              <Seperator></Seperator>
+                              <Platinum isPlatinum={total == completed}>
+                                <span
+                                  style={{
+                                    opacity: total == completed ? 1 : 0.25,
+                                  }}
+                                >
+                                  <PlatinumIcon />
+                                </span>
+                                <span
+                                  style={{
+                                    fontSize: ".7rem",
+                                    marginTop: "4px",
+                                    fontWeight: "bold",
+                                    opacity: total == completed ? 1 : 0.75,
+                                    transform: "translateX(.25rem)",
+                                  }}
+                                >
+                                  {Number(lastAch?.percentage)} %
+                                </span>
+                              </Platinum>
+                              <Seperator></Seperator>
+                              <Rank>
+                                <span
+                                  style={{ fontSize: "1.5rem", color: color }}
+                                >
+                                  {rank}
+                                </span>
+                                <span
+                                  style={{ fontSize: ".7rem", color: color }}
+                                >
+                                  RANK
+                                </span>
+                              </Rank>
+                            </GameInfo>
+                          </GRBottom>
+                        </GameRightCard>
+                        <GameLeftCard>
+                          <GameImage
+                            url={HEADER_IMAGE(game?.id)}
+                            center
+                          ></GameImage>
+                        </GameLeftCard>
+                      </GameInfoInner>
                     </GameContainer>
                   );
                 })}
@@ -331,8 +443,10 @@ export default function MainContent({
                         </TTop>
                         <TBottom>
                           <Outer>
-                            <Inner percentage={completionBG}></Inner>
-                            <Text>{completionBG} %</Text>
+                            <Inner
+                              percentage={Number(completionBG)?.toFixed(1)}
+                            ></Inner>
+                            <Text>{Number(completionBG)?.toFixed(1)} %</Text>
                           </Outer>
                         </TBottom>
                       </Trophies>
@@ -370,7 +484,10 @@ export default function MainContent({
                   </GRBottom>
                 </GameRightCard>
                 <GameLeftCard>
-                  <GameCdImage game={selectedGame} scale={0.75} />
+                  <GameImage
+                    url={HEADER_IMAGE(selectedGame?.id)}
+                    center
+                  ></GameImage>
                 </GameLeftCard>
               </GameInfoInner>
               <Game2Line>
@@ -433,7 +550,7 @@ export default function MainContent({
                         </span>
                         <AchRarity>
                           <span style={{ fontSize: ".5rem" }}>
-                            {ach?.percentage}%
+                            {Number(ach?.percentage)?.toFixed(1)}%
                           </span>
                           <span style={{ fontSize: ".35rem" }}>
                             {ach?.label?.toUpperCase()}
@@ -452,11 +569,22 @@ export default function MainContent({
   );
 }
 
+const GameLastPlayed = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  padding: 0.125rem 0.5rem 0.125rem 0;
+  color: #666666;
+`;
+
 const GameLeftCard = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0.5rem;
+  width: 100px;
+  height: 100px;
 `;
 
 const GameRightCard = styled.div`
@@ -466,6 +594,15 @@ const GameRightCard = styled.div`
   flex: 1;
   flex-direction: column;
   transform: translateX(-0.5rem);
+`;
+
+const GameHours = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem 0.5rem 0;
+  color: #666666;
 `;
 
 const GRTop = styled.div`
@@ -600,6 +737,12 @@ const Platinum = styled.div`
   min-width: 50px;
 `;
 
+const Started = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const Text = styled.div`
   display: flex;
   align-items: center;
@@ -703,10 +846,24 @@ const Ps5 = styled.div`
   box-shadow: 0 0 0 1px #939393 inset;
 `;
 
+const GameImageInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const GameFirstInner = styled.div`
+  display: flex;
+  flex: 1;
+  align-items: flex-start;
+  justify-content: center;
+  padding-left: 1rem;
+  flex-direction: column;
+`;
+
 const GameTitle = styled.div`
   display: flex;
   align-items: center;
-  width: 100%;
   justify-content: flex-start;
   color: #057fcc;
   width: 100%;
@@ -719,9 +876,8 @@ const GameCompletion = styled.div`
   justify-content: flex-start;
   font-size: 0.75rem;
   width: 100%;
-  padding: 0.25rem 0.5rem 0.25rem 0;
+  padding: 0.25rem 0.5rem 0.5rem 0;
   color: #666666;
-  height: 30px;
 `;
 
 const Warning = styled.div`
@@ -744,12 +900,26 @@ const Warning = styled.div`
   }
 `;
 
+const GameFirst = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
+const GameSecond = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.25rem 0rem;
+`;
+
 const GameData = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  height: 30px;
   width: 100%;
   padding: 0rem 1rem 0rem 1rem;
 `;
@@ -762,7 +932,7 @@ const GameInfoInner = styled.div`
 `;
 
 const GameImage = styled.div`
-  width: 100px;
+  width: 200px;
   height: 100px;
   display: flex;
   align-items: center;
@@ -771,16 +941,21 @@ const GameImage = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   cursor: pointer;
+  background-position: center;
   position: relative;
 `;
 
 const GameContainer = styled.div`
   display: flex;
   align-items: center;
+  background-color: red;
   justify-content: flex-start;
+  flex-direction: column;
   background-color: ${(props) => props.color};
   color: #333;
-  padding: 4px;
+  padding: 4px 0px 0px 0px;
+  width: 100%;
+  border: 1px solid #eee;
   cursor: pointer;
 `;
 
@@ -797,7 +972,11 @@ const Games2LineR = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-wrap: wrap;
+  flex-direction: column;
   width: 100%;
+  min-height: calc(87.25vh);
+  max-height: calc(87.25vh);
+  overflow: scroll;
 `;
 
 const Games = styled.div`
