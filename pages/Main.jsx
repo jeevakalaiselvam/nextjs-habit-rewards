@@ -9,6 +9,7 @@ import {
   getColorBasedOnRarity,
   getRarityBasedOnRarity,
 } from "../helpers/achHelper";
+import MainContentNew from "../components/MainContentNew";
 
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
