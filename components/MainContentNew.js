@@ -3,6 +3,7 @@ import {
   COLOR_ACCENT,
   COLOR_BRONZE,
   COLOR_GOLD,
+  COLOR_GOLD2,
   COLOR_GREEN,
   COLOR_SILVER,
   COLOR_SILVER2,
@@ -34,11 +35,12 @@ import { Collapse, Spin } from "antd";
 import GameCdImage from "./GameCdImage";
 import { formatDate } from "../helpers/dateHelper";
 import Panel from "antd/es/splitter/Panel";
+import LevelIcon from "./LevelIcon";
 
 const MAX_DESC = 80;
 const MEDIUM_DESC = 60;
 
-export default function MainContent({
+export default function MainContentNew({
   games,
   refreshData,
   setGamesLoading,
@@ -171,102 +173,93 @@ export default function MainContent({
     selectedRarityAchs = common;
   }
 
-  console.log({ selectedGame });
+  let allUnlocked = [];
+
+  games?.forEach((game) => {
+    game?.achievements?.forEach((ach) => {
+      if (ach?.achieved == 1) {
+        allUnlocked.push(ach);
+      }
+    });
+  });
 
   return (
     <Container>
-      {showEditModal && (
-        <EditGameForm
-          gameData={gameData}
-          showEditModal={showEditModal}
-          setShowEditModal={setShowEditModal}
-          refreshData={refreshData}
-          setGamesLoading={setGamesLoading}
-        />
-      )}
       {!gamesLoading && (
         <SRLeft>
           {selectedMode == "GAMES" && (
             <Games>
-              <Games2LineR>
-                {sortedGames?.map((game, index) => {
-                  let allCompletion = 0;
-                  let total = 0;
-                  let unearned = 0;
-                  let platinumA = 0;
-                  let goldA = 0;
-                  let silverA = 0;
-                  let bronzeA = 0;
-                  let platinum = 0;
-                  let gold = 0;
-                  let silver = 0;
-                  let bronze = 0;
-
-                  game?.achievements?.forEach((ach) => {
-                    total++;
-                    if (ach?.achieved == 0) {
-                      unearned++;
-                      if (ach?.color == "Platinum") {
-                        platinumA++;
-                      }
-                      if (ach?.color == "Gold") {
-                        goldA++;
-                      }
-                      if (ach?.color == "Silver") {
-                        silverA++;
-                      }
-                      if (ach?.color == "Bronze") {
-                        bronzeA++;
-                      }
-                    } else {
-                      if (ach?.color == "Platinum") {
-                        platinum++;
-                      }
-                      if (ach?.color == "Gold") {
-                        gold++;
-                      }
-                      if (ach?.color == "Silver") {
-                        silver++;
-                      }
-                      if (ach?.color == "Bronze") {
-                        bronze++;
-                      }
-                    }
-                  });
-
-                  let completed = game?.achievements?.filter(
-                    (item) => item?.achieved == 1
-                  )?.length;
-                  let completion = (
-                    completed == 0 ? 0 : (completed / total) * 100
-                  )?.toFixed(2);
-                  allCompletion = allCompletion + completion;
-                  if (total == completed) {
-                    completed = completed + 1;
-                  }
-
-                  let { color, rank } = calculateRankForCompletion(completion);
-                  let lastAch = game?.achievements?.sort(
-                    (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
-                  )?.[game?.achievements?.length - 1];
-
-                  let isPlatinumNotAdded = game?.achievements?.length == 1;
+              <Game2Line>
+                {allUnlocked?.map((ach, index) => {
+                  let desc1 = ach?.hiddenDesc;
+                  let desc2 = ach?.description;
+                  let desc3 = ach?.hiddenDesc?.split(
+                    "Hidden achievement:"
+                  )?.[1];
 
                   return (
-                    <GameContainer
-                      onClick={() => {
-                        setSelectedGame(game);
-                        setSelectedMode("GAME");
-                      }}
+                    <AchCard
                       color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                      achieved={ach?.achieved}
                     >
-                      <GameLeftCard>
-                        <GameImage game={game} />
-                      </GameLeftCard>
-                    </GameContainer>
+                      {ach?.achieved == 1 && (
+                        <Unlocked>
+                          {formatDate(new Date(ach?.unlocktime * 1000))}
+                        </Unlocked>
+                      )}
+                      <AchIconOuter achieved={ach?.achieved}>
+                        <AchIcon
+                          icon={ach?.icon}
+                          onClick={() => {
+                            if (false && window !== "undefined") {
+                              const searchQuery = `${
+                                ach?.displayName
+                              } achievement ${encodeURIComponent(
+                                ach?.gameName
+                              )} `;
+                              window.open(
+                                `https://www.google.com/search?q=${searchQuery}`
+                              );
+                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                            }
+                          }}
+                        ></AchIcon>
+                      </AchIconOuter>
+                      <AchData>
+                        <AchTitle>{ach?.displayName}</AchTitle>
+                        <AchDesc
+                          higher={ach?.description?.length > MAX_DESC}
+                          medium={ach?.description?.length > MEDIUM_DESC}
+                        >
+                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                        </AchDesc>
+                      </AchData>
+                      <Seperator padding={".25rem"} />
+                      <AchTrophy>
+                        <span
+                          style={{
+                            fontSize: ".5rem",
+                            transform: "translate(0.25rem, 0rem)",
+                          }}
+                        >
+                          {ach?.color == "Platinum" && <PlatinumIconS />}
+                          {ach?.color == "Gold" && <GoldIconS />}
+                          {ach?.color == "Silver" && <SilverIconS />}
+                          {ach?.color == "Bronze" && <BronzeIconS />}{" "}
+                        </span>
+                        <AchRarity>
+                          <span style={{ fontSize: ".5rem" }}>
+                            {ach?.percentage}%
+                          </span>
+                          <span style={{ fontSize: ".35rem" }}>
+                            {ach?.label?.toUpperCase()}
+                          </span>
+                        </AchRarity>
+                      </AchTrophy>
+                    </AchCard>
                   );
                 })}
-              </Games2LineR>
+              </Game2Line>
             </Games>
           )}
           {selectedMode == "GAME" && (
@@ -452,6 +445,77 @@ export default function MainContent({
   );
 }
 
+const LevelTop = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+`;
+
+const ToNext = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  padding: 0.25rem;
+`;
+
+const LevelIconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0.5rem;
+`;
+
+const LevelData = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-direction: column;
+`;
+
+const LevelData1 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${COLOR_GOLD2};
+  font-size: 1.5rem;
+`;
+
+const LevelInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 4px;
+  width: 40px;
+  border-radius: 2px;
+  background-color: ${(props) => props.color};
+  position: absolute;
+  left: 0;
+  width: ${(props) => `${props.percent}%`};
+`;
+
+const LevelData2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 4px;
+  width: 40px;
+  margin-top: 4px;
+  border-radius: 2px;
+  background-color: ${(props) => props.color};
+  position: relative;
+`;
+
+const HeaderProfileLevel = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 1rem;
+  justify-self: flex-end;
+`;
+
 const GameLeftCard = styled.div`
   display: flex;
   align-items: center;
@@ -584,8 +648,8 @@ const Game2Line = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  max-height: 70vh;
-  min-height: 70vh;
+  max-height: 84vh;
+  min-height: 84vh;
   overflow-x: hidden;
   overflow-y: scroll;
   padding-bottom: 1rem;

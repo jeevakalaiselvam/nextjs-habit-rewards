@@ -9,6 +9,7 @@ import {
   getColorBasedOnRarity,
   getRarityBasedOnRarity,
 } from "../helpers/achHelper";
+import MainContentNew from "../components/MainContentNew";
 
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
@@ -138,7 +139,7 @@ export default function Atom() {
         setSelectedMode={setSelectedMode}
         refreshData={refreshData}
       />
-      <MainContent
+      <MainContentNew
         games={finalGames}
         selectedMode={selectedMode}
         refreshData={refreshData}
