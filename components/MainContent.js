@@ -390,9 +390,6 @@ export default function MainContent({
                       <GameTitle onClick={() => {}}>
                         {selectedGame?.name}
                       </GameTitle>
-                      <GameCompletion>
-                        {completedBG} of {totalBG} Trophies
-                      </GameCompletion>
                     </GameData>
                   </GRTop>
                   <GRBottom>
@@ -577,7 +574,7 @@ const GameLeftCard = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem;
+  transform: translateY(-0.125rem);
   width: 100px;
   height: 100px;
 `;
@@ -871,7 +868,7 @@ const GameCompletion = styled.div`
   justify-content: flex-start;
   font-size: 0.75rem;
   width: 100%;
-  padding: 0.25rem 0.5rem 0.5rem 0;
+  padding: 0.25rem 0.5rem 1rem 0;
   color: #666666;
 `;
 
@@ -924,6 +921,7 @@ const GameInfoInner = styled.div`
   flex: 2;
   align-items: center;
   justify-content: flex-start;
+  padding: 0.25rem;
 `;
 
 const GameImage = styled.div`
