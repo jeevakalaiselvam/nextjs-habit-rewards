@@ -173,6 +173,20 @@ export default function MainContent({
 
   console.log({ selectedGame });
 
+  let allUnlocked = [];
+
+  games?.forEach((game) => {
+    game?.achievements?.forEach((ach) => {
+      if (ach?.achieved == 1) {
+        allUnlocked.push(ach);
+      }
+    });
+  });
+
+  allUnlocked = allUnlocked?.sort(
+    (ach1, ach2) => ach2?.percentage - ach1?.percentage
+  );
+
   return (
     <Container>
       {showEditModal && (
@@ -184,9 +198,14 @@ export default function MainContent({
           setGamesLoading={setGamesLoading}
         />
       )}
+      {gamesLoading && (
+        <SRLeft>
+          <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+        </SRLeft>
+      )}
       {!gamesLoading && (
         <SRLeft>
-          {selectedMode == "GAMES" && (
+          {selectedMode == "GAMES1" && (
             <Games>
               <Games2LineR>
                 {sortedGames?.map((game, index) => {
@@ -246,9 +265,11 @@ export default function MainContent({
                   }
 
                   let { color, rank } = calculateRankForCompletion(completion);
-                  let lastAch = game?.achievements?.sort(
-                    (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
-                  )?.[game?.achievements?.length - 1];
+                  let lastAch = game?.achievements
+                    ?.filter((ach) => ach?.achieved == 1)
+                    ?.sort(
+                      (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
+                    )?.[game?.achievements?.length - 1];
 
                   let isPlatinumNotAdded = game?.achievements?.length == 1;
 
@@ -273,7 +294,7 @@ export default function MainContent({
                                 {game?.name}
                               </GameTitle>
                               <GameCompletion>
-                                {completed} of {total} Trophies
+                                {completed} Trophies
                               </GameCompletion>
                             </GameData>
                           </GRTop>
@@ -318,18 +339,20 @@ export default function MainContent({
                                     </span>
                                   </TSingle>
                                 </TTop>
-                                <TBottom>
-                                  <Outer>
-                                    <Inner
-                                      percentage={Number(completion)?.toFixed(
-                                        1
-                                      )}
-                                    ></Inner>
-                                    <Text>
-                                      {Number(completion)?.toFixed(1)} %
-                                    </Text>
-                                  </Outer>
-                                </TBottom>
+                                {false && (
+                                  <TBottom>
+                                    <Outer>
+                                      <Inner
+                                        percentage={Number(completion)?.toFixed(
+                                          1
+                                        )}
+                                      ></Inner>
+                                      <Text>
+                                        {Number(completion)?.toFixed(1)} %
+                                      </Text>
+                                    </Outer>
+                                  </TBottom>
+                                )}
                               </Trophies>
                               <Seperator></Seperator>
                               <Platinum isPlatinum={total == completed}>
@@ -349,7 +372,7 @@ export default function MainContent({
                                     transform: "translateX(.25rem)",
                                   }}
                                 >
-                                  {Number(lastAch?.percentage)} %
+                                  {Number(lastAch?.percentage ?? 0)} %
                                 </span>
                               </Platinum>
                               <Seperator></Seperator>
@@ -381,177 +404,84 @@ export default function MainContent({
               </Games2LineR>
             </Games>
           )}
-          {selectedMode == "GAME" && (
+          {selectedMode == "GAMES" && (
             <Games>
-              <GameInfoInner>
-                <GameRightCard>
-                  <GRTop>
-                    <GameData>
-                      <GameTitle onClick={() => {}}>
-                        {selectedGame?.name}
-                      </GameTitle>
-                    </GameData>
-                  </GRTop>
-                  <GRBottom>
-                    <GameInfo>
-                      <Trophies>
-                        <TTop>
-                          <TSingle>
-                            <GoldIconS />
-                            <span
-                              style={{
-                                transform: "translate(-.5rem,-.25rem)",
-                                color: COLOR_GOLD,
-                                fontSize: "1rem",
-                              }}
-                            >
-                              {goldABG}
-                            </span>
-                          </TSingle>
-                          <TSingle>
-                            <SilverIconS />
-                            <span
-                              style={{
-                                transform: "translate(-.5rem,-.25rem)",
-                                color: COLOR_SILVER2,
-                                fontSize: "1rem",
-                              }}
-                            >
-                              {silverABG}
-                            </span>
-                          </TSingle>
-                          <TSingle>
-                            <BronzeIconS />
-                            <span
-                              style={{
-                                transform: "translate(-.5rem,-.25rem)",
-                                color: COLOR_BRONZE,
-                                fontSize: "1rem",
-                              }}
-                            >
-                              {bronzeABG}
-                            </span>
-                          </TSingle>
-                        </TTop>
-                        <TBottom>
-                          <Outer>
-                            <Inner
-                              percentage={Number(completionBG)?.toFixed(1)}
-                            ></Inner>
-                            <Text>{Number(completionBG)?.toFixed(1)} %</Text>
-                          </Outer>
-                        </TBottom>
-                      </Trophies>
-                      <Seperator></Seperator>
-                      <Platinum isPlatinum={totalBG == completedBG}>
-                        <span
-                          style={{
-                            opacity: totalBG == completedBG ? 1 : 0.25,
-                          }}
-                        >
-                          <PlatinumIcon />
-                        </span>
-                        <span
-                          style={{
-                            fontSize: ".7rem",
-                            marginTop: "4px",
-                            fontWeight: "bold",
-                            opacity: totalBG == completedBG ? 1 : 0.75,
-                            transform: "translateX(.25rem)",
-                          }}
-                        >
-                          {Number(lastAch?.percentage)} %
-                        </span>
-                      </Platinum>
-                      <Seperator></Seperator>
-                      <Rank>
-                        <span style={{ fontSize: "1.5rem", color: color }}>
-                          {rank}
-                        </span>
-                        <span style={{ fontSize: ".7rem", color: color }}>
-                          RANK
-                        </span>
-                      </Rank>
-                    </GameInfo>
-                  </GRBottom>
-                </GameRightCard>
-                <GameLeftCard>
-                  <GameImage
-                    url={HEADER_IMAGE(selectedGame?.id)}
-                    center
-                  ></GameImage>
-                </GameLeftCard>
-              </GameInfoInner>
               <Game2Line>
-                {selectedGame?.achievements?.map((ach, index) => {
-                  let desc1 = ach?.hiddenDesc;
-                  let desc2 = ach?.description;
-                  let desc3 = ach?.hiddenDesc?.split(
-                    "Hidden achievement:"
-                  )?.[1];
+                {allUnlocked?.length == 0 && (
+                  <span style={{ color: "#111", padding: "2rem" }}>
+                    No Achievements
+                  </span>
+                )}
+                {allUnlocked?.length > 0 &&
+                  allUnlocked?.map((ach, index) => {
+                    let desc1 = ach?.hiddenDesc;
+                    let desc2 = ach?.description;
+                    let desc3 = ach?.hiddenDesc?.split(
+                      "Hidden achievement:"
+                    )?.[1];
 
-                  return (
-                    <AchCard
-                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                      achieved={ach?.achieved}
-                    >
-                      {ach?.achieved == 1 && (
-                        <Unlocked>
-                          {formatDate(new Date(ach?.unlocktime * 1000))}
-                        </Unlocked>
-                      )}
-                      <AchIconOuter achieved={ach?.achieved}>
-                        <AchIcon
-                          icon={ach?.icon}
-                          onClick={() => {
-                            if (window !== "undefined") {
-                              const searchQuery = `${
-                                ach?.displayName
-                              } achievement ${encodeURIComponent(
-                                ach?.gameName
-                              )} `;
-                              window.open(
-                                `https://www.google.com/search?q=${searchQuery}`
-                              );
-                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                            }
-                          }}
-                        ></AchIcon>
-                      </AchIconOuter>
-                      <AchData>
-                        <AchTitle>{ach?.displayName}</AchTitle>
-                        <AchDesc
-                          higher={ach?.description?.length > MAX_DESC}
-                          medium={ach?.description?.length > MEDIUM_DESC}
-                        >
-                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
-                        </AchDesc>
-                      </AchData>
-                      <Seperator padding={".25rem"} />
-                      <AchTrophy>
-                        <span
-                          style={{
-                            fontSize: ".5rem",
-                            transform: "translate(0.25rem, 0rem)",
-                          }}
-                        >
-                          {ach?.color == "Platinum" && <PlatinumIconS />}
-                          {ach?.color == "Gold" && <GoldIconS />}
-                          {ach?.color == "Silver" && <SilverIconS />}
-                          {ach?.color == "Bronze" && <BronzeIconS />}{" "}
-                        </span>
-                        <AchRarity>
-                          <span style={{ fontSize: ".5rem" }}>
-                            {Number(ach?.percentage)?.toFixed(1)}%
+                    return (
+                      <AchCard
+                        color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                        achieved={ach?.achieved}
+                      >
+                        {ach?.achieved == 1 && (
+                          <Unlocked>
+                            {formatDate(new Date(ach?.unlocktime * 1000))}
+                          </Unlocked>
+                        )}
+                        <AchIconOuter achieved={ach?.achieved}>
+                          <AchIcon
+                            icon={ach?.icon}
+                            onClick={() => {
+                              if (window !== "undefined") {
+                                const searchQuery = `${
+                                  ach?.displayName
+                                } achievement ${encodeURIComponent(
+                                  ach?.gameName
+                                )} `;
+                                window.open(
+                                  `https://www.google.com/search?q=${searchQuery}`
+                                );
+                                // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                              }
+                            }}
+                          ></AchIcon>
+                        </AchIconOuter>
+                        <AchData>
+                          <AchTitle>{ach?.displayName}</AchTitle>
+                          <AchDesc
+                            higher={ach?.description?.length > MAX_DESC}
+                            medium={ach?.description?.length > MEDIUM_DESC}
+                          >
+                            {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                          </AchDesc>
+                        </AchData>
+                        <Seperator padding={".25rem"} />
+                        <AchTrophy>
+                          <span
+                            style={{
+                              fontSize: ".5rem",
+                              transform: "translate(0.25rem, 0rem)",
+                            }}
+                          >
+                            {ach?.color == "Platinum" && <PlatinumIconS />}
+                            {ach?.color == "Gold" && <GoldIconS />}
+                            {ach?.color == "Silver" && <SilverIconS />}
+                            {ach?.color == "Bronze" && <BronzeIconS />}{" "}
                           </span>
-                          <span style={{ fontSize: ".35rem" }}>
-                            {ach?.label?.toUpperCase()}
-                          </span>
-                        </AchRarity>
-                      </AchTrophy>
-                    </AchCard>
-                  );
-                })}
+                          <AchRarity>
+                            <span style={{ fontSize: ".5rem" }}>
+                              {Number(ach?.percentage)?.toFixed(1)}%
+                            </span>
+                            <span style={{ fontSize: ".35rem" }}>
+                              {ach?.label?.toUpperCase()}
+                            </span>
+                          </AchRarity>
+                        </AchTrophy>
+                      </AchCard>
+                    );
+                  })}
               </Game2Line>
             </Games>
           )}
@@ -713,8 +643,8 @@ const Game2Line = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  max-height: 70vh;
-  min-height: 70vh;
+  max-height: 90vh;
+  min-height: 90vh;
   overflow-x: hidden;
   overflow-y: scroll;
   padding-bottom: 1rem;
@@ -967,8 +897,8 @@ const Games2LineR = styled.div`
   flex-wrap: wrap;
   flex-direction: column;
   width: 100%;
-  min-height: calc(87.25vh);
-  max-height: calc(87.25vh);
+  min-height: calc(98vh);
+  max-height: calc(98vh);
   overflow: scroll;
 `;
 
@@ -980,8 +910,8 @@ const Games = styled.div`
   flex-direction: column;
   color: #fefefe;
   font-size: 0.9rem;
-  min-height: calc(87.25vh);
-  max-height: calc(87.25vh);
+  min-height: calc(98vh);
+  max-height: calc(98vh);
   padding-top: 2rem;
   padding-bottom: 2rem;
 `;
