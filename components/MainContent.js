@@ -200,7 +200,15 @@ export default function MainContent({
       )}
       {gamesLoading && (
         <SRLeft>
-          <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+          <Games>
+            <Game2Line>
+              <span style={{ padding: "2rem" }}>
+                <Spin
+                  indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
+                />
+              </span>
+            </Game2Line>
+          </Games>
         </SRLeft>
       )}
       {!gamesLoading && (
