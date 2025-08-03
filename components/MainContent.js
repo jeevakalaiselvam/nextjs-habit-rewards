@@ -1263,14 +1263,23 @@ export default function MainContent({
                             </Unlocked>
                           )}
                           <Seperator padding={".25rem"} />
-                          <AchRarity>
-                            <span style={{ fontSize: "1.2rem" }}>
-                              {ach?.percentage}%
-                            </span>
-                            <span style={{ fontSize: ".7rem" }}>
-                              {ach?.label?.toUpperCase()}
-                            </span>
-                          </AchRarity>
+                          {ach?.color != "Platinum" && (
+                            <AchRarity>
+                              <span style={{ fontSize: "1.2rem" }}>
+                                {ach?.percentage}%
+                              </span>
+                              <span style={{ fontSize: ".7rem" }}>
+                                {ach?.label?.toUpperCase()}
+                              </span>
+                            </AchRarity>
+                          )}
+                          {ach?.color == "Platinum" && (
+                            <AchRarity>
+                              <span style={{ fontSize: ".7rem" }}>
+                                PLATINUM
+                              </span>
+                            </AchRarity>
+                          )}
                           <Seperator padding={".25rem"} />
                           <AchTrophy>
                             {ach?.color == "Platinum" && <PlatinumIconS />}
