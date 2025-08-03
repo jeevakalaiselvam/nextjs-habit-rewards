@@ -244,7 +244,17 @@ export default function MainContent({
     weeklyUnlocks,
   } = calculateLevelForAchs(games);
 
-  console.log({ levelAchs });
+  useEffect(() => {
+    if (window) {
+      let old = localStorage.getItem("SELECTED_TAB") ?? "LIBRARY";
+      let oldGameId = localStorage.getItem("SELECTED_GAME") ?? "";
+      const game = games?.filter((game) => +game?.id == +oldGameId);
+      console.log({ game, oldGameId, old });
+      setSelected(old);
+      setSelectedMode(old);
+      setSelectedGame(games?.find((game) => +game?.id == +oldGameId));
+    }
+  }, [games]);
 
   return (
     <Container>
@@ -272,26 +282,18 @@ export default function MainContent({
         <FRRight>
           <TabLink
             onClick={() => {
-              setSelected("GAMES");
-              setSelectedMode("GAMES");
-            }}
-            active={selectedMode == "GAMES"}
-            onMouseEnter={() => setActive("GAMES")}
-            onMouseLeave={() => setActive("")}
-          >
-            PROFILE
-          </TabLink>
-          {/* <TabLink
-            onClick={() => {
               setSelected("LIBRARY");
               setSelectedMode("LIBRARY");
+              if (window) {
+                localStorage.setItem("SELECTED_TAB", "LIBRARY");
+              }
             }}
             active={selectedMode == "LIBRARY"}
             onMouseEnter={() => setActive("LIBRARY")}
             onMouseLeave={() => setActive("")}
           >
-            PROGRESS
-          </TabLink> */}
+            PROFILE
+          </TabLink>
         </FRRight>
         <FRRight>
           <TabLink
@@ -898,6 +900,10 @@ export default function MainContent({
                         onClick={() => {
                           setSelectedGame(game);
                           setSelectedMode("GAME");
+                          if (window) {
+                            localStorage.setItem("SELECTED_TAB", "GAME");
+                            localStorage.setItem("SELECTED_GAME", game?.id);
+                          }
                         }}
                         color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                       >

@@ -152,7 +152,7 @@ export default function Atom() {
         <span style={{ transform: "translateY(2px)", marginRight: ".5rem" }}>
           <TbRefresh />
         </span>
-        <span>{refeshing ? "Updating Profile..." : "Update Profile"}</span>
+        <span>{refeshing ? "Refreshing..." : "Refresh"}</span>
       </RefreshButton>
     </Container>
   );
