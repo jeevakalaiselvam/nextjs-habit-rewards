@@ -500,24 +500,42 @@ export default function MainContent({
                           {formatDate(new Date(ach?.unlocktime * 1000))}
                         </Unlocked>
                       )}
-                      <AchIconOuter achieved={ach?.achieved}>
-                        <AchIcon
-                          icon={ach?.icon}
-                          onClick={() => {
-                            if (window !== "undefined") {
-                              const searchQuery = `${
-                                ach?.displayName
-                              } achievement ${encodeURIComponent(
-                                ach?.gameName
-                              )} `;
-                              window.open(
-                                `https://www.google.com/search?q=${searchQuery}`
-                              );
-                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                            }
-                          }}
-                        ></AchIcon>
-                      </AchIconOuter>
+                      {ach?.color != "Platinum" && (
+                        <AchIconOuter achieved={ach?.achieved}>
+                          <AchIcon
+                            icon={ach?.icon}
+                            onClick={() => {
+                              if (window !== "undefined") {
+                                const searchQuery = `${
+                                  ach?.displayName
+                                } achievement ${encodeURIComponent(
+                                  ach?.gameName
+                                )} `;
+                                window.open(
+                                  `https://www.google.com/search?q=${searchQuery}`
+                                );
+                                // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                              }
+                            }}
+                          ></AchIcon>
+                        </AchIconOuter>
+                      )}{" "}
+                      {ach?.color == "Platinum" && (
+                        <AchIconOuter achieved={ach?.achieved}>
+                          <span
+                            style={{
+                              width: "70px",
+                              height: "70px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              background: "#cccccc",
+                            }}
+                          >
+                            <PlatinumIcon />
+                          </span>
+                        </AchIconOuter>
+                      )}
                       <AchData>
                         <AchTitle>{ach?.displayName}</AchTitle>
                         <AchDesc
@@ -540,14 +558,21 @@ export default function MainContent({
                           {ach?.color == "Silver" && <SilverIconS />}
                           {ach?.color == "Bronze" && <BronzeIconS />}{" "}
                         </span>
-                        <AchRarity>
-                          <span style={{ fontSize: ".5rem" }}>
-                            {Number(ach?.percentage)?.toFixed(1)}%
-                          </span>
-                          <span style={{ fontSize: ".35rem" }}>
-                            {ach?.label?.toUpperCase()}
-                          </span>
-                        </AchRarity>
+                        {ach?.color != "Platinum" && (
+                          <AchRarity>
+                            <span style={{ fontSize: ".5rem" }}>
+                              {Number(ach?.percentage)?.toFixed(1)}%
+                            </span>
+                            <span style={{ fontSize: ".35rem" }}>
+                              {ach?.label?.toUpperCase()}
+                            </span>
+                          </AchRarity>
+                        )}{" "}
+                        {ach?.color == "Platinum" && (
+                          <AchRarity>
+                            <span style={{ fontSize: ".35rem" }}>PLATINUM</span>
+                          </AchRarity>
+                        )}
                       </AchTrophy>
                     </AchCard>
                   );
@@ -632,7 +657,7 @@ const AchDesc = styled.div`
     props.higher ? "80px" : props?.medium ? "60px" : "45px"};
   width: 100%;
   opacity: 0.75;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
 `;
 
 const AchIconOuter = styled.div`
