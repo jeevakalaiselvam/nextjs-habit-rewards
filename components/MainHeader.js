@@ -113,7 +113,7 @@ export default function MainHeader({
             setSelectedMode("GAMES");
           }}
         >
-          <Name>N7ShadowX</Name>
+          <Name>SpectreLogan</Name>
           <Subtext>Love to collect trophies!</Subtext>
         </NameSection>
         <HeaderProfileLevel
