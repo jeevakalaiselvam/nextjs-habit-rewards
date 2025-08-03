@@ -58,11 +58,11 @@ export default function MainContent({
 }) {
   const [gameHovered, setGameHovered] = useState("");
   const [selectedRarity, setSelectedRarity] = useState("COMMON");
-  const [selectedMode, setSelectedMode] = useState("LIBRARY");
+  const [selectedMode, setSelectedMode] = useState("GAMES");
   const [selectedGame, setSelectedGame] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selected, setSelected] = useState("LIBRARY");
-  const [active, setActive] = useState("LIBRARY");
+  const [selected, setSelected] = useState("GAMES");
+  const [active, setActive] = useState("GAMES");
   const [gameData, setGameData] = useState({});
   const [gameSearch, setGameSearch] = useState("");
   const [activeAch, setActiveAch] = useState(0);
@@ -292,17 +292,17 @@ export default function MainContent({
         <FRRight>
           <TabLink
             onClick={() => {
-              setSelected("LIBRARY");
-              setSelectedMode("LIBRARY");
+              setSelected("GAMES");
+              setSelectedMode("GAMES");
               if (window) {
-                localStorage.setItem("SELECTED_TAB", "LIBRARY");
+                localStorage.setItem("SELECTED_TAB", "GAMES");
               }
             }}
-            active={selectedMode == "LIBRARY"}
-            onMouseEnter={() => setActive("LIBRARY")}
+            active={selectedMode == "GAMES"}
+            onMouseEnter={() => setActive("GAMES")}
             onMouseLeave={() => setActive("")}
           >
-            LIBRARY
+            GAMES
           </TabLink>
         </FRRight>
         <FRRight>
@@ -1690,7 +1690,7 @@ const AchTitle = styled.div`
   color: #4486c6;
   justify-content: flex-start;
   flex: 2;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   width: 100%;
 `;
 
@@ -1702,7 +1702,7 @@ const AchDesc = styled.div`
   flex: 2;
   width: 100%;
   opacity: 0.75;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
 `;
 
 const AchUnlocked = styled.div`
@@ -1720,8 +1720,8 @@ const AchIconOuter = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 75px;
-  height: 75px;
+  width: 65px;
+  height: 65px;
   background: ${(props) =>
     props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
 `;
@@ -1730,8 +1730,8 @@ const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;
@@ -1744,7 +1744,7 @@ const AchData = styled.div`
   flex-direction: column;
   flex: 1;
   min-width: 300px;
-  height: 70px;
+  height: 60px;
 `;
 
 const DataContainer = styled.div`
