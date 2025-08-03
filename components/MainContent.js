@@ -58,11 +58,11 @@ export default function MainContent({
 }) {
   const [gameHovered, setGameHovered] = useState("");
   const [selectedRarity, setSelectedRarity] = useState("COMMON");
-  const [selectedMode, setSelectedMode] = useState("GAMES");
+  const [selectedMode, setSelectedMode] = useState("LIBRARY");
   const [selectedGame, setSelectedGame] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selected, setSelected] = useState("GAMES");
-  const [active, setActive] = useState("GAMES");
+  const [selected, setSelected] = useState("LIBRARY");
+  const [active, setActive] = useState("LIBRARY");
   const [gameData, setGameData] = useState({});
   const [gameSearch, setGameSearch] = useState("");
   const [activeAch, setActiveAch] = useState(0);
@@ -292,7 +292,7 @@ export default function MainContent({
             onMouseEnter={() => setActive("LIBRARY")}
             onMouseLeave={() => setActive("")}
           >
-            PROFILE
+            LIBRARY
           </TabLink>
         </FRRight>
         <FRRight>
