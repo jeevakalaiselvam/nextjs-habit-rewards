@@ -101,7 +101,7 @@ export default function MainHeader({ games, gamesLoading }) {
           <HeaderName>
             <Country></Country>
             <NameSection>
-              <Name>SpectreLogan</Name>
+              <Name>N7ShadowX</Name>
               <Subtext>Love to collect trophies!</Subtext>
             </NameSection>
           </HeaderName>
