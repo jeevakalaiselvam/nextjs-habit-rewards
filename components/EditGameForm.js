@@ -14,6 +14,7 @@ export default function EditGameForm({
   const [gameForm, setGameForm] = useState({
     id: gameData?.id,
     cover: gameData?.cover,
+    price: gameData?.price ?? 0,
     platinum: JSON.stringify(gameData?.platinum ?? []),
     dlc1Name: gameData?.dlc1Name,
     dlc2Name: gameData?.dlc2Name,
@@ -55,6 +56,7 @@ export default function EditGameForm({
       id: gameData?.id,
       cover: gameData?.cover,
       platinum: JSON.stringify(gameData?.platinum ?? []),
+      price: gameData?.price ?? 0,
       dlc1Name: gameData?.dlc1Name,
       dlc2Name: gameData?.dlc2Name,
       dlc3Name: gameData?.dlc3Name,
@@ -90,6 +92,16 @@ export default function EditGameForm({
           value={gameData?.id}
           onChange={(e) =>
             setGameForm((old) => ({ ...old, id: e.target.value }))
+          }
+        />
+      </Row>
+      <Row style={{ marginBottom: "1rem" }}>
+        <Input
+          placeholder="Enter Price..."
+          type="number"
+          value={gameData?.price}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, price: e.target.value }))
           }
         />
       </Row>

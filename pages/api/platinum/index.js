@@ -21,6 +21,7 @@ export default async function handler(req, res) {
       dlc3Image,
       dlc4Image,
       dlc5Image,
+      price,
     } = req.body;
 
     if (!id || !cover || !platinum) {
@@ -49,6 +50,7 @@ export default async function handler(req, res) {
         dlc3Image,
         dlc4Image,
         dlc5Image,
+        price,
       });
 
       res.status(201).json({ message: "Game added successfully" });

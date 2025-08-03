@@ -24,6 +24,7 @@ export default async function handler(req, res) {
       dlc3Image,
       dlc4Image,
       dlc5Image,
+      price,
     } = req.body;
 
     let parsedPlatinum;
@@ -69,6 +70,7 @@ export default async function handler(req, res) {
             dlc3Image,
             dlc4Image,
             dlc5Image,
+            price,
           },
         },
         { upsert: true }

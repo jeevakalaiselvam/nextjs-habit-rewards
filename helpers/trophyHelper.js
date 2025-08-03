@@ -20,7 +20,7 @@ const trophyPoints = {
 export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
   // Trophy points
   const platinumPoints = 300;
-  const goldPoints = 90;
+  const goldPoints = 30;
   const silverPoints = 30;
   const bronzePoints = 15;
 

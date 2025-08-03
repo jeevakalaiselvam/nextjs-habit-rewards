@@ -110,10 +110,20 @@ export default function MainContent({
     }
   });
 
+  let targetToGet = 0;
+  let targetObtained = 0;
+
+  targetToGet =
+    selectedGame?.price > 0 ? Math.ceil(selectedGame?.price / 100) : 1;
+
+  targetObtained = selectedGame?.completed;
+
   let completedBG = selectedGame?.achievements?.filter(
     (item) => item?.achieved == 1
   )?.length;
-  let completionBG = completedBG == 0 ? 0 : (completedBG / totalBG) * 100;
+
+  let completionBG =
+    completedBG == 0 ? 0 : (targetObtained / targetToGet) * 100;
 
   let { color, rank } = calculateRankForCompletion(completionBG ?? 0);
   let lastAch = selectedGame?.achievements?.sort(
@@ -881,8 +891,17 @@ export default function MainContent({
                     let completed = game?.achievements?.filter(
                       (item) => item?.achieved == 1
                     )?.length;
+
+                    let targetToGet = 0;
+                    let targetObtained = 0;
+
+                    targetToGet =
+                      game?.price > 0 ? Math.ceil(game?.price / 100) : 1;
+
+                    targetObtained = game?.completed;
+
                     let completion = (
-                      completed == 0 ? 0 : (completed / total) * 100
+                      completed == 0 ? 0 : (targetObtained / targetToGet) * 100
                     )?.toFixed(2);
                     allCompletion = allCompletion + completion;
                     if (total == completed) {
@@ -930,8 +949,9 @@ export default function MainContent({
                             {game?.name}
                           </GameTitle>
                           <GameCompletionCD>
-                            {completed} of {total} Trophies
-                          </GameCompletionCD>
+                            {targetObtained} of {targetToGet} Trophies
+                          </GameCompletionCD>{" "}
+                          <GamePrice>Rs {game?.price}</GamePrice>
                           <Started></Started>
                         </GameDataCD>
                         <GameInfoCD>
@@ -989,9 +1009,12 @@ export default function MainContent({
                             </TBottom>
                           </Trophies>
                           <Seperator></Seperator>
-                          <Platinum isPlatinum={total == completed}>
+                          <Platinum isPlatinum={targetObtained == targetToGet}>
                             <span
-                              style={{ opacity: total == completed ? 1 : 0.25 }}
+                              style={{
+                                opacity:
+                                  targetObtained == targetToGet ? 1 : 0.25,
+                              }}
                             >
                               <PlatinumIcon />
                             </span>
@@ -1000,10 +1023,11 @@ export default function MainContent({
                                 fontSize: ".7rem",
                                 marginTop: "4px",
                                 fontWeight: "bold",
-                                opacity: total == completed ? 1 : 0.75,
+                                opacity:
+                                  targetObtained == targetToGet ? 1 : 0.75,
                               }}
                             >
-                              {lastAch?.percentage} %
+                              {/* {lastAch?.percentage} % */}
                             </span>
                           </Platinum>
                         </GameInfoCD>
@@ -2059,6 +2083,16 @@ const GameCompletionCD = styled.div`
   font-size: 0.75rem;
   padding: 0.5rem;
   color: #666666;
+`;
+
+const GamePrice = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  padding: 0.5rem;
+  color: #666666;
+  color: ${COLOR_GREEN2};
 `;
 
 const Started = styled.div`
