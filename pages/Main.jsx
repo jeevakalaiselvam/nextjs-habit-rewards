@@ -112,19 +112,7 @@ export default function Atom() {
       formedGame = {
         ...game,
         ...platinumGameData,
-        achievements: [
-          ...sortedPlatinumTrophies,
-          {
-            displayName: `Platinum`,
-            description: `Achieved all Trophies in game`,
-            hiddenDesc: `${game?.name}`,
-            percentage: 100,
-            label: getRarityBasedOnRarity(lastAch?.percentage),
-            color: "Platinum",
-            achieved: isCompleted ? 1 : 0,
-            icon: "../icons/platinum.jpg",
-          },
-        ],
+        achievements: [...sortedPlatinumTrophies],
       };
 
       return formedGame;
