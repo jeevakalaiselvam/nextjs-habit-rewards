@@ -814,12 +814,14 @@ export default function MainContent({
                                 </span>
                               </TSingle>
                             </TTop>
-                            <TBottom>
-                              <Outer>
-                                <Inner percentage={completion}></Inner>
-                                <Text>{completion} %</Text>
-                              </Outer>
-                            </TBottom>
+                            {false && (
+                              <TBottom>
+                                <Outer>
+                                  <Inner percentage={completion}></Inner>
+                                  <Text>{completion} %</Text>
+                                </Outer>
+                              </TBottom>
+                            )}
                           </Trophies>
                           <Seperator></Seperator>
                           <Platinum isPlatinum={total == completed}>
@@ -1671,7 +1673,7 @@ const TTop = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: translateX(0.25rem);
+  transform: translate(0.25rem, 0.25rem);
 `;
 
 const TBottom = styled.div`
