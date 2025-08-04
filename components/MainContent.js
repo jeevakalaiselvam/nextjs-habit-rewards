@@ -194,7 +194,7 @@ export default function MainContent({
       )}
       {!gamesLoading && (
         <SRLeft>
-          {selectedMode == "GAME" && (
+          {selectedMode == "GAMES" && (
             <Games>
               <Games2LineR>
                 {sortedGames?.map((game, index) => {
@@ -389,10 +389,10 @@ export default function MainContent({
               </Games2LineR>
             </Games>
           )}
-          {selectedMode == "GAMES" && (
+          {selectedMode == "GAME" && (
             <Games>
               <Game2Line>
-                {allUnlockedAchs?.map((ach, index) => {
+                {selectedGame?.achievements?.map((ach, index) => {
                   let desc1 = ach?.hiddenDesc;
                   let desc2 = ach?.description;
                   let desc3 = ach?.hiddenDesc?.split(
@@ -575,7 +575,8 @@ const AchIconOuter = styled.div`
   width: 75px;
   height: 75px;
   margin-left: 0.25rem;
-  transform: translateY(0.5rem);
+  transform: ${(props) =>
+    props?.achieved ? "translateY(0.5rem)" : "translateY(0rem)"};
   background: ${(props) =>
     props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
 `;
