@@ -138,6 +138,7 @@ export default function Atom() {
         games={finalGames}
         setSelectedMode={setSelectedMode}
         refreshData={refreshData}
+        gamesLoading={gamesLoading}
       />
       <MainContent
         games={finalGames}

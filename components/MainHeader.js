@@ -27,6 +27,7 @@ export default function MainHeader({
   selectedMode,
   setSelectedMode,
   refreshData,
+  gamesLoading,
 }) {
   let image =
     "https://4kwallpapers.com/images/wallpapers/hogwarts-legacy-winter-1920x1200-20034.jpeg";
@@ -116,25 +117,28 @@ export default function MainHeader({
           <Name>N7ShadowX</Name>
           <Subtext>Love to collect trophies!</Subtext>
         </NameSection>
-        <HeaderProfileLevel
-          onClick={() => {
-            refreshData();
-          }}
-        >
-          <LevelIconWrapper>
-            <LevelIcon />
-          </LevelIconWrapper>
-          <LevelData>
-            <LevelData1>{level}</LevelData1>
-            <LevelData2 color={COLOR_GOLD + "55"}>
-              <LevelInner
-                color={COLOR_GOLD}
-                percent={progressPercent}
-              ></LevelInner>
-            </LevelData2>
-            <ToNext>{remainingXP} XP</ToNext>
-          </LevelData>
-        </HeaderProfileLevel>
+        {
+          <HeaderProfileLevel
+            onClick={() => {
+              refreshData();
+            }}
+          >
+            <LevelIconWrapper>
+              <LevelIcon />
+            </LevelIconWrapper>
+            <LevelData>
+              <LevelData1>{gamesLoading ? "..." : level}</LevelData1>
+              <LevelData2 color={COLOR_GOLD + "55"}>
+                <LevelInner
+                  color={COLOR_GOLD}
+                  percent={progressPercent}
+                ></LevelInner>
+              </LevelData2>
+              {!gamesLoading && <ToNext>{remainingXP} XP</ToNext>}
+              {gamesLoading && <ToNext>...</ToNext>}
+            </LevelData>
+          </HeaderProfileLevel>
+        }
       </HeaderName>
       <HeaderCounts>
         <Section color={COLOR_WHITE}>
