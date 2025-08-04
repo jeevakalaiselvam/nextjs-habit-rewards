@@ -350,24 +350,16 @@ export default function MainContent({
                                 </TBottom>
                               </Trophies>
                               <Seperator></Seperator>
-                              <Platinum isPlatinum={total == completed}>
+                              <Platinum
+                                isPlatinum={targetObtained == targetToGet}
+                              >
                                 <span
                                   style={{
-                                    opacity: total == completed ? 1 : 0.25,
+                                    opacity:
+                                      targetObtained == targetToGet ? 1 : 0.25,
                                   }}
                                 >
                                   <PlatinumIcon />
-                                </span>
-                                <span
-                                  style={{
-                                    fontSize: ".7rem",
-                                    marginTop: "4px",
-                                    fontWeight: "bold",
-                                    opacity: total == completed ? 1 : 0.75,
-                                    transform: "translateX(.25rem)",
-                                  }}
-                                >
-                                  {Number(lastAch?.percentage)} %
                                 </span>
                               </Platinum>
                               <Seperator></Seperator>
