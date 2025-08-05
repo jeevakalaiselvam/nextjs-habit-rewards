@@ -1758,7 +1758,7 @@ const GameHours = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
-  padding: 0.125rem 0.5rem 0.125rem 0;
+  padding: 0.25rem 0.5rem 0.125rem 0;
   color: #666666;
 `;
 
