@@ -258,6 +258,7 @@ export default function MainContent({
                       ? 0
                       : (targetObtained / targetToGet) * 100
                   )?.toFixed(2);
+                  completion = completion >= 100 ? 100 : completion;
                   allCompletion = allCompletion + completion;
                   if (total == completed) {
                     completed = completed + 1;
