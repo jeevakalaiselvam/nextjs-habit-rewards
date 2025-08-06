@@ -181,6 +181,10 @@ export default function MainContent({
     });
   });
 
+  allUnlockedAchs = allUnlockedAchs?.sort(
+    (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
+  );
+
   return (
     <Container>
       {showEditModal && (
