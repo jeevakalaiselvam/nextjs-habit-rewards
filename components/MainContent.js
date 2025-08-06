@@ -194,7 +194,7 @@ export default function MainContent({
       )}
       {!gamesLoading && (
         <SRLeft>
-          {selectedMode == "GAMES" && (
+          {selectedMode == "GAME" && (
             <Games>
               <Games2LineR>
                 {sortedGames?.map((game, index) => {
@@ -392,10 +392,10 @@ export default function MainContent({
               </Games2LineR>
             </Games>
           )}
-          {selectedMode == "GAME" && (
+          {selectedMode == "GAMES" && (
             <Games>
               <Game2Line>
-                {selectedGame?.achievements?.map((ach, index) => {
+                {allUnlockedAchs?.map((ach, index) => {
                   let desc1 = ach?.hiddenDesc;
                   let desc2 = ach?.description;
                   let desc3 = ach?.hiddenDesc?.split(
