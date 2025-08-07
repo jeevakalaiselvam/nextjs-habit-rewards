@@ -249,8 +249,22 @@ export default function MainContent({
                   let targetToGet = 0;
                   let targetObtained = 0;
 
+                  let FACTOR = 50;
+
+                  if (game?.price > 0 && game?.price <= 500) {
+                    FACTOR = 25;
+                  } else if (game?.price > 500 && game?.price <= 1000) {
+                    FACTOR = 50;
+                  } else if (game?.price > 1000 && game?.price <= 2000) {
+                    FACTOR = 75;
+                  } else if (game?.price > 2000 && game?.price <= 3000) {
+                    FACTOR = 100;
+                  } else if (game?.price > 3000) {
+                    FACTOR = 125;
+                  }
+
                   targetToGet =
-                    game?.price > 0 ? Math.ceil(game?.price / 100) : 1;
+                    game?.price > 0 ? Math.ceil(game?.price / FACTOR) : 1;
 
                   targetObtained = game?.completed;
 
@@ -368,6 +382,21 @@ export default function MainContent({
                                   }}
                                 >
                                   <PlatinumIcon />
+                                </span>
+                                <span
+                                  style={{
+                                    fontSize: ".75rem",
+                                    margin: ".25rem",
+                                    transform: "translateX(.25rem)",
+                                    opacity:
+                                      targetObtained == targetToGet ? 1 : 0.25,
+                                    color: generateDarkTextColorForLightBg(
+                                      "#b9c7e5",
+                                      20
+                                    ),
+                                  }}
+                                >
+                                  {lastAch?.percentage} %
                                 </span>
                               </Platinum>
                               <Seperator></Seperator>
