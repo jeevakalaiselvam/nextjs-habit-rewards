@@ -33,12 +33,16 @@ export const TROPHY_GAMES_OPTIONS = [
     color: "Bronze",
   },
   {
-    name: "Complete a Challenge",
+    name: "Complete a Easy Challenge",
     color: "Bronze",
   },
   {
-    name: "Complete a Side Mission",
+    name: "Complete a Hard Challenge",
     color: "Silver",
+  },
+  {
+    name: "Complete a Side Mission",
+    color: "Gold",
   },
   {
     name: "Complete a Main Mission",
