@@ -29,11 +29,11 @@ export const TROPHY_GAME_LIST = [
 
 export const TROPHY_GAMES_OPTIONS = [
   {
-    name: "Complete a Challenge or Objective",
+    name: "Get 5 Kills",
     color: "Bronze",
   },
   {
-    name: "Get 10 Kills",
+    name: "Complete a Challenge",
     color: "Bronze",
   },
   {
@@ -41,15 +41,15 @@ export const TROPHY_GAMES_OPTIONS = [
     color: "Silver",
   },
   {
+    name: "Complete a Main Mission",
+    color: "Gold",
+  },
+  {
     name: "Defeat a Boss",
     color: "Gold",
   },
   {
-    name: "Complete a Mission or Level",
-    color: "Gold",
-  },
-  {
-    name: "Complete a Game",
+    name: "Complete the Game",
     color: "Platinum",
   },
 ];

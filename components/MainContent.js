@@ -457,7 +457,7 @@ export default function MainContent({
                         {ach?.color == "Platinum" && "300 XP"}
                         {ach?.color == "Gold" && "90 XP"}
                         {ach?.color == "Silver" && "30 XP"}
-                        {ach?.color == "Bronze" && "5 XP"}
+                        {ach?.color == "Bronze" && "15 XP"}
                       </span>
                       <span style={{ fontSize: ".35rem" }}>
                         {ach?.color == "Platinum" && "PLATINUM"}
@@ -694,7 +694,7 @@ export default function MainContent({
                             {ach?.color == "Platinum" && "300 XP"}
                             {ach?.color == "Gold" && "90 XP"}
                             {ach?.color == "Silver" && "60 XP"}
-                            {ach?.color == "Bronze" && "5 XP"}
+                            {ach?.color == "Bronze" && "15 XP"}
                           </span>
                           <span style={{ fontSize: ".35rem" }}>
                             {ach?.color == "Platinum" && "PLATINUM"}
