@@ -38,7 +38,7 @@ export const TROPHY_GAMES_OPTIONS = [
   },
   {
     name: "Solve a Puzzle",
-    color: "Bronze",
+    color: "Silver",
   },
   {
     name: "Defeat 1 Boss",
