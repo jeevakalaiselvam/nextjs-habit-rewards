@@ -4,6 +4,7 @@ import {
   COLOR_BRONZE,
   COLOR_GOLD,
   COLOR_GREEN,
+  COLOR_PLATINUM,
   COLOR_SILVER,
   COLOR_SILVER2,
   COLOR_UNLOCKED,
@@ -442,24 +443,31 @@ export default function MainContent({
                           {formatDate(new Date(ach?.unlocktime * 1000))}
                         </Unlocked>
                       )}
-                      <AchIconOuter achieved={ach?.achieved}>
-                        <AchIcon
-                          icon={ach?.icon}
-                          onClick={() => {
-                            if (window !== "undefined") {
-                              const searchQuery = `${
-                                ach?.displayName
-                              } achievement ${encodeURIComponent(
-                                ach?.gameName
-                              )} `;
-                              window.open(
-                                `https://www.google.com/search?q=${searchQuery}`
-                              );
-                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                            }
-                          }}
-                        ></AchIcon>
-                      </AchIconOuter>
+                      {ach?.color != "Platinum" && (
+                        <AchIconOuter achieved={ach?.achieved}>
+                          <AchIcon
+                            icon={ach?.icon}
+                            onClick={() => {
+                              if (window !== "undefined") {
+                                const searchQuery = `${
+                                  ach?.displayName
+                                } achievement ${encodeURIComponent(
+                                  ach?.gameName
+                                )} `;
+                                window.open(
+                                  `https://www.google.com/search?q=${searchQuery}`
+                                );
+                                // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                              }
+                            }}
+                          ></AchIcon>
+                        </AchIconOuter>
+                      )}
+                      {ach?.color == "Platinum" && (
+                        <AchIconOuterPlatinum achieved={ach?.achieved}>
+                          <PlatinumIcon />
+                        </AchIconOuterPlatinum>
+                      )}
                       <AchData>
                         <AchTitle>{ach?.displayName}</AchTitle>
                         <AchDesc
@@ -587,6 +595,18 @@ const AchIconOuter = styled.div`
     props?.achieved ? "translateY(0.5rem)" : "translateY(0rem)"};
   background: ${(props) =>
     props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
+`;
+
+const AchIconOuterPlatinum = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  margin-left: 0.25rem;
+  transform: ${(props) =>
+    props?.achieved ? "translateY(0.5rem)" : "translateY(0rem)"};
+  background: ${(props) => (props.achieved ? "#e6e6e6ff" : "#e6e6e6ff")};
 `;
 
 const AchIcon = styled.div`
