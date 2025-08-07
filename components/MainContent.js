@@ -784,8 +784,7 @@ const ProgressContainer = styled.div`
   justify-content: center;
   width: 100%;
   height: 40px;
-  color: #fefefe;
-  background-color: ${COLOR_BACKGROUND};
+  color: ${COLOR_BACKGROUND};
 `;
 
 const ProgressLeft = styled.div`
