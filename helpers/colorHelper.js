@@ -94,7 +94,7 @@ export const generateSimilarColor = () => {
   return hslToHex(newH, newS, newL);
 };
 
-export const generateDarkTextColorForLightBg = (hex, darkenPercent = 40) => {
+export const agenerateDarkTextColorForLightBg = (hex, darkenPercent = 40) => {
   let newHex = hex ? hex : "#333333";
   const amt = Math.round(2.55 * darkenPercent);
 

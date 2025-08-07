@@ -4,11 +4,13 @@ import {
   COLOR_BRONZE,
   COLOR_GOLD,
   COLOR_GREEN,
+  COLOR_PLATINUM,
   COLOR_SILVER,
   COLOR_SILVER2,
   COLOR_UNLOCKED,
   COLOR_UNLOCKED_DARK,
   COLOR_UNLOCKED_TEXT,
+  COLOR_WHITE,
   generateDarkTextColorForLightBg,
 } from "../helpers/colorHelper";
 import { useState } from "react";
@@ -38,11 +40,12 @@ import {
   TROPHY_GAME_OPTIONS,
   TROPHY_GAMES_OPTIONS,
 } from "../helpers/optionHelper";
-import { Collapse, Modal, theme } from "antd";
+import { Collapse, Modal, Progress, theme } from "antd";
 import SilverIcon from "./SilverIcon";
 import BronzeIcon from "./BronzeIcon";
 import axios from "axios";
 import CreateAchForm from "./CreateAchForm";
+import WhiteTrophy from "./WhiteTrophy";
 
 const MAX_DESC = 80;
 const MEDIUM_DESC = 60;
@@ -65,6 +68,14 @@ export default function MainContent({
   const [gameData, setGameData] = useState({});
   const [showLevelUpModal, setShowLevelUpModal] = useState(null);
   const [formData, setFormData] = useState({});
+  const [levelLeft, setLevelLeft] = useState(0);
+  const [levelRight, setLevelRight] = useState(0);
+  const [platinumC, setPLatinumC] = useState(0);
+  const [goldC, setGoldC] = useState(0);
+  const [silverC, setSilverC] = useState(0);
+  const [bronzeC, setBronzeC] = useState(0);
+  const [levelProgress, setLevelProgress] = useState(0);
+  const [xpNeeded, setXPNeeded] = useState(0);
 
   const addTrophy = () => {
     try {
@@ -163,6 +174,122 @@ export default function MainContent({
   let allUnlockedAchs = [];
 
   allUnlockedAchs = games;
+
+  const triggerLevelUpAnimation = (color) => {
+    setShowLevelUpModal(true);
+    let completed = 0;
+    let allCompletion = 0;
+    let unearned = 0;
+    let platinumA = 0;
+    let goldA = 0;
+    let silverA = 0;
+    let bronzeA = 0;
+    let platinum = 0;
+    let gold = 0;
+    let silver = 0;
+    let bronze = 0;
+    let total = 0;
+
+    games?.forEach((ach) => {
+      if (ach?.color == "Platinum") {
+        platinum++;
+        total++;
+      }
+      if (ach?.color == "Gold") {
+        gold++;
+        total++;
+      }
+      if (ach?.color == "Silver") {
+        silver++;
+        total++;
+      }
+      if (ach?.color == "Bronze") {
+        bronze++;
+        total++;
+      }
+    });
+
+    let averageCompletion =
+      allCompletion == 0 ? 0 : allCompletion / games?.length;
+
+    let { progressPercent, level, xpForNextLevel, remainingXP } =
+      calculatePSLevelAndProgress(platinum, gold, silver, bronze);
+
+    setLevelLeft(level);
+    setLevelRight(level + 1);
+    setPLatinumC(platinum);
+    setGoldC(gold);
+    setSilverC(silver);
+    setBronzeC(bronze);
+    setLevelProgress(progressPercent);
+    setXPNeeded(xpForNextLevel);
+
+    setTimeout(() => {
+      let completed = 0;
+      let allCompletion = 0;
+      let unearned = 0;
+      let platinumA = 0;
+      let goldA = 0;
+      let silverA = 0;
+      let bronzeA = 0;
+      let platinum = 0;
+      let gold = 0;
+      let silver = 0;
+      let bronze = 0;
+      let total = 0;
+
+      games?.forEach((ach) => {
+        if (ach?.color == "Platinum") {
+          platinum++;
+          total++;
+        }
+        if (ach?.color == "Gold") {
+          gold++;
+          total++;
+        }
+        if (ach?.color == "Silver") {
+          silver++;
+          total++;
+        }
+        if (ach?.color == "Bronze") {
+          bronze++;
+          total++;
+        }
+      });
+
+      if (color == "Platinum") {
+        platinum++;
+        total++;
+      }
+      if (color == "Gold") {
+        gold++;
+        total++;
+      }
+      if (color == "Silver") {
+        silver++;
+        total++;
+      }
+      if (color == "Bronze") {
+        bronze++;
+        total++;
+      }
+
+      let averageCompletion =
+        allCompletion == 0 ? 0 : allCompletion / games?.length;
+
+      let { progressPercent, level, xpForNextLevel, remainingXP } =
+        calculatePSLevelAndProgress(platinum, gold, silver, bronze);
+
+      setLevelLeft(level);
+      setLevelRight(level + 1);
+      setPLatinumC(platinum);
+      setGoldC(gold);
+      setSilverC(silver);
+      setBronzeC(bronze);
+      setLevelProgress(progressPercent);
+      setXPNeeded(xpForNextLevel);
+    }, 2000);
+  };
 
   const getItems = (panelStyle) => [
     ...TROPHY_GAME_LIST?.map((game, index) => {
@@ -308,15 +435,20 @@ export default function MainContent({
                   color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                   achieved={false}
                   onClick={() => {
-                    setShowCreatModal(true);
-                    setFormData((old) => ({
-                      title: ach?.name,
-                      color: ach?.color,
-                      name: game?.name,
-                    }));
+                    if (!showLevelUpModal) {
+                      setFormData((old) => ({
+                        title: ach?.name,
+                        color: ach?.color,
+                        name: game?.name,
+                      }));
 
-                    if (window) {
-                      localStorage.setItem("OPEN_ACCORDION", game?.name);
+                      triggerLevelUpAnimation(ach?.color);
+
+                      // setShowCreatModal(true);
+
+                      if (window) {
+                        localStorage.setItem("OPEN_ACCORDION", game?.name);
+                      }
                     }
                   }}
                 >
@@ -410,6 +542,95 @@ export default function MainContent({
 
   return (
     <Container>
+      {showLevelUpModal && (
+        <LevelUpContainer
+          onClick={() => {
+            setShowLevelUpModal(false);
+          }}
+        >
+          <LevelUpInner>
+            <TrophyContainer>
+              <div style={{ fontSize: "2rem", padding: "1rem" }}>Level</div>
+            </TrophyContainer>
+            <TrophyContainer>
+              <HeaderCounts>
+                <Section color={COLOR_PLATINUM}>
+                  <Top>
+                    <span
+                      style={{
+                        transform: "translateY(-2.5px)",
+                        marginRight: ".25rem",
+                      }}
+                    >
+                      <PlatinumIcon />
+                    </span>
+                    <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+                      {platinumC}
+                    </span>
+                  </Top>
+                </Section>
+                <Section color={COLOR_GOLD}>
+                  <Top>
+                    <span
+                      style={{
+                        transform: "translateY(-2.5px)",
+                        marginRight: ".25rem",
+                      }}
+                    >
+                      <GoldIcon />
+                    </span>
+                    <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+                      {goldC}
+                    </span>
+                  </Top>
+                </Section>
+                <Section color={COLOR_SILVER}>
+                  <Top>
+                    <span
+                      style={{
+                        transform: "translateY(-2.5px)",
+                        marginRight: ".25rem",
+                      }}
+                    >
+                      <SilverIcon />
+                    </span>
+                    <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+                      {silverC}
+                    </span>
+                  </Top>
+                </Section>
+                <Section color={COLOR_BRONZE}>
+                  <Top>
+                    <span
+                      style={{
+                        transform: "translateY(-2.5px)",
+                        marginRight: ".25rem",
+                      }}
+                    >
+                      <BronzeIcon />
+                    </span>
+                    <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+                      {bronzeC}
+                    </span>
+                  </Top>
+                </Section>
+              </HeaderCounts>
+            </TrophyContainer>
+            <ProgressContainer>
+              <ProgressLeft>Level {levelLeft}</ProgressLeft>
+              <ProgressMiddle>
+                <XPNeeded>
+                  <span style={{ fontSize: ".8rem", opacity: ".75" }}>
+                    {xpNeeded} XP
+                  </span>
+                </XPNeeded>
+                <Progress percent={levelProgress} showInfo={false} />
+              </ProgressMiddle>
+              <ProgressRight>Level {levelRight}</ProgressRight>
+            </ProgressContainer>
+          </LevelUpInner>
+        </LevelUpContainer>
+      )}
       {showCreateModal && (
         <Modal
           title="Log Trophy"
@@ -426,7 +647,7 @@ export default function MainContent({
         </Modal>
       )}
       {!gamesLoading && (
-        <SRLeft>
+        <SRLeft showLevelUpModal={showLevelUpModal}>
           {selectedMode == "GAMES" && (
             <Games>
               <Games2LineR>
@@ -516,6 +737,94 @@ export default function MainContent({
   );
 }
 
+const HeaderCounts = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  width: 100%;
+  padding: 0.25rem;
+`;
+
+const Section = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0 1rem;
+  flex: 1;
+  color: ${(props) => props.color};
+`;
+
+const Top = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 300;
+`;
+
+const ProgressContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+`;
+
+const ProgressLeft = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0.5rem;
+`;
+
+const ProgressMiddle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 1rem 0.5rem;
+  position: relative;
+`;
+
+const XPNeeded = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 0;
+`;
+
+const ProgressRight = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0.5rem;
+`;
+
+const TrophyContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  margin-bottom: 0.25rem;
+`;
+
+const LevelUpInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  color: #333;
+  padding: 1rem;
+  min-height: 20vh;
+`;
+
 const LevelUpContainer = styled.div`
   display: flex;
   align-items: center;
@@ -523,17 +832,33 @@ const LevelUpContainer = styled.div`
   position: absolute;
   left: 50%;
   width: 80%;
-  background-color: cyan;
-  min-height: 70vh;
-  top: 50%;
+  top: 20%;
   z-index: 1000;
   transform: translate(-50%, -50%);
-`;
+  position: absolute;
+  background-size: contain;
+  background-color: #fefefe;
+  min-height: 20vh;
+  padding: 1rem;
 
-const ItemRight = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border: 1px solid #ffd700;
+  color: #ffd700;
+  padding: 16px 24px;
+  border-radius: 8px;
+  text-align: center;
+
+  box-shadow: 0 0 8px #ffd700;
+  animation: goldBreath 2s ease-in-out infinite;
+
+  @keyframes goldBreath {
+    0%,
+    100% {
+      box-shadow: 0 0 10px #ffd700, 0 0 12px #ffa500;
+    }
+    50% {
+      box-shadow: 0 0 30px #ffd700, 0 0 32px #ffa500;
+    }
+  }
 `;
 
 const ItemsContainer = styled.div`
@@ -606,7 +931,7 @@ const AchTitle = styled.div`
   color: #4486c6;
   justify-content: flex-start;
   height: 20px;
-  font-size: 0.7;
+  font-size: 0.8rem;
   width: 100%;
 `;
 
@@ -617,8 +942,8 @@ const AchDesc = styled.div`
   padding-left: 0.5rem;
   height: 40px;
   width: 100%;
-  opacity: 0.75;
-  font-size: 0.65rem;
+  opacity: 0.8;
+  font-size: 0.7rem;
 `;
 
 const AchIconOuter = styled.div`
@@ -991,6 +1316,7 @@ const SRLeft = styled.div`
   justify-content: center;
   flex-direction: column;
   width: 100%;
+  filter: ${(props) => (props.showLevelUpModal ? "blur(2px)" : "")};
 `;
 
 const Container = styled.div`
