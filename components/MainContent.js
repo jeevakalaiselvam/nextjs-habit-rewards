@@ -311,7 +311,7 @@ export default function MainContent({
                                 {game?.name}
                               </GameTitle>
                               <GameCompletion>
-                                {targetObtained} of {targetToGet} Trophies
+                                {completed} of {total} Trophies
                               </GameCompletion>
                             </GameData>
                           </GRTop>
@@ -359,24 +359,21 @@ export default function MainContent({
                                 <TBottom>
                                   <Outer>
                                     <Inner
-                                      percentage={Number(completion)?.toFixed(
-                                        1
-                                      )}
+                                      percentage={Number(
+                                        game?.completion
+                                      )?.toFixed(1)}
                                     ></Inner>
                                     <Text>
-                                      {Number(completion)?.toFixed(1)} %
+                                      {Number(game?.completion)?.toFixed(1)} %
                                     </Text>
                                   </Outer>
                                 </TBottom>
                               </Trophies>
                               <Seperator></Seperator>
-                              <Platinum
-                                isPlatinum={targetObtained == targetToGet}
-                              >
+                              <Platinum isPlatinum={completed == total}>
                                 <span
                                   style={{
-                                    opacity:
-                                      targetObtained == targetToGet ? 1 : 0.25,
+                                    opacity: completed == total ? 1 : 0.25,
                                   }}
                                 >
                                   <PlatinumIcon />
@@ -386,8 +383,7 @@ export default function MainContent({
                                     fontSize: ".75rem",
                                     margin: ".25rem",
                                     transform: "translateX(.25rem)",
-                                    opacity:
-                                      targetObtained == targetToGet ? 1 : 0.25,
+                                    opacity: completed == total ? 1 : 0.25,
                                     color: generateDarkTextColorForLightBg(
                                       "#b9c7e5",
                                       20
