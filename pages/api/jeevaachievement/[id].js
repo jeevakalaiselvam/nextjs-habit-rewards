@@ -45,7 +45,7 @@ export default async function handler(req, res) {
       const { value } = req.query;
 
       const result = await db
-        .collection(req.query.value)
+        .collection("allgames")
         .deleteOne({ _id: new ObjectId(id) });
 
       if (result.deletedCount === 1) {

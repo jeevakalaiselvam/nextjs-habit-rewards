@@ -10,6 +10,7 @@ import {
   getRarityBasedOnRarity,
 } from "../helpers/achHelper";
 import MainContentNew from "../components/MainContentNew";
+import CreateAchForm from "../components/CreateAchForm";
 
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
@@ -18,13 +19,13 @@ export default function Atom() {
   const [platinumData, setPlatinumData] = useState([]);
   const [finalGames, setFinalGames] = useState([]);
   const [selectedMode, setSelectedMode] = useState("GAMES");
-  const [refeshing, setRefreshing] = useState(false);
+  const [showCreateModal, setShowCreatModal] = useState(false);
 
   const refreshSteamGames = () => {
     setGamesLoading(true);
     try {
-      axios.get("/api/steam").then((response) => {
-        setGames(response?.data?.data ?? []);
+      axios.get("/api/jeevaachievement").then((response) => {
+        setGames(response?.data ?? []);
         setGamesLoading(false);
       });
     } catch (e) {
@@ -32,21 +33,8 @@ export default function Atom() {
     }
   };
 
-  const refreshPlatinumData = () => {
-    setPlatinumDataLoading(true);
-    try {
-      axios.get("/api/platinum").then((response) => {
-        setPlatinumData(response?.data);
-        setPlatinumDataLoading(false);
-      });
-    } catch (e) {
-      setPlatinumDataLoading(false);
-    }
-  };
-
   const refreshData = () => {
     refreshSteamGames();
-    refreshPlatinumData();
   };
 
   useEffect(() => {
@@ -55,87 +43,33 @@ export default function Atom() {
     }
   }, []);
 
-  useEffect(() => {
-    let finalGames = [];
-
-    finalGames = games?.map((game) => {
-      let platinumGameData = platinumData?.find((item) => item?.id == game?.id);
-      let formedGame = {};
-      let platinumMapper = {};
-      let dlcMapper = {};
-
-      platinumGameData?.platinum?.forEach((ach) => {
-        platinumMapper[ach?.title] = ach;
-      });
-
-      console.log({ platinumMapper });
-
-      platinumGameData?.dlc1Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC1" };
-      });
-      platinumGameData?.dlc2Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC2" };
-      });
-      platinumGameData?.dlc3Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC3" };
-      });
-      platinumGameData?.dlc4Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC4" };
-      });
-      platinumGameData?.dlc5Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC5" };
-      });
-
-      let gameName = game?.achievements?.[0]?.gameName;
-
-      let sortedPlatinumTrophies = game?.achievements
-        ?.map((ach) => {
-          return {
-            ...ach,
-            label: getRarityBasedOnRarity(ach?.percentage),
-            color: getColorBasedOnRarity(ach?.percentage),
-            title: ach?.displayName,
-            hiddenDesc: platinumMapper[ach?.displayName]?.description,
-          };
-        })
-        ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
-
-      let lastAch =
-        sortedPlatinumTrophies?.[sortedPlatinumTrophies?.length - 1];
-
-      let total = sortedPlatinumTrophies?.length;
-      let completed = sortedPlatinumTrophies?.filter(
-        (ach) => ach?.achieved == "1"
-      )?.length;
-      let isCompleted = total == completed;
-
-      formedGame = {
-        ...game,
-        ...platinumGameData,
-        achievements: [...sortedPlatinumTrophies],
-      };
-
-      return formedGame;
-    });
-    setFinalGames(finalGames);
-  }, [games, platinumData]);
-
   return (
     <Container>
       <MainHeader
-        games={finalGames}
+        games={games}
         setSelectedMode={setSelectedMode}
         refreshData={refreshData}
         gamesLoading={gamesLoading}
+        showCreateModal={showCreateModal}
+        setShowCreatModal={setShowCreatModal}
       />
+      {showCreateModal && (
+        <CreateAchForm
+          refreshData={refreshData}
+          showCreateModal={showCreateModal}
+          setShowCreatModal={setShowCreatModal}
+        />
+      )}
       <MainContent
-        games={finalGames}
+        games={games}
         selectedMode={selectedMode}
         refreshData={refreshData}
         setGamesLoading={setGamesLoading}
         gamesLoading={gamesLoading}
         setSelectedMode={setSelectedMode}
         platinumDataLoading={platinumDataLoading}
+        showCreateModal={showCreateModal}
+        setShowCreatModal={setShowCreatModal}
       />
     </Container>
   );

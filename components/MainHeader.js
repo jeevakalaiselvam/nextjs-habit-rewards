@@ -28,6 +28,8 @@ export default function MainHeader({
   setSelectedMode,
   refreshData,
   gamesLoading,
+  setShowCreatModal,
+  showCreateModal,
 }) {
   let image =
     "https://4kwallpapers.com/images/wallpapers/hogwarts-legacy-winter-1920x1200-20034.jpeg";
@@ -108,37 +110,39 @@ export default function MainHeader({
     <Container background={image}>
       <Overlay></Overlay>
       <HeaderName>
-        <Country></Country>
+        <Country
+          onClick={() => {
+            setShowCreatModal((old) => !old);
+          }}
+        ></Country>
         <NameSection
           onClick={() => {
-            setSelectedMode("GAMES");
+            setShowCreatModal((old) => !old);
           }}
         >
           <Name>N7ShadowX</Name>
           <Subtext>Love to collect trophies!</Subtext>
         </NameSection>
-        {
-          <HeaderProfileLevel
-            onClick={() => {
-              refreshData();
-            }}
-          >
-            <LevelIconWrapper>
-              <LevelIcon />
-            </LevelIconWrapper>
-            <LevelData>
-              <LevelData1>{gamesLoading ? "..." : level}</LevelData1>
-              <LevelData2 color={COLOR_GOLD + "55"}>
-                <LevelInner
-                  color={COLOR_GOLD}
-                  percent={progressPercent}
-                ></LevelInner>
-              </LevelData2>
-              {!gamesLoading && <ToNext>{remainingXP} XP</ToNext>}
-              {gamesLoading && <ToNext>...</ToNext>}
-            </LevelData>
-          </HeaderProfileLevel>
-        }
+        <HeaderProfileLevel
+          onClick={() => {
+            refreshData();
+          }}
+        >
+          <LevelIconWrapper>
+            <LevelIcon />
+          </LevelIconWrapper>
+          <LevelData>
+            <LevelData1>{gamesLoading ? "..." : level}</LevelData1>
+            <LevelData2 color={COLOR_GOLD + "55"}>
+              <LevelInner
+                color={COLOR_GOLD}
+                percent={progressPercent}
+              ></LevelInner>
+            </LevelData2>
+            {!gamesLoading && <ToNext>{remainingXP} XP</ToNext>}
+            {gamesLoading && <ToNext>...</ToNext>}
+          </LevelData>
+        </HeaderProfileLevel>
       </HeaderName>
       <HeaderCounts>
         <Section color={COLOR_WHITE}>
@@ -301,7 +305,6 @@ const HeaderCounts = styled.div`
   justify-content: center;
   z-index: 2;
   width: 100%;
-  flex: 1;
   padding: 0.25rem;
 `;
 

@@ -34,6 +34,7 @@ import { Collapse, Spin } from "antd";
 import GameCdImage from "./GameCdImage";
 import { formatDate } from "../helpers/dateHelper";
 import Panel from "antd/es/splitter/Panel";
+import { TROPHY_GAME_LIST } from "../helpers/optionHelper";
 
 const MAX_DESC = 80;
 const MEDIUM_DESC = 60;
@@ -45,6 +46,8 @@ export default function MainContent({
   gamesLoading,
   selectedMode,
   setSelectedMode,
+  showCreateModal,
+  setShowCreatModal,
 }) {
   const [selectedRarity, setSelectedRarity] = useState("ULTRA RARE");
   const [selectedGame, setSelectedGame] = useState("");
@@ -173,100 +176,47 @@ export default function MainContent({
 
   let allUnlockedAchs = [];
 
-  games?.forEach((game) => {
-    game?.achievements?.forEach((ach) => {
-      if (ach?.achieved == 1) {
-        allUnlockedAchs.push(ach);
-      }
-    });
-  });
-
-  allUnlockedAchs = allUnlockedAchs?.sort(
-    (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
-  );
+  allUnlockedAchs = games;
 
   return (
     <Container>
-      {showEditModal && (
-        <EditGameForm
-          gameData={gameData}
-          showEditModal={showEditModal}
-          setShowEditModal={setShowEditModal}
-          refreshData={refreshData}
-          setGamesLoading={setGamesLoading}
-        />
-      )}
       {!gamesLoading && (
         <SRLeft>
-          {selectedMode == "GAME" && (
+          {selectedMode == "GAMES" && (
             <Games>
               <Games2LineR>
-                {sortedGames?.map((game, index) => {
+                {TROPHY_GAME_LIST?.map((game, index) => {
                   let allCompletion = 0;
                   let total = 0;
-                  let unearned = 0;
-                  let platinumA = 0;
-                  let goldA = 0;
-                  let silverA = 0;
-                  let bronzeA = 0;
                   let platinum = 0;
                   let gold = 0;
                   let silver = 0;
                   let bronze = 0;
 
-                  game?.achievements?.forEach((ach) => {
+                  let unlockedForGame = allUnlockedAchs?.filter(
+                    (item) => item?.header == game?.name
+                  );
+
+                  unlockedForGame?.forEach((ach) => {
                     total++;
-                    if (ach?.achieved == 0) {
-                      unearned++;
-                      if (ach?.color == "Platinum") {
-                        platinumA++;
-                      }
-                      if (ach?.color == "Gold") {
-                        goldA++;
-                      }
-                      if (ach?.color == "Silver") {
-                        silverA++;
-                      }
-                      if (ach?.color == "Bronze") {
-                        bronzeA++;
-                      }
-                    } else {
-                      if (ach?.color == "Platinum") {
-                        platinum++;
-                      }
-                      if (ach?.color == "Gold") {
-                        gold++;
-                      }
-                      if (ach?.color == "Silver") {
-                        silver++;
-                      }
-                      if (ach?.color == "Bronze") {
-                        bronze++;
-                      }
+                    if (ach?.color == "Platinum") {
+                      platinum++;
+                    }
+                    if (ach?.color == "Gold") {
+                      gold++;
+                    }
+                    if (ach?.color == "Silver") {
+                      silver++;
+                    }
+                    if (ach?.color == "Bronze") {
+                      bronze++;
                     }
                   });
 
-                  let targetToGet = 0;
-                  let targetObtained = 0;
-
-                  targetToGet =
-                    game?.price > 0 ? Math.ceil(game?.price / 100) : 1;
-
-                  targetObtained = game?.completed;
-
-                  let completed = game?.achievements?.filter(
-                    (item) => item?.achieved == 1
-                  )?.length;
-                  let completion = (
-                    targetObtained == 0
-                      ? 0
-                      : (targetObtained / targetToGet) * 100
-                  )?.toFixed(2);
+                  let completed = total;
+                  let completion = 100;
                   completion = completion >= 100 ? 100 : completion;
                   allCompletion = allCompletion + completion;
-                  if (total == completed) {
-                    completed = completed + 1;
-                  }
 
                   let { color, rank } = calculateRankForCompletion(completion);
                   let lastAch = game?.achievements?.sort(
@@ -277,26 +227,18 @@ export default function MainContent({
 
                   return (
                     <GameContainer
-                      onClick={() => {
-                        setSelectedGame(game);
-                        setSelectedMode("GAME");
-                      }}
+                      onClick={() => {}}
                       color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                     >
                       <GameInfoInner>
                         <GameRightCard>
                           <GRTop>
                             <GameData>
-                              <GameTitle
-                                onClick={() => {
-                                  setSelectedGame(game);
-                                  setSelectedMode("GAME");
-                                }}
-                              >
+                              <GameTitle onClick={() => {}}>
                                 {game?.name}
                               </GameTitle>
                               <GameCompletion>
-                                {completed} of {total} Trophies
+                                {total} {total > 1 ? "Trophies" : "Trophy"}
                               </GameCompletion>
                             </GameData>
                           </GRTop>
@@ -355,13 +297,10 @@ export default function MainContent({
                                 </TBottom>
                               </Trophies>
                               <Seperator></Seperator>
-                              <Platinum
-                                isPlatinum={targetObtained == targetToGet}
-                              >
+                              <Platinum isPlatinum={platinum > 0}>
                                 <span
                                   style={{
-                                    opacity:
-                                      targetObtained == targetToGet ? 1 : 0.25,
+                                    opacity: platinum > 0 ? 1 : 0.25,
                                   }}
                                 >
                                   <PlatinumIcon />
@@ -384,10 +323,7 @@ export default function MainContent({
                           </GRBottom>
                         </GameRightCard>
                         <GameLeftCard>
-                          <GameImage
-                            url={HEADER_IMAGE(game?.id)}
-                            center
-                          ></GameImage>
+                          <GameImage url={game?.url} center></GameImage>
                         </GameLeftCard>
                       </GameInfoInner>
                     </GameContainer>
@@ -396,7 +332,7 @@ export default function MainContent({
               </Games2LineR>
             </Games>
           )}
-          {selectedMode == "GAMES" && (
+          {selectedMode == "GAME" && (
             <Games>
               <Game2Line>
                 {allUnlockedAchs?.map((ach, index) => {

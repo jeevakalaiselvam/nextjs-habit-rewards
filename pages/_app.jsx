@@ -26,37 +26,8 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <ConfigProvider
         theme={{
-          token: {
-            colorPrimary: "#1890ff",
-            colorBgBase: "#100d0d",
-            colorTextBase: "#fefefe",
-            colorLink: "#1890ff",
-            colorPrimaryBorder: "#000",
-            colorBgContainer: CARD_BACKGROUND,
-          },
-          components: {
-            Select: {
-              optionFontSize: "1rem",
-              optionActiveBg: CARD_BACKGROUND,
-              optionSelectedBg: CARD_BACKGROUND,
-              hoverBorderColor: "#000",
-              colorBgBase: COLOR_BACKGROUND,
-              colorBgContainer: CARD_BACKGROUND,
-            },
-            Button: {
-              primaryShadow: "none",
-              defaultShadow: " none",
-              dangerShadow: "none",
-            },
-            Input: {
-              borderRadius: 0,
-              borderWidth: 0,
-              boxShadow: "none",
-              activeShadow: "none",
-              hoverBorderColor: "transparent",
-              focusBorderColor: "transparent",
-            },
-          },
+          token: {},
+          components: {},
         }}
       >
         {" "}
