@@ -194,12 +194,13 @@ export default function MainContent({
     let total = 0;
 
     games?.forEach((ach) => {
-      platinum = ach?.platinum;
-      gold = ach?.gold;
-      silver = ach?.silver;
-      bronze = ach?.bronze;
-      total = platinum + gold + silver + bronze;
+      platinum += ach?.platinum;
+      gold += ach?.gold;
+      silver += ach?.silver;
+      bronze += ach?.bronze;
     });
+
+    total += platinum + gold + silver + bronze;
 
     let averageCompletion =
       allCompletion == 0 ? 0 : allCompletion / games?.length;
@@ -217,13 +218,6 @@ export default function MainContent({
     setXPNeeded(remainingXP);
 
     setTimeout(() => {
-      let completed = 0;
-      let allCompletion = 0;
-      let unearned = 0;
-      let platinumA = 0;
-      let goldA = 0;
-      let silverA = 0;
-      let bronzeA = 0;
       let platinum = 0;
       let gold = 0;
       let silver = 0;
@@ -231,12 +225,13 @@ export default function MainContent({
       let total = 0;
 
       games?.forEach((ach) => {
-        platinum = ach?.platinum;
-        gold = ach?.gold;
-        silver = ach?.silver;
-        bronze = ach?.bronze;
-        total = platinum + gold + silver + bronze;
+        platinum += ach?.platinum;
+        gold += ach?.gold;
+        silver += ach?.silver;
+        bronze += ach?.bronze;
       });
+
+      total += platinum + gold + silver + bronze;
 
       if (color == "Platinum") {
         platinum++;
@@ -255,9 +250,6 @@ export default function MainContent({
         total++;
       }
 
-      let averageCompletion =
-        allCompletion == 0 ? 0 : allCompletion / games?.length;
-
       let { progressPercent, level, xpForNextLevel, remainingXP } =
         calculatePSLevelAndProgress(platinum, gold, silver, bronze);
 
@@ -266,11 +258,13 @@ export default function MainContent({
 
       if (window) {
         oldInStorage = Number(localStorage.getItem("OLD_LEVEL") ?? 0);
+        console.log({ level, oldInStorage });
         if (level > oldInStorage) {
           setShouldBlink(true);
           setLevelOld(oldInStorage);
           setLevelNew(level);
         } else {
+          setShouldBlink(false);
         }
       }
 
@@ -286,13 +280,7 @@ export default function MainContent({
 
     setTimeout(() => {
       if (window) {
-        let completed = 0;
         let allCompletion = 0;
-        let unearned = 0;
-        let platinumA = 0;
-        let goldA = 0;
-        let silverA = 0;
-        let bronzeA = 0;
         let platinum = 0;
         let gold = 0;
         let silver = 0;
@@ -300,23 +288,13 @@ export default function MainContent({
         let total = 0;
 
         games?.forEach((ach) => {
-          if (ach?.color == "Platinum") {
-            platinum++;
-            total++;
-          }
-          if (ach?.color == "Gold") {
-            gold++;
-            total++;
-          }
-          if (ach?.color == "Silver") {
-            silver++;
-            total++;
-          }
-          if (ach?.color == "Bronze") {
-            bronze++;
-            total++;
-          }
+          platinum += ach?.platinum;
+          gold += ach?.gold;
+          silver += ach?.silver;
+          bronze += ach?.bronze;
         });
+
+        total += platinum + gold + silver + bronze;
 
         let averageCompletion =
           allCompletion == 0 ? 0 : allCompletion / games?.length;
@@ -324,11 +302,9 @@ export default function MainContent({
         let { progressPercent, level, xpForNextLevel, remainingXP } =
           calculatePSLevelAndProgress(platinum, gold, silver, bronze);
 
-        setShouldBlink(false);
+        console.log({ level });
 
-        if (window) {
-          localStorage.setItem("OLD_LEVEL", level);
-        }
+        localStorage.setItem("OLD_LEVEL", level);
       }
       setShowLevelUpModal(false);
       refreshData();

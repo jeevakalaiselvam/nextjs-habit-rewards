@@ -34,13 +34,7 @@ export default function MainHeader({
   let image =
     "https://4kwallpapers.com/images/wallpapers/hogwarts-legacy-winter-1920x1200-20034.jpeg";
 
-  let completed = 0;
   let allCompletion = 0;
-  let unearned = 0;
-  let platinumA = 0;
-  let goldA = 0;
-  let silverA = 0;
-  let bronzeA = 0;
   let platinum = 0;
   let gold = 0;
   let silver = 0;
@@ -48,23 +42,13 @@ export default function MainHeader({
   let total = 0;
 
   games?.forEach((ach) => {
-    if (ach?.color == "Platinum") {
-      platinum++;
-      total++;
-    }
-    if (ach?.color == "Gold") {
-      gold++;
-      total++;
-    }
-    if (ach?.color == "Silver") {
-      silver++;
-      total++;
-    }
-    if (ach?.color == "Bronze") {
-      bronze++;
-      total++;
-    }
+    platinum += ach?.platinum;
+    gold += ach?.gold;
+    silver += ach?.silver;
+    bronze += ach?.bronze;
   });
+
+  total += platinum + gold + silver + bronze;
 
   let averageCompletion =
     allCompletion == 0 ? 0 : allCompletion / games?.length;
