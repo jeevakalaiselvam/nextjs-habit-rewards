@@ -304,7 +304,7 @@ export default function MainContent({
       setBronzeC(bronze);
       setLevelProgress(progressPercent);
       setXPNeeded(remainingXP);
-    }, 2000);
+    }, 500);
 
     setTimeout(() => {
       if (window) {
@@ -354,7 +354,7 @@ export default function MainContent({
       }
       setShowLevelUpModal(false);
       refreshData();
-    }, 3000);
+    }, 1000);
   };
 
   const getItems = (panelStyle) => [
