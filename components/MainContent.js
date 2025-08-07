@@ -354,7 +354,7 @@ export default function MainContent({
       }
       setShowLevelUpModal(false);
       refreshData();
-    }, 1000);
+    }, 1500);
   };
 
   const getItems = (panelStyle) => [
@@ -367,7 +367,7 @@ export default function MainContent({
       let bronze = 0;
 
       let unlockedForGame = allUnlockedAchs?.filter(
-        (item) => item?.name == game?.name
+        (item) => item?.title == game?.name
       );
 
       unlockedForGame?.forEach((ach) => {
