@@ -33,7 +33,7 @@ export const TROPHY_GAMES_OPTIONS = [
     color: "Bronze",
   },
   {
-    name: "Get 10 Kills / Use Item 10 Times",
+    name: "Get 10 Kills",
     color: "Bronze",
   },
   {
