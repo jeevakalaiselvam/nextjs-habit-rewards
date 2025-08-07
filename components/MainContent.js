@@ -612,7 +612,7 @@ export default function MainContent({
                   <span style={{ marginRight: ".5rem", color: "#ffd700" }}>
                     <TbChevronsUp />
                   </span>
-                  Level Up
+                  Level {levelNew}
                   <span style={{ marginLeft: ".5rem", color: "#ffd700" }}>
                     <TbChevronsUp />
                   </span>
