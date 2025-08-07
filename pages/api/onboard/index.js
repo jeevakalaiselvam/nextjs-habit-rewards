@@ -13,9 +13,16 @@ export default async function handler(req, res) {
     try {
       const client = await clientPromise;
       const db = client.db("habittracker");
-      await db.collection("gameslist").insertOne({
+      await db.collection("allgames").insertOne({
         name,
+        title: name,
         url,
+        platinum: 0,
+        gold: 0,
+        silver: 0,
+        bronze: 0,
+        createdAt: new Date(),
+        updatedAt: new Date(),
       });
 
       res.status(201).json({ message: "Achievement added successfully" });
@@ -28,7 +35,7 @@ export default async function handler(req, res) {
       const client = await clientPromise;
       const db = client.db("habittracker");
 
-      const jeevagames = await db.collection("gameslist").find({}).toArray();
+      const jeevagames = await db.collection("allgames").find({}).toArray();
 
       res.status(200).json(jeevagames);
     } catch (error) {

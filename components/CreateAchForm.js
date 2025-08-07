@@ -18,14 +18,21 @@ export default function CreateAchForm({
   refreshData,
   setShowCreatModal,
   showCreateModal,
-  setFormData,
   formData,
 }) {
-  const [desc, setDesc] = useState("");
+  const [gameForm, setGameForm] = useState({
+    name: "",
+    title: "",
+    url: "",
+    platinum: 0,
+    gold: 0,
+    silver: 0,
+    bronze: 0,
+  });
 
-  const saveAchData = () => {
+  const saveGame = () => {
     try {
-      axios.post("/api/jeevaachievement", { ...gameForm }).then((response) => {
+      axios.post("/api/onboard", { ...gameForm }).then((response) => {
         refreshData();
       });
     } catch (e) {}
@@ -44,17 +51,44 @@ export default function CreateAchForm({
 
   return (
     <Container>
-      <Row style={{ marginBottom: "1rem" }}>
-        <TextArea
-          placeholder="Description..."
-          rows={3}
-          value={formData?.description}
-          style={{ width: 350, fontSize: ".9rem" }}
-          onChange={(e) => {
-            setFormData((old) => ({ ...old, description: e.target.value }));
-          }}
-        />
-      </Row>
+      <Modal
+        title="Create Game"
+        open={showCreateModal}
+        onOk={() => {
+          saveGame();
+          setShowCreatModal(false);
+        }}
+        onCancel={() => {
+          setShowCreatModal(false);
+        }}
+      >
+        <Row style={{ marginBottom: "1rem" }}>
+          <Input
+            placeholder="Name..."
+            rows={3}
+            value={formData?.name}
+            style={{ width: 350, fontSize: ".9rem" }}
+            onChange={(e) => {
+              setGameForm((old) => ({
+                ...old,
+                name: e.target.value,
+                title: e.target.value,
+              }));
+            }}
+          />
+        </Row>
+        <Row style={{ marginBottom: "1rem" }}>
+          <Input
+            placeholder="URL..."
+            rows={3}
+            value={formData?.url}
+            style={{ width: 350, fontSize: ".9rem" }}
+            onChange={(e) => {
+              setGameForm((old) => ({ ...old, url: e.target.value }));
+            }}
+          />
+        </Row>
+      </Modal>
     </Container>
   );
 }

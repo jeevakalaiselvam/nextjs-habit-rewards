@@ -284,7 +284,7 @@ export default function MainContent({
   };
 
   const getItems = (panelStyle) => [
-    ...TROPHY_GAME_LIST?.map((game, index) => {
+    ...games?.map((game, index) => {
       let allCompletion = 0;
       let total = 0;
       let platinum = 0;
@@ -634,19 +634,13 @@ export default function MainContent({
         </LevelUpContainer>
       )}
       {showCreateModal && (
-        <Modal
-          title="Log Trophy"
-          open={showCreateModal}
-          onOk={() => {
-            addTrophy();
-            setShowCreatModal(false);
-          }}
-          onCancel={() => {
-            setShowCreatModal(false);
-          }}
-        >
-          <CreateAchForm setFormData={setFormData} formData={formData} />
-        </Modal>
+        <CreateAchForm
+          setFormData={setFormData}
+          formData={formData}
+          setShowCreatModal={setShowCreatModal}
+          showCreateModal={showCreateModal}
+          refreshData={refreshData}
+        />
       )}
 
       {

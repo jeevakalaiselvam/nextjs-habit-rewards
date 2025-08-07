@@ -59,10 +59,10 @@ export default function MainHeader({
   return (
     <Container background={image}>
       <Overlay></Overlay>
-      <HeaderName>
+      <HeaderName onClick={() => {}}>
         <Country
           onClick={() => {
-            setSelectedMode("GAMES");
+            setShowCreatModal(true);
           }}
         ></Country>
         <NameSection
