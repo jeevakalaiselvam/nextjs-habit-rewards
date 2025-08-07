@@ -38,10 +38,11 @@ import {
   TROPHY_GAME_OPTIONS,
   TROPHY_GAMES_OPTIONS,
 } from "../helpers/optionHelper";
-import { Collapse, theme } from "antd";
+import { Collapse, Modal, theme } from "antd";
 import SilverIcon from "./SilverIcon";
 import BronzeIcon from "./BronzeIcon";
 import axios from "axios";
+import CreateAchForm from "./CreateAchForm";
 
 const MAX_DESC = 80;
 const MEDIUM_DESC = 60;
@@ -63,14 +64,13 @@ export default function MainContent({
   const [active, setActive] = useState("PROFILE");
   const [gameData, setGameData] = useState({});
   const [showLevelUpModal, setShowLevelUpModal] = useState(null);
+  const [formData, setFormData] = useState({});
 
-  const addTrophy = (ach, game) => {
+  const addTrophy = () => {
     try {
       axios
         .post("/api/jeevaachievement", {
-          title: ach?.name,
-          color: ach?.color,
-          name: game?.name,
+          ...formData,
         })
         .then((response) => {
           refreshData();
@@ -290,7 +290,11 @@ export default function MainContent({
                   </GameInfo>
                 </GRBottom>
               </GameRightCard>
-              <GameLeftCard>
+              <GameLeftCard
+                onClick={() => {
+                  setSelectedMode("GAME");
+                }}
+              >
                 <GameImage url={game?.url} center></GameImage>
               </GameLeftCard>
             </GameInfoInner>
@@ -304,15 +308,19 @@ export default function MainContent({
                   color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                   achieved={false}
                   onClick={() => {
-                    // setShowLevelUpModal(true);
-                    addTrophy(ach, game);
+                    setShowCreatModal(true);
+                    setFormData((old) => ({
+                      title: ach?.name,
+                      color: ach?.color,
+                      name: game?.name,
+                    }));
 
                     if (window) {
                       localStorage.setItem("OPEN_ACCORDION", game?.name);
                     }
                   }}
                 >
-                  <AchIconOuter achieved={ach?.achieved}>
+                  <AchIconOuter achieved={false}>
                     <AchIcon icon={ach?.icon}>
                       {ach?.color == "Platinum" && <PlatinumIcon />}
                       {ach?.color == "Gold" && <GoldIcon />}
@@ -402,7 +410,21 @@ export default function MainContent({
 
   return (
     <Container>
-      {showLevelUpModal && <LevelUpContainer>JEEVA</LevelUpContainer>}
+      {showCreateModal && (
+        <Modal
+          title="Log Trophy"
+          open={showCreateModal}
+          onOk={() => {
+            addTrophy();
+            setShowCreatModal(false);
+          }}
+          onCancel={() => {
+            setShowCreatModal(false);
+          }}
+        >
+          <CreateAchForm setFormData={setFormData} formData={formData} />
+        </Modal>
+      )}
       {!gamesLoading && (
         <SRLeft>
           {selectedMode == "GAMES" && (
@@ -432,38 +454,26 @@ export default function MainContent({
                   return (
                     <AchCard
                       color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                      achieved={ach?.achieved}
+                      achieved={true}
                     >
-                      {ach?.achieved == 1 && (
-                        <Unlocked>
-                          {formatDate(new Date(ach?.unlocktime * 1000))}
-                        </Unlocked>
-                      )}
-                      <AchIconOuter achieved={ach?.achieved}>
-                        <AchIcon
-                          icon={ach?.icon}
-                          onClick={() => {
-                            if (window !== "undefined") {
-                              const searchQuery = `${
-                                ach?.displayName
-                              } achievement ${encodeURIComponent(
-                                ach?.gameName
-                              )} `;
-                              window.open(
-                                `https://www.google.com/search?q=${searchQuery}`
-                              );
-                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                            }
-                          }}
-                        ></AchIcon>
+                      <Unlocked>
+                        {formatDate(new Date(ach?.unlocktime * 1000))}
+                      </Unlocked>
+                      <AchIconOuter achieved={true}>
+                        <AchIcon icon={ach?.icon}>
+                          {ach?.color == "Platinum" && <PlatinumIcon />}
+                          {ach?.color == "Gold" && <GoldIcon />}
+                          {ach?.color == "Silver" && <SilverIcon />}
+                          {ach?.color == "Bronze" && <BronzeIcon />}
+                        </AchIcon>
                       </AchIconOuter>
                       <AchData>
-                        <AchTitle>{ach?.displayName}</AchTitle>
+                        <AchTitle>{ach?.title}</AchTitle>
                         <AchDesc
                           higher={ach?.description?.length > MAX_DESC}
                           medium={ach?.description?.length > MEDIUM_DESC}
                         >
-                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                          {ach?.description}
                         </AchDesc>
                       </AchData>
                       <Seperator padding={".25rem"} />
@@ -481,10 +491,16 @@ export default function MainContent({
                         </span>
                         <AchRarity>
                           <span style={{ fontSize: ".5rem" }}>
-                            {Number(ach?.percentage)?.toFixed(1)}%
+                            {ach?.color == "Platinum" && "300 XP"}
+                            {ach?.color == "Gold" && "90 XP"}
+                            {ach?.color == "Silver" && "60 XP"}
+                            {ach?.color == "Bronze" && "15 XP"}
                           </span>
                           <span style={{ fontSize: ".35rem" }}>
-                            {ach?.label?.toUpperCase()}
+                            {ach?.color == "Platinum" && "PLATINUM"}
+                            {ach?.color == "Gold" && "GOLD"}
+                            {ach?.color == "Silver" && "SILVER"}
+                            {ach?.color == "Bronze" && "BRONZE"}
                           </span>
                         </AchRarity>
                       </AchTrophy>
@@ -627,6 +643,7 @@ const AchIcon = styled.div`
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;
+  background: ${(props) => (props.achieved ? COLOR_UNLOCKED : "#00000000")};
 `;
 
 const AchData = styled.div`

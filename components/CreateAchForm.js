@@ -18,12 +18,10 @@ export default function CreateAchForm({
   refreshData,
   setShowCreatModal,
   showCreateModal,
+  setFormData,
+  formData,
 }) {
-  const [gameForm, setGameForm] = useState({
-    name: TROPHY_GAME_OPTIONS?.[0]?.name,
-    title: TROPHY_GAMES_OPTIONS?.[0]?.name,
-    color: "Bronze",
-  });
+  const [desc, setDesc] = useState("");
 
   const saveAchData = () => {
     try {
@@ -44,144 +42,18 @@ export default function CreateAchForm({
   let optionForList = [];
   let optionForSub = [];
 
-  if (gameForm?.name == "Game") {
-    optionForSub = TROPHY_GAMES_OPTIONS;
-    optionForList = TROPHY_GAME_LIST;
-  }
-
   return (
     <Container>
-      <Row style={{ marginBottom: "1rem" }}>
-        <Select
-          defaultValue={TROPHY_GAME_OPTIONS?.[0]?.name}
-          style={{ width: 375 }}
-          value={gameForm?.name}
-          onSelect={(e) => {
-            setGameForm((old) => ({ ...old, name: e }));
-          }}
-          options={[
-            ...TROPHY_GAME_OPTIONS?.map((item) => ({
-              value: item?.name,
-              label: item?.name,
-            })),
-          ]}
-        />
-      </Row>
-      <Row style={{ marginBottom: "1rem" }}>
-        <Select
-          defaultValue={optionForList?.[0]?.name}
-          style={{ width: 375 }}
-          value={gameForm?.header}
-          onSelect={(e) => {
-            setGameForm((old) => ({
-              ...old,
-              header: e,
-            }));
-          }}
-        >
-          {optionForList?.map((item) => {
-            return (
-              <Option value={item?.value}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-start",
-                  }}
-                >
-                  <span
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      transform: "translateY(4px)",
-                    }}
-                  >
-                    {item?.color == "Platinum" && <PlatinumIconS />}
-                    {item?.color == "Gold" && <GoldIconS />}
-                    {item?.color == "Silver" && <SilverIconS />}
-                    {item?.color == "Bronze" && <BronzeIconS />}
-                  </span>
-                  <span>{item?.name}</span>
-                </div>
-              </Option>
-            );
-          })}
-        </Select>
-      </Row>
-      <Row style={{ marginBottom: "1rem" }}>
-        <Select
-          defaultValue={optionForSub?.[0]?.name}
-          style={{ width: 375 }}
-          value={gameForm?.title}
-          onSelect={(e) => {
-            setGameForm((old) => ({
-              ...old,
-              title: e,
-              color: optionForSub?.find((item) => item?.name == e)?.color,
-            }));
-          }}
-        >
-          {optionForSub?.map((item) => {
-            return (
-              <Option value={item?.value}>
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "flex-start",
-                  }}
-                >
-                  <span
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      transform: "translateY(4px)",
-                    }}
-                  >
-                    {item?.color == "Platinum" && <PlatinumIconS />}
-                    {item?.color == "Gold" && <GoldIconS />}
-                    {item?.color == "Silver" && <SilverIconS />}
-                    {item?.color == "Bronze" && <BronzeIconS />}
-                  </span>
-                  <span>{item?.name}</span>
-                </div>
-              </Option>
-            );
-          })}
-        </Select>
-      </Row>
       <Row style={{ marginBottom: "1rem" }}>
         <TextArea
           placeholder="Description..."
           rows={3}
-          value={gameForm?.description}
-          style={{ width: 375 }}
+          value={formData?.description}
+          style={{ width: 350, fontSize: ".9rem" }}
           onChange={(e) => {
-            setGameForm((old) => ({ ...old, description: e?.target?.value }));
+            setFormData((old) => ({ ...old, description: e.target.value }));
           }}
         />
-      </Row>
-      <Row style={{ marginBottom: "2rem", width: "100%", textAlign: "center" }}>
-        <Col span={12}>
-          <Button
-            onClick={() => {
-              setShowCreatModal(false);
-            }}
-          >
-            Cancel
-          </Button>
-        </Col>
-        <Col span={12}>
-          <Button
-            onClick={() => {
-              saveAchData();
-            }}
-          >
-            Save
-          </Button>
-        </Col>
       </Row>
     </Container>
   );

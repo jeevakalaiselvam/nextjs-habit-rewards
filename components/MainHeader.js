@@ -78,12 +78,12 @@ export default function MainHeader({
       <HeaderName>
         <Country
           onClick={() => {
-            setShowCreatModal((old) => !old);
+            setSelectedMode("GAMES");
           }}
         ></Country>
         <NameSection
           onClick={() => {
-            setShowCreatModal((old) => !old);
+            setSelectedMode("GAMES");
           }}
         >
           <Name>N7ShadowX</Name>
