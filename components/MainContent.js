@@ -1160,7 +1160,7 @@ const GameTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  color: #057fcc;
+  color: #fefefe;
   width: 100%;
   height: 30px;
   font-size: 1rem;
