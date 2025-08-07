@@ -227,27 +227,7 @@ export default function MainContent({
       completion = completion >= 100 ? 100 : completion;
       allCompletion = allCompletion + completion;
 
-      if (total >= 0 && total <= 5) {
-        completion = 10;
-      } else if (total > 5 && total <= 10) {
-        completion = 20;
-      } else if (total > 10 && total <= 15) {
-        completion = 30;
-      } else if (total > 15 && total <= 20) {
-        completion = 40;
-      } else if (total > 20 && total <= 25) {
-        completion = 50;
-      } else if (total > 25 && total <= 30) {
-        completion = 60;
-      } else if (total > 30 && total <= 35) {
-        completion = 70;
-      } else if (total > 35 && total <= 40) {
-        completion = 80;
-      } else if (total > 40 && total <= 45) {
-        completion = 90;
-      } else if (total > 45 && total <= 50) {
-        completion = 100;
-      }
+      completion = total * 1;
 
       let { color, rank } = calculateRankForCompletion(completion);
       let lastAch = game?.achievements?.sort(
@@ -379,10 +359,42 @@ export default function MainContent({
                         transform: "translate(0.25rem, 0rem)",
                       }}
                     >
-                      {ach?.color == "Platinum" && <PlatinumIconS />}
-                      {ach?.color == "Gold" && <GoldIconS />}
-                      {ach?.color == "Silver" && <SilverIconS />}
-                      {ach?.color == "Bronze" && <BronzeIconS />}{" "}
+                      {ach?.color == "Platinum" && (
+                        <div
+                          style={{
+                            transform: "scale(.5) translateX(-.25rem)",
+                          }}
+                        >
+                          <PlatinumIcon />
+                        </div>
+                      )}
+                      {ach?.color == "Gold" && (
+                        <div
+                          style={{
+                            transform: "scale(.5) translateX(-.25rem)",
+                          }}
+                        >
+                          <GoldIcon />
+                        </div>
+                      )}
+                      {ach?.color == "Silver" && (
+                        <div
+                          style={{
+                            transform: "scale(.5) translateX(-.25rem)",
+                          }}
+                        >
+                          <SilverIcon />
+                        </div>
+                      )}
+                      {ach?.color == "Bronze" && (
+                        <div
+                          style={{
+                            transform: "scale(.5) translateX(-.25rem)",
+                          }}
+                        >
+                          <BronzeIcon />
+                        </div>
+                      )}
                     </span>
                     <AchRarity>
                       <span style={{ fontSize: ".5rem" }}>
