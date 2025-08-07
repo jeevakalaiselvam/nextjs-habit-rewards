@@ -251,16 +251,12 @@ export default function MainContent({
 
                   let FACTOR = 50;
 
-                  if (game?.price > 0 && game?.price <= 500) {
+                  if (game?.price > 0 && game?.price <= 1000) {
                     FACTOR = 25;
-                  } else if (game?.price > 500 && game?.price <= 1000) {
+                  } else if (game?.price > 1000 && game?.price <= 3000) {
                     FACTOR = 50;
-                  } else if (game?.price > 1000 && game?.price <= 2000) {
-                    FACTOR = 75;
-                  } else if (game?.price > 2000 && game?.price <= 3000) {
-                    FACTOR = 100;
                   } else if (game?.price > 3000) {
-                    FACTOR = 125;
+                    FACTOR = 100;
                   }
 
                   targetToGet =
