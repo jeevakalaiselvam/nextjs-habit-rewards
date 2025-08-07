@@ -198,7 +198,7 @@ export default function MainContent({
       )}
       {!gamesLoading && (
         <SRLeft>
-          {selectedMode == "GAME" && (
+          {selectedMode == "GAMES" && (
             <Games>
               <Games2LineR>
                 {sortedGames?.map((game, index) => {
@@ -254,6 +254,9 @@ export default function MainContent({
 
                   targetObtained = game?.completed;
 
+                  targetObtained =
+                    targetObtained > targetToGet ? targetToGet : targetObtained;
+
                   let completed = game?.achievements?.filter(
                     (item) => item?.achieved == 1
                   )?.length;
@@ -296,7 +299,7 @@ export default function MainContent({
                                 {game?.name}
                               </GameTitle>
                               <GameCompletion>
-                                {completed} of {total} Trophies
+                                {targetObtained} of {targetToGet} Trophies
                               </GameCompletion>
                             </GameData>
                           </GRTop>
@@ -396,10 +399,10 @@ export default function MainContent({
               </Games2LineR>
             </Games>
           )}
-          {selectedMode == "GAMES" && (
+          {selectedMode == "GAME" && (
             <Games>
               <Game2Line>
-                {allUnlockedAchs?.map((ach, index) => {
+                {selectedGame?.achievements?.map((ach, index) => {
                   let desc1 = ach?.hiddenDesc;
                   let desc2 = ach?.description;
                   let desc3 = ach?.hiddenDesc?.split(
