@@ -59,34 +59,10 @@ export default function Atom() {
     let finalGames = [];
 
     finalGames = games?.map((game) => {
-      let platinumGameData = platinumData?.find((item) => item?.id == game?.id);
+      let platinumGameData = platinumData?.map((item) => item?.gameId);
       let formedGame = {};
       let platinumMapper = {};
       let dlcMapper = {};
-
-      platinumGameData?.platinum?.forEach((ach) => {
-        platinumMapper[ach?.title] = ach;
-      });
-
-      console.log({ platinumMapper });
-
-      platinumGameData?.dlc1Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC1" };
-      });
-      platinumGameData?.dlc2Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC2" };
-      });
-      platinumGameData?.dlc3Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC3" };
-      });
-      platinumGameData?.dlc4Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC4" };
-      });
-      platinumGameData?.dlc5Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC5" };
-      });
-
-      let gameName = game?.achievements?.[0]?.gameName;
 
       let sortedPlatinumTrophies = game?.achievements
         ?.map((ach) => {
@@ -111,7 +87,6 @@ export default function Atom() {
 
       formedGame = {
         ...game,
-        ...platinumGameData,
         achievements: [
           ...sortedPlatinumTrophies,
           {
@@ -121,7 +96,7 @@ export default function Atom() {
             percentage: Number(lastAch?.percentage),
             label: getRarityBasedOnRarity(lastAch?.percentage),
             color: "Platinum",
-            achieved: isCompleted ? 1 : 0,
+            achieved: platinumData?.includes(game?.id),
             unlocktime: lastAch?.unlocktime,
             icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
           },

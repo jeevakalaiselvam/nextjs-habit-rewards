@@ -35,6 +35,7 @@ import { Collapse, Spin } from "antd";
 import GameCdImage from "./GameCdImage";
 import { formatDate } from "../helpers/dateHelper";
 import Panel from "antd/es/splitter/Panel";
+import axios from "axios";
 
 const MAX_DESC = 80;
 const MEDIUM_DESC = 60;
@@ -186,6 +187,14 @@ export default function MainContent({
     (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
   );
 
+  const togglePlatinum = (gameId) => {
+    try {
+      axios.post("/api/onboard", { gameId: gameId }).then((response) => {
+        refreshData();
+      });
+    } catch (e) {}
+  };
+
   return (
     <Container>
       {showEditModal && (
@@ -289,7 +298,10 @@ export default function MainContent({
                     (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
                   )?.[game?.achievements?.length - 1];
 
-                  let isPlatinumNotAdded = game?.achievements?.length == 1;
+                  let isPlatinumDone =
+                    game?.achievements?.filter(
+                      (ach) => ach?.color == "Platinum" && ach?.achieved == 1
+                    )?.length > 0;
 
                   return (
                     <GameContainer
@@ -371,10 +383,10 @@ export default function MainContent({
                                 </TBottom>
                               </Trophies>
                               <Seperator></Seperator>
-                              <Platinum isPlatinum={completed == total}>
+                              <Platinum isPlatinum={isPlatinumDone}>
                                 <span
                                   style={{
-                                    opacity: completed == total ? 1 : 0.25,
+                                    opacity: isPlatinumDone ? 1 : 0.25,
                                   }}
                                 >
                                   <PlatinumIcon />
@@ -384,7 +396,7 @@ export default function MainContent({
                                     fontSize: ".75rem",
                                     margin: ".25rem",
                                     transform: "translateX(.25rem)",
-                                    opacity: completed == total ? 1 : 0.25,
+                                    opacity: isPlatinumDone ? 1 : 0.25,
                                     color: generateDarkTextColorForLightBg(
                                       "#b9c7e5",
                                       20
@@ -426,82 +438,89 @@ export default function MainContent({
           {selectedMode == "GAME" && (
             <Games>
               <Game2Line>
-                {selectedGame?.achievements?.map((ach, index) => {
-                  let desc1 = ach?.hiddenDesc;
-                  let desc2 = ach?.description;
-                  let desc3 = ach?.hiddenDesc?.split(
-                    "Hidden achievement:"
-                  )?.[1];
+                {selectedGame?.achievements
+                  ?.filter((ach) => ach?.achieved == 1)
+                  ?.map((ach, index) => {
+                    let desc1 = ach?.hiddenDesc;
+                    let desc2 = ach?.description;
+                    let desc3 = ach?.hiddenDesc?.split(
+                      "Hidden achievement:"
+                    )?.[1];
 
-                  return (
-                    <AchCard
-                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                      achieved={ach?.achieved}
-                    >
-                      {ach?.achieved == 1 && (
-                        <Unlocked>
-                          {formatDate(new Date(ach?.unlocktime * 1000))}
-                        </Unlocked>
-                      )}
-                      {ach?.color != "Platinum" && (
-                        <AchIconOuter achieved={ach?.achieved}>
-                          <AchIcon
-                            icon={ach?.icon}
+                    return (
+                      <AchCard
+                        color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                        achieved={ach?.achieved}
+                      >
+                        {ach?.achieved == 1 && (
+                          <Unlocked>
+                            {formatDate(new Date(ach?.unlocktime * 1000))}
+                          </Unlocked>
+                        )}
+                        {ach?.color != "Platinum" && (
+                          <AchIconOuter achieved={ach?.achieved}>
+                            <AchIcon
+                              icon={ach?.icon}
+                              onClick={() => {
+                                if (window !== "undefined") {
+                                  const searchQuery = `${
+                                    ach?.displayName
+                                  } achievement ${encodeURIComponent(
+                                    ach?.gameName
+                                  )} `;
+                                  window.open(
+                                    `https://www.google.com/search?q=${searchQuery}`
+                                  );
+                                  // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                                }
+                              }}
+                            ></AchIcon>
+                          </AchIconOuter>
+                        )}
+                        {ach?.color == "Platinum" && (
+                          <AchIconOuterPlatinum
+                            achieved={ach?.achieved}
                             onClick={() => {
-                              if (window !== "undefined") {
-                                const searchQuery = `${
-                                  ach?.displayName
-                                } achievement ${encodeURIComponent(
-                                  ach?.gameName
-                                )} `;
-                                window.open(
-                                  `https://www.google.com/search?q=${searchQuery}`
-                                );
-                                // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                              }
+                              togglePlatinum(selectedGame?.id);
                             }}
-                          ></AchIcon>
-                        </AchIconOuter>
-                      )}
-                      {ach?.color == "Platinum" && (
-                        <AchIconOuterPlatinum achieved={ach?.achieved}>
-                          <PlatinumIcon />
-                        </AchIconOuterPlatinum>
-                      )}
-                      <AchData>
-                        <AchTitle>{ach?.displayName}</AchTitle>
-                        <AchDesc
-                          higher={ach?.description?.length > MAX_DESC}
-                          medium={ach?.description?.length > MEDIUM_DESC}
-                        >
-                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
-                        </AchDesc>
-                      </AchData>
-                      <Seperator padding={".25rem"} />
-                      <AchTrophy>
-                        <span
-                          style={{
-                            fontSize: ".5rem",
-                            transform: "translate(0.25rem, 0rem)",
-                          }}
-                        >
-                          {ach?.color == "Platinum" && <PlatinumIconS />}
-                          {ach?.color == "Gold" && <GoldIconS />}
-                          {ach?.color == "Silver" && <SilverIconS />}
-                          {ach?.color == "Bronze" && <BronzeIconS />}{" "}
-                        </span>
-                        <AchRarity>
-                          <span style={{ fontSize: ".5rem" }}>
-                            {Number(ach?.percentage)?.toFixed(1)}%
+                          >
+                            <PlatinumIcon />
+                          </AchIconOuterPlatinum>
+                        )}
+                        <AchData>
+                          <AchTitle>{ach?.displayName}</AchTitle>
+                          <AchDesc
+                            higher={ach?.description?.length > MAX_DESC}
+                            medium={ach?.description?.length > MEDIUM_DESC}
+                          >
+                            {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                          </AchDesc>
+                        </AchData>
+                        <Seperator padding={".25rem"} />
+                        <AchTrophy>
+                          <span
+                            style={{
+                              fontSize: ".5rem",
+                              transform: "translate(0.25rem, 0rem)",
+                            }}
+                          >
+                            {ach?.color == "Platinum" && <PlatinumIconS />}
+                            {ach?.color == "Gold" && <GoldIconS />}
+                            {ach?.color == "Silver" && <SilverIconS />}
+                            {ach?.color == "Bronze" && <BronzeIconS />}{" "}
                           </span>
-                          <span style={{ fontSize: ".35rem" }}>
-                            {ach?.label?.toUpperCase()}
-                          </span>
-                        </AchRarity>
-                      </AchTrophy>
-                    </AchCard>
-                  );
-                })}
+                          <AchRarity>
+                            <span style={{ fontSize: ".5rem" }}>
+                              {Number(ach?.percentage)?.toFixed(1)}%
+                            </span>
+                            <span style={{ fontSize: ".35rem" }}>
+                              {ach?.label?.toUpperCase()}
+                            </span>
+                          </AchRarity>
+                        </AchTrophy>
+                      </AchCard>
+                    );
+                  })}
               </Game2Line>
             </Games>
           )}
