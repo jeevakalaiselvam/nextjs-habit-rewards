@@ -88,7 +88,17 @@ export default function Atom() {
       formedGame = {
         ...game,
         achievements: [
-          ...sortedPlatinumTrophies,
+          ...sortedPlatinumTrophies?.filter((ach) => {
+            if (platinumData?.includes(game?.id)) {
+              if (ach?.achieved == 1) {
+                return true;
+              } else {
+                return false;
+              }
+            } else {
+              return true;
+            }
+          }),
           {
             displayName: `Platinum`,
             description: `Achieved all Trophies in game`,
