@@ -158,3 +158,21 @@ div.ant-collapse-content-box{
 .ant-collapse>.ant-collapse-item{
     border: 1px solid #f5f5f5;
 }
+
+/* Hide expand icons in SubMenu */
+.anticon .anticon-right .ant-collapse-arrow {
+  display: none !important;
+  background-color: red !important;
+}
+
+div.ant-collapse-header{
+  padding: 0 !important;
+}
+
+div.ant-collapse-expand-icon{
+  display: none !important;
+}
+
+div.ant-collapse-item{
+  margin-bottom: 0rem !important;
+}
