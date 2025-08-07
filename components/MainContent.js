@@ -979,8 +979,8 @@ const GameLeftCard = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 94px;
-  height: 94px;
+  width: 100px;
+  height: 100px;
 `;
 
 const GameRightCard = styled.div`
