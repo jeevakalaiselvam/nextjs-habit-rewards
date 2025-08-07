@@ -22,8 +22,6 @@ export default function CreateAchForm({
   const [gameForm, setGameForm] = useState({
     name: TROPHY_GAME_OPTIONS?.[0]?.name,
     title: TROPHY_GAMES_OPTIONS?.[0]?.name,
-    header: TROPHY_GAME_LIST?.[0]?.name,
-    description: "",
     color: "Bronze",
   });
 

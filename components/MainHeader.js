@@ -47,56 +47,22 @@ export default function MainHeader({
   let bronze = 0;
   let total = 0;
 
-  games?.forEach((game) => {
-    console.log("GAME", game?.name, game?.achievements);
-    game?.achievements?.forEach((ach) => {
-      if (ach?.achieved == 0) {
-        unearned++;
-        if (ach?.color == "Platinum") {
-          platinumA++;
-        }
-        if (ach?.color == "Gold") {
-          goldA++;
-        }
-        if (ach?.color == "Silver") {
-          silverA++;
-        }
-        if (ach?.color == "Bronze") {
-          bronzeA++;
-        }
-      } else {
-        if (ach?.color == "Platinum") {
-          platinum++;
-          total++;
-        }
-        if (ach?.color == "Gold") {
-          gold++;
-          total++;
-        }
-        if (ach?.color == "Silver") {
-          silver++;
-          total++;
-        }
-        if (ach?.color == "Bronze") {
-          bronze++;
-          total++;
-        }
-      }
-    });
-
-    let exceptPlatinum = game?.achievements?.filter(
-      (item) => item?.color !== "Platinum"
-    );
-
-    let completed = exceptPlatinum?.filter(
-      (item) => item?.achieved == 1
-    )?.length;
-    let completion = (completed == 0 ? 0 : (completed / total) * 100)?.toFixed(
-      2
-    );
-    allCompletion = allCompletion + completion;
-    if (total == completed) {
-      completed = completed + 1;
+  games?.forEach((ach) => {
+    if (ach?.color == "Platinum") {
+      platinum++;
+      total++;
+    }
+    if (ach?.color == "Gold") {
+      gold++;
+      total++;
+    }
+    if (ach?.color == "Silver") {
+      silver++;
+      total++;
+    }
+    if (ach?.color == "Bronze") {
+      bronze++;
+      total++;
     }
   });
 

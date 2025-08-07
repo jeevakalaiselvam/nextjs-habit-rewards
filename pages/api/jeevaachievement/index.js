@@ -2,9 +2,9 @@ import clientPromise from "../../../lib/db";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { name, title, description, color, header } = req.body;
+    const { name, title, color } = req.body;
 
-    if (!name || !title || !description || !color || !header) {
+    if (!name || !title || !color) {
       return res
         .status(400)
         .json({ error: "Name, Title, Description, Type required" });
@@ -16,10 +16,7 @@ export default async function handler(req, res) {
       await db.collection("allgames").insertOne({
         name,
         title,
-        description,
         color,
-        header,
-        unlocked: new Date(),
       });
 
       res.status(201).json({ message: "Achievement added successfully" });

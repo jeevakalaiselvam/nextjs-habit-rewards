@@ -41,6 +41,7 @@ import {
 import { Collapse, theme } from "antd";
 import SilverIcon from "./SilverIcon";
 import BronzeIcon from "./BronzeIcon";
+import axios from "axios";
 
 const MAX_DESC = 80;
 const MEDIUM_DESC = 60;
@@ -61,7 +62,21 @@ export default function MainContent({
   const [selected, setSelected] = useState("LIBRARY");
   const [active, setActive] = useState("PROFILE");
   const [gameData, setGameData] = useState({});
-  const [activeAccKey, setAccActiveKey] = useState(null);
+  const [showLevelUpModal, setShowLevelUpModal] = useState(null);
+
+  const addTrophy = (ach, game) => {
+    try {
+      axios
+        .post("/api/jeevaachievement", {
+          title: ach?.name,
+          color: ach?.color,
+          name: game?.name,
+        })
+        .then((response) => {
+          refreshData();
+        });
+    } catch (e) {}
+  };
 
   let unearnedBG = 0;
   let platinumABG = 0;
@@ -111,50 +126,6 @@ export default function MainContent({
   )?.length;
   let completionBG = completedBG == 0 ? 0 : (completedBG / totalBG) * 100;
 
-  let { color, rank } = calculateRankForCompletion(completionBG ?? 0);
-  let lastAch = selectedGame?.achievements?.sort(
-    (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
-  )?.[selectedGame?.achievements?.length - 1];
-
-  let allDLCKeys = [
-    {
-      dlcKey: "DLC1",
-      name: selectedGame?.dlc1Name,
-      image: selectedGame?.dlc1Image,
-    },
-    {
-      dlcKey: "DLC2",
-      name: selectedGame?.dlc2Name,
-      image: selectedGame?.dlc2Image,
-    },
-    {
-      dlcKey: "DLC3",
-      name: selectedGame?.dlc3Name,
-      image: selectedGame?.dlc3Image,
-    },
-    {
-      dlcKey: "DLC4",
-      name: selectedGame?.dlc4Name,
-      image: selectedGame?.dlc4Image,
-    },
-    {
-      dlcKey: "DLC5",
-      name: selectedGame?.dlc5Name,
-      image: selectedGame?.dlc5Image,
-    },
-  ];
-
-  allDLCKeys = allDLCKeys?.filter((dlc) => {
-    let allDlcKeys = selectedGame?.dlcAchievements?.map((item) => item?.dlc);
-    if (allDlcKeys?.includes(dlc?.dlcKey)) {
-      return true;
-    }
-  });
-
-  let sortedGames = games.sort((a, b) =>
-    a?.name.localeCompare(b?.name, undefined, { sensitivity: "base" })
-  );
-
   const { ultrarare, veryrare, rare, uncommon, common } =
     getAchsBasedOnRarity(games);
 
@@ -203,7 +174,7 @@ export default function MainContent({
       let bronze = 0;
 
       let unlockedForGame = allUnlockedAchs?.filter(
-        (item) => item?.header == game?.name
+        (item) => item?.name == game?.name
       );
 
       unlockedForGame?.forEach((ach) => {
@@ -222,7 +193,6 @@ export default function MainContent({
         }
       });
 
-      let completed = total;
       let completion = 100;
       completion = completion >= 100 ? 100 : completion;
       allCompletion = allCompletion + completion;
@@ -230,11 +200,6 @@ export default function MainContent({
       completion = total * 1;
 
       let { color, rank } = calculateRankForCompletion(completion);
-      let lastAch = game?.achievements?.sort(
-        (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
-      )?.[game?.achievements?.length - 1];
-
-      let isPlatinumNotAdded = game?.achievements?.length == 1;
 
       return {
         key: game?.name,
@@ -338,6 +303,14 @@ export default function MainContent({
                 <AchCard
                   color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                   achieved={false}
+                  onClick={() => {
+                    // setShowLevelUpModal(true);
+                    addTrophy(ach, game);
+
+                    if (window) {
+                      localStorage.setItem("OPEN_ACCORDION", game?.name);
+                    }
+                  }}
                 >
                   <AchIconOuter achieved={ach?.achieved}>
                     <AchIcon icon={ach?.icon}>
@@ -421,8 +394,15 @@ export default function MainContent({
     }),
   ];
 
+  let openAcc = "";
+
+  if (window) {
+    openAcc = localStorage.getItem("OPEN_ACCORDION");
+  }
+
   return (
     <Container>
+      {showLevelUpModal && <LevelUpContainer>JEEVA</LevelUpContainer>}
       {!gamesLoading && (
         <SRLeft>
           {selectedMode == "GAMES" && (
@@ -431,7 +411,7 @@ export default function MainContent({
                 <Collapse
                   bordered={false}
                   expandIconPosition="right"
-                  defaultActiveKey={["1"]}
+                  defaultActiveKey={[openAcc]}
                   expandIcon={null}
                   style={{ background: token.colorBgContainer }}
                   items={getItems(panelStyle)}
@@ -520,10 +500,18 @@ export default function MainContent({
   );
 }
 
-const ItemLeft = styled.div`
+const LevelUpContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: absolute;
+  left: 50%;
+  width: 80%;
+  background-color: cyan;
+  min-height: 70vh;
+  top: 50%;
+  z-index: 1000;
+  transform: translate(-50%, -50%);
 `;
 
 const ItemRight = styled.div`
@@ -689,6 +677,10 @@ const AchCard = styled.div`
   border: 1px solid #eee;
   padding-bottom: ${(props) => (props.achieved ? "1rem" : "0rem")};
   position: relative;
+
+  &:active {
+    background-color: ${(props) => COLOR_UNLOCKED};
+  }
 `;
 
 const Game2Line = styled.div`

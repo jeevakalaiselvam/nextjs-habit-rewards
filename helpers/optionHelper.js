@@ -45,6 +45,10 @@ export const TROPHY_GAMES_OPTIONS = [
     color: "Silver",
   },
   {
+    name: "Defeat 1 God Boss",
+    color: "Gold",
+  },
+  {
     name: "Complete a Level",
     color: "Gold",
   },
