@@ -291,8 +291,9 @@ const HeaderProfileLevel = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 1rem;
+  margin-left: 2rem;
   justify-self: flex-end;
+  background-color: red;
 `;
 
 const HeaderCounts = styled.div`
