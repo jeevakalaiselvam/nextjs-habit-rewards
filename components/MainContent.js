@@ -282,11 +282,8 @@ export default function MainContent({
                   let completed = game?.achievements?.filter(
                     (item) => item?.achieved == 1
                   )?.length;
-                  let completion = (
-                    targetObtained == 0
-                      ? 0
-                      : (targetObtained / targetToGet) * 100
-                  )?.toFixed(2);
+                  let completion = game?.completion;
+
                   completion = completion >= 100 ? 100 : completion;
                   allCompletion = allCompletion + completion;
                   if (total == completed) {
