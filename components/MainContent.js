@@ -728,7 +728,6 @@ export default function MainContent({
                   expandIconPosition="right"
                   defaultActiveKey={[openAcc]}
                   expandIcon={null}
-                  style={{ background: token.colorBgContainer }}
                   items={getItems(panelStyle)}
                 />
               </Games2LineR>
@@ -981,9 +980,8 @@ const GameLeftCard = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: translateY(-0.125rem);
-  width: 100px;
-  height: 100px;
+  width: 94px;
+  height: 94px;
 `;
 
 const GameRightCard = styled.div`
@@ -1017,6 +1015,7 @@ const GRBottom = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  height: 50px;
 `;
 
 const AchTitle = styled.div`
@@ -1337,8 +1336,8 @@ const GameInfoInner = styled.div`
 `;
 
 const GameImage = styled.div`
-  width: 200px;
-  height: 100px;
+  width: 100px;
+  height: 94px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1360,7 +1359,7 @@ const GameContainer = styled.div`
   background-color: ${(props) => props.color};
   color: #333;
   padding: 4px 0px 0px 0px;
-  width: 100%;
+  min-width: 100%;
   border: 1px solid #eee;
   cursor: pointer;
 `;
@@ -1382,6 +1381,7 @@ const Games2LineR = styled.div`
   width: 100%;
   min-height: calc(87.25vh);
   max-height: calc(87.25vh);
+  overflow: scroll;
 `;
 
 const Games = styled.div`
