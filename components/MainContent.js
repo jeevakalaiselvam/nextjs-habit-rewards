@@ -909,7 +909,7 @@ const ItemsContainer = styled.div`
   justify-content: center;
   flex-direction: column;
   font-size: 0.75rem;
-  padding: 0.125rem 0.5rem 0.125rem 0;
+  padding: 0.125rem 0.125rem 0.125rem 0;
   color: #666666;
   width: 100%;
 `;
@@ -1284,7 +1284,7 @@ const GameInfoInner = styled.div`
 `;
 
 const GameImage = styled.div`
-  width: 100px;
+  width: 94px;
   height: 94px;
   display: flex;
   align-items: center;

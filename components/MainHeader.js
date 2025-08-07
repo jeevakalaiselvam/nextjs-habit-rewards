@@ -230,7 +230,7 @@ const HeaderProfileLevel = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-left: 1rem;
+  margin-left: 1.5rem;
   justify-self: flex-end;
 `;
 
