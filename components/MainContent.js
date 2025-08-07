@@ -554,8 +554,8 @@ const AchIconOuter = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 75px;
-  height: 75px;
+  width: 70px;
+  height: 70px;
   margin-left: 0.25rem;
   transform: ${(props) =>
     props?.achieved ? "translateY(0.5rem)" : "translateY(0rem)"};
@@ -567,8 +567,8 @@ const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 72px;
-  height: 72px;
+  width: 65px;
+  height: 65px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;
