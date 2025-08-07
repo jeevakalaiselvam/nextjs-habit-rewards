@@ -809,7 +809,7 @@ const TrophyContainer = styled.div`
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.25rem6;
 `;
 
 const LevelUpInner = styled.div`
@@ -1287,7 +1287,6 @@ const Games2LineR = styled.div`
   width: 100%;
   min-height: calc(87.25vh);
   max-height: calc(87.25vh);
-  overflow: scroll;
 `;
 
 const Games = styled.div`
