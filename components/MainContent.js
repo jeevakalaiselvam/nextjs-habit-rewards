@@ -305,6 +305,56 @@ export default function MainContent({
       setLevelProgress(progressPercent);
       setXPNeeded(remainingXP);
     }, 2000);
+
+    setTimeout(() => {
+      if (window) {
+        let completed = 0;
+        let allCompletion = 0;
+        let unearned = 0;
+        let platinumA = 0;
+        let goldA = 0;
+        let silverA = 0;
+        let bronzeA = 0;
+        let platinum = 0;
+        let gold = 0;
+        let silver = 0;
+        let bronze = 0;
+        let total = 0;
+
+        games?.forEach((ach) => {
+          if (ach?.color == "Platinum") {
+            platinum++;
+            total++;
+          }
+          if (ach?.color == "Gold") {
+            gold++;
+            total++;
+          }
+          if (ach?.color == "Silver") {
+            silver++;
+            total++;
+          }
+          if (ach?.color == "Bronze") {
+            bronze++;
+            total++;
+          }
+        });
+
+        let averageCompletion =
+          allCompletion == 0 ? 0 : allCompletion / games?.length;
+
+        let { progressPercent, level, xpForNextLevel, remainingXP } =
+          calculatePSLevelAndProgress(platinum, gold, silver, bronze);
+
+        setShouldBlink(false);
+
+        if (window) {
+          localStorage.setItem("OLD_LEVEL", level);
+        }
+      }
+      setShowLevelUpModal(false);
+      refreshData();
+    }, 3000);
   };
 
   const getItems = (panelStyle) => [
@@ -553,58 +603,7 @@ export default function MainContent({
   return (
     <Container>
       {showLevelUpModal && (
-        <LevelUpContainer
-          shouldBlink={shouldBlink}
-          onClick={() => {
-            if (window) {
-              let completed = 0;
-              let allCompletion = 0;
-              let unearned = 0;
-              let platinumA = 0;
-              let goldA = 0;
-              let silverA = 0;
-              let bronzeA = 0;
-              let platinum = 0;
-              let gold = 0;
-              let silver = 0;
-              let bronze = 0;
-              let total = 0;
-
-              games?.forEach((ach) => {
-                if (ach?.color == "Platinum") {
-                  platinum++;
-                  total++;
-                }
-                if (ach?.color == "Gold") {
-                  gold++;
-                  total++;
-                }
-                if (ach?.color == "Silver") {
-                  silver++;
-                  total++;
-                }
-                if (ach?.color == "Bronze") {
-                  bronze++;
-                  total++;
-                }
-              });
-
-              let averageCompletion =
-                allCompletion == 0 ? 0 : allCompletion / games?.length;
-
-              let { progressPercent, level, xpForNextLevel, remainingXP } =
-                calculatePSLevelAndProgress(platinum, gold, silver, bronze);
-
-              setShouldBlink(false);
-
-              if (window) {
-                localStorage.setItem("OLD_LEVEL", level);
-              }
-            }
-            setShowLevelUpModal(false);
-            refreshData();
-          }}
-        >
+        <LevelUpContainer shouldBlink={shouldBlink} onClick={() => {}}>
           <LevelUpInner>
             <LevelHeader shouldBlink={shouldBlink}>
               {shouldBlink && (
