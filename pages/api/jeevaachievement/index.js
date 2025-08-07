@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   if (req.method === "POST") {
     const { name, title, color, description } = req.body;
 
-    if (!name || !title || !color || !description) {
+    if (!name || !title || !color) {
       return res
         .status(400)
         .json({ error: "Name, Title, Description, Type required" });
@@ -17,7 +17,7 @@ export default async function handler(req, res) {
         name,
         title,
         color,
-        description,
+        description: description ? description : `${color} Trophy`,
         unlocked: new Date(),
       });
 
