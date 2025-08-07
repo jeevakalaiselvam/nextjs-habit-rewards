@@ -117,6 +117,7 @@ export const COLOR_BLACK1 = "#1b1b1b";
 export const COLOR_BLACK2 = "#252525";
 export const COLOR_ACH = "#171b2a";
 
+export const COLOR_COPPER = "#6A4928";
 export const COLOR_GOLD = "#CD9A46";
 export const COLOR_GOLD2 = "#E7C533";
 export const COLOR_SILVER = "#D6D6D6";

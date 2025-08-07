@@ -46,6 +46,7 @@ import BronzeIcon from "./BronzeIcon";
 import axios from "axios";
 import CreateAchForm from "./CreateAchForm";
 import WhiteTrophy from "./WhiteTrophy";
+import CopperIcon from "./CopperIcon";
 
 const MAX_DESC = 80;
 const MEDIUM_DESC = 60;
@@ -334,7 +335,7 @@ export default function MainContent({
       completion = completion >= 100 ? 100 : completion;
       allCompletion = allCompletion + completion;
 
-      completion = total * 1;
+      completion = total * 1 > 100 ? 100 : total * 1;
 
       let { color, rank } = calculateRankForCompletion(completion);
 
@@ -346,6 +347,9 @@ export default function MainContent({
             color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
           >
             <GameInfoInner>
+              <GameLeftCard onClick={() => {}}>
+                <GameImage url={game?.url} center></GameImage>
+              </GameLeftCard>
               <GameRightCard>
                 <GRTop>
                   <GameData>
@@ -415,21 +419,9 @@ export default function MainContent({
                         <PlatinumIcon />
                       </span>
                     </Platinum>
-                    <Seperator></Seperator>
-                    <Rank>
-                      <span style={{ fontSize: "1.5rem", color: color }}>
-                        {rank}
-                      </span>
-                      <span style={{ fontSize: ".7rem", color: color }}>
-                        RANK
-                      </span>
-                    </Rank>
                   </GameInfo>
                 </GRBottom>
               </GameRightCard>
-              <GameLeftCard onClick={() => {}}>
-                <GameImage url={game?.url} center></GameImage>
-              </GameLeftCard>
             </GameInfoInner>
           </GameContainer>
         ),
@@ -458,6 +450,7 @@ export default function MainContent({
                       {ach?.color == "Gold" && <GoldIcon />}
                       {ach?.color == "Silver" && <SilverIcon />}
                       {ach?.color == "Bronze" && <BronzeIcon />}
+                      {ach?.color == "Copper" && <CopperIcon />}
                     </AchIcon>
                   </AchIconOuter>
                   <AchData>
@@ -507,13 +500,22 @@ export default function MainContent({
                         >
                           <BronzeIcon />
                         </div>
+                      )}{" "}
+                      {ach?.color == "Copper" && (
+                        <div
+                          style={{
+                            transform: "scale(.5) translateX(-.25rem)",
+                          }}
+                        >
+                          <CopperIcon />
+                        </div>
                       )}
                     </span>
                     <AchRarity>
                       <span style={{ fontSize: ".5rem" }}>
                         {ach?.color == "Platinum" && "300 XP"}
                         {ach?.color == "Gold" && "90 XP"}
-                        {ach?.color == "Silver" && "60 XP"}
+                        {ach?.color == "Silver" && "30 XP"}
                         {ach?.color == "Bronze" && "15 XP"}
                       </span>
                       <span style={{ fontSize: ".35rem" }}>
@@ -1108,7 +1110,7 @@ const Outer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 120px;
+  min-width: 180px;
   height: 14px;
   background-color: #bababa;
   position: relative;
@@ -1135,7 +1137,7 @@ const TSingle = styled.div`
 const TTop = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
 `;
 

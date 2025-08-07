@@ -95,21 +95,6 @@ export default function MainHeader({
         </HeaderProfileLevel>
       </HeaderName>
       <HeaderCounts>
-        <Section color={COLOR_WHITE}>
-          <Top>
-            <span
-              style={{
-                transform: "translateY(-2.5px)",
-                marginRight: ".25rem",
-              }}
-            >
-              <WhiteTrophy />
-            </span>
-            <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
-              {total}
-            </span>
-          </Top>
-        </Section>
         <Section color={COLOR_PLATINUM}>
           <Top>
             <span
