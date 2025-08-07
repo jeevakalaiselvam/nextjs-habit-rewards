@@ -83,9 +83,7 @@ export default function MainContent({
         .post("/api/jeevaachievement", {
           ...formData,
         })
-        .then((response) => {
-          refreshData();
-        });
+        .then((response) => {});
     } catch (e) {}
   };
 
@@ -176,6 +174,7 @@ export default function MainContent({
   allUnlockedAchs = games;
 
   const triggerLevelUpAnimation = (color) => {
+    addTrophy();
     setShowLevelUpModal(true);
     let completed = 0;
     let allCompletion = 0;
@@ -546,6 +545,7 @@ export default function MainContent({
         <LevelUpContainer
           onClick={() => {
             setShowLevelUpModal(false);
+            refreshData();
           }}
         >
           <LevelUpInner>
