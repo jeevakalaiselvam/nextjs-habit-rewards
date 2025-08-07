@@ -194,22 +194,11 @@ export default function MainContent({
     let total = 0;
 
     games?.forEach((ach) => {
-      if (ach?.color == "Platinum") {
-        platinum++;
-        total++;
-      }
-      if (ach?.color == "Gold") {
-        gold++;
-        total++;
-      }
-      if (ach?.color == "Silver") {
-        silver++;
-        total++;
-      }
-      if (ach?.color == "Bronze") {
-        bronze++;
-        total++;
-      }
+      platinum = ach?.platinum;
+      gold = ach?.gold;
+      silver = ach?.silver;
+      bronze = ach?.bronze;
+      total = platinum + gold + silver + bronze;
     });
 
     let averageCompletion =
@@ -242,22 +231,11 @@ export default function MainContent({
       let total = 0;
 
       games?.forEach((ach) => {
-        if (ach?.color == "Platinum") {
-          platinum++;
-          total++;
-        }
-        if (ach?.color == "Gold") {
-          gold++;
-          total++;
-        }
-        if (ach?.color == "Silver") {
-          silver++;
-          total++;
-        }
-        if (ach?.color == "Bronze") {
-          bronze++;
-          total++;
-        }
+        platinum = ach?.platinum;
+        gold = ach?.gold;
+        silver = ach?.silver;
+        bronze = ach?.bronze;
+        total = platinum + gold + silver + bronze;
       });
 
       if (color == "Platinum") {
@@ -366,25 +344,15 @@ export default function MainContent({
       let silver = 0;
       let bronze = 0;
 
-      let unlockedForGame = allUnlockedAchs?.filter(
+      let unlockedForGame = allUnlockedAchs?.find(
         (item) => item?.title == game?.name
       );
 
-      unlockedForGame?.forEach((ach) => {
-        total++;
-        if (ach?.color == "Platinum") {
-          platinum++;
-        }
-        if (ach?.color == "Gold") {
-          gold++;
-        }
-        if (ach?.color == "Silver") {
-          silver++;
-        }
-        if (ach?.color == "Bronze") {
-          bronze++;
-        }
-      });
+      platinum = unlockedForGame?.platinum;
+      gold = unlockedForGame?.gold;
+      silver = unlockedForGame?.silver;
+      bronze = unlockedForGame?.bronze;
+      total = platinum + gold + silver + bronze;
 
       let completion = 100;
       completion = completion >= 100 ? 100 : completion;
@@ -483,11 +451,7 @@ export default function MainContent({
                   </GameInfo>
                 </GRBottom>
               </GameRightCard>
-              <GameLeftCard
-                onClick={() => {
-                  setSelectedMode("GAME");
-                }}
-              >
+              <GameLeftCard onClick={() => {}}>
                 <GameImage url={game?.url} center></GameImage>
               </GameLeftCard>
             </GameInfoInner>
