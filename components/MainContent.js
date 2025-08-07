@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import {
   COLOR_ACCENT,
+  COLOR_BACKGROUND,
   COLOR_BRONZE,
   COLOR_GOLD,
   COLOR_GREEN,
@@ -89,7 +90,9 @@ export default function MainContent({
           color: color,
           title: game,
         })
-        .then((response) => {});
+        .then((response) => {
+          refreshData();
+        });
     } catch (e) {}
   };
 
@@ -278,38 +281,6 @@ export default function MainContent({
       setLevelProgress(progressPercent);
       setXPNeeded(remainingXP);
     }, 500);
-
-    setTimeout(() => {
-      if (window) {
-        let allCompletion = 0;
-        let platinum = 0;
-        let gold = 0;
-        let silver = 0;
-        let bronze = 0;
-        let total = 0;
-
-        games?.forEach((ach) => {
-          platinum += ach?.platinum;
-          gold += ach?.gold;
-          silver += ach?.silver;
-          bronze += ach?.bronze;
-        });
-
-        total += platinum + gold + silver + bronze;
-
-        let averageCompletion =
-          allCompletion == 0 ? 0 : allCompletion / games?.length;
-
-        let { progressPercent, level, xpForNextLevel, remainingXP } =
-          calculatePSLevelAndProgress(platinum, gold, silver, bronze);
-
-        console.log({ level });
-
-        localStorage.setItem("OLD_LEVEL", level);
-      }
-      setShowLevelUpModal(false);
-      refreshData();
-    }, 1500);
   };
 
   const getItems = (panelStyle) => [
@@ -435,8 +406,7 @@ export default function MainContent({
                   onClick={() => {
                     if (!showLevelUpModal) {
                       addTrophy(ach?.name, ach?.color, game?.name);
-
-                      triggerLevelUpAnimation(ach?.color);
+                      // triggerLevelUpAnimation(ach?.color);
 
                       if (window) {
                         localStorage.setItem("OPEN_ACCORDION", game?.name);
@@ -542,9 +512,28 @@ export default function MainContent({
     openAcc = localStorage.getItem("OPEN_ACCORDION");
   }
 
+  let allCompletion = 0;
+  let platinum = 0;
+  let gold = 0;
+  let silver = 0;
+  let bronze = 0;
+  let total = 0;
+
+  games?.forEach((ach) => {
+    platinum += ach?.platinum;
+    gold += ach?.gold;
+    silver += ach?.silver;
+    bronze += ach?.bronze;
+  });
+
+  total += platinum + gold + silver + bronze;
+
+  let { progressPercent, level, xpForNextLevel, remainingXP } =
+    calculatePSLevelAndProgress(platinum, gold, silver, bronze);
+
   return (
     <Container>
-      {showLevelUpModal && (
+      {false && (
         <LevelUpContainer shouldBlink={shouldBlink} onClick={() => {}}>
           <LevelUpInner>
             <LevelHeader shouldBlink={shouldBlink}>
@@ -630,7 +619,7 @@ export default function MainContent({
               </HeaderCounts>
             </TrophyContainer>
             <ProgressContainer>
-              <ProgressLeft>Level {levelLeft}</ProgressLeft>
+              <ProgressLeft>Level {level - 1}</ProgressLeft>
               <ProgressMiddle>
                 <XPNeeded>
                   <span style={{ fontSize: ".8rem", opacity: ".75" }}>
@@ -639,7 +628,7 @@ export default function MainContent({
                 </XPNeeded>
                 <Progress percent={levelProgress} showInfo={false} />
               </ProgressMiddle>
-              <ProgressRight>Level {levelRight}</ProgressRight>
+              <ProgressRight>Level {level + 1}</ProgressRight>
             </ProgressContainer>
           </LevelUpInner>
         </LevelUpContainer>
@@ -659,10 +648,23 @@ export default function MainContent({
           <CreateAchForm setFormData={setFormData} formData={formData} />
         </Modal>
       )}
-      {!gamesLoading && (
+
+      {
         <SRLeft showLevelUpModal={showLevelUpModal}>
           {selectedMode == "GAMES" && (
             <Games>
+              <ProgressContainer>
+                <ProgressLeft>Level {level}</ProgressLeft>
+                <ProgressMiddle>
+                  <XPNeeded>
+                    <span style={{ fontSize: ".8rem", opacity: ".75" }}>
+                      {remainingXP} XP
+                    </span>
+                  </XPNeeded>
+                  <Progress percent={progressPercent} showInfo={false} />
+                </ProgressMiddle>
+                <ProgressRight>Level {level + 1}</ProgressRight>
+              </ProgressContainer>
               <Games2LineR>
                 <Collapse
                   bordered={false}
@@ -744,7 +746,7 @@ export default function MainContent({
             </Games>
           )}
         </SRLeft>
-      )}
+      }
     </Container>
   );
 }
@@ -781,6 +783,9 @@ const ProgressContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
+  height: 40px;
+  color: #fefefe;
+  background-color: ${COLOR_BACKGROUND};
 `;
 
 const ProgressLeft = styled.div`
@@ -788,6 +793,7 @@ const ProgressLeft = styled.div`
   align-items: center;
   justify-content: center;
   padding: 1rem 0.5rem;
+  transform: translate(0%, 10%);
 `;
 
 const ProgressMiddle = styled.div`
@@ -796,6 +802,7 @@ const ProgressMiddle = styled.div`
   justify-content: center;
   flex: 1;
   padding: 1rem 0.5rem;
+  transform: translate(0%, 10%);
   position: relative;
 `;
 
@@ -805,7 +812,7 @@ const XPNeeded = styled.div`
   justify-content: center;
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, 50%);
   top: 0;
 `;
 
@@ -814,6 +821,7 @@ const ProgressRight = styled.div`
   align-items: center;
   justify-content: center;
   padding: 1rem 0.5rem;
+  transform: translate(0%, 10%);
 `;
 
 const TrophyContainer = styled.div`
@@ -1320,8 +1328,8 @@ const Games2LineR = styled.div`
   flex-wrap: wrap;
   flex-direction: column;
   width: 100%;
-  min-height: calc(87.25vh);
-  max-height: calc(87.25vh);
+  min-height: calc(81vh);
+  max-height: calc(81vh);
   overflow: scroll;
 `;
 
@@ -1333,8 +1341,8 @@ const Games = styled.div`
   flex-direction: column;
   color: #fefefe;
   font-size: 0.9rem;
-  min-height: calc(87.25vh);
-  max-height: calc(87.25vh);
+  min-height: calc(81vh);
+  max-height: calc(81vh);
   padding-top: 2rem;
   padding-bottom: 2rem;
 `;
