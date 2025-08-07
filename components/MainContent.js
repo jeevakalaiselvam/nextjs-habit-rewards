@@ -16,7 +16,7 @@ import {
 import { useState } from "react";
 import { HEADER_IMAGE } from "../helpers/urlHelper";
 import { MdOutlineModeEditOutline } from "react-icons/md";
-import { TbEdit, TbPlayCard } from "react-icons/tb";
+import { TbChevronsUp, TbEdit, TbPlayCard } from "react-icons/tb";
 import { HiPlay } from "react-icons/hi2";
 import {
   calculatePSLevelAndProgress,
@@ -76,12 +76,17 @@ export default function MainContent({
   const [bronzeC, setBronzeC] = useState(0);
   const [levelProgress, setLevelProgress] = useState(0);
   const [xpNeeded, setXPNeeded] = useState(0);
+  const [shouldBlink, setShouldBlink] = useState(false);
+  const [levelOld, setLevelOld] = useState(0);
+  const [levelNew, setLevelNew] = useState(0);
 
-  const addTrophy = () => {
+  const addTrophy = (name, color, game) => {
     try {
       axios
         .post("/api/jeevaachievement", {
-          ...formData,
+          name: name,
+          color: color,
+          title: game,
         })
         .then((response) => {});
     } catch (e) {}
@@ -174,7 +179,6 @@ export default function MainContent({
   allUnlockedAchs = games;
 
   const triggerLevelUpAnimation = (color) => {
-    addTrophy();
     setShowLevelUpModal(true);
     let completed = 0;
     let allCompletion = 0;
@@ -221,7 +225,7 @@ export default function MainContent({
     setSilverC(silver);
     setBronzeC(bronze);
     setLevelProgress(progressPercent);
-    setXPNeeded(xpForNextLevel);
+    setXPNeeded(remainingXP);
 
     setTimeout(() => {
       let completed = 0;
@@ -279,6 +283,19 @@ export default function MainContent({
       let { progressPercent, level, xpForNextLevel, remainingXP } =
         calculatePSLevelAndProgress(platinum, gold, silver, bronze);
 
+      let shouldBlink = false;
+      let oldInStorage = 0;
+
+      if (window) {
+        oldInStorage = Number(localStorage.getItem("OLD_LEVEL") ?? 0);
+        if (level > oldInStorage) {
+          setShouldBlink(true);
+          setLevelOld(oldInStorage);
+          setLevelNew(level);
+        } else {
+        }
+      }
+
       setLevelLeft(level);
       setLevelRight(level + 1);
       setPLatinumC(platinum);
@@ -286,7 +303,7 @@ export default function MainContent({
       setSilverC(silver);
       setBronzeC(bronze);
       setLevelProgress(progressPercent);
-      setXPNeeded(xpForNextLevel);
+      setXPNeeded(remainingXP);
     }, 2000);
   };
 
@@ -435,11 +452,7 @@ export default function MainContent({
                   achieved={false}
                   onClick={() => {
                     if (!showLevelUpModal) {
-                      setFormData((old) => ({
-                        title: ach?.name,
-                        color: ach?.color,
-                        name: game?.name,
-                      }));
+                      addTrophy(ach?.name, ach?.color, game?.name);
 
                       triggerLevelUpAnimation(ach?.color);
 
@@ -541,15 +554,76 @@ export default function MainContent({
     <Container>
       {showLevelUpModal && (
         <LevelUpContainer
+          shouldBlink={shouldBlink}
           onClick={() => {
+            if (window) {
+              let completed = 0;
+              let allCompletion = 0;
+              let unearned = 0;
+              let platinumA = 0;
+              let goldA = 0;
+              let silverA = 0;
+              let bronzeA = 0;
+              let platinum = 0;
+              let gold = 0;
+              let silver = 0;
+              let bronze = 0;
+              let total = 0;
+
+              games?.forEach((ach) => {
+                if (ach?.color == "Platinum") {
+                  platinum++;
+                  total++;
+                }
+                if (ach?.color == "Gold") {
+                  gold++;
+                  total++;
+                }
+                if (ach?.color == "Silver") {
+                  silver++;
+                  total++;
+                }
+                if (ach?.color == "Bronze") {
+                  bronze++;
+                  total++;
+                }
+              });
+
+              let averageCompletion =
+                allCompletion == 0 ? 0 : allCompletion / games?.length;
+
+              let { progressPercent, level, xpForNextLevel, remainingXP } =
+                calculatePSLevelAndProgress(platinum, gold, silver, bronze);
+
+              setShouldBlink(false);
+
+              if (window) {
+                localStorage.setItem("OLD_LEVEL", level);
+              }
+            }
             setShowLevelUpModal(false);
             refreshData();
           }}
         >
           <LevelUpInner>
-            <TrophyContainer>
-              <div style={{ fontSize: "2rem", padding: "1rem" }}>Level</div>
-            </TrophyContainer>
+            <LevelHeader shouldBlink={shouldBlink}>
+              {shouldBlink && (
+                <div style={{ fontSize: "2rem", padding: "1rem" }}>
+                  <span style={{ marginRight: ".5rem", color: "#ffd700" }}>
+                    <TbChevronsUp />
+                  </span>
+                  Level Up
+                  <span style={{ marginLeft: ".5rem", color: "#ffd700" }}>
+                    <TbChevronsUp />
+                  </span>
+                </div>
+              )}
+              {!shouldBlink && (
+                <div style={{ fontSize: "2rem", padding: "1rem" }}>
+                  Level {levelNew}
+                </div>
+              )}
+            </LevelHeader>
             <TrophyContainer>
               <HeaderCounts>
                 <Section color={COLOR_PLATINUM}>
@@ -810,6 +884,27 @@ const TrophyContainer = styled.div`
   margin-bottom: 0.25rem6;
 `;
 
+const LevelHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  margin-bottom: 0.25rem6;
+
+  animation: ${(props) =>
+    props.shouldBlink ? "blinkSmooth 1.5s ease-in-out infinite" : ""};
+
+  @keyframes blinkSmooth {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+`;
+
 const LevelUpInner = styled.div`
   display: flex;
   align-items: center;
@@ -839,14 +934,16 @@ const LevelUpContainer = styled.div`
   min-height: 20vh;
   padding: 1rem;
 
-  border: 1px solid #ffd700;
+  border: ${(props) => (props?.shouldBlink ? "1px solid #ffd700" : "")};
   color: #ffd700;
   padding: 16px 24px;
   border-radius: 8px;
   text-align: center;
 
-  box-shadow: 0 0 8px #ffd700;
-  animation: goldBreath 2s ease-in-out infinite;
+  box-shadow: ${(props) =>
+    props?.shouldBlink ? "0 0 8px #ffd700" : `0 0 8px ${COLOR_GREEN}`};
+  animation: ${(props) =>
+    props?.shouldBlink ? "goldBreath 2s ease-in-out infinite" : ""};
 
   @keyframes goldBreath {
     0%,
