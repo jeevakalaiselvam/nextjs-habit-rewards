@@ -443,8 +443,6 @@ export default function MainContent({
 
                       triggerLevelUpAnimation(ach?.color);
 
-                      // setShowCreatModal(true);
-
                       if (window) {
                         localStorage.setItem("OPEN_ACCORDION", game?.name);
                       }
