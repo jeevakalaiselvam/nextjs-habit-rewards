@@ -35,7 +35,7 @@ export default function Atom() {
   const refreshPlatinumData = () => {
     setPlatinumDataLoading(true);
     try {
-      axios.get("/api/platinum").then((response) => {
+      axios.get("/api/onboard").then((response) => {
         setPlatinumData(response?.data);
         setPlatinumDataLoading(false);
       });
@@ -59,32 +59,7 @@ export default function Atom() {
     let finalGames = [];
 
     finalGames = games?.map((game) => {
-      let platinumGameData = platinumData?.find((item) => item?.id == game?.id);
-      let formedGame = {};
-      let platinumMapper = {};
-      let dlcMapper = {};
-
-      platinumGameData?.platinum?.forEach((ach) => {
-        platinumMapper[ach?.title] = ach;
-      });
-
-      console.log({ platinumMapper });
-
-      platinumGameData?.dlc1Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC1" };
-      });
-      platinumGameData?.dlc2Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC2" };
-      });
-      platinumGameData?.dlc3Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC3" };
-      });
-      platinumGameData?.dlc4Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC4" };
-      });
-      platinumGameData?.dlc5Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC5" };
-      });
+      let platinumGameData = platinumData?.map((item) => item?.gameId);
 
       let gameName = game?.achievements?.[0]?.gameName;
 
@@ -112,7 +87,13 @@ export default function Atom() {
       formedGame = {
         ...game,
         ...platinumGameData,
-        achievements: [...sortedPlatinumTrophies],
+        achievements: [
+          ...sortedPlatinumTrophies,
+          {
+            name: "Jeeva",
+            description: "",
+          },
+        ],
       };
 
       return formedGame;
