@@ -14,7 +14,7 @@ export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
   const platinumPoints = 300;
   const goldPoints = 90;
   const silverPoints = 30;
-  const bronzePoints = 15;
+  const bronzePoints = 5;
 
   // Calculate total XP
   const totalXP =
