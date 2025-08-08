@@ -68,22 +68,6 @@ export default function Atom() {
 
       console.log({ platinumMapper });
 
-      platinumGameData?.dlc1Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC1" };
-      });
-      platinumGameData?.dlc2Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC2" };
-      });
-      platinumGameData?.dlc3Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC3" };
-      });
-      platinumGameData?.dlc4Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC4" };
-      });
-      platinumGameData?.dlc5Trophies?.forEach((ach) => {
-        dlcMapper[ach?.title] = { ...ach, dlc: "DLC5" };
-      });
-
       let gameName = game?.achievements?.[0]?.gameName;
 
       let sortedPlatinumTrophies = game?.achievements
@@ -95,6 +79,13 @@ export default function Atom() {
             title: ach?.displayName,
             hiddenDesc: platinumMapper[ach?.displayName]?.description,
           };
+        })
+        ?.filter((ach) => {
+          if (platinumMapper[ach?.displayName]) {
+            return true;
+          } else {
+            return false;
+          }
         })
         ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
 
