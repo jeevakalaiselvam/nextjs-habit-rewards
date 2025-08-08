@@ -16,6 +16,7 @@ export default function Atom() {
   const [games, setGames] = useState([]);
   const [platinumData, setPlatinumData] = useState([]);
   const [finalGames, setFinalGames] = useState([]);
+  const [selectedMode, setSelectedMode] = useState("GAMES");
   const [refeshing, setRefreshing] = useState(false);
 
   const refreshSteamGames = () => {
@@ -124,27 +125,21 @@ export default function Atom() {
 
   return (
     <Container>
-      <MainHeader games={finalGames} gamesLoading={gamesLoading} />
+      <MainHeader
+        games={finalGames}
+        setSelectedMode={setSelectedMode}
+        refreshData={refreshData}
+        gamesLoading={gamesLoading}
+      />
       <MainContent
         games={finalGames}
+        selectedMode={selectedMode}
         refreshData={refreshData}
         setGamesLoading={setGamesLoading}
         gamesLoading={gamesLoading}
+        setSelectedMode={setSelectedMode}
         platinumDataLoading={platinumDataLoading}
       />
-      <RefreshButton
-        onClick={() => {
-          setRefreshing(true);
-          if (window) {
-            window.location.reload();
-          }
-        }}
-      >
-        <span style={{ transform: "translateY(2px)", marginRight: ".5rem" }}>
-          <TbRefresh />
-        </span>
-        <span>{refeshing ? "Refreshing..." : "Refresh"}</span>
-      </RefreshButton>
     </Container>
   );
 }
@@ -154,7 +149,7 @@ const RefreshButton = styled.div`
   align-items: center;
   justify-content: flex-start;
   position: fixed;
-  right: 2rem;
+  right: 1rem;
   top: 1rem;
   background-color: ${COLOR_ACCENT};
   padding: 0.25rem 0.5rem;
@@ -172,7 +167,7 @@ const Container = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  background-color: #292b2d;
+  background-color: #1b2838;
   color: #fefefe;
   position: relative;
 `;

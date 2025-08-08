@@ -288,7 +288,7 @@ export default function MainContent({
       </FirstRow>
       <FirstRow>
         <FRItem>P</FRItem>
-        <FRLeft>OBSIDIANLOGAN'S PROFILE</FRLeft>
+        <FRLeft>N7SHADOWX PROFILE</FRLeft>
         <FRRight>
           <TabLink
             onClick={() => {
@@ -462,6 +462,7 @@ export default function MainContent({
                           padding: "1rem 0.5rem",
                           opacity: 0.75,
                           transform: "translate(-.66rem,.4rem)",
+                          color: "#FEFEFE",
                         }}
                       >
                         {ach?.levelReached}
@@ -871,7 +872,9 @@ export default function MainContent({
                           {ach?.color != "Platinum" && (
                             <AchIconOuter achieved={ach?.achieved}>
                               <AchIcon
-                                icon={ach?.icon}
+                                icon={
+                                  ach?.achieved == 1 ? ach?.icon : ach?.icongray
+                                }
                                 onClick={() => {
                                   if (window !== "undefined") {
                                     const searchQuery = `${
@@ -892,7 +895,7 @@ export default function MainContent({
                             <AchIconOuterPlatinum achieved={ach?.achieved}>
                               <span
                                 style={{
-                                  background: "#D5D6D6",
+                                  background: "#262D35",
                                   width: "60px",
                                   height: "60px",
                                   display: "flex",
@@ -1372,10 +1375,10 @@ const AchTitle = styled.div`
   display: flex;
   align-items: center;
   padding-left: 0.5rem;
-  color: #4486c6;
+  color: #fefefe;
   justify-content: flex-start;
   flex: 2;
-  font-size: 0.8rem;
+  font-size: 16px;
   width: 100%;
 `;
 
@@ -1386,8 +1389,8 @@ const AchDesc = styled.div`
   padding-left: 0.5rem;
   flex: 2;
   width: 100%;
-  opacity: 0.75;
-  font-size: 0.75rem;
+  font-size: 12px;
+  color: #898989;
 `;
 
 const AchUnlocked = styled.div`
@@ -1407,8 +1410,6 @@ const AchIconOuter = styled.div`
   justify-content: center;
   width: 65px;
   height: 65px;
-  background: ${(props) =>
-    props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
 `;
 
 const AchIconOuterPlatinum = styled.div`
@@ -1417,8 +1418,6 @@ const AchIconOuterPlatinum = styled.div`
   justify-content: center;
   width: 65px;
   height: 65px;
-  background: ${(props) =>
-    props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
 `;
 
 const AchIcon = styled.div`
@@ -1459,6 +1458,7 @@ const AchRarity = styled.div`
   width: 100px;
   justify-content: flex-start;
   flex-direction: column;
+  color: rgb(139, 146, 154);
 `;
 
 const AchTrophy = styled.div`
@@ -1467,7 +1467,7 @@ const AchTrophy = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   min-width: 50px;
-  transform: scale(2) translate(0.25rem, 0.25rem);
+  transform: scale(1.5) translate(0.25rem, 0.25rem);
 `;
 
 const AchTrophy2 = styled.div`
@@ -1485,9 +1485,8 @@ const AchCard = styled.div`
   justify-content: flex-start;
   color: #333;
   width: 100%;
-  background-color: ${(props) =>
-    props.achieved ? COLOR_UNLOCKED : props.color};
-  border: 1px solid #eee;
+  background-color: #080c11;
+  margin-bottom: 0.5rem;
 `;
 
 const Game2Line = styled.div`
@@ -1528,7 +1527,6 @@ const Game = styled.div`
   width: 100%;
   color: #fefefe;
   font-size: 0.9rem;
-  border: 1px solid #ddd;
 `;
 
 const RItem = styled.div`
@@ -1548,7 +1546,7 @@ const RareSelection = styled.div`
   color: #4486c6;
   width: 100%;
   padding: 1rem;
-  background-color: #f5f5f7;
+  background-color: #16202d;
 `;
 
 const Rarest2Line = styled.div`
@@ -1592,7 +1590,7 @@ const Rarest = styled.div`
   width: 100%;
   color: #fefefe;
   font-size: 0.9rem;
-  border: 1px solid #ddd;
+  background-color: #16202d;
 `;
 
 const Milestones = styled.div`
@@ -1603,7 +1601,6 @@ const Milestones = styled.div`
   width: 100%;
   color: #fefefe;
   font-size: 0.9rem;
-  border: 1px solid #ddd;
   margin-bottom: 1rem;
 `;
 
@@ -1613,7 +1610,7 @@ const Platinum = styled.div`
   justify-content: center;
   flex-direction: column;
   margin-right: 0.5rem;
-  color: #b9c7e5;
+  color: #2f3e56;
   min-width: 50px;
 `;
 
@@ -1641,7 +1638,7 @@ const Outer = styled.div`
   justify-content: center;
   width: 120px;
   height: 14px;
-  background-color: #bababa;
+  background-color: #3c3f49;
   position: relative;
 `;
 
@@ -1653,7 +1650,7 @@ const Inner = styled.div`
   left: 0;
   top: 0;
   height: 14px;
-  background-color: #336291;
+  background-color: #1a9fff;
   width: ${(props) => `${props.percentage}%`};
 `;
 
@@ -1689,6 +1686,7 @@ const Rank = styled.div`
   flex-direction: column;
   justify-content: center;
   min-width: 50px;
+  color: rgb(139, 146, 154);
 `;
 
 const Seperator = styled.div`
@@ -1697,7 +1695,7 @@ const Seperator = styled.div`
   justify-content: center;
   content: "";
   height: 40px;
-  background: #000000;
+  background: #eee;
   opacity: 0.25;
   width: 1px;
   margin: ${(props) => (props.padding ? `0rem ${props.padding}` : `0rem 1rem`)};
@@ -1714,6 +1712,7 @@ const Ps5 = styled.div`
   cursor: pointer;
   width: 40px;
   box-shadow: 0 0 0 1px #939393 inset;
+  color: rgb(139, 146, 154);
 `;
 
 const GameTitle = styled.div`
@@ -1721,7 +1720,7 @@ const GameTitle = styled.div`
   align-items: center;
   width: 100%6;
   justify-content: center;
-  color: #057fcc;
+  color: #fefefe;
 `;
 
 const Warning = styled.div`
@@ -1844,10 +1843,10 @@ const GameContainer = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100%;
-  background-color: ${(props) => props.color};
+  background-color: #16202d;
   color: #333;
   padding: 4px;
-  border: 1px solid #ddd;
+  margin-bottom: 0.5rem;
   cursor: pointer;
 `;
 
@@ -1859,7 +1858,6 @@ const GameContainerCD = styled.div`
   color: #333;
   padding: 8px;
   flex-direction: column;
-  border: 1px solid #ddd;
   cursor: pointer;
   width: 350px;
 `;
@@ -1905,7 +1903,6 @@ const GamesCD = styled.div`
   width: 100%;
   color: #fefefe;
   font-size: 0.9rem;
-  border: 1px solid #ddd;
   margin-bottom: 1rem;
 `;
 
@@ -1917,7 +1914,6 @@ const Games = styled.div`
   width: 98%;
   color: #fefefe;
   font-size: 0.9rem;
-  border: 1px solid #ddd;
   margin-bottom: 1rem;
 `;
 
@@ -1937,7 +1933,6 @@ const GameLineTime = styled.div`
   color: #fefefe;
   flex-direction: column;
   font-size: 0.9rem;
-  border: 1px solid #ddd;
   flex: 1;
   margin-right: 1rem;
   margin-bottom: 1rem;
@@ -1950,7 +1945,6 @@ const GameLineHours = styled.div`
   flex-direction: column;
   color: #fefefe;
   font-size: 0.9rem;
-  border: 1px solid #ddd;
   margin-bottom: 1rem;
 `;
 
@@ -1997,7 +1991,7 @@ const SecondRow = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  background-color: #f7f7f7;
+  background-color: #111923;
   width: 100%;
   padding: 1rem;
   color: #44484b;
@@ -2024,6 +2018,7 @@ const TabLink = styled.div`
   font-size: 0.8rem;
   margin-right: 1rem;
   padding-bottom: 0.25rem;
+  color: ${(props) => (props.active ? "#FEFEFE" : "#777")};
   font-weight: ${(props) => (props.active ? "bold" : "300")};
   border-bottom: ${(props) =>
     props.active ? `2px solid ${COLOR_ACCENT}` : `2px solid #00000000`};
@@ -2034,6 +2029,7 @@ const FRLeft = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex: 1;
+  color: #fefefe;
 `;
 
 const FRRight = styled.div`
@@ -2053,6 +2049,7 @@ const GameSearch = styled.div`
     outline: none;
     border: none;
     padding: 0.5rem 1rem;
+    background-color: #1b2838;
   }
 `;
 
@@ -2070,7 +2067,6 @@ const RecentAchs = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  background-color: #e7e7e7;
   padding: 1rem;
   width: 100%;
   overflow: scroll;
@@ -2081,10 +2077,10 @@ const FirstRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #e7e7e7;
   padding: 0.5rem 1rem;
   width: 100%;
   color: #44484b;
+  background-color: #111923;
 `;
 
 const OuterAchContainer = styled.div`
@@ -2101,7 +2097,7 @@ const Container = styled.div`
   width: 1600px;
   border-radius: 4px;
   transform: translateY(-2rem);
-  background-color: #292b2d;
+  background-color: #111923;
 `;
 
 const RecentAch = styled.div`
@@ -2110,8 +2106,7 @@ const RecentAch = styled.div`
   align-items: center;
   justify-content: flex-start;
   margin-right: 0.5rem;
-  background-color: #f5f5f7;
-  border: 2px solid #e3e3e6;
+  background-color: #080c11;
   transition: 0.5s all ease;
 `;
 
