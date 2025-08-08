@@ -35,7 +35,7 @@ export default function Atom() {
   const refreshPlatinumData = () => {
     setPlatinumDataLoading(true);
     try {
-      axios.get("/api/onboard").then((response) => {
+      axios.get("/api/platinum").then((response) => {
         setPlatinumData(response?.data);
         setPlatinumDataLoading(false);
       });
@@ -59,10 +59,18 @@ export default function Atom() {
     let finalGames = [];
 
     finalGames = games?.map((game) => {
-      let platinumGameData = platinumData?.map((item) => item?.gameId);
+      let platinumGameData = platinumData?.find((item) => item?.id == game?.id);
       let formedGame = {};
       let platinumMapper = {};
       let dlcMapper = {};
+
+      platinumGameData?.platinum?.forEach((ach) => {
+        platinumMapper[ach?.title] = ach;
+      });
+
+      console.log({ platinumMapper });
+
+      let gameName = game?.achievements?.[0]?.gameName;
 
       let sortedPlatinumTrophies = game?.achievements
         ?.map((ach) => {
@@ -73,6 +81,13 @@ export default function Atom() {
             title: ach?.displayName,
             hiddenDesc: platinumMapper[ach?.displayName]?.description,
           };
+        })
+        ?.filter((ach) => {
+          if (platinumMapper[ach?.displayName]) {
+            return true;
+          } else {
+            return false;
+          }
         })
         ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
 
@@ -87,26 +102,17 @@ export default function Atom() {
 
       formedGame = {
         ...game,
+        ...platinumGameData,
         achievements: [
-          ...sortedPlatinumTrophies?.filter((ach) => {
-            if (platinumData?.includes(game?.id)) {
-              if (ach?.achieved == 1) {
-                return true;
-              } else {
-                return false;
-              }
-            } else {
-              return true;
-            }
-          }),
+          ...sortedPlatinumTrophies,
           {
             displayName: `Platinum`,
             description: `Achieved all Trophies in game`,
             hiddenDesc: `${game?.name}`,
-            percentage: Number(lastAch?.percentage),
+            percentage: lastAch?.percentage,
             label: getRarityBasedOnRarity(lastAch?.percentage),
             color: "Platinum",
-            achieved: platinumData?.includes(game?.id),
+            achieved: isCompleted ? 1 : 0,
             unlocktime: lastAch?.unlocktime,
             icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
           },
