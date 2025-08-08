@@ -107,7 +107,7 @@ export default function Atom() {
             displayName: `Platinum`,
             description: `Achieved all Trophies in game`,
             hiddenDesc: `${game?.name}`,
-            percentage: 100,
+            percentage: lastAch?.percentage,
             label: getRarityBasedOnRarity(lastAch?.percentage),
             color: "Platinum",
             achieved: isCompleted ? 1 : 0,
