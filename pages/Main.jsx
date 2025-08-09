@@ -9,6 +9,7 @@ import {
   getColorBasedOnRarity,
   getRarityBasedOnRarity,
 } from "../helpers/achHelper";
+import { COMPLETION_FACTOR } from "../helpers/trophyHelper";
 
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
@@ -98,7 +99,7 @@ export default function Atom() {
         (ach) => ach?.achieved == "1"
       )?.length;
 
-      total = Math.ceil(total * 1);
+      total = Math.ceil(total * COMPLETION_FACTOR);
       completed = completed > total ? total : completed;
       let isCompleted = total == completed;
 

@@ -22,6 +22,7 @@ import {
   calculateLevelForAchs,
   calculatePSLevelAndProgress,
   calculateRankForCompletion,
+  COMPLETION_FACTOR,
   getAchsBasedOnRarity,
 } from "../helpers/trophyHelper";
 import GoldIcon from "./GoldIcon";
@@ -122,7 +123,7 @@ export default function MainContent({
     (item) => item?.achieved == 1
   )?.length;
 
-  totalBG = Math.ceil(totalBG * 1);
+  totalBG = Math.ceil(totalBG * COMPLETION_FACTOR);
   completedBG = completedBG > totalBG ? totalBG : completedBG;
 
   let completionBG = completedBG == 0 ? 0 : (completedBG / totalBG) * 100;
@@ -698,7 +699,7 @@ export default function MainContent({
                       (item) => item?.achieved == 1
                     )?.length;
 
-                    total = Math.ceil(total * 1);
+                    total = Math.ceil(total * COMPLETION_FACTOR);
                     completed = completed > total ? total : completed;
 
                     let completionBG =
