@@ -867,7 +867,14 @@ export default function MainContent({
                     </GameLeft>
                   </Game1Line>
                   <Game2Line>
-                    {selectedGame?.achievements?.map((ach, index) => {
+                    {[
+                      ...selectedGame?.achievements?.filter(
+                        (ach) => ach?.color == "Platinum"
+                      ),
+                      ...selectedGame?.achievements?.filter(
+                        (ach) => ach?.color != "Platinum"
+                      ),
+                    ]?.map((ach, index) => {
                       let desc1 = ach?.hiddenDesc;
                       let desc2 = ach?.description;
                       let desc3 = ach?.hiddenDesc?.split(

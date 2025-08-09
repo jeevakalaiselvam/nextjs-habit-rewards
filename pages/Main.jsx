@@ -98,6 +98,9 @@ export default function Atom() {
       let completed = sortedPlatinumTrophies?.filter(
         (ach) => ach?.achieved == "1"
       )?.length;
+
+      total = Math.ceil(total * 0.5);
+      completed = completed > total ? total : completed;
       let isCompleted = total == completed;
 
       formedGame = {
