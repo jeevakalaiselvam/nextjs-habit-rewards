@@ -258,7 +258,7 @@ export default function MainContent({
 
   useEffect(() => {
     if (window) {
-      let old = localStorage.getItem("SELECTED_TAB") ?? "LIBRARY";
+      let old = localStorage.getItem("SELECTED_TAB") ?? "GAME";
       let oldGameId = localStorage.getItem("SELECTED_GAME") ?? "";
       const game = games?.filter((game) => +game?.id == +oldGameId);
       console.log({ game, oldGameId, old });
@@ -733,6 +733,10 @@ export default function MainContent({
                         onClick={() => {
                           setSelectedGame(game);
                           setSelectedMode("GAME");
+                          if (window) {
+                            localStorage.setItem("SELECTED_TAB", "GAME");
+                            localStorage.setItem("SELECTED_GAME", game?.id);
+                          }
                         }}
                         color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                       >
@@ -868,10 +872,10 @@ export default function MainContent({
                   </Game1Line>
                   <Game2Line>
                     {[
-                      ...selectedGame?.achievements?.filter(
+                      ...(selectedGame?.achievements ?? [])?.filter(
                         (ach) => ach?.color == "Platinum"
                       ),
-                      ...selectedGame?.achievements?.filter(
+                      ...(selectedGame?.achievements ?? [])?.filter(
                         (ach) => ach?.color != "Platinum"
                       ),
                     ]?.map((ach, index) => {
