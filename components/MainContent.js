@@ -714,7 +714,7 @@ const Outer = styled.div`
   justify-content: center;
   width: 120px;
   height: 14px;
-  background-color: #bababa;
+  background-color: #1b2838;
   position: relative;
 `;
 
@@ -726,7 +726,7 @@ const Inner = styled.div`
   left: 0;
   top: 0;
   height: 14px;
-  background-color: #336291;
+  background-color: #1a9fff;
   width: ${(props) => `${props.percentage}%`};
 `;
 
@@ -747,6 +747,7 @@ const TBottom = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-top: 0.25rem;
 `;
 
 const Trophies = styled.div`
@@ -829,9 +830,10 @@ const GameInfoInner = styled.div`
 `;
 
 const GameImage = styled.div`
-  width: 200px;
+  width: 100px;
   height: 100px;
   display: flex;
+  margin-right: 0.25rem;
   align-items: center;
   justify-content: center;
   background: ${(props) => `url(${props.url})`};
