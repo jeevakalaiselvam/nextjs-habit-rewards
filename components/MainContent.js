@@ -873,18 +873,18 @@ export default function MainContent({
                   </Game1Line>
                   <Game2Line>
                     {[
-                      ...(selectedGame?.achievements ?? [])?.filter(
-                        (ach) => ach?.color != "Platinum" && ach?.achieved == 1
-                      ),
                       ...(selectedGame?.achievements ?? [])
                         ?.filter(
                           (ach) =>
-                            ach?.color != "Platinum" && ach?.achieved != 1
+                            ach?.color != "Platinum" && ach?.achieved == 1
                         )
                         ?.sort(
-                          (ach1, ach2) => ach2?.unlocktime - ach1?.unlocktime
+                          (ach1, ach2) => ach1?.unlocktime - ach2?.unlocktime
                         ),
                       ,
+                      ...(selectedGame?.achievements ?? [])?.filter(
+                        (ach) => ach?.color != "Platinum" && ach?.achieved != 1
+                      ),
                       ...(selectedGame?.achievements ?? [])?.filter(
                         (ach) => ach?.color == "Platinum"
                       ),
