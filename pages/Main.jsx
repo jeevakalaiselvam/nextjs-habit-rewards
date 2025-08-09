@@ -98,7 +98,7 @@ export default function Atom() {
       let completed = sortedPlatinumTrophies?.filter(
         (ach) => ach?.achieved == "1"
       )?.length;
-      let isCompleted = completed > Math.ceil(total * 1);
+      let isCompleted = completed > Math.ceil(total * 0.5);
 
       formedGame = {
         ...game,
@@ -107,7 +107,7 @@ export default function Atom() {
           ...sortedPlatinumTrophies,
           {
             displayName: `Platinum`,
-            description: `Achieved all Trophies in game`,
+            description: `Achieved 50% of Trophies in the game`,
             hiddenDesc: `${game?.name}`,
             percentage: lastAch?.percentage,
             label: getRarityBasedOnRarity(lastAch?.percentage),
