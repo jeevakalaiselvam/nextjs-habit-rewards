@@ -18,7 +18,7 @@ import { calculatePSLevelAndProgress } from "../helpers/trophyHelper";
 import LevelIcon from "./LevelIcon";
 import GameCdImage from "./GameCdImage";
 
-export default function MainHeader({ games, gamesLoading }) {
+export default function MainHeader({ games, gamesLoading, refreshData }) {
   let image =
     "https://4kwallpapers.com/images/wallpapers/hogwarts-legacy-winter-1920x1200-20034.jpeg";
 
@@ -106,7 +106,11 @@ export default function MainHeader({ games, gamesLoading }) {
             </NameSection>
           </HeaderName>
           {!gamesLoading && (
-            <HeaderProfileLevel>
+            <HeaderProfileLevel
+              onClick={() => {
+                refreshData();
+              }}
+            >
               <LevelIconWrapper>
                 <LevelIcon />
               </LevelIconWrapper>
@@ -322,6 +326,7 @@ const HeaderProfileLevel = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   margin: 0 2rem;
 `;
 
