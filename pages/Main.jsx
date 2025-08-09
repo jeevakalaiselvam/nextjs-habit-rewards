@@ -83,7 +83,6 @@ export default function Atom() {
           };
         })
         ?.filter((ach) => {
-          return true;
           if (platinumMapper[ach?.displayName]) {
             return true;
           } else {
@@ -99,7 +98,7 @@ export default function Atom() {
       let completed = sortedPlatinumTrophies?.filter(
         (ach) => ach?.achieved == "1"
       )?.length;
-      let isCompleted = completed > Math.ceil(total * 0.5);
+      let isCompleted = completed > Math.ceil(total * 1);
 
       formedGame = {
         ...game,
