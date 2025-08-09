@@ -438,7 +438,7 @@ export default function MainContent({
                     ?.filter(
                       (ach) => ach?.color != "Platinum" && ach?.achieved == 1
                     )
-                    ?.sort((ach1, ach2) => ach?.unlocktime - ach1?.unlocktime),
+                    ?.sort((ach1, ach2) => ach2?.unlocktime - ach1?.unlocktime),
                   ...selectedGame?.achievements?.filter(
                     (ach) => ach?.color != "Platinum" && ach?.achieved != 1
                   ),
