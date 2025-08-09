@@ -876,7 +876,10 @@ export default function MainContent({
                         (ach) => ach?.color == "Platinum"
                       ),
                       ...(selectedGame?.achievements ?? [])?.filter(
-                        (ach) => ach?.color != "Platinum"
+                        (ach) => ach?.color != "Platinum" && ach?.achieved == 1
+                      ),
+                      ...(selectedGame?.achievements ?? [])?.filter(
+                        (ach) => ach?.color != "Platinum" && ach?.achieved != 1
                       ),
                     ]?.map((ach, index) => {
                       let desc1 = ach?.hiddenDesc;
