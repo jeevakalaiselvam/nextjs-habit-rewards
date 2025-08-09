@@ -122,8 +122,10 @@ export default function MainContent({
     (item) => item?.achieved == 1
   )?.length;
 
-  let completionBG =
-    completedBG == 0 ? 0 : (targetObtained / targetToGet) * 100;
+  totalBG = Math.ceil(totalBG * 0.5);
+  completedBG = completedBG > totalBG ? totalBG : completedBG;
+
+  let completionBG = completedBG == 0 ? 0 : (completedBG / totalBG) * 100;
 
   let { color, rank } = calculateRankForCompletion(completionBG ?? 0);
   let lastAch = selectedGame?.achievements?.sort(
@@ -695,6 +697,13 @@ export default function MainContent({
                     let completed = game?.achievements?.filter(
                       (item) => item?.achieved == 1
                     )?.length;
+
+                    total = Math.ceil(total * 0.5);
+                    completed = completed > total ? total : completed;
+
+                    let completionBG =
+                      completed == 0 ? 0 : (completed / total) * 100;
+
                     let completion = (
                       completed == 0 ? 0 : (completed / total) * 100
                     )?.toFixed(2);
