@@ -282,13 +282,14 @@ export default function MainContent({
                   let completed = game?.achievements?.filter(
                     (item) => item?.achieved == 1
                   )?.length;
-                  let completion = game?.completion;
 
-                  completion = completion >= 100 ? 100 : completion;
+                  total = Math.ceil(total * 0.5);
+                  completed = completed > total ? total : completed;
+
+                  let completion = (completed / total) * 100;
+                  completion = completion > 100 ? 100 : completion;
+
                   allCompletion = allCompletion + completion;
-                  if (total == completed) {
-                    completed = completed + 1;
-                  }
 
                   let { color, rank } = calculateRankForCompletion(completion);
                   let lastAch = game?.achievements?.sort(
@@ -368,12 +369,10 @@ export default function MainContent({
                               <TBottom>
                                 <Outer>
                                   <Inner
-                                    percentage={Number(
-                                      game?.completion
-                                    )?.toFixed(1)}
+                                    percentage={Number(completion)?.toFixed(1)}
                                   ></Inner>
                                   <Text>
-                                    {Number(game?.completion)?.toFixed(1)} %
+                                    {Number(completion)?.toFixed(1)} %
                                   </Text>
                                 </Outer>
                               </TBottom>
@@ -429,7 +428,14 @@ export default function MainContent({
           {selectedMode == "GAME" && (
             <Games>
               <Game2Line>
-                {selectedGame?.achievements?.map((ach, index) => {
+                {[
+                  ...selectedGame?.achievements?.filter(
+                    (ach) => ach?.color == "Platinum"
+                  ),
+                  ...selectedGame?.achievements?.filter(
+                    (ach) => ach?.color != "Platinum"
+                  ),
+                ]?.map((ach, index) => {
                   let desc1 = ach?.hiddenDesc;
                   let desc2 = ach?.description;
                   let desc3 = ach?.hiddenDesc?.split(
@@ -903,5 +909,5 @@ const Container = styled.div`
   width: 100%;
   border-radius: 4px;
   transform: translateY(-2rem);
-  background-color: #f5f5f7;
+  background-color: #1b2838;
 `;

@@ -83,6 +83,7 @@ export default function Atom() {
           };
         })
         ?.filter((ach) => {
+          return true;
           if (platinumMapper[ach?.displayName]) {
             return true;
           } else {
@@ -98,7 +99,7 @@ export default function Atom() {
       let completed = sortedPlatinumTrophies?.filter(
         (ach) => ach?.achieved == "1"
       )?.length;
-      let isCompleted = total == completed;
+      let isCompleted = completed > Math.ceil(total * 0.5);
 
       formedGame = {
         ...game,
@@ -152,7 +153,7 @@ const RefreshButton = styled.div`
   position: fixed;
   right: 1rem;
   top: 1rem;
-  background-color: ${COLOR_ACCENT};
+  background-color: #1b2838;
   padding: 0.25rem 0.5rem;
   cursor: pointer;
   z-index: 100;
@@ -168,7 +169,7 @@ const Container = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  background-color: #292b2d;
+  background-color: #1b2838;
   color: #fefefe;
   position: relative;
 `;

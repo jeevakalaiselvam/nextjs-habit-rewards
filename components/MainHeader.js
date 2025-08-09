@@ -398,7 +398,7 @@ const Container = styled.div`
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
-  background-color: #292b2d;
+  background-color: #1b2838;
   position: relative;
   z-index: 1;
   color: #fefefe;
