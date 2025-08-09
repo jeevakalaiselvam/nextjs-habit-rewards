@@ -98,7 +98,7 @@ export default function Atom() {
         (ach) => ach?.achieved == "1"
       )?.length;
 
-      total = Math.ceil(total * 1);
+      total = Math.ceil(total * 0.5);
       completed = completed > total ? total : completed;
       let isCompleted = total == completed;
 

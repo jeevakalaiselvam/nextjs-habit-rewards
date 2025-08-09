@@ -122,7 +122,7 @@ export default function MainContent({
     (item) => item?.achieved == 1
   )?.length;
 
-  totalBG = Math.ceil(totalBG * 1);
+  totalBG = Math.ceil(totalBG * 0.5);
   completedBG = completedBG > totalBG ? totalBG : completedBG;
 
   let completionBG = completedBG == 0 ? 0 : (completedBG / totalBG) * 100;
@@ -698,7 +698,7 @@ export default function MainContent({
                       (item) => item?.achieved == 1
                     )?.length;
 
-                    total = Math.ceil(total * 1);
+                    total = Math.ceil(total * 0.5);
                     completed = completed > total ? total : completed;
 
                     let completionBG =
