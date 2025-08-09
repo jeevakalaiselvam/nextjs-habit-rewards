@@ -270,8 +270,9 @@ export default function MainContent({
   }, [games]);
 
   let isPlatinumInSelectedGame =
-    selectedGame?.achievements?.filter((ach) => ach?.color == "Platinum")
-      ?.length > 0;
+    selectedGame?.achievements?.filter(
+      (ach) => ach?.color == "Platinum" && ach?.achieved == 1
+    )?.length > 0;
 
   return (
     <Container>
