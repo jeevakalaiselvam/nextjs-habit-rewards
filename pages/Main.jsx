@@ -82,7 +82,6 @@ export default function Atom() {
           };
         })
         ?.filter((ach) => {
-          return true;
           if (platinumMapper[ach?.displayName]) {
             return true;
           } else {
@@ -99,7 +98,7 @@ export default function Atom() {
         (ach) => ach?.achieved == "1"
       )?.length;
 
-      total = Math.ceil(total * 0.5);
+      total = Math.ceil(total * 1);
       completed = completed > total ? total : completed;
       let isCompleted = total == completed;
 

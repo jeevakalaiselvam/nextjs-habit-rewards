@@ -122,7 +122,7 @@ export default function MainContent({
     (item) => item?.achieved == 1
   )?.length;
 
-  totalBG = Math.ceil(totalBG * 0.5);
+  totalBG = Math.ceil(totalBG * 1);
   completedBG = completedBG > totalBG ? totalBG : completedBG;
 
   let completionBG = completedBG == 0 ? 0 : (completedBG / totalBG) * 100;
@@ -698,7 +698,7 @@ export default function MainContent({
                       (item) => item?.achieved == 1
                     )?.length;
 
-                    total = Math.ceil(total * 0.5);
+                    total = Math.ceil(total * 1);
                     completed = completed > total ? total : completed;
 
                     let completionBG =
@@ -873,13 +873,13 @@ export default function MainContent({
                   <Game2Line>
                     {[
                       ...(selectedGame?.achievements ?? [])?.filter(
-                        (ach) => ach?.color == "Platinum"
-                      ),
-                      ...(selectedGame?.achievements ?? [])?.filter(
                         (ach) => ach?.color != "Platinum" && ach?.achieved == 1
                       ),
                       ...(selectedGame?.achievements ?? [])?.filter(
                         (ach) => ach?.color != "Platinum" && ach?.achieved != 1
+                      ),
+                      ...(selectedGame?.achievements ?? [])?.filter(
+                        (ach) => ach?.color == "Platinum"
                       ),
                     ]?.map((ach, index) => {
                       let desc1 = ach?.hiddenDesc;
