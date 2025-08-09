@@ -283,7 +283,7 @@ export default function MainContent({
                     (item) => item?.achieved == 1
                   )?.length;
 
-                  total = Math.ceil(total * 0.5);
+                  total = Math.ceil(total * 1);
                   completed = completed > total ? total : completed;
 
                   let completion = (completed / total) * 100;
