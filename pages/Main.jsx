@@ -10,6 +10,7 @@ import {
   getRarityBasedOnRarity,
 } from "../helpers/achHelper";
 import MainContentNew from "../components/MainContentNew";
+import { COMPLETION_FACTOR } from "../helpers/trophyHelper";
 
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
@@ -98,7 +99,7 @@ export default function Atom() {
       let completed = sortedPlatinumTrophies?.filter(
         (ach) => ach?.achieved == "1"
       )?.length;
-      let isCompleted = completed > Math.ceil(total * 1);
+      let isCompleted = completed > Math.ceil(total * COMPLETION_FACTOR);
 
       formedGame = {
         ...game,

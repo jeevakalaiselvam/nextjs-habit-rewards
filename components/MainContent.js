@@ -20,6 +20,7 @@ import { HiPlay } from "react-icons/hi2";
 import {
   calculatePSLevelAndProgress,
   calculateRankForCompletion,
+  COMPLETION_FACTOR,
   getAchsBasedOnRarity,
 } from "../helpers/trophyHelper";
 import GoldIcon from "./GoldIcon";
@@ -102,6 +103,7 @@ export default function MainContent({
   let completedBG = selectedGame?.achievements?.filter(
     (item) => item?.achieved == 1
   )?.length;
+
   let completionBG = completedBG == 0 ? 0 : (completedBG / totalBG) * 100;
 
   let { color, rank } = calculateRankForCompletion(completionBG ?? 0);
@@ -283,7 +285,7 @@ export default function MainContent({
                     (item) => item?.achieved == 1
                   )?.length;
 
-                  total = Math.ceil(total * 1);
+                  total = Math.ceil(total * COMPLETION_FACTOR);
                   completed = completed > total ? total : completed;
 
                   let completion = (completed / total) * 100;
