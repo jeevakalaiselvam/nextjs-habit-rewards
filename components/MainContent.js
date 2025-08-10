@@ -228,7 +228,7 @@ export default function MainContent({
   useEffect(() => {
     let timer = setInterval(() => {
       setActiveAch((old) => {
-        if (old < allUnlocked?.length - 1) {
+        if (old < 13 - 1) {
           return old + 1;
         } else {
           return 0;
