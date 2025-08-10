@@ -296,7 +296,17 @@ export default function MainContent({
       </FirstRow>
       <FirstRow>
         <FRItem>P</FRItem>
-        <FRLeft>N7SHADOWX PROFILE</FRLeft>
+        <FRLeft
+          onClick={() => {
+            if (window) {
+              window.open(
+                "https://steamcommunity.com/profiles/76561199881782703/games/"
+              );
+            }
+          }}
+        >
+          N7ShadowX Profile
+        </FRLeft>
         <FRRight>
           <TabLink
             onClick={() => {
@@ -2069,6 +2079,12 @@ const FRLeft = styled.div`
   justify-content: flex-start;
   flex: 1;
   color: #fefefe;
+  opacity: 0.8;
+  &:hover {
+    color: #fefefe;
+    cursor: pointer;
+    opacity: 1;
+  }
 `;
 
 const FRRight = styled.div`
@@ -2090,16 +2106,6 @@ const GameSearch = styled.div`
     padding: 0.5rem 1rem;
     background-color: #1b2838;
   }
-`;
-
-const CollectionRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #e7e7e7;
-  padding: 1rem;
-  width: 100%;
-  color: #44484b;
 `;
 
 const RecentAchs = styled.div`
