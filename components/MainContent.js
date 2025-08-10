@@ -366,56 +366,65 @@ export default function MainContent({
       </FirstRow>
       {!gamesLoading && (
         <RecentAchs>
-          {allUnlocked?.slice(0, 13)?.map((ach, index) => {
-            let desc1 = ach?.hiddenDesc;
-            let desc2 = ach?.description;
-            let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
-            return (
-              <RecentAch
-                color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                achieved={ach?.achieved}
-              >
-                <AchIconOuter achieved={ach?.achieved}>
-                  <AchIcon icon={ach?.icon}></AchIcon>
-                </AchIconOuter>{" "}
-                <DataContainer active={index === activeAch}>
-                  <AchData active={index === activeAch}>
-                    <AchTitle>{ach?.displayName}</AchTitle>
-                    <AchDesc> {desc2 ? desc2 : desc3 ? desc3 : desc1}</AchDesc>
-                    {ach?.achieved == 1 && (
-                      <AchUnlocked>
-                        <UnlockedT1>
-                          <span style={{ color: COLOR_GREEN2 }}>
-                            {timeAgoInGame(new Date(ach?.unlocktime * 1000))}
-                          </span>
-                          <span style={{ margin: "0rem .25rem" }}>in</span>
-                          <span style={{ color: COLOR_BLUE }}>
-                            {ach?.gameName}
-                          </span>
-                        </UnlockedT1>
-                      </AchUnlocked>
-                    )}
-                  </AchData>
-                  <Seperator padding={".25rem"} />{" "}
-                  <AchRarity active={index === activeAch}>
-                    <span style={{ fontSize: "1.2rem" }}>
-                      {ach?.percentage}%
-                    </span>
-                    <span style={{ fontSize: ".7rem" }}>
-                      {ach?.label?.toUpperCase()}
-                    </span>
-                  </AchRarity>
-                  <Seperator padding={".25rem"} />
-                  <AchTrophy active={index === activeAch}>
-                    {ach?.color == "Platinum" && <PlatinumIconS />}
-                    {ach?.color == "Gold" && <GoldIconS />}
-                    {ach?.color == "Silver" && <SilverIconS />}
-                    {ach?.color == "Bronze" && <BronzeIconS />}
-                  </AchTrophy>
-                </DataContainer>
-              </RecentAch>
-            );
-          })}
+          {allUnlocked
+            ?.filter((ach) => ach?.color != "Platinum")
+            ?.slice(0, 13)
+            ?.map((ach, index) => {
+              let desc1 = ach?.hiddenDesc;
+              let desc2 = ach?.description;
+              let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
+              return (
+                <RecentAch
+                  color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                  achieved={ach?.achieved}
+                >
+                  {
+                    <AchIconOuter achieved={ach?.achieved}>
+                      <AchIcon icon={ach?.icon}></AchIcon>
+                    </AchIconOuter>
+                  }
+
+                  <DataContainer active={index === activeAch}>
+                    <AchData active={index === activeAch}>
+                      <AchTitle>{ach?.displayName}</AchTitle>
+                      <AchDesc>
+                        {" "}
+                        {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                      </AchDesc>
+                      {ach?.achieved == 1 && (
+                        <AchUnlocked>
+                          <UnlockedT1>
+                            <span style={{ color: COLOR_GREEN2 }}>
+                              {timeAgoInGame(new Date(ach?.unlocktime * 1000))}
+                            </span>
+                            <span style={{ margin: "0rem .25rem" }}>in</span>
+                            <span style={{ color: COLOR_BLUE }}>
+                              {ach?.gameName}
+                            </span>
+                          </UnlockedT1>
+                        </AchUnlocked>
+                      )}
+                    </AchData>
+                    <Seperator padding={".25rem"} />{" "}
+                    <AchRarity active={index === activeAch}>
+                      <span style={{ fontSize: "1.2rem" }}>
+                        {ach?.percentage}%
+                      </span>
+                      <span style={{ fontSize: ".7rem" }}>
+                        {ach?.label?.toUpperCase()}
+                      </span>
+                    </AchRarity>
+                    <Seperator padding={".25rem"} />
+                    <AchTrophy active={index === activeAch}>
+                      {ach?.color == "Platinum" && <PlatinumIconS />}
+                      {ach?.color == "Gold" && <GoldIconS />}
+                      {ach?.color == "Silver" && <SilverIconS />}
+                      {ach?.color == "Bronze" && <BronzeIconS />}
+                    </AchTrophy>
+                  </DataContainer>
+                </RecentAch>
+              );
+            })}
         </RecentAchs>
       )}
       {!gamesLoading && (
