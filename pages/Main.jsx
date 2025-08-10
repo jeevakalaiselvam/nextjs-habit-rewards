@@ -135,15 +135,17 @@ export default function Atom() {
         refreshData={refreshData}
         gamesLoading={gamesLoading}
       />
-      <MainContent
-        games={finalGames}
-        selectedMode={selectedMode}
-        refreshData={refreshData}
-        setGamesLoading={setGamesLoading}
-        gamesLoading={gamesLoading}
-        setSelectedMode={setSelectedMode}
-        platinumDataLoading={platinumDataLoading}
-      />
+      {
+        <MainContent
+          games={finalGames}
+          selectedMode={selectedMode}
+          refreshData={refreshData}
+          setGamesLoading={setGamesLoading}
+          gamesLoading={gamesLoading}
+          setSelectedMode={setSelectedMode}
+          platinumDataLoading={platinumDataLoading}
+        />
+      }
     </Container>
   );
 }

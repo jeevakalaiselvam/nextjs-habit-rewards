@@ -364,854 +364,567 @@ export default function MainContent({
           </TabLink>
         </FRRight>
       </FirstRow>
-      <RecentAchs>
-        {allUnlocked?.slice(0, 13)?.map((ach, index) => {
-          let desc1 = ach?.hiddenDesc;
-          let desc2 = ach?.description;
-          let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
-          return (
-            <RecentAch
-              color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-              achieved={ach?.achieved}
-            >
-              <AchIconOuter achieved={ach?.achieved}>
-                <AchIcon icon={ach?.icon}></AchIcon>
-              </AchIconOuter>{" "}
-              <DataContainer active={index === activeAch}>
-                <AchData active={index === activeAch}>
-                  <AchTitle>{ach?.displayName}</AchTitle>
-                  <AchDesc> {desc2 ? desc2 : desc3 ? desc3 : desc1}</AchDesc>
-                  {ach?.achieved == 1 && (
-                    <AchUnlocked>
-                      <UnlockedT1>
-                        <span style={{ color: COLOR_GREEN2 }}>
-                          {timeAgoInGame(new Date(ach?.unlocktime * 1000))}
-                        </span>
-                        <span style={{ margin: "0rem .25rem" }}>in</span>
-                        <span style={{ color: COLOR_BLUE }}>
-                          {ach?.gameName}
-                        </span>
-                      </UnlockedT1>
-                    </AchUnlocked>
-                  )}
-                </AchData>
-                <Seperator padding={".25rem"} />{" "}
-                <AchRarity active={index === activeAch}>
-                  <span style={{ fontSize: "1.2rem" }}>{ach?.percentage}%</span>
-                  <span style={{ fontSize: ".7rem" }}>
-                    {ach?.label?.toUpperCase()}
-                  </span>
-                </AchRarity>
-                <Seperator padding={".25rem"} />
-                <AchTrophy active={index === activeAch}>
-                  {ach?.color == "Platinum" && <PlatinumIconS />}
-                  {ach?.color == "Gold" && <GoldIconS />}
-                  {ach?.color == "Silver" && <SilverIconS />}
-                  {ach?.color == "Bronze" && <BronzeIconS />}
-                </AchTrophy>
-              </DataContainer>
-            </RecentAch>
-          );
-        })}
-      </RecentAchs>
-      <SecondRow>
-        {gamesLoading && (
-          <SRLeft>
-            <Spin
-              indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
-            />
-          </SRLeft>
-        )}
-        {!gamesLoading && (
-          <SRLeft>
-            {selectedMode == "GAMES" && (
-              <Games>
-                <Games1Line>
-                  <GamesLeft>GAMES</GamesLeft>
-                  <GamesRight></GamesRight>
-                </Games1Line>
-                <Games2Line>
-                  {sortedGames?.map((game, index) => {
-                    let allCompletion = 0;
-                    let total = 0;
-                    let unearned = 0;
-                    let platinumA = 0;
-                    let goldA = 0;
-                    let silverA = 0;
-                    let bronzeA = 0;
-                    let platinum = 0;
-                    let gold = 0;
-                    let silver = 0;
-                    let bronze = 0;
+      {!gamesLoading && (
+        <RecentAchs>
+          {allUnlocked?.slice(0, 13)?.map((ach, index) => {
+            let desc1 = ach?.hiddenDesc;
+            let desc2 = ach?.description;
+            let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
+            return (
+              <RecentAch
+                color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                achieved={ach?.achieved}
+              >
+                <AchIconOuter achieved={ach?.achieved}>
+                  <AchIcon icon={ach?.icon}></AchIcon>
+                </AchIconOuter>{" "}
+                <DataContainer active={index === activeAch}>
+                  <AchData active={index === activeAch}>
+                    <AchTitle>{ach?.displayName}</AchTitle>
+                    <AchDesc> {desc2 ? desc2 : desc3 ? desc3 : desc1}</AchDesc>
+                    {ach?.achieved == 1 && (
+                      <AchUnlocked>
+                        <UnlockedT1>
+                          <span style={{ color: COLOR_GREEN2 }}>
+                            {timeAgoInGame(new Date(ach?.unlocktime * 1000))}
+                          </span>
+                          <span style={{ margin: "0rem .25rem" }}>in</span>
+                          <span style={{ color: COLOR_BLUE }}>
+                            {ach?.gameName}
+                          </span>
+                        </UnlockedT1>
+                      </AchUnlocked>
+                    )}
+                  </AchData>
+                  <Seperator padding={".25rem"} />{" "}
+                  <AchRarity active={index === activeAch}>
+                    <span style={{ fontSize: "1.2rem" }}>
+                      {ach?.percentage}%
+                    </span>
+                    <span style={{ fontSize: ".7rem" }}>
+                      {ach?.label?.toUpperCase()}
+                    </span>
+                  </AchRarity>
+                  <Seperator padding={".25rem"} />
+                  <AchTrophy active={index === activeAch}>
+                    {ach?.color == "Platinum" && <PlatinumIconS />}
+                    {ach?.color == "Gold" && <GoldIconS />}
+                    {ach?.color == "Silver" && <SilverIconS />}
+                    {ach?.color == "Bronze" && <BronzeIconS />}
+                  </AchTrophy>
+                </DataContainer>
+              </RecentAch>
+            );
+          })}
+        </RecentAchs>
+      )}
+      {!gamesLoading && (
+        <SecondRow>
+          {gamesLoading && (
+            <SRLeft>
+              <Spin
+                indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
+              />
+            </SRLeft>
+          )}
+          {!gamesLoading && (
+            <SRLeft>
+              {selectedMode == "GAMES" && (
+                <Games>
+                  <Games1Line>
+                    <GamesLeft>GAMES</GamesLeft>
+                    <GamesRight></GamesRight>
+                  </Games1Line>
+                  <Games2Line>
+                    {sortedGames?.map((game, index) => {
+                      let allCompletion = 0;
+                      let total = 0;
+                      let unearned = 0;
+                      let platinumA = 0;
+                      let goldA = 0;
+                      let silverA = 0;
+                      let bronzeA = 0;
+                      let platinum = 0;
+                      let gold = 0;
+                      let silver = 0;
+                      let bronze = 0;
 
-                    game?.achievements?.forEach((ach) => {
-                      total++;
-                      if (ach?.achieved == 0) {
-                        unearned++;
-                        if (ach?.color == "Platinum") {
-                          platinumA++;
-                        }
-                        if (ach?.color == "Gold") {
-                          goldA++;
-                        }
-                        if (ach?.color == "Silver") {
-                          silverA++;
-                        }
-                        if (ach?.color == "Bronze") {
-                          bronzeA++;
-                        }
-                      } else {
-                        if (ach?.color == "Platinum") {
-                          platinum++;
-                        }
-                        if (ach?.color == "Gold") {
-                          gold++;
-                        }
-                        if (ach?.color == "Silver") {
-                          silver++;
-                        }
-                        if (ach?.color == "Bronze") {
-                          bronze++;
-                        }
-                      }
-                    });
-
-                    let completed = game?.achievements?.filter(
-                      (item) => item?.achieved == 1
-                    )?.length;
-
-                    total = Math.ceil(total * COMPLETION_FACTOR);
-                    completed = completed > total ? total : completed;
-
-                    let completionBG =
-                      completed == 0 ? 0 : (completed / total) * 100;
-
-                    let completion = (
-                      completed == 0 ? 0 : (completed / total) * 100
-                    )?.toFixed(2);
-                    allCompletion = allCompletion + completion;
-
-                    let { color, rank } =
-                      calculateRankForCompletion(completion);
-                    let lastAch = game?.achievements?.sort(
-                      (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
-                    )?.[game?.achievements?.length - 1];
-
-                    let allUnlocked = game?.achievements
-                      ?.filter((ach) => ach?.achieved == 1)
-                      ?.sort(
-                        (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
-                      );
-
-                    let lastUnlocked = allUnlocked?.[allUnlocked?.length - 1];
-
-                    let isPlatinumNotAdded = game?.achievements?.length == 1;
-
-                    return (
-                      <GameContainer
-                        onClick={() => {
-                          setSelectedGame(game);
-                          setSelectedMode("GAME");
-                          if (window) {
-                            localStorage.setItem("SELECTED_TAB", "GAME");
-                            localStorage.setItem("SELECTED_GAME", game?.id);
+                      game?.achievements?.forEach((ach) => {
+                        total++;
+                        if (ach?.achieved == 0) {
+                          unearned++;
+                          if (ach?.color == "Platinum") {
+                            platinumA++;
                           }
-                        }}
-                        color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                      >
-                        <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
-                        <GameData>
-                          <GameTitle
-                            onClick={() => {
-                              setSelectedGame(game);
-                              setSelectedMode("GAME");
-                            }}
-                          >
-                            {game?.name}
-                          </GameTitle>
-                          <GameCompletion>
-                            {completed} of {total} Trophies
-                          </GameCompletion>
-                          <GameLastPlayed>
-                            {lastUnlocked &&
-                              formatDate(
-                                new Date(lastUnlocked?.unlocktime * 1000)
-                              )}
-                            {!lastUnlocked && "Yet to Start"}
-                          </GameLastPlayed>
-                          <GameHours>
-                            {game?.playtime == 0
-                              ? "Yet to Start"
-                              : (game?.playtime / 60)?.toFixed(1)}
-                            {" Hours"}
-                          </GameHours>
-                          {isPlatinumNotAdded &&
-                            !(gamesLoading || platinumDataLoading) && (
-                              <Warning> PLATINUM DATA MISSING !</Warning>
-                            )}
-                          <Started></Started>
-                        </GameData>
-                        <GameInfo>
-                          <Ps5
-                            onClick={() => {
-                              setShowEditModal(true);
-                              setGameData((old) => game);
-                            }}
-                          >
-                            PS5
-                          </Ps5>
-                          <Seperator></Seperator>
-                          <Rank>
-                            <span style={{ fontSize: "1.5rem", color: color }}>
-                              {rank}
-                            </span>
-                            <span style={{ fontSize: ".7rem" }}>RANK</span>
-                          </Rank>
-                          <Seperator></Seperator>
-                          <Trophies>
-                            <TTop>
-                              <TSingle>
-                                <GoldIconS />
-                                <span
-                                  style={{
-                                    transform: "translate(-.5rem,-.25rem)",
-                                    color: COLOR_GOLD,
-                                    fontSize: "1rem",
-                                  }}
-                                >
-                                  {gold}
-                                </span>
-                              </TSingle>
-                              <TSingle>
-                                <SilverIconS />
-                                <span
-                                  style={{
-                                    transform: "translate(-.5rem,-.25rem)",
-                                    color: COLOR_SILVER2,
-                                    fontSize: "1rem",
-                                  }}
-                                >
-                                  {silver}
-                                </span>
-                              </TSingle>
-                              <TSingle>
-                                <BronzeIconS />
-                                <span
-                                  style={{
-                                    transform: "translate(-.5rem,-.25rem)",
-                                    color: COLOR_BRONZE,
-                                    fontSize: "1rem",
-                                  }}
-                                >
-                                  {bronze}
-                                </span>
-                              </TSingle>
-                            </TTop>
-                            {true && (
-                              <TBottom>
-                                <Outer>
-                                  <Inner percentage={completion}></Inner>
-                                  <Text>{completion} %</Text>
-                                </Outer>
-                              </TBottom>
-                            )}
-                          </Trophies>
-                          <Seperator></Seperator>
-                          <Platinum isPlatinum={total == completed}>
-                            <span
-                              style={{
-                                opacity: total == completed ? 1 : 0.1,
-                                color: "#7A96D1",
-                              }}
-                            >
-                              <PlatinumIcon />
-                            </span>
-                            <span
-                              style={{
-                                color: "#7A96D1",
-                                fontSize: ".7rem",
-                                marginTop: "4px",
-                                fontWeight: "bold",
-                                opacity: total == completed ? 1 : 0.1,
-                              }}
-                            >
-                              {Number(lastAch?.percentage)} %
-                            </span>
-                          </Platinum>
-                        </GameInfo>
-                      </GameContainer>
-                    );
-                  })}
-                </Games2Line>
-              </Games>
-            )}
-            {selectedMode == "GAME" && (
-              <>
-                <Game>
-                  <Game1Line>
-                    <GameLeft>
-                      {selectedGame?.name?.toUpperCase()} TROPHIES
-                    </GameLeft>
-                  </Game1Line>
-                  <Game2Line>
-                    {[
-                      ...(selectedGame?.achievements ?? [])?.filter(
-                        (ach) => ach?.color == "Platinum"
-                      ),
-                      ...(selectedGame?.achievements ?? [])
-                        ?.filter(
-                          (ach) =>
-                            ach?.color != "Platinum" && ach?.achieved == 1
-                        )
+                          if (ach?.color == "Gold") {
+                            goldA++;
+                          }
+                          if (ach?.color == "Silver") {
+                            silverA++;
+                          }
+                          if (ach?.color == "Bronze") {
+                            bronzeA++;
+                          }
+                        } else {
+                          if (ach?.color == "Platinum") {
+                            platinum++;
+                          }
+                          if (ach?.color == "Gold") {
+                            gold++;
+                          }
+                          if (ach?.color == "Silver") {
+                            silver++;
+                          }
+                          if (ach?.color == "Bronze") {
+                            bronze++;
+                          }
+                        }
+                      });
+
+                      let completed = game?.achievements?.filter(
+                        (item) => item?.achieved == 1
+                      )?.length;
+
+                      total = Math.ceil(total * COMPLETION_FACTOR);
+                      completed = completed > total ? total : completed;
+
+                      let completionBG =
+                        completed == 0 ? 0 : (completed / total) * 100;
+
+                      let completion = (
+                        completed == 0 ? 0 : (completed / total) * 100
+                      )?.toFixed(2);
+                      allCompletion = allCompletion + completion;
+
+                      let { color, rank } =
+                        calculateRankForCompletion(completion);
+                      let lastAch = game?.achievements?.sort(
+                        (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
+                      )?.[game?.achievements?.length - 1];
+
+                      let allUnlocked = game?.achievements
+                        ?.filter((ach) => ach?.achieved == 1)
                         ?.sort(
-                          (ach1, ach2) => ach1?.unlocktime - ach2?.unlocktime
-                        ),
-                      ,
-                      ...(selectedGame?.achievements ?? [])?.filter(
-                        (ach) =>
-                          ach?.color != "Platinum" &&
-                          ach?.achieved != 1 &&
-                          !isPlatinumInSelectedGame
-                      ),
-                    ]?.map((ach, index) => {
-                      let desc1 = ach?.hiddenDesc;
-                      let desc2 = ach?.description;
-                      let desc3 = ach?.hiddenDesc?.split(
-                        "Hidden achievement:"
-                      )?.[1];
+                          (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
+                        );
+
+                      let lastUnlocked = allUnlocked?.[allUnlocked?.length - 1];
+
+                      let isPlatinumNotAdded = game?.achievements?.length == 1;
+
                       return (
-                        <AchCard
+                        <GameContainer
+                          onClick={() => {
+                            setSelectedGame(game);
+                            setSelectedMode("GAME");
+                            if (window) {
+                              localStorage.setItem("SELECTED_TAB", "GAME");
+                              localStorage.setItem("SELECTED_GAME", game?.id);
+                            }
+                          }}
                           color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                          achieved={ach?.achieved}
                         >
-                          {ach?.color != "Platinum" && (
-                            <AchIconOuter achieved={ach?.achieved}>
-                              <AchIcon
-                                icon={
-                                  ach?.achieved == 1 ? ach?.icon : ach?.icongray
-                                }
-                                onClick={() => {
-                                  if (window !== "undefined") {
-                                    const searchQuery = `${
-                                      ach?.displayName
-                                    } achievement ${encodeURIComponent(
-                                      ach?.gameName
-                                    )} `;
-                                    window.open(
-                                      `https://www.google.com/search?q=${searchQuery}`
-                                    );
-                                    // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                                  }
-                                }}
-                              ></AchIcon>
-                            </AchIconOuter>
-                          )}
-                          {ach?.color == "Platinum" && (
-                            <AchIconOuterPlatinum achieved={ach?.achieved}>
+                          <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
+                          <GameData>
+                            <GameTitle
+                              onClick={() => {
+                                setSelectedGame(game);
+                                setSelectedMode("GAME");
+                              }}
+                            >
+                              {game?.name}
+                            </GameTitle>
+                            <GameCompletion>
+                              {completed} Trophies
+                            </GameCompletion>
+                            <GameLastPlayed>
+                              {lastUnlocked &&
+                                formatDate(
+                                  new Date(lastUnlocked?.unlocktime * 1000)
+                                )}
+                              {!lastUnlocked && "Yet to Start"}
+                            </GameLastPlayed>
+                            <GameHours>
+                              {game?.playtime == 0
+                                ? "Yet to Start"
+                                : (game?.playtime / 60)?.toFixed(1)}
+                              {" Hours"}
+                            </GameHours>
+                            {isPlatinumNotAdded &&
+                              !(gamesLoading || platinumDataLoading) && (
+                                <Warning> PLATINUM DATA MISSING !</Warning>
+                              )}
+                            <Started></Started>
+                          </GameData>
+                          <GameInfo>
+                            <Ps5
+                              onClick={() => {
+                                setShowEditModal(true);
+                                setGameData((old) => game);
+                              }}
+                            >
+                              PS5
+                            </Ps5>
+                            <Seperator></Seperator>
+                            <Rank>
+                              <span
+                                style={{ fontSize: "1.5rem", color: color }}
+                              >
+                                {rank}
+                              </span>
+                              <span style={{ fontSize: ".7rem" }}>RANK</span>
+                            </Rank>
+                            <Seperator></Seperator>
+                            <Trophies>
+                              <TTop>
+                                <TSingle>
+                                  <GoldIconS />
+                                  <span
+                                    style={{
+                                      transform: "translate(-.5rem,-.25rem)",
+                                      color: COLOR_GOLD,
+                                      fontSize: "1rem",
+                                    }}
+                                  >
+                                    {gold}
+                                  </span>
+                                </TSingle>
+                                <TSingle>
+                                  <SilverIconS />
+                                  <span
+                                    style={{
+                                      transform: "translate(-.5rem,-.25rem)",
+                                      color: COLOR_SILVER2,
+                                      fontSize: "1rem",
+                                    }}
+                                  >
+                                    {silver}
+                                  </span>
+                                </TSingle>
+                                <TSingle>
+                                  <BronzeIconS />
+                                  <span
+                                    style={{
+                                      transform: "translate(-.5rem,-.25rem)",
+                                      color: COLOR_BRONZE,
+                                      fontSize: "1rem",
+                                    }}
+                                  >
+                                    {bronze}
+                                  </span>
+                                </TSingle>
+                              </TTop>
+                              {true && (
+                                <TBottom>
+                                  <Outer>
+                                    <Inner percentage={completion}></Inner>
+                                    <Text>{completion} %</Text>
+                                  </Outer>
+                                </TBottom>
+                              )}
+                            </Trophies>
+                            <Seperator></Seperator>
+                            <Platinum isPlatinum={total == completed}>
                               <span
                                 style={{
-                                  background: "#262D35",
-                                  width: "60px",
-                                  height: "60px",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
+                                  opacity: total == completed ? 1 : 0.1,
+                                  color: "#7A96D1",
                                 }}
                               >
                                 <PlatinumIcon />
                               </span>
-                            </AchIconOuterPlatinum>
-                          )}
-                          <AchData>
-                            <AchTitle>{ach?.displayName}</AchTitle>
-                            <AchDesc>
-                              {desc2 ? desc2 : desc3 ? desc3 : desc1}
-                            </AchDesc>
-                          </AchData>
-                          {ach?.achieved == 1 && (
-                            <Unlocked>
-                              <UnlockedT1>
-                                {formatDate1(new Date(ach?.unlocktime * 1000))}
-                              </UnlockedT1>
-                              <UnlockedT2>
-                                {formatDate2(new Date(ach?.unlocktime * 1000))}
-                              </UnlockedT2>
-                            </Unlocked>
-                          )}
-                          <Seperator padding={".25rem"} />
-                          {ach?.color != "Platinum" && (
-                            <AchRarity>
-                              <span style={{ fontSize: "1.2rem" }}>
-                                {ach?.percentage}%
+                              <span
+                                style={{
+                                  color: "#7A96D1",
+                                  fontSize: ".7rem",
+                                  marginTop: "4px",
+                                  fontWeight: "bold",
+                                  opacity: total == completed ? 1 : 0.1,
+                                }}
+                              >
+                                {Number(lastAch?.percentage)} %
                               </span>
-                              <span style={{ fontSize: ".7rem" }}>
-                                {ach?.label?.toUpperCase()}
-                              </span>
-                            </AchRarity>
-                          )}
-                          {ach?.color == "Platinum" && (
-                            <AchRarity>
-                              <span style={{ fontSize: ".7rem" }}>
-                                PLATINUM
-                              </span>
-                            </AchRarity>
-                          )}
-                          <Seperator padding={".25rem"} />
-                          <AchTrophy>
-                            {ach?.color == "Platinum" && <PlatinumIconS />}
-                            {ach?.color == "Gold" && <GoldIconS />}
-                            {ach?.color == "Silver" && <SilverIconS />}
-                            {ach?.color == "Bronze" && <BronzeIconS />}
-                          </AchTrophy>
-                        </AchCard>
+                            </Platinum>
+                          </GameInfo>
+                        </GameContainer>
                       );
                     })}
-                  </Game2Line>
-                </Game>
-              </>
-            )}
-            {selectedMode == "STATS" && (
-              <GamesR>
-                <GameLineHours>
-                  <Games1Line>
-                    <GamesLeft>MAIN STATISTICS</GamesLeft>
-                    <GamesRight></GamesRight>
-                  </Games1Line>
-                  <StatWrapper>
-                    <StatInformation games={games} />
-                  </StatWrapper>
-                </GameLineHours>
-              </GamesR>
-            )}
-            {selectedMode == "STATS" && (
-              <GamesR>
-                <GameLineHours>
-                  <Games1Line>
-                    <GamesLeft>MONTHLY ACTIVITY</GamesLeft>
-                    <GamesRight></GamesRight>
-                  </Games1Line>
-                  <StatWrapper2>
-                    <LevelProgressChart
-                      dailyUnlocks={monthlyUnlocks}
-                      size={1550}
-                    />
-                  </StatWrapper2>
-                </GameLineHours>
-              </GamesR>
-            )}
-            {selectedMode == "STATS" && (
-              <GamesR>
-                <GameLineHours>
-                  <Games1Line>
-                    <GamesLeft>TROPHY PROGRESSION</GamesLeft>
-                    <GamesRight></GamesRight>
-                  </Games1Line>
-                  <StatWrapper2>
-                    <MultiProgressChart
-                      size={1550}
-                      dailyTypeBreakdown={dailyTypeBreakdown}
-                    />
-                  </StatWrapper2>
-                </GameLineHours>
-              </GamesR>
-            )}
-            {selectedMode == "STATS" && (
-              <GamesR>
-                <GameLineHours>
-                  <Games1Line>
-                    <GamesLeft>TROPHIES BY TIME</GamesLeft>
-                    <GamesRight></GamesRight>
-                  </Games1Line>
-                  <StatWrapper2>
-                    <BarProgressChart
-                      dailyUnlocks={hourlyUnlocks}
-                      size={1550}
-                    />
-                  </StatWrapper2>
-                </GameLineHours>
-              </GamesR>
-            )}
-            {selectedMode == "STATS" && (
-              <GamesR>
-                <GameLineHours>
-                  <Games1Line>
-                    <GamesLeft>TROPHIES BY DAY</GamesLeft>
-                    <GamesRight></GamesRight>
-                  </Games1Line>
-                  <StatWrapper2>
-                    <BarProgressChart
-                      dailyUnlocks={weeklyUnlocks}
-                      size={1550}
-                    />
-                  </StatWrapper2>
-                </GameLineHours>
-              </GamesR>
-            )}{" "}
-            {selectedMode == "LEVEL_HISTORY" && (
-              <LevelProgressChart
-                dailyUnlocks={levelAchs?.map((ach) => ({
-                  date: formatDate3(new Date(ach?.unlocktime * 1000)),
-                  Level: ach?.levelReached,
-                }))}
-                size={1550}
-              />
-            )}
-            {selectedMode == "LEVEL_HISTORY" && (
-              <Game2LineLH>
-                {levelAchs?.reverse().map((ach, index) => {
-                  let desc1 = ach?.hiddenDesc;
-                  let desc2 = ach?.description;
-                  let desc3 = ach?.hiddenDesc?.split(
-                    "Hidden achievement:"
-                  )?.[1];
-                  return (
-                    <AchCard color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}>
-                      <GameSubLeftImageSmall
-                        image={HEADER_IMAGE(ach?.gameId)}
+                  </Games2Line>
+                </Games>
+              )}
+              {selectedMode == "GAME" && (
+                <>
+                  <Game>
+                    <Game1Line>
+                      <GameLeft>
+                        {selectedGame?.name?.toUpperCase()} TROPHIES
+                      </GameLeft>
+                    </Game1Line>
+                    <Game2Line>
+                      {[
+                        ...(selectedGame?.achievements ?? [])?.filter(
+                          (ach) => ach?.color == "Platinum"
+                        ),
+                        ...(selectedGame?.achievements ?? [])
+                          ?.filter(
+                            (ach) =>
+                              ach?.color != "Platinum" && ach?.achieved == 1
+                          )
+                          ?.sort(
+                            (ach1, ach2) => ach1?.unlocktime - ach2?.unlocktime
+                          ),
+                      ]?.map((ach, index) => {
+                        let desc1 = ach?.hiddenDesc;
+                        let desc2 = ach?.description;
+                        let desc3 = ach?.hiddenDesc?.split(
+                          "Hidden achievement:"
+                        )?.[1];
+                        return (
+                          <AchCard
+                            color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                            achieved={ach?.achieved}
+                          >
+                            {ach?.color != "Platinum" && (
+                              <AchIconOuter achieved={ach?.achieved}>
+                                <AchIcon
+                                  icon={
+                                    ach?.achieved == 1
+                                      ? ach?.icon
+                                      : ach?.icongray
+                                  }
+                                  onClick={() => {
+                                    if (window !== "undefined") {
+                                      const searchQuery = `${
+                                        ach?.displayName
+                                      } achievement ${encodeURIComponent(
+                                        ach?.gameName
+                                      )} `;
+                                      window.open(
+                                        `https://www.google.com/search?q=${searchQuery}`
+                                      );
+                                      // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                                    }
+                                  }}
+                                ></AchIcon>
+                              </AchIconOuter>
+                            )}
+                            {ach?.color == "Platinum" && (
+                              <AchIconOuterPlatinum achieved={ach?.achieved}>
+                                <span
+                                  style={{
+                                    background: "#262D35",
+                                    width: "60px",
+                                    height: "60px",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                  }}
+                                >
+                                  <PlatinumIcon />
+                                </span>
+                              </AchIconOuterPlatinum>
+                            )}
+                            <AchData>
+                              <AchTitle>{ach?.displayName}</AchTitle>
+                              <AchDesc>
+                                {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                              </AchDesc>
+                            </AchData>
+                            {ach?.achieved == 1 && (
+                              <Unlocked>
+                                <UnlockedT1>
+                                  {formatDate1(
+                                    new Date(ach?.unlocktime * 1000)
+                                  )}
+                                </UnlockedT1>
+                                <UnlockedT2>
+                                  {formatDate2(
+                                    new Date(ach?.unlocktime * 1000)
+                                  )}
+                                </UnlockedT2>
+                              </Unlocked>
+                            )}
+                            <Seperator padding={".25rem"} />
+                            {ach?.color != "Platinum" && (
+                              <AchRarity>
+                                <span style={{ fontSize: "1.2rem" }}>
+                                  {ach?.percentage}%
+                                </span>
+                                <span style={{ fontSize: ".7rem" }}>
+                                  {ach?.label?.toUpperCase()}
+                                </span>
+                              </AchRarity>
+                            )}
+                            {ach?.color == "Platinum" && (
+                              <AchRarity>
+                                <span style={{ fontSize: ".7rem" }}>
+                                  PLATINUM
+                                </span>
+                              </AchRarity>
+                            )}
+                            <Seperator padding={".25rem"} />
+                            <AchTrophy>
+                              {ach?.color == "Platinum" && <PlatinumIconS />}
+                              {ach?.color == "Gold" && <GoldIconS />}
+                              {ach?.color == "Silver" && <SilverIconS />}
+                              {ach?.color == "Bronze" && <BronzeIconS />}
+                            </AchTrophy>
+                          </AchCard>
+                        );
+                      })}
+                    </Game2Line>
+                  </Game>
+                </>
+              )}
+              {selectedMode == "STATS" && (
+                <GamesR>
+                  <GameLineHours>
+                    <Games1Line>
+                      <GamesLeft>MAIN STATISTICS</GamesLeft>
+                      <GamesRight></GamesRight>
+                    </Games1Line>
+                    <StatWrapper>
+                      <StatInformation games={games} />
+                    </StatWrapper>
+                  </GameLineHours>
+                </GamesR>
+              )}
+              {selectedMode == "STATS" && (
+                <GamesR>
+                  <GameLineHours>
+                    <Games1Line>
+                      <GamesLeft>MONTHLY ACTIVITY</GamesLeft>
+                      <GamesRight></GamesRight>
+                    </Games1Line>
+                    <StatWrapper2>
+                      <LevelProgressChart
+                        dailyUnlocks={monthlyUnlocks}
+                        size={1550}
                       />
-                      <span style={{ marginLeft: "1rem" }}></span>
-                      <AchIconOuter achieved={ach?.achieved}>
-                        <AchIcon
-                          icon={ach?.icon}
-                          onClick={() => {
-                            if (window !== "undefined") {
-                              const searchQuery = `${
-                                ach?.displayName
-                              } achievement ${encodeURIComponent(
-                                ach?.gameName
-                              )} `;
-                              window.open(
-                                `https://www.google.com/search?q=${searchQuery}`
-                              );
-                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                            }
-                          }}
-                        ></AchIcon>
-                      </AchIconOuter>
-                      <AchData>
-                        <AchTitle>{ach?.displayName}</AchTitle>
-                        <AchDesc>
-                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
-                        </AchDesc>
-                      </AchData>
-                      <AchTrophy2>
-                        <LevelUpIcon />
-                      </AchTrophy2>
-                      <span
-                        style={{
-                          fontSize: "1.25rem",
-                          padding: "1rem 0.5rem",
-                          opacity: 0.75,
-                          transform: "translate(-.66rem,.4rem)",
-                          color: "#FEFEFE",
-                        }}
-                      >
-                        {ach?.levelReached}
-                      </span>
-                      <Seperator padding={".25rem"} />
-                      {ach?.achieved == 1 && (
-                        <Unlocked>
-                          <UnlockedT1>
-                            {formatDate1(new Date(ach?.unlocktime * 1000))}
-                          </UnlockedT1>
-                          <UnlockedT2>
-                            {formatDate2(new Date(ach?.unlocktime * 1000))}
-                          </UnlockedT2>
-                        </Unlocked>
-                      )}
-                      <Seperator padding={".25rem"} />
-                      <AchRarity>
-                        <span style={{ fontSize: "1.2rem" }}>
-                          {ach?.percentage}%
-                        </span>
-                        <span style={{ fontSize: ".7rem" }}>
-                          {ach?.label?.toUpperCase()}
-                        </span>
-                      </AchRarity>
-                      <Seperator padding={".25rem"} />
-                      <AchTrophy>
-                        {ach?.color == "Platinum" && <PlatinumIconS />}
-                        {ach?.color == "Gold" && <GoldIconS />}
-                        {ach?.color == "Silver" && <SilverIconS />}
-                        {ach?.color == "Bronze" && <BronzeIconS />}
-                      </AchTrophy>
-                    </AchCard>
-                  );
-                })}
-              </Game2LineLH>
-            )}
-            {selectedMode == "TROPHY_LOG" && (
-              <Game2Line>
-                {allUnlocked?.map((ach, index) => {
-                  let desc1 = ach?.hiddenDesc;
-                  let desc2 = ach?.description;
-                  let desc3 = ach?.hiddenDesc?.split(
-                    "Hidden achievement:"
-                  )?.[1];
-                  return (
-                    <AchCard
-                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                      achieved={ach?.achieved}
-                    >
-                      <GameSubLeftImageSmall
-                        image={HEADER_IMAGE(ach?.gameId)}
+                    </StatWrapper2>
+                  </GameLineHours>
+                </GamesR>
+              )}
+              {selectedMode == "STATS" && (
+                <GamesR>
+                  <GameLineHours>
+                    <Games1Line>
+                      <GamesLeft>TROPHY PROGRESSION</GamesLeft>
+                      <GamesRight></GamesRight>
+                    </Games1Line>
+                    <StatWrapper2>
+                      <MultiProgressChart
+                        size={1550}
+                        dailyTypeBreakdown={dailyTypeBreakdown}
                       />
-                      <span style={{ marginLeft: "1rem" }}></span>
-                      <AchIconOuter achieved={ach?.achieved}>
-                        <AchIcon
-                          icon={ach?.icon}
-                          onClick={() => {
-                            if (window !== "undefined") {
-                              const searchQuery = `${
-                                ach?.displayName
-                              } achievement ${encodeURIComponent(
-                                ach?.gameName
-                              )} `;
-                              window.open(
-                                `https://www.google.com/search?q=${searchQuery}`
-                              );
-                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                            }
-                          }}
-                        ></AchIcon>
-                      </AchIconOuter>
-                      <AchData>
-                        <AchTitle>{ach?.displayName}</AchTitle>
-                        <AchDesc>
-                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
-                        </AchDesc>
-                      </AchData>
-                      <span style={{ padding: "0rem 1rem", opacity: 0.75 }}>
-                        #{allUnlocked?.length - index}
-                      </span>
-                      <Seperator padding={".25rem"} />
-                      {ach?.achieved == 1 && (
-                        <Unlocked>
-                          <UnlockedT1>
-                            {formatDate1(new Date(ach?.unlocktime * 1000))}
-                          </UnlockedT1>
-                          <UnlockedT2>
-                            {formatDate2(new Date(ach?.unlocktime * 1000))}
-                          </UnlockedT2>
-                        </Unlocked>
-                      )}
-                      <Seperator padding={".25rem"} />
-                      <AchRarity>
-                        <span style={{ fontSize: "1.2rem" }}>
-                          {ach?.percentage}%
-                        </span>
-                        <span style={{ fontSize: ".7rem" }}>
-                          {ach?.label?.toUpperCase()}
-                        </span>
-                      </AchRarity>
-                      <Seperator padding={".25rem"} />
-                      <AchTrophy>
-                        {ach?.color == "Platinum" && <PlatinumIconS />}
-                        {ach?.color == "Gold" && <GoldIconS />}
-                        {ach?.color == "Silver" && <SilverIconS />}
-                        {ach?.color == "Bronze" && <BronzeIconS />}
-                      </AchTrophy>
-                    </AchCard>
-                  );
-                })}
-              </Game2Line>
-            )}
-            {selectedMode == "TROPHY_ADVISOR" && (
-              <Game2Line>
-                {notUnlocked?.map((ach, index) => {
-                  let desc1 = ach?.hiddenDesc;
-                  let desc2 = ach?.description;
-                  let desc3 = ach?.hiddenDesc?.split(
-                    "Hidden achievement:"
-                  )?.[1];
-                  return (
-                    <AchCard
-                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                      achieved={ach?.achieved}
-                    >
-                      <GameSubLeftImageSmall
-                        image={HEADER_IMAGE(ach?.gameId)}
+                    </StatWrapper2>
+                  </GameLineHours>
+                </GamesR>
+              )}
+              {selectedMode == "STATS" && (
+                <GamesR>
+                  <GameLineHours>
+                    <Games1Line>
+                      <GamesLeft>TROPHIES BY TIME</GamesLeft>
+                      <GamesRight></GamesRight>
+                    </Games1Line>
+                    <StatWrapper2>
+                      <BarProgressChart
+                        dailyUnlocks={hourlyUnlocks}
+                        size={1550}
                       />
-                      <span style={{ marginLeft: "1rem" }}></span>
-                      <AchIconOuter achieved={ach?.achieved}>
-                        <AchIcon
-                          icon={ach?.icon}
-                          onClick={() => {
-                            if (window !== "undefined") {
-                              const searchQuery = `${
-                                ach?.displayName
-                              } achievement ${encodeURIComponent(
-                                ach?.gameName
-                              )} `;
-                              window.open(
-                                `https://www.google.com/search?q=${searchQuery}`
-                              );
-                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                            }
-                          }}
-                        ></AchIcon>
-                      </AchIconOuter>
-                      <AchData>
-                        <AchTitle>{ach?.displayName}</AchTitle>
-                        <AchDesc>
-                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
-                        </AchDesc>
-                      </AchData>
-                      <span style={{ padding: "0rem 1rem", opacity: 0.75 }}>
-                        #{index + 1}
-                      </span>
-                      <Seperator padding={".25rem"} />
-                      <AchRarity>
-                        <span style={{ fontSize: "1.2rem" }}>
-                          {ach?.percentage}%
-                        </span>
-                        <span style={{ fontSize: ".7rem" }}>
-                          {ach?.label?.toUpperCase()}
-                        </span>
-                      </AchRarity>
-                      <Seperator padding={".25rem"} />
-                      <AchTrophy>
-                        {ach?.color == "Platinum" && <PlatinumIconS />}
-                        {ach?.color == "Gold" && <GoldIconS />}
-                        {ach?.color == "Silver" && <SilverIconS />}
-                        {ach?.color == "Bronze" && <BronzeIconS />}
-                      </AchTrophy>
-                    </AchCard>
-                  );
-                })}
-              </Game2Line>
-            )}
-          </SRLeft>
-        )}
-        {shouldShowRight && (
-          <SRRight>
-            {selectedMode == "GAME" && (
-              <Milestones>
-                <Rarest1Line>
-                  <GamesLeft>GAME</GamesLeft>
-                  <GamesRight></GamesRight>
-                </Rarest1Line>
-                <Rarest3Line>
-                  <GameSubLine>
-                    <GameImage url={HEADER_IMAGE(selectedGame?.id)}></GameImage>
-                    <GameSubRight>
-                      <Ps5
-                        onClick={() => {
-                          setShowEditModal(true);
-                          setGameData((old) => selectedGame);
-                        }}
-                      >
-                        PS5
-                      </Ps5>
-                      <Seperator></Seperator>
-                      <Rank>
-                        <span style={{ fontSize: "1.5rem", color: color }}>
-                          {rank}
-                        </span>
-                        <span style={{ fontSize: ".7rem" }}>RANK</span>
-                      </Rank>
-                      <Seperator></Seperator>
-                      <Platinum isPlatinum={totalBG == completedBG}>
-                        <span
-                          style={{
-                            opacity: totalBG == completedBG ? 1 : 0.25,
-                          }}
-                        >
-                          <PlatinumIcon />
-                        </span>
-                        <span
-                          style={{
-                            fontSize: ".7rem",
-                            marginTop: "4px",
-                            fontWeight: "bold",
-                            opacity: totalBG == completedBG ? 1 : 0.75,
-                          }}
-                        >
-                          {lastAch?.percentage} %
-                        </span>
-                      </Platinum>
-                      <Seperator></Seperator>
-                      <Trophies>
-                        <TTop>
-                          <TSingle>
-                            <GoldIconS />
-                            <span
-                              style={{
-                                transform: "translate(-.5rem,-.25rem)",
-                                color: COLOR_GOLD,
-                                fontSize: "1rem",
-                              }}
-                            >
-                              {goldBG}
-                            </span>
-                          </TSingle>
-                          <TSingle>
-                            <SilverIconS />
-                            <span
-                              style={{
-                                transform: "translate(-.5rem,-.25rem)",
-                                color: COLOR_SILVER2,
-                                fontSize: "1rem",
-                              }}
-                            >
-                              {silverBG}
-                            </span>
-                          </TSingle>
-                          <TSingle>
-                            <BronzeIconS />
-                            <span
-                              style={{
-                                transform: "translate(-.5rem,-.25rem)",
-                                color: COLOR_BRONZE,
-                                fontSize: "1rem",
-                              }}
-                            >
-                              {bronzeBG}
-                            </span>
-                          </TSingle>
-                        </TTop>
-                        <TBottom>
-                          <Outer>
-                            <Inner percentage={completionBG}></Inner>
-                            <Text>{completionBG?.toFixed(2)} %</Text>
-                          </Outer>
-                        </TBottom>
-                      </Trophies>
-                    </GameSubRight>
-                  </GameSubLine>
-                </Rarest3Line>
-              </Milestones>
-            )}
-            <Rarest>
-              <Rarest1Line>
-                <GamesLeft>RAREST TROPHIES</GamesLeft>
-                <GamesRight></GamesRight>
-              </Rarest1Line>
-              <Rarest2Line>
-                {selectedRarityAchs?.length == 0 && <span>No Trophies</span>}
-                {selectedRarityAchs?.length > 0 &&
-                  selectedRarityAchs?.map((ach, index) => {
+                    </StatWrapper2>
+                  </GameLineHours>
+                </GamesR>
+              )}
+              {selectedMode == "STATS" && (
+                <GamesR>
+                  <GameLineHours>
+                    <Games1Line>
+                      <GamesLeft>TROPHIES BY DAY</GamesLeft>
+                      <GamesRight></GamesRight>
+                    </Games1Line>
+                    <StatWrapper2>
+                      <BarProgressChart
+                        dailyUnlocks={weeklyUnlocks}
+                        size={1550}
+                      />
+                    </StatWrapper2>
+                  </GameLineHours>
+                </GamesR>
+              )}{" "}
+              {selectedMode == "LEVEL_HISTORY" && (
+                <LevelProgressChart
+                  dailyUnlocks={levelAchs?.map((ach) => ({
+                    date: formatDate3(new Date(ach?.unlocktime * 1000)),
+                    Level: ach?.levelReached,
+                  }))}
+                  size={1550}
+                />
+              )}
+              {selectedMode == "LEVEL_HISTORY" && (
+                <Game2LineLH>
+                  {levelAchs?.reverse().map((ach, index) => {
                     let desc1 = ach?.hiddenDesc;
                     let desc2 = ach?.description;
                     let desc3 = ach?.hiddenDesc?.split(
                       "Hidden achievement:"
                     )?.[1];
-
                     return (
-                      <AchCard
-                        color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                        achieved={ach?.achieved}
-                      >
+                      <AchCard color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}>
+                        <GameSubLeftImageSmall
+                          image={HEADER_IMAGE(ach?.gameId)}
+                        />
+                        <span style={{ marginLeft: "1rem" }}></span>
                         <AchIconOuter achieved={ach?.achieved}>
-                          <AchIcon icon={ach?.icon}></AchIcon>
+                          <AchIcon
+                            icon={ach?.icon}
+                            onClick={() => {
+                              if (window !== "undefined") {
+                                const searchQuery = `${
+                                  ach?.displayName
+                                } achievement ${encodeURIComponent(
+                                  ach?.gameName
+                                )} `;
+                                window.open(
+                                  `https://www.google.com/search?q=${searchQuery}`
+                                );
+                                // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                              }
+                            }}
+                          ></AchIcon>
                         </AchIconOuter>
                         <AchData>
                           <AchTitle>{ach?.displayName}</AchTitle>
                           <AchDesc>
-                            {" "}
                             {desc2 ? desc2 : desc3 ? desc3 : desc1}
                           </AchDesc>
                         </AchData>
+                        <AchTrophy2>
+                          <LevelUpIcon />
+                        </AchTrophy2>
+                        <span
+                          style={{
+                            fontSize: "1.25rem",
+                            padding: "1rem 0.5rem",
+                            opacity: 0.75,
+                            transform: "translate(-.66rem,.4rem)",
+                            color: "#FEFEFE",
+                          }}
+                        >
+                          {ach?.levelReached}
+                        </span>
+                        <Seperator padding={".25rem"} />
+                        {ach?.achieved == 1 && (
+                          <Unlocked>
+                            <UnlockedT1>
+                              {formatDate1(new Date(ach?.unlocktime * 1000))}
+                            </UnlockedT1>
+                            <UnlockedT2>
+                              {formatDate2(new Date(ach?.unlocktime * 1000))}
+                            </UnlockedT2>
+                          </Unlocked>
+                        )}
                         <Seperator padding={".25rem"} />
                         <AchRarity>
                           <span style={{ fontSize: "1.2rem" }}>
@@ -1231,72 +944,378 @@ export default function MainContent({
                       </AchCard>
                     );
                   })}
-              </Rarest2Line>
-              <RareSelection>
-                <RItem
-                  active={selectedRarity == "ULTRA RARE"}
-                  onClick={() => {
-                    setSelectedRarity("ULTRA RARE");
-                  }}
-                >
-                  <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
-                    {ultrarare?.length}
-                  </span>
-                  <span style={{ fontSize: ".7rem" }}>ULTRA RARE</span>
-                </RItem>
-                <Seperator padding={".25rem"}></Seperator>
-                <RItem
-                  active={selectedRarity == "VERY RARE"}
-                  onClick={() => {
-                    setSelectedRarity("VERY RARE");
-                  }}
-                >
-                  <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
-                    {veryrare?.length}
-                  </span>
-                  <span style={{ fontSize: ".7rem" }}>VERY RARE</span>
-                </RItem>
-                <Seperator padding={".25rem"}></Seperator>
-                <RItem
-                  active={selectedRarity == "RARE"}
-                  onClick={() => {
-                    setSelectedRarity("RARE");
-                  }}
-                >
-                  <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
-                    {rare?.length}
-                  </span>
-                  <span style={{ fontSize: ".7rem" }}>RARE</span>
-                </RItem>
-                <Seperator padding={".25rem"}></Seperator>
-                <RItem
-                  active={selectedRarity == "UNCOMMON"}
-                  onClick={() => {
-                    setSelectedRarity("UNCOMMON");
-                  }}
-                >
-                  <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
-                    {uncommon?.length}
-                  </span>
-                  <span style={{ fontSize: ".7rem" }}>UNCOMMON</span>
-                </RItem>
-                <Seperator padding={".25rem"}></Seperator>
-                <RItem
-                  active={selectedRarity == "COMMON"}
-                  onClick={() => {
-                    setSelectedRarity("COMMON");
-                  }}
-                >
-                  <span style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}>
-                    {common?.length}
-                  </span>
-                  <span style={{ fontSize: ".7rem" }}>COMMON</span>
-                </RItem>
-              </RareSelection>
-            </Rarest>
-          </SRRight>
-        )}
-      </SecondRow>
+                </Game2LineLH>
+              )}
+              {selectedMode == "TROPHY_LOG" && (
+                <Game2Line>
+                  {allUnlocked?.map((ach, index) => {
+                    let desc1 = ach?.hiddenDesc;
+                    let desc2 = ach?.description;
+                    let desc3 = ach?.hiddenDesc?.split(
+                      "Hidden achievement:"
+                    )?.[1];
+                    return (
+                      <AchCard
+                        color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                        achieved={ach?.achieved}
+                      >
+                        <GameSubLeftImageSmall
+                          image={HEADER_IMAGE(ach?.gameId)}
+                        />
+                        <span style={{ marginLeft: "1rem" }}></span>
+                        <AchIconOuter achieved={ach?.achieved}>
+                          <AchIcon
+                            icon={ach?.icon}
+                            onClick={() => {
+                              if (window !== "undefined") {
+                                const searchQuery = `${
+                                  ach?.displayName
+                                } achievement ${encodeURIComponent(
+                                  ach?.gameName
+                                )} `;
+                                window.open(
+                                  `https://www.google.com/search?q=${searchQuery}`
+                                );
+                                // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                              }
+                            }}
+                          ></AchIcon>
+                        </AchIconOuter>
+                        <AchData>
+                          <AchTitle>{ach?.displayName}</AchTitle>
+                          <AchDesc>
+                            {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                          </AchDesc>
+                        </AchData>
+                        <span style={{ padding: "0rem 1rem", opacity: 0.75 }}>
+                          #{allUnlocked?.length - index}
+                        </span>
+                        <Seperator padding={".25rem"} />
+                        {ach?.achieved == 1 && (
+                          <Unlocked>
+                            <UnlockedT1>
+                              {formatDate1(new Date(ach?.unlocktime * 1000))}
+                            </UnlockedT1>
+                            <UnlockedT2>
+                              {formatDate2(new Date(ach?.unlocktime * 1000))}
+                            </UnlockedT2>
+                          </Unlocked>
+                        )}
+                        <Seperator padding={".25rem"} />
+                        <AchRarity>
+                          <span style={{ fontSize: "1.2rem" }}>
+                            {ach?.percentage}%
+                          </span>
+                          <span style={{ fontSize: ".7rem" }}>
+                            {ach?.label?.toUpperCase()}
+                          </span>
+                        </AchRarity>
+                        <Seperator padding={".25rem"} />
+                        <AchTrophy>
+                          {ach?.color == "Platinum" && <PlatinumIconS />}
+                          {ach?.color == "Gold" && <GoldIconS />}
+                          {ach?.color == "Silver" && <SilverIconS />}
+                          {ach?.color == "Bronze" && <BronzeIconS />}
+                        </AchTrophy>
+                      </AchCard>
+                    );
+                  })}
+                </Game2Line>
+              )}
+              {selectedMode == "TROPHY_ADVISOR" && (
+                <Game2Line>
+                  {notUnlocked?.map((ach, index) => {
+                    let desc1 = ach?.hiddenDesc;
+                    let desc2 = ach?.description;
+                    let desc3 = ach?.hiddenDesc?.split(
+                      "Hidden achievement:"
+                    )?.[1];
+                    return (
+                      <AchCard
+                        color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                        achieved={ach?.achieved}
+                      >
+                        <GameSubLeftImageSmall
+                          image={HEADER_IMAGE(ach?.gameId)}
+                        />
+                        <span style={{ marginLeft: "1rem" }}></span>
+                        <AchIconOuter achieved={ach?.achieved}>
+                          <AchIcon
+                            icon={ach?.icon}
+                            onClick={() => {
+                              if (window !== "undefined") {
+                                const searchQuery = `${
+                                  ach?.displayName
+                                } achievement ${encodeURIComponent(
+                                  ach?.gameName
+                                )} `;
+                                window.open(
+                                  `https://www.google.com/search?q=${searchQuery}`
+                                );
+                                // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                              }
+                            }}
+                          ></AchIcon>
+                        </AchIconOuter>
+                        <AchData>
+                          <AchTitle>{ach?.displayName}</AchTitle>
+                          <AchDesc>
+                            {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                          </AchDesc>
+                        </AchData>
+                        <span style={{ padding: "0rem 1rem", opacity: 0.75 }}>
+                          #{index + 1}
+                        </span>
+                        <Seperator padding={".25rem"} />
+                        <AchRarity>
+                          <span style={{ fontSize: "1.2rem" }}>
+                            {ach?.percentage}%
+                          </span>
+                          <span style={{ fontSize: ".7rem" }}>
+                            {ach?.label?.toUpperCase()}
+                          </span>
+                        </AchRarity>
+                        <Seperator padding={".25rem"} />
+                        <AchTrophy>
+                          {ach?.color == "Platinum" && <PlatinumIconS />}
+                          {ach?.color == "Gold" && <GoldIconS />}
+                          {ach?.color == "Silver" && <SilverIconS />}
+                          {ach?.color == "Bronze" && <BronzeIconS />}
+                        </AchTrophy>
+                      </AchCard>
+                    );
+                  })}
+                </Game2Line>
+              )}
+            </SRLeft>
+          )}
+          {shouldShowRight && (
+            <SRRight>
+              {selectedMode == "GAME" && (
+                <Milestones>
+                  <Rarest1Line>
+                    <GamesLeft>GAME</GamesLeft>
+                    <GamesRight></GamesRight>
+                  </Rarest1Line>
+                  <Rarest3Line>
+                    <GameSubLine>
+                      <GameImage
+                        url={HEADER_IMAGE(selectedGame?.id)}
+                      ></GameImage>
+                      <GameSubRight>
+                        <Ps5
+                          onClick={() => {
+                            setShowEditModal(true);
+                            setGameData((old) => selectedGame);
+                          }}
+                        >
+                          PS5
+                        </Ps5>
+                        <Seperator></Seperator>
+                        <Rank>
+                          <span style={{ fontSize: "1.5rem", color: color }}>
+                            {rank}
+                          </span>
+                          <span style={{ fontSize: ".7rem" }}>RANK</span>
+                        </Rank>
+                        <Seperator></Seperator>
+                        <Platinum isPlatinum={totalBG == completedBG}>
+                          <span
+                            style={{
+                              opacity: totalBG == completedBG ? 1 : 0.25,
+                            }}
+                          >
+                            <PlatinumIcon />
+                          </span>
+                          <span
+                            style={{
+                              fontSize: ".7rem",
+                              marginTop: "4px",
+                              fontWeight: "bold",
+                              opacity: totalBG == completedBG ? 1 : 0.75,
+                            }}
+                          >
+                            {lastAch?.percentage} %
+                          </span>
+                        </Platinum>
+                        <Seperator></Seperator>
+                        <Trophies>
+                          <TTop>
+                            <TSingle>
+                              <GoldIconS />
+                              <span
+                                style={{
+                                  transform: "translate(-.5rem,-.25rem)",
+                                  color: COLOR_GOLD,
+                                  fontSize: "1rem",
+                                }}
+                              >
+                                {goldBG}
+                              </span>
+                            </TSingle>
+                            <TSingle>
+                              <SilverIconS />
+                              <span
+                                style={{
+                                  transform: "translate(-.5rem,-.25rem)",
+                                  color: COLOR_SILVER2,
+                                  fontSize: "1rem",
+                                }}
+                              >
+                                {silverBG}
+                              </span>
+                            </TSingle>
+                            <TSingle>
+                              <BronzeIconS />
+                              <span
+                                style={{
+                                  transform: "translate(-.5rem,-.25rem)",
+                                  color: COLOR_BRONZE,
+                                  fontSize: "1rem",
+                                }}
+                              >
+                                {bronzeBG}
+                              </span>
+                            </TSingle>
+                          </TTop>
+                          <TBottom>
+                            <Outer>
+                              <Inner percentage={completionBG}></Inner>
+                              <Text>{completionBG?.toFixed(2)} %</Text>
+                            </Outer>
+                          </TBottom>
+                        </Trophies>
+                      </GameSubRight>
+                    </GameSubLine>
+                  </Rarest3Line>
+                </Milestones>
+              )}
+              <Rarest>
+                <Rarest1Line>
+                  <GamesLeft>RAREST TROPHIES</GamesLeft>
+                  <GamesRight></GamesRight>
+                </Rarest1Line>
+                <Rarest2Line>
+                  {selectedRarityAchs?.length == 0 && <span>No Trophies</span>}
+                  {selectedRarityAchs?.length > 0 &&
+                    selectedRarityAchs?.map((ach, index) => {
+                      let desc1 = ach?.hiddenDesc;
+                      let desc2 = ach?.description;
+                      let desc3 = ach?.hiddenDesc?.split(
+                        "Hidden achievement:"
+                      )?.[1];
+
+                      return (
+                        <AchCard
+                          color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                          achieved={ach?.achieved}
+                        >
+                          <AchIconOuter achieved={ach?.achieved}>
+                            <AchIcon icon={ach?.icon}></AchIcon>
+                          </AchIconOuter>
+                          <AchData>
+                            <AchTitle>{ach?.displayName}</AchTitle>
+                            <AchDesc>
+                              {" "}
+                              {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                            </AchDesc>
+                          </AchData>
+                          <Seperator padding={".25rem"} />
+                          <AchRarity>
+                            <span style={{ fontSize: "1.2rem" }}>
+                              {ach?.percentage}%
+                            </span>
+                            <span style={{ fontSize: ".7rem" }}>
+                              {ach?.label?.toUpperCase()}
+                            </span>
+                          </AchRarity>
+                          <Seperator padding={".25rem"} />
+                          <AchTrophy>
+                            {ach?.color == "Platinum" && <PlatinumIconS />}
+                            {ach?.color == "Gold" && <GoldIconS />}
+                            {ach?.color == "Silver" && <SilverIconS />}
+                            {ach?.color == "Bronze" && <BronzeIconS />}
+                          </AchTrophy>
+                        </AchCard>
+                      );
+                    })}
+                </Rarest2Line>
+                <RareSelection>
+                  <RItem
+                    active={selectedRarity == "ULTRA RARE"}
+                    onClick={() => {
+                      setSelectedRarity("ULTRA RARE");
+                    }}
+                  >
+                    <span
+                      style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}
+                    >
+                      {ultrarare?.length}
+                    </span>
+                    <span style={{ fontSize: ".7rem" }}>ULTRA RARE</span>
+                  </RItem>
+                  <Seperator padding={".25rem"}></Seperator>
+                  <RItem
+                    active={selectedRarity == "VERY RARE"}
+                    onClick={() => {
+                      setSelectedRarity("VERY RARE");
+                    }}
+                  >
+                    <span
+                      style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}
+                    >
+                      {veryrare?.length}
+                    </span>
+                    <span style={{ fontSize: ".7rem" }}>VERY RARE</span>
+                  </RItem>
+                  <Seperator padding={".25rem"}></Seperator>
+                  <RItem
+                    active={selectedRarity == "RARE"}
+                    onClick={() => {
+                      setSelectedRarity("RARE");
+                    }}
+                  >
+                    <span
+                      style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}
+                    >
+                      {rare?.length}
+                    </span>
+                    <span style={{ fontSize: ".7rem" }}>RARE</span>
+                  </RItem>
+                  <Seperator padding={".25rem"}></Seperator>
+                  <RItem
+                    active={selectedRarity == "UNCOMMON"}
+                    onClick={() => {
+                      setSelectedRarity("UNCOMMON");
+                    }}
+                  >
+                    <span
+                      style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}
+                    >
+                      {uncommon?.length}
+                    </span>
+                    <span style={{ fontSize: ".7rem" }}>UNCOMMON</span>
+                  </RItem>
+                  <Seperator padding={".25rem"}></Seperator>
+                  <RItem
+                    active={selectedRarity == "COMMON"}
+                    onClick={() => {
+                      setSelectedRarity("COMMON");
+                    }}
+                  >
+                    <span
+                      style={{ fontSize: "1.3rem", marginBottom: ".25rem" }}
+                    >
+                      {common?.length}
+                    </span>
+                    <span style={{ fontSize: ".7rem" }}>COMMON</span>
+                  </RItem>
+                </RareSelection>
+              </Rarest>
+            </SRRight>
+          )}
+        </SecondRow>
+      )}
     </Container>
   );
 }
@@ -1797,7 +1816,7 @@ const GameLastPlayed = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
-  padding: 0.125rem 0.5rem 0.125rem 0;
+  padding: 0.25rem 0.5rem 0.25rem 0;
   color: #666666;
 `;
 
@@ -1806,7 +1825,7 @@ const GameHours = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
-  padding: 0.25rem 0.5rem 0.125rem 0;
+  padding: 0.25rem 0.5rem 0.25rem 0;
   color: #666666;
 `;
 
@@ -1815,7 +1834,7 @@ const GameCompletion = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
-  padding: 0.25rem 0.5rem 0.25rem 0;
+  padding: 0.5rem 0.5rem 0.25rem 0;
   color: #666666;
 `;
 
