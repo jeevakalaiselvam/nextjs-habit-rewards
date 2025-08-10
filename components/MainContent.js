@@ -673,6 +673,10 @@ export default function MainContent({
                           ?.sort(
                             (ach1, ach2) => ach1?.unlocktime - ach2?.unlocktime
                           ),
+                        ...(selectedGame?.achievements ?? [])?.filter(
+                          (ach) =>
+                            ach?.color != "Platinum" && ach?.achieved != 1
+                        ),
                       ]?.map((ach, index) => {
                         let desc1 = ach?.hiddenDesc;
                         let desc2 = ach?.description;
