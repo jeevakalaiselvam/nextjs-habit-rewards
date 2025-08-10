@@ -67,6 +67,7 @@ export default function MainContent({
   const [gameData, setGameData] = useState({});
   const [gameSearch, setGameSearch] = useState("");
   const [activeAch, setActiveAch] = useState(0);
+  const [visibleAll, setVisibleAll] = useState(false);
 
   let unearnedBG = 0;
   let platinumABG = 0;
@@ -124,6 +125,7 @@ export default function MainContent({
   )?.length;
 
   totalBG = Math.ceil(totalBG * COMPLETION_FACTOR);
+
   completedBG = completedBG > totalBG ? totalBG : completedBG;
 
   let completionBG = completedBG == 0 ? 0 : (completedBG / totalBG) * 100;
@@ -197,7 +199,9 @@ export default function MainContent({
     selectedRarityAchs = common;
   }
 
-  console.log({ selectedRarityAchs });
+  selectedRarityAchs = selectedRarityAchs?.filter(
+    (ach) => ach?.color !== "Platinum"
+  );
 
   sortedGames = sortedGames?.filter((game) =>
     game?.name?.toLowerCase()?.includes(gameSearch?.toLowerCase())
@@ -494,6 +498,8 @@ export default function MainContent({
                         (item) => item?.achieved == 1
                       )?.length;
 
+                      let allCompleted = completed;
+
                       total = Math.ceil(total * COMPLETION_FACTOR);
                       completed = completed > total ? total : completed;
 
@@ -544,7 +550,7 @@ export default function MainContent({
                               {game?.name}
                             </GameTitle>
                             <GameCompletion>
-                              {completed} of {total} Trophies
+                              {allCompleted} Trophies
                             </GameCompletion>
                             <GameLastPlayed>
                               {lastUnlocked &&
@@ -667,6 +673,13 @@ export default function MainContent({
                     <Game1Line>
                       <GameLeft>
                         {selectedGame?.name?.toUpperCase()} TROPHIES
+                        <Visible
+                          onClick={() => {
+                            setVisibleAll(true);
+                          }}
+                        >
+                          SHOW ALL
+                        </Visible>
                       </GameLeft>
                     </Game1Line>
                     <Game2Line>
@@ -684,7 +697,9 @@ export default function MainContent({
                           ),
                         ...(selectedGame?.achievements ?? [])?.filter(
                           (ach) =>
-                            ach?.color != "Platinum" && ach?.achieved != 1
+                            ach?.color != "Platinum" &&
+                            ach?.achieved != 1 &&
+                            (visibleAll || completedBG < totalBG)
                         ),
                       ]?.map((ach, index) => {
                         let desc1 = ach?.hiddenDesc;
@@ -2042,6 +2057,28 @@ const GameLeft = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex: 1;
+  position: relative;
+`;
+
+const Visible = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #244465;
+  padding: 0.5rem 1rem;
+  opacity: 0.9;
+  font-size: 0.9rem;
+
+  &:hover {
+    padding: 0.5rem 1rem;
+    opacity: 1;
+    cursor: pointer;
+  }
 `;
 
 const GamesRight = styled.div`
