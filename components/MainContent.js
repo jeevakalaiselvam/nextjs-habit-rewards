@@ -535,7 +535,7 @@ export default function MainContent({
                               {game?.name}
                             </GameTitle>
                             <GameCompletion>
-                              {completed} Trophies
+                              {completed} of {total} Trophies
                             </GameCompletion>
                             <GameLastPlayed>
                               {lastUnlocked &&
@@ -1132,7 +1132,8 @@ export default function MainContent({
                               fontSize: ".7rem",
                               marginTop: "4px",
                               fontWeight: "bold",
-                              opacity: totalBG == completedBG ? 1 : 0.75,
+                              opacity: totalBG == completedBG ? 1 : 0.25,
+                              color: "#7A96D1",
                             }}
                           >
                             {lastAch?.percentage} %

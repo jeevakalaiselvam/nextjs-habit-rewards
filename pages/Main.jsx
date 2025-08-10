@@ -83,6 +83,7 @@ export default function Atom() {
           };
         })
         ?.filter((ach) => {
+          return true;
           if (platinumMapper[ach?.displayName]) {
             return true;
           } else {
@@ -110,7 +111,7 @@ export default function Atom() {
           ...sortedPlatinumTrophies,
           {
             displayName: `Platinum`,
-            description: `Achieved all Trophies in game`,
+            description: `Achieved 50% Trophies in the game`,
             hiddenDesc: `${game?.name}`,
             percentage: lastAch?.percentage,
             label: getRarityBasedOnRarity(lastAch?.percentage),
