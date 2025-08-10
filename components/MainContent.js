@@ -675,7 +675,7 @@ export default function MainContent({
                               ach?.color != "Platinum" && ach?.achieved == 1
                           )
                           ?.sort(
-                            (ach1, ach2) => ach1?.unlocktime - ach2?.unlocktime
+                            (ach1, ach2) => ach2?.unlocktime - ach1?.unlocktime
                           ),
                       ]?.map((ach, index) => {
                         let desc1 = ach?.hiddenDesc;
