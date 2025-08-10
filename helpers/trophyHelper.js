@@ -9,7 +9,7 @@ import {
   COLOR_RANK_S,
 } from "./colorHelper";
 
-export const COMPLETION_FACTOR = 1;
+export const COMPLETION_FACTOR = 0.5;
 
 export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
   // Trophy points
