@@ -16,7 +16,7 @@ const trophyPoints = {
   gold: 90,
   platinum: 300,
 };
-export const COMPLETION_FACTOR = 0.8;
+export const COMPLETION_FACTOR = 1;
 
 export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
   // Trophy points
