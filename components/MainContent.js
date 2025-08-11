@@ -326,20 +326,6 @@ export default function MainContent({
           >
             GAMES
           </TabLink>
-          <TabLink
-            onClick={() => {
-              setSelected("LIBRARY");
-              setSelectedMode("LIBRARY");
-              if (window) {
-                localStorage.setItem("SELECTED_TAB", "LIBRARY");
-              }
-            }}
-            active={selectedMode == "LIBRARY"}
-            onMouseEnter={() => setActive("LIBRARY")}
-            onMouseLeave={() => setActive("")}
-          >
-            LIBRARY
-          </TabLink>
         </FRRight>
         <FRRight>
           <TabLink
