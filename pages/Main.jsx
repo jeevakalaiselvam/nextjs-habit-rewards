@@ -108,7 +108,7 @@ export default function Atom() {
           ...sortedPlatinumTrophies,
           {
             displayName: `Platinum`,
-            description: `Achieved all base game trophies in the game`,
+            description: `Achieved all Base Game Trophies in the game`,
             hiddenDesc: `${game?.name}`,
             percentage: lastAch?.percentage,
             label: getRarityBasedOnRarity(lastAch?.percentage),
