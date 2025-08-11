@@ -86,6 +86,7 @@ const PieCircleCenterCount = styled.div`
   justify-content: center;
   position: absolute;
   top: 45%;
+  color: #646464;
   left: 50%;
   font-size: 1.25rem;
   transform: translate(-50%, -50%);

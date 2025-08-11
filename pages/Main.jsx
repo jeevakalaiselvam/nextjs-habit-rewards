@@ -101,7 +101,7 @@ export default function Atom() {
 
       total = Math.ceil(total * COMPLETION_FACTOR);
       completed = completed > total ? total : completed;
-      let isCompleted = total == completed;
+      let isCompleted = total == completed && total != 0;
 
       formedGame = {
         ...game,

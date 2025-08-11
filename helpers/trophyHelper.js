@@ -12,7 +12,7 @@ import { formatDate1, formatDate3 } from "./dateHelper";
 
 const trophyPoints = {
   bronze: 15,
-  silver: 30,
+  silver: 60,
   gold: 90,
   platinum: 300,
 };
@@ -21,8 +21,8 @@ export const COMPLETION_FACTOR = 1;
 export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
   // Trophy points
   const platinumPoints = 300;
-  const goldPoints = 30;
-  const silverPoints = 30;
+  const goldPoints = 90;
+  const silverPoints = 60;
   const bronzePoints = 15;
 
   // Calculate total XP

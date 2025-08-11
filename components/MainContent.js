@@ -128,7 +128,8 @@ export default function MainContent({
 
   completedBG = completedBG > totalBG ? totalBG : completedBG;
 
-  let completionBG = completedBG == 0 ? 0 : (completedBG / totalBG) * 100;
+  let completionBG =
+    completedBG == 0 || totalBG == 0 ? 0 : (completedBG / totalBG) * 100;
 
   let { color, rank } = calculateRankForCompletion(completionBG ?? 0);
   let lastAch = selectedGame?.achievements?.sort(
@@ -507,7 +508,9 @@ export default function MainContent({
                         completed == 0 ? 0 : (completed / total) * 100;
 
                       let completion = (
-                        completed == 0 ? 0 : (completed / total) * 100
+                        completed == 0 || total == 0
+                          ? 0
+                          : (completed / total) * 100
                       )?.toFixed(2);
                       allCompletion = allCompletion + completion;
 
@@ -932,24 +935,68 @@ export default function MainContent({
                           image={HEADER_IMAGE(ach?.gameId)}
                         />
                         <span style={{ marginLeft: "1rem" }}></span>
-                        <AchIconOuter achieved={ach?.achieved}>
-                          <AchIcon
-                            icon={ach?.icon}
+                        {ach?.color != "Platinum" && (
+                          <AchIconOuter achieved={ach?.achieved}>
+                            <AchIcon
+                              icon={ach?.icon}
+                              onClick={() => {
+                                if (window !== "undefined") {
+                                  const searchQuery = `${
+                                    ach?.displayName
+                                  } achievement ${encodeURIComponent(
+                                    ach?.gameName
+                                  )} `;
+                                  window.open(
+                                    `https://www.google.com/search?q=${searchQuery}`
+                                  );
+                                  // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                                }
+                              }}
+                            ></AchIcon>
+                          </AchIconOuter>
+                        )}
+                        {ach?.color == "Platinum" && (
+                          <AchIconOuterPlatinum
+                            achieved={ach?.achieved}
                             onClick={() => {
                               if (window !== "undefined") {
-                                const searchQuery = `${
-                                  ach?.displayName
-                                } achievement ${encodeURIComponent(
-                                  ach?.gameName
-                                )} `;
+                                const searchQuery = `${ach?.gameName} Platinum Trophy Guide} `;
                                 window.open(
                                   `https://www.google.com/search?q=${searchQuery}`
                                 );
-                                // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
                               }
                             }}
-                          ></AchIcon>
-                        </AchIconOuter>
+                          >
+                            {ach?.achieved == 1 && (
+                              <span
+                                style={{
+                                  background: "#262D35",
+                                  width: "60px",
+                                  height: "60px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <PlatinumIcon />
+                              </span>
+                            )}
+                            {ach?.achieved != 1 && (
+                              <span
+                                style={{
+                                  background: "#262D35",
+                                  width: "60px",
+                                  height: "60px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <PlatinumIcon />
+                              </span>
+                            )}
+                          </AchIconOuterPlatinum>
+                        )}
                         <AchData>
                           <AchTitle>{ach?.displayName}</AchTitle>
                           <AchDesc>
