@@ -433,16 +433,16 @@ export default function MainContent({
             <Games>
               <Game2Line>
                 {[
-                  ...selectedGame?.achievements?.filter(
-                    (ach) => ach?.color == "Platinum"
-                  ),
-                  ...selectedGame?.achievements
+                  ...(selectedGame?.achievements ?? [])
                     ?.filter(
                       (ach) => ach?.color != "Platinum" && ach?.achieved == 1
                     )
-                    ?.sort((ach1, ach2) => ach1?.unlocktime - ach2?.unlocktime),
-                  ...selectedGame?.achievements?.filter(
+                    ?.sort((ach1, ach2) => ach2?.percentage - ach1?.percentage),
+                  ...(selectedGame?.achievements ?? [])?.filter(
                     (ach) => ach?.color != "Platinum" && ach?.achieved != 1
+                  ),
+                  ...(selectedGame?.achievements ?? [])?.filter(
+                    (ach) => ach?.color == "Platinum"
                   ),
                 ]?.map((ach, index) => {
                   let desc1 = ach?.hiddenDesc;
