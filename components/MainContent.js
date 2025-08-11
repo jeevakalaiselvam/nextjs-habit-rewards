@@ -553,7 +553,7 @@ export default function MainContent({
                               {game?.name}
                             </GameTitle>
                             <GameCompletion>
-                              {allCompleted} Trophies
+                              {completed} of {total} Trophies
                             </GameCompletion>
                             <GameLastPlayed>
                               {lastUnlocked &&
