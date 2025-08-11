@@ -105,7 +105,10 @@ export default function Atom() {
         ...game,
         ...platinumGameData,
         achievements: [
-          ...sortedPlatinumTrophies,
+          ...sortedPlatinumTrophies?.filter(
+            (ach) => ach?.displayName != lastAch?.displayName
+          ),
+          { ...lastAch, color: "Gold" },
           {
             displayName: `Platinum`,
             description: `Achieved all Base Game Trophies in the game`,
@@ -116,6 +119,7 @@ export default function Atom() {
             achieved: isCompleted ? 1 : 0,
             unlocktime: lastAch?.unlocktime,
             icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
+            gameName: lastAch?.gameName,
           },
         ],
       };
