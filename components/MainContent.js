@@ -326,6 +326,20 @@ export default function MainContent({
           >
             GAMES
           </TabLink>
+          <TabLink
+            onClick={() => {
+              setSelected("LIBRARY");
+              setSelectedMode("LIBRARY");
+              if (window) {
+                localStorage.setItem("SELECTED_TAB", "LIBRARY");
+              }
+            }}
+            active={selectedMode == "LIBRARY"}
+            onMouseEnter={() => setActive("LIBRARY")}
+            onMouseLeave={() => setActive("")}
+          >
+            LIBRARY
+          </TabLink>
         </FRRight>
         <FRRight>
           <TabLink
@@ -733,14 +747,23 @@ export default function MainContent({
                                       window.open(
                                         `https://www.google.com/search?q=${searchQuery}`
                                       );
-                                      // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
                                     }
                                   }}
                                 ></AchIcon>
                               </AchIconOuter>
                             )}
                             {ach?.color == "Platinum" && (
-                              <AchIconOuterPlatinum achieved={ach?.achieved}>
+                              <AchIconOuterPlatinum
+                                achieved={ach?.achieved}
+                                onClick={() => {
+                                  if (window !== "undefined") {
+                                    const searchQuery = `${ach?.gameName} Platinum Trophy Guide} `;
+                                    window.open(
+                                      `https://www.google.com/search?q=${searchQuery}`
+                                    );
+                                  }
+                                }}
+                              >
                                 {ach?.achieved == 1 && (
                                   <span
                                     style={{
@@ -752,7 +775,7 @@ export default function MainContent({
                                       justifyContent: "center",
                                     }}
                                   >
-                                    <FaCheck />
+                                    <PlatinumIcon />
                                   </span>
                                 )}
                                 {ach?.achieved != 1 && (

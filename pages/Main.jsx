@@ -118,6 +118,7 @@ export default function Atom() {
             achieved: isCompleted ? 1 : 0,
             unlocktime: lastAch?.unlocktime,
             icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
+            gameName: lastAch?.gameName,
           },
         ],
       };
