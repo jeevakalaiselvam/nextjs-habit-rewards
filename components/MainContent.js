@@ -701,9 +701,7 @@ export default function MainContent({
                           ),
                         ...(selectedGame?.achievements ?? [])?.filter(
                           (ach) =>
-                            ach?.color != "Platinum" &&
-                            ach?.achieved != 1 &&
-                            (visibleAll || completedBG < totalBG)
+                            ach?.color != "Platinum" && ach?.achieved != 1
                         ),
                       ]?.map((ach, index) => {
                         let desc1 = ach?.hiddenDesc;
