@@ -69,6 +69,7 @@ export default function MainContent({
   const [gameSearch, setGameSearch] = useState("");
   const [activeAch, setActiveAch] = useState(0);
   const [visibleAll, setVisibleAll] = useState(false);
+  const [visibleAllGames, setVisibleAllGames] = useState(false);
 
   let unearnedBG = 0;
   let platinumABG = 0;
@@ -447,7 +448,16 @@ export default function MainContent({
               {selectedMode == "GAMES" && (
                 <Games>
                   <Games1Line>
-                    <GamesLeft>GAMES</GamesLeft>
+                    <GamesLeft>
+                      GAMES
+                      <Visible
+                        onClick={() => {
+                          setVisibleAllGames((old) => !old);
+                        }}
+                      >
+                        SHOW ALL
+                      </Visible>
+                    </GamesLeft>
                     <GamesRight></GamesRight>
                   </Games1Line>
                   <Games2Line>
