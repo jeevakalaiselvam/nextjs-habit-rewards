@@ -67,7 +67,7 @@ export default function MainContent({
   const [gameData, setGameData] = useState({});
   const [gameSearch, setGameSearch] = useState("");
   const [activeAch, setActiveAch] = useState(0);
-  const [visibleAll, setVisibleAll] = useState(true);
+  const [visibleAll, setVisibleAll] = useState(false);
 
   let unearnedBG = 0;
   let platinumABG = 0;
@@ -675,7 +675,11 @@ export default function MainContent({
                         {selectedGame?.name?.toUpperCase()} TROPHIES
                         <Visible
                           onClick={() => {
-                            setVisibleAll(true);
+                            if (completedBG >= totalBG) {
+                              setVisibleAll(false);
+                            } else {
+                              setVisibleAll(true);
+                            }
                           }}
                         >
                           SHOW ALL
@@ -689,7 +693,9 @@ export default function MainContent({
                         ),
                         ...(selectedGame?.achievements ?? [])?.filter(
                           (ach) =>
-                            ach?.color != "Platinum" && ach?.achieved != 1
+                            ach?.color != "Platinum" &&
+                            ach?.achieved != 1 &&
+                            (visibleAll || completedBG < totalBG)
                         ),
                         ...(selectedGame?.achievements ?? [])
                           ?.filter(
