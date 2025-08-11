@@ -109,6 +109,7 @@ export const COLOR_GREY = "#717f8d";
 export const COLOR_WHITE = "#FEFEFE";
 export const COLOR_RED = "#FE6662";
 export const COLOR_GREEN = "#3BD987";
+export const COLOR_GREEN2 = "#579428";
 export const COLOR_BLUE = "#5474FD";
 export const COLOR_BLUE_DARK = "#0d1a28";
 export const COLOR_BLUE_LIGHT = "#52b8da";
@@ -125,7 +126,18 @@ export const COLOR_BRONZE = "#C46438";
 export const COLOR_PLATINUM = "#7A96D1";
 export const COLOR_UNLOCKED = "#ECF8EA";
 export const COLOR_UNLOCKED_DARK = "#61BF19";
-export const COLOR_UNLOCKED_TEXT = "#31640aff";
+
+export const COLOR_ULTRA_RARE = "#CD2103";
+export const COLOR_VERY_RARE = "#D84A02";
+export const COLOR_RARE = "#EC7C00";
+export const COLOR_UNCOMMON = "#FFB100";
+export const COLOR_COMMON = "#FFEA00";
+
+export const COLOR_80_100 = "#02451F";
+export const COLOR_60_80 = "#016616";
+export const COLOR_40_60 = "#017B13";
+export const COLOR_20_40 = "#139610";
+export const COLOR_0_20 = "#20B21C";
 
 export const calculatePsnLevel = ({ platinum, gold, silver, bronze }) => {
   // Trophy values
@@ -185,5 +197,5 @@ export const COLOR_RANK_A = "#008000";
 export const COLOR_RANK_B = "#3BD987";
 export const COLOR_RANK_C = "#A68E00";
 export const COLOR_RANK_D = "#3BD987";
-export const COLOR_RANK_E = "#FF4100";
-export const COLOR_RANK_F = "#f64646ff";
+export const COLOR_RANK_E = "#ff7547ff";
+export const COLOR_RANK_F = "#fc5151ff";
