@@ -30,7 +30,7 @@ import GoldIconS from "./GoldIconS";
 import SilverIconS from "./SilverIconS";
 import BronzeIconS from "./BronzeIconS";
 import PlatinumIcon from "./PlatinumIcon";
-import { FaEdge, FaPlay } from "react-icons/fa";
+import { FaCheck, FaEdge, FaPlay } from "react-icons/fa";
 import EditGameForm from "./EditGameForm";
 import PlatinumIconS from "./PlatinumIconS";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -691,12 +691,6 @@ export default function MainContent({
                         ...(selectedGame?.achievements ?? [])?.filter(
                           (ach) => ach?.color == "Platinum"
                         ),
-                        ...(selectedGame?.achievements ?? [])?.filter(
-                          (ach) =>
-                            ach?.color != "Platinum" &&
-                            ach?.achieved != 1 &&
-                            (visibleAll || completedBG < totalBG)
-                        ),
                         ...(selectedGame?.achievements ?? [])
                           ?.filter(
                             (ach) =>
@@ -705,6 +699,12 @@ export default function MainContent({
                           ?.sort(
                             (ach1, ach2) => ach2?.unlocktime - ach1?.unlocktime
                           ),
+                        ...(selectedGame?.achievements ?? [])?.filter(
+                          (ach) =>
+                            ach?.color != "Platinum" &&
+                            ach?.achieved != 1 &&
+                            (visibleAll || completedBG < totalBG)
+                        ),
                       ]?.map((ach, index) => {
                         let desc1 = ach?.hiddenDesc;
                         let desc2 = ach?.description;
@@ -715,6 +715,7 @@ export default function MainContent({
                           <AchCard
                             color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                             achieved={ach?.achieved}
+                            platinum={ach?.color == "Platinum"}
                           >
                             {ach?.color != "Platinum" && (
                               <AchIconOuter achieved={ach?.achieved}>
@@ -742,18 +743,34 @@ export default function MainContent({
                             )}
                             {ach?.color == "Platinum" && (
                               <AchIconOuterPlatinum achieved={ach?.achieved}>
-                                <span
-                                  style={{
-                                    background: "#262D35",
-                                    width: "60px",
-                                    height: "60px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                  }}
-                                >
-                                  <PlatinumIcon />
-                                </span>
+                                {ach?.achieved == 1 && (
+                                  <span
+                                    style={{
+                                      background: "#262D35",
+                                      width: "60px",
+                                      height: "60px",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    <FaCheck />
+                                  </span>
+                                )}
+                                {ach?.achieved != 1 && (
+                                  <span
+                                    style={{
+                                      background: "#262D35",
+                                      width: "60px",
+                                      height: "60px",
+                                      display: "flex",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                    }}
+                                  >
+                                    <PlatinumIcon />
+                                  </span>
+                                )}
                               </AchIconOuterPlatinum>
                             )}
                             <AchData>
@@ -1517,8 +1534,22 @@ const AchIconOuterPlatinum = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 65px;
-  height: 65px;
+  width: 60px;
+  height: 60px;
+  margin: 0.125rem;
+  background-color: #262d35;
+  animation: ${(props) =>
+    props?.achieved == 1 ? "blinkSmooth 1.5s ease-in-out infinite" : ""};
+
+  @keyframes blinkSmooth {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
 `;
 
 const AchIcon = styled.div`
@@ -1737,8 +1768,8 @@ const Outer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 120px;
-  height: 14px;
+  width: 140px;
+  height: 16px;
   background-color: #3c3f49;
   position: relative;
 `;
@@ -1750,7 +1781,7 @@ const Inner = styled.div`
   position: absolute;
   left: 0;
   top: 0;
-  height: 14px;
+  height: 16px;
   background-color: #1a9fff;
   width: ${(props) => `${props.percentage}%`};
 `;
