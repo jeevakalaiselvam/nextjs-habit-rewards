@@ -67,7 +67,7 @@ export default function MainContent({
   const [gameData, setGameData] = useState({});
   const [gameSearch, setGameSearch] = useState("");
   const [activeAch, setActiveAch] = useState(0);
-  const [visibleAll, setVisibleAll] = useState(false);
+  const [visibleAll, setVisibleAll] = useState(true);
 
   let unearnedBG = 0;
   let platinumABG = 0;
@@ -687,6 +687,10 @@ export default function MainContent({
                         ...(selectedGame?.achievements ?? [])?.filter(
                           (ach) => ach?.color == "Platinum"
                         ),
+                        ...(selectedGame?.achievements ?? [])?.filter(
+                          (ach) =>
+                            ach?.color != "Platinum" && ach?.achieved != 1
+                        ),
                         ...(selectedGame?.achievements ?? [])
                           ?.filter(
                             (ach) =>
@@ -695,12 +699,6 @@ export default function MainContent({
                           ?.sort(
                             (ach1, ach2) => ach2?.unlocktime - ach1?.unlocktime
                           ),
-                        ...(selectedGame?.achievements ?? [])?.filter(
-                          (ach) =>
-                            ach?.color != "Platinum" &&
-                            ach?.achieved != 1 &&
-                            (visibleAll || completedBG < totalBG)
-                        ),
                       ]?.map((ach, index) => {
                         let desc1 = ach?.hiddenDesc;
                         let desc2 = ach?.description;
