@@ -324,9 +324,16 @@ export default function MainContent({
                             >
                               {game?.name}
                             </GameTitle>
-                            <GameCompletion>
-                              {completed} of {total} Trophies
-                            </GameCompletion>
+                            {completed < total && (
+                              <GameCompletion>
+                                {completed} of {total} Trophies
+                              </GameCompletion>
+                            )}
+                            {completed == total && (
+                              <GameCompletion>
+                                All {total} Trophies
+                              </GameCompletion>
+                            )}
                           </GameData>
                         </GRTop>
                         <GRBottom>
