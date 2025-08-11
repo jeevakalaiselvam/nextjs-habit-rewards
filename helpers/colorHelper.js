@@ -186,4 +186,4 @@ export const COLOR_RANK_B = "#3BD987";
 export const COLOR_RANK_C = "#A68E00";
 export const COLOR_RANK_D = "#3BD987";
 export const COLOR_RANK_E = "#FF4100";
-export const COLOR_RANK_F = "#EE0000";
+export const COLOR_RANK_F = "#f64646ff";

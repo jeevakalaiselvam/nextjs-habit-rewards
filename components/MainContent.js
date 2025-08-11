@@ -4,6 +4,7 @@ import {
   COLOR_BRONZE,
   COLOR_GOLD,
   COLOR_GREEN,
+  COLOR_GREY,
   COLOR_PLATINUM,
   COLOR_SILVER,
   COLOR_SILVER2,
@@ -56,6 +57,7 @@ export default function MainContent({
   const [active, setActive] = useState("PROFILE");
   const [gameData, setGameData] = useState({});
   const [activeAccKey, setAccActiveKey] = useState(null);
+  const [visibleAll, setVisibleAll] = useState(false);
 
   let unearnedBG = 0;
   let platinumABG = 0;
@@ -439,7 +441,6 @@ export default function MainContent({
                       (ach) => ach?.color != "Platinum" && ach?.achieved == 1
                     )
                     ?.sort((ach1, ach2) => ach1?.unlocktime - ach2?.unlocktime),
-                  ,
                   ...selectedGame?.achievements?.filter(
                     (ach) => ach?.color != "Platinum" && ach?.achieved != 1
                   ),
@@ -489,7 +490,25 @@ export default function MainContent({
                             togglePlatinum(selectedGame?.id);
                           }}
                         >
-                          <PlatinumIcon />
+                          {ach?.achieved == 1 && (
+                            <div
+                              style={{
+                                transform: "scale(1.5)",
+                              }}
+                            >
+                              <PlatinumIcon />
+                            </div>
+                          )}
+                          {ach?.achieved != 1 && (
+                            <div
+                              style={{
+                                transform: "scale(1.5)",
+                                opacity: 0.1,
+                              }}
+                            >
+                              <PlatinumIcon />
+                            </div>
+                          )}
                         </AchIconOuterPlatinum>
                       )}
                       <AchData>
@@ -611,6 +630,18 @@ const AchIconOuterPlatinum = styled.div`
   transform: ${(props) =>
     props?.achieved ? "translateY(0.5rem)" : "translateY(0rem)"};
   background-color: #262d35;
+  animation: ${(props) =>
+    props?.achieved == 1 ? "blinkSmooth 1.5s ease-in-out infinite" : ""};
+
+  @keyframes blinkSmooth {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
 `;
 
 const AchIcon = styled.div`
