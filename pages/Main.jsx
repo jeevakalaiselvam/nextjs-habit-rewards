@@ -107,7 +107,10 @@ export default function Atom() {
         ...game,
         ...platinumGameData,
         achievements: [
-          ...sortedPlatinumTrophies,
+          ...sortedPlatinumTrophies?.filter(
+            (ach) => ach?.displayName != lastAch?.displayName
+          ),
+          { ...lastAch, color: "Gold" },
           {
             displayName: `Platinum`,
             description: `Achieved all Base Game Trophies in the game`,

@@ -1,9 +1,7 @@
 export const getColorBasedOnRarity = (percentage) => {
-  if (percentage > 0 && percentage <= 5) {
-    return "Gold";
-  } else if (percentage > 5 && percentage <= 20) {
+  if (percentage > 0 && percentage <= 10) {
     return "Silver";
-  } else if (percentage > 20 && percentage <= 100) {
+  } else if (percentage > 10 && percentage <= 100) {
     return "Bronze";
   }
 };

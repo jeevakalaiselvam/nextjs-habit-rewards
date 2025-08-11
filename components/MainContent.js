@@ -691,20 +691,20 @@ export default function MainContent({
                     </Game1Line>
                     <Game2Line>
                       {[
-                        ...(selectedGame?.achievements ?? [])?.filter(
-                          (ach) => ach?.color == "Platinum"
-                        ),
                         ...(selectedGame?.achievements ?? [])
                           ?.filter(
                             (ach) =>
                               ach?.color != "Platinum" && ach?.achieved == 1
                           )
                           ?.sort(
-                            (ach1, ach2) => ach2?.unlocktime - ach1?.unlocktime
+                            (ach1, ach2) => ach2?.percentage - ach1?.percentage
                           ),
                         ...(selectedGame?.achievements ?? [])?.filter(
                           (ach) =>
                             ach?.color != "Platinum" && ach?.achieved != 1
+                        ),
+                        ...(selectedGame?.achievements ?? [])?.filter(
+                          (ach) => ach?.color == "Platinum"
                         ),
                       ]?.map((ach, index) => {
                         let desc1 = ach?.hiddenDesc;
@@ -1682,7 +1682,7 @@ const Game2Line = styled.div`
   flex-direction: column;
   overflow: scroll;
   width: 100%;
-  padding: 0.25rem 0.25rem;
+  padding: 0.5rem 0.25rem;
 `;
 
 const Game2LineLH = styled.div`
