@@ -242,22 +242,22 @@ export const calculateRankForCompletion = (completion) => {
   if (completion == 100) {
     return { color: COLOR_RANK_S, rank: "S" };
   }
-  if (completion < 100 && completion >= 90) {
+  if (completion < 90 && completion >= 80) {
     return { color: COLOR_RANK_A, rank: "A" };
   }
-  if (completion < 90 && completion >= 80) {
+  if (completion < 80 && completion >= 50) {
     return { color: COLOR_RANK_B, rank: "B" };
   }
-  if (completion < 80 && completion >= 70) {
+  if (completion < 50 && completion >= 30) {
     return { color: COLOR_RANK_C, rank: "C" };
   }
-  if (completion < 70 && completion >= 50) {
+  if (completion < 30 && completion >= 20) {
     return { color: COLOR_RANK_D, rank: "D" };
   }
-  if (completion < 50 && completion >= 20) {
+  if (completion < 20 && completion >= 10) {
     return { color: COLOR_RANK_E, rank: "E" };
   }
-  if (completion < 20 && completion >= 0) {
+  if (completion < 10 && completion >= 0) {
     return { color: COLOR_RANK_F, rank: "F" };
   }
   return { color: COLOR_RANK_F, rank: "F" };

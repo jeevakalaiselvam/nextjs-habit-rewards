@@ -757,11 +757,10 @@ export default function MainContent({
                                   <span
                                     style={{
                                       background: "#262D35",
-                                      width: "60px",
-                                      height: "60px",
                                       display: "flex",
                                       alignItems: "center",
                                       justifyContent: "center",
+                                      transform: "scale(1.25)",
                                     }}
                                   >
                                     <PlatinumIcon />
@@ -1592,18 +1591,6 @@ const AchIconOuterPlatinum = styled.div`
   height: 60px;
   margin: 0.125rem;
   background-color: #262d35;
-  animation: ${(props) =>
-    props?.achieved == 1 ? "blinkSmooth 1.5s ease-in-out infinite" : ""};
-
-  @keyframes blinkSmooth {
-    0%,
-    100% {
-      opacity: 1;
-    }
-    50% {
-      opacity: 0;
-    }
-  }
 `;
 
 const AchIcon = styled.div`
