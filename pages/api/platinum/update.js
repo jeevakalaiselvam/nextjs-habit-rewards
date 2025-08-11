@@ -9,6 +9,7 @@ export default async function handler(req, res) {
       id,
       cover,
       platinum,
+      platinumReal,
       dlc1Name,
       dlc1Trophies,
       dlc2Name,
@@ -28,6 +29,7 @@ export default async function handler(req, res) {
     } = req.body;
 
     let parsedPlatinum;
+    let parsedPlatinumReal;
     let parseddlc1Trophies;
     let parseddlc2Trophies;
     let parseddlc3Trophies;
@@ -35,6 +37,7 @@ export default async function handler(req, res) {
     let parseddlc5Trophies;
     try {
       parsedPlatinum = JSON.parse(platinum);
+      parsedPlatinumReal = JSON.parse(platinumReal);
       parseddlc1Trophies = JSON.parse(dlc1Trophies);
       parseddlc2Trophies = JSON.parse(dlc2Trophies);
       parseddlc3Trophies = JSON.parse(dlc3Trophies);
@@ -55,6 +58,7 @@ export default async function handler(req, res) {
           $set: {
             cover: cover,
             platinum: parsedPlatinum,
+            platinumReal: parsedPlatinumReal,
             dlc1Name,
             dlc1Trophies: parseddlc1Trophies,
             dlc2Name,

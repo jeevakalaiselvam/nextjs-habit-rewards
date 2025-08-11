@@ -16,6 +16,7 @@ export default function EditGameForm({
     cover: gameData?.cover,
     price: gameData?.price ?? 0,
     platinum: JSON.stringify(gameData?.platinum ?? []),
+    platinumReal: JSON.stringify(gameData?.platinumReal ?? []),
     dlc1Name: gameData?.dlc1Name,
     dlc2Name: gameData?.dlc2Name,
     dlc3Name: gameData?.dlc3Name,
@@ -56,6 +57,7 @@ export default function EditGameForm({
       id: gameData?.id,
       cover: gameData?.cover,
       platinum: JSON.stringify(gameData?.platinum ?? []),
+      platinumReal: JSON.stringify(gameData?.platinumReal ?? []),
       price: gameData?.price ?? 0,
       dlc1Name: gameData?.dlc1Name,
       dlc2Name: gameData?.dlc2Name,
@@ -117,11 +119,22 @@ export default function EditGameForm({
       <Row style={{ marginBottom: "1rem" }}>
         <TextArea
           rows={3}
-          placeholder="Enter Platinum JSON..."
+          placeholder="Enter Steam JSON..."
           type="number"
           value={gameForm?.platinum}
           onChange={(e) =>
             setGameForm((old) => ({ ...old, platinum: e.target.value }))
+          }
+        />
+      </Row>
+      <Row style={{ marginBottom: "1rem" }}>
+        <TextArea
+          rows={3}
+          placeholder="Enter Platinum JSON..."
+          type="number"
+          value={gameForm?.platinumReal}
+          onChange={(e) =>
+            setGameForm((old) => ({ ...old, platinumReal: e.target.value }))
           }
         />
       </Row>

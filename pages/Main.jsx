@@ -62,32 +62,45 @@ export default function Atom() {
       let platinumGameData = platinumData?.find((item) => item?.id == game?.id);
       let formedGame = {};
       let platinumMapper = {};
+      let platinumRealMapper = {};
       let dlcMapper = {};
 
       platinumGameData?.platinum?.forEach((ach) => {
         platinumMapper[ach?.title] = ach;
       });
 
-      console.log({ platinumMapper });
+      let platTitle = "";
+      let platDesc = "";
+      platinumGameData?.platinumReal?.forEach((ach) => {
+        if (ach?.color == "Platinum") {
+          platTitle = ach?.title;
+          platDesc = ach?.description;
+        }
+        platinumRealMapper[ach?.title] = ach;
+      });
 
       let gameName = game?.achievements?.[0]?.gameName;
 
       let sortedPlatinumTrophies = game?.achievements
-        ?.map((ach) => {
-          return {
-            ...ach,
-            label: getRarityBasedOnRarity(ach?.percentage),
-            color: getColorBasedOnRarity(ach?.percentage),
-            title: ach?.displayName,
-            hiddenDesc: platinumMapper[ach?.displayName]?.description,
-          };
-        })
         ?.filter((ach) => {
-          if (platinumMapper[ach?.displayName]) {
+          if (
+            platinumMapper[ach?.displayName] &&
+            platinumRealMapper[ach?.displayName]
+          ) {
             return true;
           } else {
             return false;
           }
+        })
+        ?.map((ach) => {
+          return {
+            ...ach,
+            label: platinumRealMapper[ach?.displayName]?.label,
+            color: platinumRealMapper[ach?.displayName]?.color,
+            percentage: platinumRealMapper[ach?.displayName]?.percentage,
+            title: ach?.displayName,
+            hiddenDesc: platinumMapper[ach?.displayName]?.description,
+          };
         })
         ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
 
@@ -113,8 +126,8 @@ export default function Atom() {
             ),
             { ...lastAch, color: "Gold" },
             {
-              displayName: `Platinum`,
-              description: `Achieved all Base Game Trophies in the game`,
+              displayName: platTitle,
+              description: platDesc,
               hiddenDesc: `${game?.name}`,
               percentage: lastAch?.percentage,
               label: getRarityBasedOnRarity(lastAch?.percentage),
