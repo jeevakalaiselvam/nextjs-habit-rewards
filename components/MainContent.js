@@ -171,8 +171,8 @@ export default function MainContent({
     }
   });
 
-  let sortedGames = games.sort((a, b) =>
-    a?.name.localeCompare(b?.name, undefined, { sensitivity: "base" })
+  let sortedGames = games?.sort((a, b) =>
+    a?.name?.localeCompare(b?.name, undefined, { sensitivity: "base" })
   );
 
   const { ultrarare, veryrare, rare, uncommon, common } =
