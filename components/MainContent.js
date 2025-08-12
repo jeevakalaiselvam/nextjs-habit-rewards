@@ -448,16 +448,7 @@ export default function MainContent({
               {selectedMode == "GAMES" && (
                 <Games>
                   <Games1Line>
-                    <GamesLeft>
-                      GAMES
-                      <Visible
-                        onClick={() => {
-                          setVisibleAllGames((old) => !old);
-                        }}
-                      >
-                        SHOW ALL
-                      </Visible>
-                    </GamesLeft>
+                    <GamesLeft>GAMES</GamesLeft>
                     <GamesRight></GamesRight>
                   </Games1Line>
                   <Games2Line>
