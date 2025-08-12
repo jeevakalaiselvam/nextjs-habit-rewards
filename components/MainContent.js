@@ -547,7 +547,23 @@ export default function MainContent({
                           }}
                           color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                         >
-                          <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
+                          <GameImage url={HEADER_IMAGE(game?.id)}>
+                            <RunPlay
+                              onClick={(e) => {
+                                if (window) {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  window.open(
+                                    `steam://rungameid/${encodeURIComponent(
+                                      game?.id
+                                    )}`
+                                  );
+                                }
+                              }}
+                            >
+                              <FaPlay />
+                            </RunPlay>
+                          </GameImage>
                           <GameData>
                             <GameTitle
                               onClick={() => {
@@ -2041,16 +2057,22 @@ const GameContainer = styled.div`
   cursor: pointer;
 `;
 
-const GameContainerCD = styled.div`
+const RunPlay = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  background-color: ${(props) => props.color};
-  color: #333;
-  padding: 8px;
-  flex-direction: column;
-  cursor: pointer;
-  width: 350px;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  color: #beee11;
+  padding: 0.5rem;
+  background-color: #4c6b22;
+  font-size: 12px;
+
+  &:hover {
+    color: #4c6b22;
+    background-color: #beee11;
+  }
 `;
 
 const Games2Line = styled.div`
