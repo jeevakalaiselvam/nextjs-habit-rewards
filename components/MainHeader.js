@@ -404,7 +404,7 @@ const Country = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: url("https://avatars.fastly.steamstatic.com/2d570b928b0e4b353c1a92ef43e534ee623e92ed_full.jpg");
+  background: url("https://avatars.fastly.steamstatic.com/eda92f4d9a970e1780dc057a363bfbad594f5a41_full.jpg");
   width: 50px;
   height: 50px;
   background-size: cover;
