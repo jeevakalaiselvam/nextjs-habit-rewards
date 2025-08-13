@@ -146,7 +146,6 @@ export default function MainHeader({
             <span
               style={{
                 transform: "translateY(-2.5px)",
-                marginRight: ".25rem",
               }}
             >
               <WhiteTrophy />
@@ -161,7 +160,6 @@ export default function MainHeader({
             <span
               style={{
                 transform: "translateY(-2.5px)",
-                marginRight: ".25rem",
               }}
             >
               <PlatinumIcon />
@@ -176,7 +174,6 @@ export default function MainHeader({
             <span
               style={{
                 transform: "translateY(-2.5px)",
-                marginRight: ".25rem",
               }}
             >
               <GoldIcon />
@@ -191,7 +188,6 @@ export default function MainHeader({
             <span
               style={{
                 transform: "translateY(-2.5px)",
-                marginRight: ".25rem",
               }}
             >
               <SilverIcon />
@@ -206,7 +202,6 @@ export default function MainHeader({
             <span
               style={{
                 transform: "translateY(-2.5px)",
-                marginRight: ".25rem",
               }}
             >
               <BronzeIcon />
