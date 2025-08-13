@@ -91,6 +91,7 @@ export default function Atom() {
             };
           })
           ?.filter((ach) => {
+            return true;
             if (platinumMapper[ach?.displayName]) {
               return true;
             } else {
