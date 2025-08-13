@@ -10,6 +10,8 @@ import {
   getRarityBasedOnRarity,
 } from "../helpers/achHelper";
 import { COMPLETION_FACTOR } from "../helpers/trophyHelper";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
 
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
@@ -144,6 +146,13 @@ export default function Atom() {
     setFinalGames(finalGames);
   }, [games, platinumData]);
 
+  if (gamesLoading || platinumDataLoading) {
+    return (
+      <LoadingContainer>
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+      </LoadingContainer>
+    );
+  }
   return (
     <Container>
       <MainHeader
@@ -152,17 +161,15 @@ export default function Atom() {
         refreshData={refreshData}
         gamesLoading={gamesLoading}
       />
-      {
-        <MainContent
-          games={finalGames}
-          selectedMode={selectedMode}
-          refreshData={refreshData}
-          setGamesLoading={setGamesLoading}
-          gamesLoading={gamesLoading}
-          setSelectedMode={setSelectedMode}
-          platinumDataLoading={platinumDataLoading}
-        />
-      }
+      <MainContent
+        games={finalGames}
+        selectedMode={selectedMode}
+        refreshData={refreshData}
+        setGamesLoading={setGamesLoading}
+        gamesLoading={gamesLoading}
+        setSelectedMode={setSelectedMode}
+        platinumDataLoading={platinumDataLoading}
+      />
     </Container>
   );
 }
@@ -182,6 +189,17 @@ const RefreshButton = styled.div`
   &:active {
     transform: translateY(0.25rem);
   }
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: #1b2838;
+  color: #fefefe;
+  min-width: 100vw;
+  min-height: 100vh;
 `;
 
 const Container = styled.div`
