@@ -45,7 +45,6 @@ export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
     { startLevel: 800, endLevel: 899, xpPerLevel: 3150 },
     { startLevel: 900, endLevel: 999, xpPerLevel: 3600 },
   ];
-
   let accumulatedXP = 0;
   let level = 0;
   let xpIntoLevel = 0;
