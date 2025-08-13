@@ -141,7 +141,7 @@ export default function MainHeader({
         }
       </HeaderName>
       <HeaderCounts>
-        <Section color={COLOR_WHITE}>
+        <SectionL color={COLOR_WHITE}>
           <Top>
             <span
               style={{
@@ -155,7 +155,7 @@ export default function MainHeader({
               {total}
             </span>
           </Top>
-        </Section>
+        </SectionL>
         <Section color={COLOR_PLATINUM}>
           <Top>
             <span
@@ -201,7 +201,7 @@ export default function MainHeader({
             </span>
           </Top>
         </Section>
-        <Section color={COLOR_BRONZE}>
+        <SectionR color={COLOR_BRONZE}>
           <Top>
             <span
               style={{
@@ -215,11 +215,41 @@ export default function MainHeader({
               {bronze}
             </span>
           </Top>
-        </Section>
+        </SectionR>
       </HeaderCounts>
     </Container>
   );
 }
+
+const SectionL = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0 1rem;
+  flex: 1;
+  color: ${(props) => props.color};
+`;
+
+const SectionR = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0 1rem;
+  flex: 1;
+  color: ${(props) => props.color};
+`;
+
+const Section = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0 1rem;
+  flex: 1;
+  color: ${(props) => props.color};
+`;
 
 const ToNext = styled.div`
   display: flex;
@@ -305,38 +335,12 @@ const HeaderCounts = styled.div`
   padding: 0.25rem;
 `;
 
-const Section = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  margin: 0 1rem;
-  flex: 1;
-  color: ${(props) => props.color};
-`;
-
 const Top = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.75rem;
   font-weight: 300;
-`;
-
-const BottomStats = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem 1rem 2.5rem 1rem;
-  width: 100%;
-`;
-
-const MainWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  z-index: 1;
 `;
 
 const Country = styled.div`

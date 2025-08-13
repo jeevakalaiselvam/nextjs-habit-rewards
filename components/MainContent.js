@@ -904,7 +904,7 @@ const GameContainer = styled.div`
   color: #333;
   padding: 4px 0px 0px 0px;
   width: 100%;
-  margin: 0.25rem 0.25rem 0rem 0.5rem;
+  margin: 0.25rem 0rem 0rem 0rem;
   cursor: pointer;
 `;
 
