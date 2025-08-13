@@ -6,8 +6,6 @@ import EditGameForm from "./EditGameForm";
 import { useState } from "react";
 
 export default function GameCdImage({ game }) {
-  console.log({ game });
-
   return (
     <CdImage>
       <CdInnerImage cover={game?.cover}></CdInnerImage>
