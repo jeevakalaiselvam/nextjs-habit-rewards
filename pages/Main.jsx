@@ -11,6 +11,8 @@ import {
 } from "../helpers/achHelper";
 import MainContentNew from "../components/MainContentNew";
 import { COMPLETION_FACTOR } from "../helpers/trophyHelper";
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
@@ -105,7 +107,7 @@ export default function Atom() {
         let completed = sortedPlatinumTrophies?.filter(
           (ach) => ach?.achieved == "1"
         )?.length;
-        let isCompleted = completed > Math.ceil(total * COMPLETION_FACTOR);
+        let isCompleted = (completed = total * COMPLETION_FACTOR);
 
         formedGame = {
           ...game,
@@ -134,6 +136,14 @@ export default function Atom() {
       });
     setFinalGames(finalGames);
   }, [games, platinumData]);
+
+  if (gamesLoading || platinumDataLoading) {
+    return (
+      <LoadingContainer>
+        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
+      </LoadingContainer>
+    );
+  }
 
   return (
     <Container>
@@ -182,4 +192,15 @@ const Container = styled.div`
   background-color: #1b2838;
   color: #fefefe;
   position: relative;
+`;
+
+const LoadingContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  background-color: #1b2838;
+  color: #fefefe;
+  min-width: 100vw;
+  min-height: 100vh;
 `;
