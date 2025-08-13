@@ -107,30 +107,40 @@ export default function Atom() {
         let completed = sortedPlatinumTrophies?.filter(
           (ach) => ach?.achieved == "1"
         )?.length;
-        let isCompleted = (completed = total * COMPLETION_FACTOR);
 
-        formedGame = {
-          ...game,
-          ...platinumGameData,
-          achievements: [
-            ...sortedPlatinumTrophies?.filter(
-              (ach) => ach?.displayName != lastAch?.displayName
-            ),
-            { ...lastAch, color: "Gold" },
-            {
-              displayName: `Platinum`,
-              description: `Achieved all Base Game Trophies in the game`,
-              hiddenDesc: `${game?.name}`,
-              percentage: lastAch?.percentage,
-              label: getRarityBasedOnRarity(lastAch?.percentage),
-              color: "Platinum",
-              achieved: isCompleted ? 1 : 0,
-              unlocktime: lastAch?.unlocktime,
-              icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
-              gameName: lastAch?.gameName,
-            },
-          ],
-        };
+        total = Math.ceil(total * COMPLETION_FACTOR);
+        completed = completed > total ? total : completed;
+        let isCompleted = total == completed && total != 0;
+
+        if (platinumGameData) {
+          formedGame = {
+            ...game,
+            ...platinumGameData,
+            achievements: [
+              ...sortedPlatinumTrophies?.filter(
+                (ach) => ach?.displayName != lastAch?.displayName
+              ),
+              { ...lastAch, color: "Gold" },
+              {
+                displayName: `Platinum`,
+                description: `Achieved all Base Game Trophies in the game`,
+                hiddenDesc: `${game?.name}`,
+                percentage: lastAch?.percentage,
+                label: getRarityBasedOnRarity(lastAch?.percentage),
+                color: "Platinum",
+                achieved: isCompleted ? 1 : 0,
+                completedFinal: completed,
+                unlocktime: lastAch?.unlocktime,
+                icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
+                gameName: lastAch?.gameName,
+              },
+            ],
+          };
+        } else {
+          formedGame = {
+            ...game,
+          };
+        }
 
         return formedGame;
       });
