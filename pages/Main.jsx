@@ -58,9 +58,11 @@ export default function Atom() {
   useEffect(() => {
     let finalGames = [];
 
+    const GAMES_INCLUDED = ["1659040", "2358720"];
+
     finalGames = games
-      ?.filter((game) => ["1659040", "2358720"]?.includes(String(game?.id)))
-      .map((game) => {
+      ?.filter((game) => GAMES_INCLUDED?.includes(String(game?.id)))
+      ?.map((game) => {
         let platinumGameData = platinumData?.find(
           (item) => item?.id == game?.id
         );
