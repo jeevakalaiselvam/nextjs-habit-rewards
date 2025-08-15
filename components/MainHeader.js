@@ -102,7 +102,9 @@ export default function MainHeader({ games, gamesLoading, refreshData }) {
             <Country></Country>
             <NameSection>
               <Name>N7ShadowX</Name>
-              <Subtext>Love to collect trophies!</Subtext>
+              <Subtext>
+                No Mods, No Trainers, Journey over Destination !
+              </Subtext>
             </NameSection>
           </HeaderName>
           {!gamesLoading && (
