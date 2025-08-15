@@ -958,6 +958,13 @@ export default function MainContent({
                     </Game1Line>
                     <Game2Line>
                       {[
+                        ...(selectedGame?.achievements ?? [])?.filter(
+                          (ach) => ach?.color == "Platinum"
+                        ),
+                        ...(selectedGame?.achievements ?? [])?.filter(
+                          (ach) =>
+                            ach?.color != "Platinum" && ach?.achieved != 1
+                        ),
                         ...(selectedGame?.achievements ?? [])
                           ?.filter(
                             (ach) =>
@@ -966,13 +973,6 @@ export default function MainContent({
                           ?.sort(
                             (ach1, ach2) => ach2?.percentage - ach1?.percentage
                           ),
-                        ...(selectedGame?.achievements ?? [])?.filter(
-                          (ach) =>
-                            ach?.color != "Platinum" && ach?.achieved != 1
-                        ),
-                        ...(selectedGame?.achievements ?? [])?.filter(
-                          (ach) => ach?.color == "Platinum"
-                        ),
                       ]
                         ?.filter((ach) => {
                           return ach?.displayName
