@@ -87,6 +87,7 @@ export default function Atom() {
           };
         })
         ?.filter((ach) => {
+          return true;
           if (platinumMapper[ach?.displayName]) {
             return true;
           } else {
@@ -118,7 +119,7 @@ export default function Atom() {
             { ...lastAch, color: "Gold" },
             {
               displayName: `Platinum`,
-              description: `Achieved 50% of Game Trophies in the game`,
+              description: `Achieved all Trophies in the game`,
               hiddenDesc: `${game?.name}`,
               percentage: lastAch?.percentage,
               label: getRarityBasedOnRarity(lastAch?.percentage),
