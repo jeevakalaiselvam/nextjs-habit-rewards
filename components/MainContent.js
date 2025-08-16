@@ -959,13 +959,11 @@ export default function MainContent({
                     <Game2Line>
                       {[
                         ...(selectedGame?.achievements ?? [])?.filter(
-                          (ach) => ach?.color == "Platinum" && false
+                          (ach) => ach?.color == "Platinum"
                         ),
                         ...(selectedGame?.achievements ?? [])?.filter(
                           (ach) =>
-                            ach?.color != "Platinum" &&
-                            ach?.achieved != 1 &&
-                            false
+                            ach?.color != "Platinum" && ach?.achieved != 1
                         ),
                         ...(selectedGame?.achievements ?? [])
                           ?.filter(
