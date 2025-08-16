@@ -595,7 +595,7 @@ export default function MainContent({
                               </GameTitle>
                               {completed < total && (
                                 <GameCompletion>
-                                  {completed} Trophies
+                                  {completed} of {total} Trophies
                                 </GameCompletion>
                               )}
                               {completed == total && (
