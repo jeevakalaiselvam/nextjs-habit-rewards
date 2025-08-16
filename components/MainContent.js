@@ -963,7 +963,9 @@ export default function MainContent({
                         ),
                         ...(selectedGame?.achievements ?? [])?.filter(
                           (ach) =>
-                            ach?.color != "Platinum" && ach?.achieved != 1
+                            ach?.color != "Platinum" &&
+                            ach?.achieved != 1 &&
+                            false
                         ),
                         ...(selectedGame?.achievements ?? [])
                           ?.filter(
