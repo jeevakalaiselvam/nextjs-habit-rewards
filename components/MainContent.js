@@ -318,17 +318,17 @@ export default function MainContent({
         <FRRight>
           <TabLink
             onClick={() => {
-              setSelected("GAMES");
-              setSelectedMode("GAMES");
+              setSelected("LIBRARY");
+              setSelectedMode("LIBRARY");
               if (window) {
-                localStorage.setItem("SELECTED_TAB", "GAMES");
+                localStorage.setItem("SELECTED_TAB", "LIBRARY");
               }
             }}
-            active={selectedMode == "GAMES"}
-            onMouseEnter={() => setActive("GAMES")}
+            active={selectedMode == "LIBRARY"}
+            onMouseEnter={() => setActive("LIBRARY")}
             onMouseLeave={() => setActive("")}
           >
-            GAMES
+            LIBRARY
           </TabLink>
         </FRRight>
         <FRRight>
@@ -1020,14 +1020,14 @@ export default function MainContent({
                                   {ach?.achieved == 1 && (
                                     <span
                                       style={{
-                                        background: "#262D35",
+                                        color: COLOR_GREEN,
                                         display: "flex",
                                         alignItems: "center",
                                         justifyContent: "center",
                                         transform: "scale(1.25)",
                                       }}
                                     >
-                                      <PlatinumIcon />
+                                      <FaCheck />
                                     </span>
                                   )}
                                   {ach?.achieved != 1 && (
