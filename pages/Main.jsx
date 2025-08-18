@@ -60,7 +60,10 @@ export default function Atom() {
   useEffect(() => {
     let finalGames = [];
 
-    const GAMES_INCLUDED = ["1659040", "2358720"];
+    const GAMES_INCLUDED = [
+      "1659040", //Hitman 3
+      "2358720", //Wukong
+    ];
 
     finalGames = games
       ?.filter((game) => {
