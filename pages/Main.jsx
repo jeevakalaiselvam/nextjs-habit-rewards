@@ -62,83 +62,89 @@ export default function Atom() {
 
     const GAMES_INCLUDED = ["1659040", "2358720"];
 
-    finalGames = games?.map((game) => {
-      let platinumGameData = platinumData?.find((item) => item?.id == game?.id);
-      let formedGame = {};
-      let platinumMapper = {};
-      let dlcMapper = {};
+    finalGames = games
+      ?.filter((game) => {
+        return GAMES_INCLUDED?.includes(String(game?.id));
+      })
+      ?.map((game) => {
+        let platinumGameData = platinumData?.find(
+          (item) => item?.id == game?.id
+        );
+        let formedGame = {};
+        let platinumMapper = {};
+        let dlcMapper = {};
 
-      platinumGameData?.platinum?.forEach((ach) => {
-        platinumMapper[ach?.title] = ach;
-      });
+        platinumGameData?.platinum?.forEach((ach) => {
+          platinumMapper[ach?.title] = ach;
+        });
 
-      console.log({ platinumMapper });
+        console.log({ platinumMapper });
 
-      let gameName = game?.achievements?.[0]?.gameName;
+        let gameName = game?.achievements?.[0]?.gameName;
 
-      let sortedPlatinumTrophies = game?.achievements
-        ?.map((ach) => {
-          return {
-            ...ach,
-            label: getRarityBasedOnRarity(ach?.percentage),
-            color: getColorBasedOnRarity(ach?.percentage),
-            title: ach?.displayName,
-            hiddenDesc: platinumMapper[ach?.displayName]?.description,
+        let sortedPlatinumTrophies = game?.achievements
+          ?.map((ach) => {
+            return {
+              ...ach,
+              label: getRarityBasedOnRarity(ach?.percentage),
+              color: getColorBasedOnRarity(ach?.percentage),
+              title: ach?.displayName,
+              hiddenDesc: platinumMapper[ach?.displayName]?.description,
+            };
+          })
+          ?.filter((ach) => {
+            if (platinumMapper[ach?.displayName]) {
+              return true;
+            } else {
+              return false;
+            }
+          })
+          ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
+
+        let lastAch =
+          sortedPlatinumTrophies?.[sortedPlatinumTrophies?.length - 1];
+
+        let total = sortedPlatinumTrophies?.length;
+        let completed = sortedPlatinumTrophies?.filter(
+          (ach) => ach?.achieved == "1"
+        )?.length;
+
+        total = Math.ceil(total * COMPLETION_FACTOR);
+        completed = completed > total ? total : completed;
+        let isCompleted = total == completed && total != 0;
+
+        if (platinumGameData) {
+          formedGame = {
+            ...game,
+            ...platinumGameData,
+            achievements: [
+              ...sortedPlatinumTrophies?.filter(
+                (ach) => ach?.displayName != lastAch?.displayName
+              ),
+              { ...lastAch, color: "Gold" },
+              {
+                displayName: `Platinum`,
+                description: `Achieved all Trophies in the game`,
+                hiddenDesc: `${game?.name}`,
+                percentage: lastAch?.percentage,
+                label: getRarityBasedOnRarity(lastAch?.percentage),
+                color: "Platinum",
+                achieved: isCompleted ? 1 : 0,
+                completedFinal: completed,
+                unlocktime: lastAch?.unlocktime,
+                icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
+                gameName: lastAch?.gameName,
+              },
+            ],
           };
-        })
-        ?.filter((ach) => {
-          if (platinumMapper[ach?.displayName]) {
-            return true;
-          } else {
-            return false;
-          }
-        })
-        ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
+        } else {
+          formedGame = {
+            ...game,
+          };
+        }
 
-      let lastAch =
-        sortedPlatinumTrophies?.[sortedPlatinumTrophies?.length - 1];
-
-      let total = sortedPlatinumTrophies?.length;
-      let completed = sortedPlatinumTrophies?.filter(
-        (ach) => ach?.achieved == "1"
-      )?.length;
-
-      total = Math.ceil(total * COMPLETION_FACTOR);
-      completed = completed > total ? total : completed;
-      let isCompleted = total == completed && total != 0;
-
-      if (platinumGameData) {
-        formedGame = {
-          ...game,
-          ...platinumGameData,
-          achievements: [
-            ...sortedPlatinumTrophies?.filter(
-              (ach) => ach?.displayName != lastAch?.displayName
-            ),
-            { ...lastAch, color: "Gold" },
-            {
-              displayName: `Platinum`,
-              description: `Achieved all Trophies in the game`,
-              hiddenDesc: `${game?.name}`,
-              percentage: lastAch?.percentage,
-              label: getRarityBasedOnRarity(lastAch?.percentage),
-              color: "Platinum",
-              achieved: isCompleted ? 1 : 0,
-              completedFinal: completed,
-              unlocktime: lastAch?.unlocktime,
-              icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
-              gameName: lastAch?.gameName,
-            },
-          ],
-        };
-      } else {
-        formedGame = {
-          ...game,
-        };
-      }
-
-      return formedGame;
-    });
+        return formedGame;
+      });
     setFinalGames(finalGames);
   }, [games, platinumData]);
 

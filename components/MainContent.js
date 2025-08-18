@@ -449,16 +449,7 @@ export default function MainContent({
               {selectedMode == "GAMES" && (
                 <Games>
                   <Games1Line>
-                    <GamesLeft>
-                      GAMES{" "}
-                      <VisibleGames
-                        onClick={() => {
-                          setShowAllGames((old) => !old);
-                        }}
-                      >
-                        SHOW ALL
-                      </VisibleGames>
-                    </GamesLeft>
+                    <GamesLeft>GAMES</GamesLeft>
                     <GamesRight></GamesRight>
                   </Games1Line>
                   <Games2Line>
@@ -595,7 +586,7 @@ export default function MainContent({
                               </GameTitle>
                               {completed < total && (
                                 <GameCompletion>
-                                  {completed} of {total} Trophies
+                                  {completed} of {totala} Trophies
                                 </GameCompletion>
                               )}
                               {completed == total && (
