@@ -584,16 +584,7 @@ export default function MainContent({
                               >
                                 {game?.name}
                               </GameTitle>
-                              {completed < total && (
-                                <GameCompletion>
-                                  {completed} of {total} Trophies
-                                </GameCompletion>
-                              )}
-                              {completed == total && (
-                                <GameCompletion>
-                                  All {total} Trophies
-                                </GameCompletion>
-                              )}
+                              <GameCompletion>{total} Trophies</GameCompletion>
                               <GameLastPlayed>
                                 {lastUnlocked &&
                                   formatDate(
@@ -765,6 +756,8 @@ export default function MainContent({
                         (item) => item?.achieved == 1
                       )?.length;
 
+                      let realCompleted = completed;
+
                       let allCompleted = completed;
 
                       total = Math.ceil(total * COMPLETION_FACTOR);
@@ -838,7 +831,7 @@ export default function MainContent({
                                 {game?.name}
                               </GameTitle>
                               <GameCompletionCD>
-                                {completed} of {total} Trophies
+                                {realCompleted} Trophies
                               </GameCompletionCD>
                               <Started></Started>
                             </GameDataCD>
@@ -951,10 +944,6 @@ export default function MainContent({
                       {[
                         ...(selectedGame?.achievements ?? [])?.filter(
                           (ach) => ach?.color == "Platinum"
-                        ),
-                        ...(selectedGame?.achievements ?? [])?.filter(
-                          (ach) =>
-                            ach?.color != "Platinum" && ach?.achieved != 1
                         ),
                         ...(selectedGame?.achievements ?? [])
                           ?.filter(
