@@ -831,7 +831,7 @@ export default function MainContent({
                                 {game?.name}
                               </GameTitle>
                               <GameCompletionCD>
-                                {realCompleted} Trophies
+                                {completed} of {total} Trophies
                               </GameCompletionCD>
                               <Started></Started>
                             </GameDataCD>
@@ -945,6 +945,14 @@ export default function MainContent({
                         ...(selectedGame?.achievements ?? [])?.filter(
                           (ach) => ach?.color == "Platinum"
                         ),
+                        ...(selectedGame?.achievements ?? [])
+                          ?.filter(
+                            (ach) =>
+                              ach?.color != "Platinum" && ach?.achieved != 1
+                          )
+                          ?.sort(
+                            (ach1, ach2) => ach2?.percentage - ach1?.percentage
+                          ),
                         ...(selectedGame?.achievements ?? [])
                           ?.filter(
                             (ach) =>
