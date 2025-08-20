@@ -804,117 +804,7 @@ export default function MainContent({
                           }}
                           color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                         >
-                          <GameInfoCDOuter>
-                            <GameCdImage game={game} scale={1.1} />
-                            <span
-                              style={{
-                                marginBottom: "1rem",
-                                marginTop: "1rem",
-                              }}
-                            >
-                              <Ps5
-                                onClick={() => {
-                                  setShowEditModal(true);
-                                  setGameData((old) => game);
-                                }}
-                              >
-                                PS5
-                              </Ps5>
-                            </span>
-                            <GameDataCD>
-                              <GameTitle
-                                onClick={() => {
-                                  setSelectedGame(game);
-                                  setSelectedMode("GAME");
-                                }}
-                              >
-                                {game?.name}
-                              </GameTitle>
-                              <GameCompletionCD>
-                                {completed} of {total} Trophies
-                              </GameCompletionCD>
-                              <Started></Started>
-                            </GameDataCD>
-                            <GameInfoCD>
-                              <Rank>
-                                <span
-                                  style={{ fontSize: "1.5rem", color: color }}
-                                >
-                                  {rank}
-                                </span>
-                                <span style={{ fontSize: ".7rem" }}>RANK</span>
-                              </Rank>
-                              <Seperator></Seperator>
-                              <Trophies>
-                                <TTop>
-                                  <TSingle>
-                                    <GoldIconS />
-                                    <span
-                                      style={{
-                                        transform: "translate(-.5rem,-.25rem)",
-                                        color: COLOR_GOLD,
-                                        fontSize: "1rem",
-                                      }}
-                                    >
-                                      {gold}
-                                    </span>
-                                  </TSingle>
-                                  <TSingle>
-                                    <SilverIconS />
-                                    <span
-                                      style={{
-                                        transform: "translate(-.5rem,-.25rem)",
-                                        color: COLOR_SILVER2,
-                                        fontSize: "1rem",
-                                      }}
-                                    >
-                                      {silver}
-                                    </span>
-                                  </TSingle>
-                                  <TSingle>
-                                    <BronzeIconS />
-                                    <span
-                                      style={{
-                                        transform: "translate(-.5rem,-.25rem)",
-                                        color: COLOR_BRONZE,
-                                        fontSize: "1rem",
-                                      }}
-                                    >
-                                      {bronze}
-                                    </span>
-                                  </TSingle>
-                                </TTop>
-                                <TBottom>
-                                  <Outer>
-                                    <Inner percentage={completion}></Inner>
-                                    <Text>{completion} %</Text>
-                                  </Outer>
-                                </TBottom>
-                              </Trophies>
-                              <Seperator></Seperator>
-                              <Platinum isPlatinum={total == completed}>
-                                <span
-                                  style={{
-                                    opacity: total == completed ? 1 : 0.1,
-                                    color: "#7A96D1",
-                                  }}
-                                >
-                                  <PlatinumIcon />
-                                </span>
-                                <span
-                                  style={{
-                                    color: "#7A96D1",
-                                    fontSize: ".7rem",
-                                    marginTop: "4px",
-                                    fontWeight: "bold",
-                                    opacity: total == completed ? 1 : 0.1,
-                                  }}
-                                >
-                                  {Number(lastAch?.percentage)} %
-                                </span>
-                              </Platinum>
-                            </GameInfoCD>
-                          </GameInfoCDOuter>
+                          <GameCdImage game={game} scale={1.1} />
                         </GameContainerCD>
                       );
                     })}
@@ -2288,7 +2178,6 @@ const GameContainerCD = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  background-color: #16202d;
   color: #333;
   padding: 4px;
   margin: 0.5rem;
