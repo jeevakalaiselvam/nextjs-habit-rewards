@@ -946,21 +946,11 @@ export default function MainContent({
                           (ach) => ach?.color == "Platinum"
                         ),
                         ...(selectedGame?.achievements ?? [])
-                          ?.filter(
-                            (ach) =>
-                              ach?.color != "Platinum" && ach?.achieved != 1
-                          )
+                          ?.filter((ach) => ach?.color != "Platinum")
                           ?.sort(
                             (ach1, ach2) => ach2?.percentage - ach1?.percentage
                           ),
-                        ...(selectedGame?.achievements ?? [])
-                          ?.filter(
-                            (ach) =>
-                              ach?.color != "Platinum" && ach?.achieved == 1
-                          )
-                          ?.sort(
-                            (ach1, ach2) => ach2?.percentage - ach1?.percentage
-                          ),
+                        ,
                       ]
                         ?.filter((ach) => {
                           return ach?.displayName
