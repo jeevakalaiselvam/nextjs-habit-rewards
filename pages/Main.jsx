@@ -13,6 +13,11 @@ import { COMPLETION_FACTOR } from "../helpers/trophyHelper";
 import { LoadingOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 
+const GAMES_INCLUDED = [
+  "1659040", //Hitman 3
+  "2358720", //Wukong
+];
+
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
   const [platinumDataLoading, setPlatinumDataLoading] = useState(false);
@@ -25,10 +30,12 @@ export default function Atom() {
   const refreshSteamGames = () => {
     setGamesLoading(true);
     try {
-      axios.get("/api/steam").then((response) => {
-        setGames(response?.data?.data ?? []);
-        setGamesLoading(false);
-      });
+      axios
+        .post("/api/steam", { gamesToInclude: GAMES_INCLUDED })
+        .then((response) => {
+          setGames(response?.data?.data ?? []);
+          setGamesLoading(false);
+        });
     } catch (e) {
       setGamesLoading(false);
     }
@@ -59,11 +66,6 @@ export default function Atom() {
 
   useEffect(() => {
     let finalGames = [];
-
-    const GAMES_INCLUDED = [
-      "1659040", //Hitman 3
-      "2358720", //Wukong
-    ];
 
     finalGames = games
       ?.filter((game) => {

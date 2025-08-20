@@ -8,7 +8,8 @@ import {
 const axios = require("axios");
 
 const handler = async (req, res) => {
-  if (req.method === "GET") {
+  if (req.method === "POST") {
+    const { gamesToInclude } = req.body;
     try {
       let finalGamesResponse = {};
 
@@ -23,6 +24,10 @@ const handler = async (req, res) => {
           lastPlayed: game?.rtime_last_played,
         };
         return newGame;
+      });
+
+      finalGamesResponse = finalGamesResponse?.filter((game) => {
+        return gamesToInclude?.includes(String(game?.id));
       });
 
       //Get All Achievements Schema for All Games
