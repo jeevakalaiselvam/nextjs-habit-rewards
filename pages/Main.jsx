@@ -65,6 +65,7 @@ export default function Atom() {
 
     finalGames = games
       ?.filter((game) => {
+        return true;
         return GAMES_INCLUDED?.includes(String(game?.id));
       })
       ?.map((game) => {
