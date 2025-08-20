@@ -1911,7 +1911,7 @@ const AchCard = styled.div`
   width: 100%;
   background-color: #080c11;
   margin-bottom: 0.5rem;
-  opacity: ${(props) => (props?.achieved == 1 ? 1 : 0.25)};
+  opacity: ${(props) => (props?.achieved == 1 ? 1 : 0.5)};
 `;
 
 const Game2Line = styled.div`
