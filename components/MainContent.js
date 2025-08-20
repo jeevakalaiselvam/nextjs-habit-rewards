@@ -711,6 +711,7 @@ const AchCard = styled.div`
   padding-bottom: ${(props) => (props.achieved ? "1rem" : "0rem")};
   position: relative;
   margin-top: 0.25rem;
+  opacity: ${(props) => (props.achieved ? 1 : 0.5)};
 `;
 
 const Game2Line = styled.div`
