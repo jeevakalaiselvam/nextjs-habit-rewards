@@ -88,13 +88,13 @@ export default function Main2() {
     refreshLibrary();
   }, []);
 
-  let games = library?.filter((item) => item?.type == "GAME");
+  let games = library
+    ?.filter((item) => item?.type == "GAME")
+    ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
 
   const initiateEditForm = (game) => {
     setCreateForm(game);
   };
-
-  console.log({ createForm });
 
   return (
     <Container>
@@ -278,11 +278,11 @@ export default function Main2() {
           </Content>
         )}
         {loading && (
-          <Content>
+          <ContentC>
             <Spin
               indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
             />
-          </Content>
+          </ContentC>
         )}
       </Right>
     </Container>
@@ -292,9 +292,9 @@ export default function Main2() {
 const CreateButton = styled.div`
   background-image: linear-gradient(
     to right,
-    #4776e6 0%,
-    #8e54e9 51%,
-    #4776e6 100%
+    #1adeec 0%,
+    #4bccf2 51%,
+    #7eb9fd 100%
   );
   padding: 4px;
   margin-left: 1rem;
@@ -312,7 +312,6 @@ const CreateButton = styled.div`
     background-position: right center; /* change the direction of the change here */
     color: #fff;
     text-decoration: none;
-    box-shadow: 0 0 10px #eee;
   }
 `;
 
@@ -428,6 +427,14 @@ const Content = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-wrap: wrap;
+  width: 100%;
+  padding: 1rem 0.25rem;
+`;
+
+const ContentC = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   padding: 1rem 0.25rem;
 `;
