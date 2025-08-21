@@ -9,7 +9,7 @@ export default function Main() {
   const [courseForm, setCourseForm] = useState({
     name: "",
     exclude: "",
-    count: 0,
+    count: "0",
   });
 
   const createCourse = () => {
@@ -75,26 +75,22 @@ export default function Main() {
             <th style={{ width: "200px", textAlign: "center" }}>Exclude</th>
             <th style={{ width: "200px", textAlign: "center" }}>Count</th>
           </tr>
-          <tbody>
-            {courses?.map((course, index) => {
-              return (
-                <tr>
-                  <td style={{ width: "200px", textAlign: "center" }}>
-                    {index}
-                  </td>
-                  <td style={{ width: "200px", textAlign: "center" }}>
-                    {course?.name}
-                  </td>
-                  <td style={{ width: "200px", textAlign: "center" }}>
-                    {course?.exclude}
-                  </td>{" "}
-                  <td style={{ width: "200px", textAlign: "center" }}>
-                    {course?.count}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
+          {courses?.map((course, index) => {
+            return (
+              <tr>
+                <td style={{ width: "200px", textAlign: "center" }}>{index}</td>
+                <td style={{ width: "200px", textAlign: "center" }}>
+                  {course?.name}
+                </td>
+                <td style={{ width: "200px", textAlign: "center" }}>
+                  {course?.exclude}
+                </td>{" "}
+                <td style={{ width: "200px", textAlign: "center" }}>
+                  {course?.count}
+                </td>
+              </tr>
+            );
+          })}
         </table>
         <br />
         <br />
