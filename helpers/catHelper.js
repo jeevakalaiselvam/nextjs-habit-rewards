@@ -1,93 +1,93 @@
 export const GAME_GENRES = [
   {
-    id: 'G_ACTION',
-    label: 'Action',
+    value: "G_ACTION",
+    label: "Action",
   },
   {
-    id: 'G_ADVENTURE',
-    label: 'Adventure',
+    value: "G_ADVENTURE",
+    label: "Adventure",
   },
   {
-    id: 'G_SCIENCE FICTION',
-    label: 'Science Fiction',
+    value: "G_SCIENCE FICTION",
+    label: "Science Fiction",
   },
   {
-    id: 'G_FANTASY',
-    label: 'Fantasy',
+    value: "G_FANTASY",
+    label: "Fantasy",
   },
   {
-    id: 'G_RPG',
-    label: 'Role Playing Game',
+    value: "G_RPG",
+    label: "Role Playing Game",
   },
   {
-    id: 'G_STEALTH',
-    label: 'Stealth',
+    value: "G_STEALTH",
+    label: "Stealth",
   },
   {
-    id: 'G_PUZZLE',
-    label: 'Puzzle',
+    value: "G_PUZZLE",
+    label: "Puzzle",
   },
   {
-    id: 'G_HORROR',
-    label: 'Horror',
+    value: "G_HORROR",
+    label: "Horror",
   },
   {
-    id: 'G_DRAMA',
-    label: 'Drama',
+    value: "G_DRAMA",
+    label: "Drama",
   },
   {
-    id: 'G_THRILLER',
-    label: 'Thriller',
+    value: "G_THRILLER",
+    label: "Thriller",
   },
   {
-    id: 'G_COMEDY',
-    label: 'Comedy',
+    value: "G_COMEDY",
+    label: "Comedy",
   },
 ];
 
 export const MOVIE_GENRES = [
   {
-    id: 'M_ACTION',
-    label: 'Action',
+    value: "M_ACTION",
+    label: "Action",
   },
   {
-    id: 'M_ADVENTURE',
-    label: 'Adventure',
+    value: "M_ADVENTURE",
+    label: "Adventure",
   },
   {
-    id: 'M_SCIENCE FICTION',
-    label: 'Science Fiction',
+    value: "M_SCIENCE FICTION",
+    label: "Science Fiction",
   },
   {
-    id: 'M_FANTASY',
-    label: 'Fantasy',
+    value: "M_FANTASY",
+    label: "Fantasy",
   },
   {
-    id: 'M_RPG',
-    label: 'Role Playing Game',
+    value: "M_RPG",
+    label: "Role Playing Game",
   },
   {
-    id: 'M_STEALTH',
-    label: 'Stealth',
+    value: "M_STEALTH",
+    label: "Stealth",
   },
   {
-    id: 'M_PUZZLE',
-    label: 'Puzzle',
+    value: "M_PUZZLE",
+    label: "Puzzle",
   },
   {
-    id: 'M_HORROR',
-    label: 'Horror',
+    value: "M_HORROR",
+    label: "Horror",
   },
   {
-    id: 'M_DRAMA',
-    label: 'Drama',
+    value: "M_DRAMA",
+    label: "Drama",
   },
   {
-    id: 'M_THRILLER',
-    label: 'Thriller',
+    value: "M_THRILLER",
+    label: "Thriller",
   },
   {
-    id: 'M_COMEDY',
-    label: 'Comedy',
+    value: "M_COMEDY",
+    label: "Comedy",
   },
 ];

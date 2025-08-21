@@ -5,10 +5,10 @@ import { COLOR_ACCENT, COLOR_BLUE_DARK } from "../helpers/colorHelper";
 import EditGameForm from "./EditGameForm";
 import { useState } from "react";
 
-export default function GameCdImage({ game }) {
+export default function GameCdImage({ game, onClick }) {
   return (
     <CdImage>
-      <CdInnerImage cover={game?.cover}></CdInnerImage>
+      <CdInnerImage cover={game?.image} onClick={onClick}></CdInnerImage>
     </CdImage>
   );
 }
@@ -24,6 +24,7 @@ const CdImage = styled.div`
   background-size: contain;
   background-repeat: no-repeat;
   position: relative;
+  margin: 8px;
 `;
 
 const CdInnerImage = styled.div`
