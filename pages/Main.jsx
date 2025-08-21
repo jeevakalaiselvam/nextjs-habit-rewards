@@ -1,219 +1,156 @@
-import styled from "styled-components";
-import { useEffect, useState } from "react";
 import axios from "axios";
-import MainHeader from "../components/MainHeader";
-import MainContent from "../components/MainContent";
-import { TbRefresh } from "react-icons/tb";
-import { COLOR_ACCENT } from "../helpers/colorHelper";
-import {
-  getColorBasedOnRarity,
-  getRarityBasedOnRarity,
-} from "../helpers/achHelper";
-import MainContentNew from "../components/MainContentNew";
-import { COMPLETION_FACTOR } from "../helpers/trophyHelper";
-import { Spin } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 
-export default function Atom() {
-  const [gamesLoading, setGamesLoading] = useState(false);
-  const [platinumDataLoading, setPlatinumDataLoading] = useState(false);
-  const [games, setGames] = useState([]);
-  const [platinumData, setPlatinumData] = useState([]);
-  const [finalGames, setFinalGames] = useState([]);
-  const [selectedMode, setSelectedMode] = useState("GAMES");
-  const [refeshing, setRefreshing] = useState(false);
+export default function Main() {
+  const [userName, setUserName] = useState("");
+  const [userDept, setUserDept] = useState("");
+  const [courses, setCourses] = useState([]);
+  const [courseForm, setCourseForm] = useState({
+    name: "",
+    exclude: "",
+    count: 0,
+  });
 
-  const refreshSteamGames = () => {
-    setGamesLoading(true);
+  const createCourse = () => {
     try {
-      axios.get("/api/steam").then((response) => {
-        setGames(response?.data?.data ?? []);
-        setGamesLoading(false);
-      });
-    } catch (e) {
-      setGamesLoading(false);
-    }
+      console.log(courseForm);
+      axios.post("/api/createCourse", { ...courseForm }).then((response) => {});
+    } catch (e) {}
   };
 
-  const refreshPlatinumData = () => {
-    setPlatinumDataLoading(true);
+  const checkUserRole = (userName) => {
     try {
-      axios.get("/api/platinum").then((response) => {
-        setPlatinumData(response?.data);
-        setPlatinumDataLoading(false);
+      axios.get(`/api/role?user=${userName}`).then((response) => {
+        const dept = response?.data?.department;
+        setUserDept(dept);
       });
-    } catch (e) {
-      setPlatinumDataLoading(false);
-    }
+    } catch (e) {}
   };
-
-  const refreshData = () => {
-    refreshSteamGames();
-    refreshPlatinumData();
-  };
-
-  useEffect(() => {
-    if (games?.length == 0) {
-      refreshData();
-    }
-  }, []);
-
-  useEffect(() => {
-    let finalGames = [];
-
-    const GAMES_INCLUDED = ["1659040", "2358720"];
-
-    finalGames = games
-      ?.filter((game) => {
-        return true;
-        return GAMES_INCLUDED?.includes(String(game?.id));
-      })
-      ?.map((game) => {
-        let platinumGameData = platinumData?.find(
-          (item) => item?.id == game?.id
-        );
-        let formedGame = {};
-        let platinumMapper = {};
-        let dlcMapper = {};
-
-        platinumGameData?.platinum?.forEach((ach) => {
-          platinumMapper[ach?.title] = ach;
-        });
-
-        console.log({ platinumMapper });
-
-        let gameName = game?.achievements?.[0]?.gameName;
-
-        let sortedPlatinumTrophies = game?.achievements
-          ?.map((ach) => {
-            return {
-              ...ach,
-              label: getRarityBasedOnRarity(ach?.percentage),
-              color: getColorBasedOnRarity(ach?.percentage),
-              title: ach?.displayName,
-              hiddenDesc: platinumMapper[ach?.displayName]?.description,
-            };
-          })
-          ?.filter((ach) => {
-            if (platinumMapper[ach?.displayName]) {
-              return true;
-            } else {
-              return false;
-            }
-          })
-          ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
-
-        let lastAch =
-          sortedPlatinumTrophies?.[sortedPlatinumTrophies?.length - 1];
-
-        let total = sortedPlatinumTrophies?.length;
-        let completed = sortedPlatinumTrophies?.filter(
-          (ach) => ach?.achieved == "1"
-        )?.length;
-
-        total = Math.ceil(total * COMPLETION_FACTOR);
-        completed = completed > total ? total : completed;
-        let isCompleted = total == completed && total != 0;
-
-        if (platinumGameData) {
-          formedGame = {
-            ...game,
-            ...platinumGameData,
-            achievements: [
-              ...sortedPlatinumTrophies?.filter(
-                (ach) => ach?.displayName != lastAch?.displayName
-              ),
-              { ...lastAch, color: "Gold" },
-              {
-                displayName: `Platinum`,
-                description: `Achieved all Base Game Trophies in the game`,
-                hiddenDesc: `${game?.name}`,
-                percentage: lastAch?.percentage,
-                label: getRarityBasedOnRarity(lastAch?.percentage),
-                color: "Platinum",
-                achieved: isCompleted ? 1 : 0,
-                completedFinal: completed,
-                unlocktime: lastAch?.unlocktime,
-                icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
-                gameName: lastAch?.gameName,
-              },
-            ],
-          };
-        } else {
-          formedGame = {
-            ...game,
-          };
-        }
-
-        return formedGame;
-      });
-    setFinalGames(finalGames);
-  }, [games, platinumData]);
-
-  if (gamesLoading || platinumDataLoading) {
-    return (
-      <LoadingContainer>
-        <Spin indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />} />
-      </LoadingContainer>
-    );
-  }
 
   return (
     <Container>
-      <MainHeader
-        games={finalGames}
-        setSelectedMode={setSelectedMode}
-        refreshData={refreshData}
-        gamesLoading={gamesLoading}
-      />
-      <MainContent
-        games={finalGames}
-        selectedMode={selectedMode}
-        refreshData={refreshData}
-        setGamesLoading={setGamesLoading}
-        gamesLoading={gamesLoading}
-        setSelectedMode={setSelectedMode}
-        platinumDataLoading={platinumDataLoading}
-      />
+      <Left>
+        <input
+          style={{ color: "#333", cursor: "pointer" }}
+          type="text"
+          value={userName}
+          onChange={(e) => {
+            setUserName(e.target.value);
+          }}
+        />
+        <button
+          style={{ color: "#333", cursor: "pointer" }}
+          onClick={() => {
+            checkUserRole(userName);
+          }}
+        >
+          CHECK
+        </button>
+      </Left>
+      <Content>
+        <table>
+          <tr>
+            <th style={{ width: "200px", textAlign: "center" }}>Id</th>
+            <th style={{ width: "200px", textAlign: "center" }}>Name</th>
+            <th style={{ width: "200px", textAlign: "center" }}>Exclude</th>
+          </tr>
+          <tbody>
+            {courses
+              ?.filter((course) => {
+                return !course?.exclude?.includes(userDept);
+              })
+              ?.map((course) => {
+                return (
+                  <tr>
+                    <td style={{ width: "200px", textAlign: "center" }}>
+                      {course?.id}
+                    </td>
+                    <td style={{ width: "200px", textAlign: "center" }}>
+                      {course?.name}
+                    </td>
+                    <td style={{ width: "200px", textAlign: "center" }}>
+                      {course?.exclude}
+                    </td>
+                  </tr>
+                );
+              })}
+          </tbody>
+        </table>
+        <br />
+        <br />
+        <br />
+        <br />
+        <input
+          style={{ color: "#333", cursor: "pointer" }}
+          type="text"
+          value={courseForm?.name}
+          onChange={(e) => {
+            setCourseForm((old) => ({ ...old, name: e.target.value }));
+          }}
+        />
+        <input
+          style={{ color: "#333", cursor: "pointer" }}
+          type="text"
+          value={courseForm?.exclude}
+          onChange={(e) => {
+            setCourseForm((old) => ({ ...old, exclude: e.target.value }));
+          }}
+        />
+        <input
+          style={{ color: "#333", cursor: "pointer" }}
+          type="number"
+          min={10}
+          max={100}
+          value={courseForm?.count}
+          onChange={(e) => {
+            setCourseForm((old) => ({ ...old, count: Number(e.target.value) }));
+          }}
+        />
+        <button
+          style={{ color: "#333", cursor: "pointer" }}
+          onClick={() => {
+            createCourse();
+          }}
+        >
+          CHECK
+        </button>
+      </Content>
     </Container>
   );
 }
 
-const RefreshButton = styled.div`
+const Left = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  position: fixed;
-  right: 1rem;
-  top: 1rem;
-  background-color: #1b2838;
-  padding: 0.25rem 0.5rem;
-  cursor: pointer;
-  z-index: 100;
+  width: 300px;
+  min-height: 100vh;
+  max-height: 100vh;
+  padding: 1rem;
+  flex-direction: column;
+  background-color: #111923;
+`;
 
-  &:active {
-    transform: translateY(0.25rem);
-  }
+const Content = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+  min-height: 100vh;
+  max-height: 100vh;
+  padding: 1rem;
+  flex-direction: column;
+  background-color: #1b2838;
 `;
 
 const Container = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  width: 100%;
-  background-color: #1b2838;
-  color: #fefefe;
-  position: relative;
-`;
-
-const LoadingContainer = styled.div`
-  display: flex;
-  align-items: center;
   justify-content: center;
-  width: 100%;
-  background-color: #1b2838;
-  color: #fefefe;
   min-width: 100vw;
+  max-width: 100vw;
   min-height: 100vh;
+  max-height: 100vh;
+  color: #fefefe;
 `;
