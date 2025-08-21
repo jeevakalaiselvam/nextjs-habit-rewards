@@ -40,8 +40,8 @@ export const GAME_GENRES = [
     label: "Thriller",
   },
   {
-    value: "G_COMEDY",
-    label: "Comedy",
+    value: "G_FPS",
+    label: "FPS",
   },
 ];
 
