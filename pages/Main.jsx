@@ -15,7 +15,9 @@ export default function Main() {
   const createCourse = () => {
     try {
       console.log(courseForm);
-      axios.post("/api/createCourse", { ...courseForm }).then((response) => {});
+      axios.post("/api/createCourse", { ...courseForm }).then((response) => {
+        refreshCourse();
+      });
     } catch (e) {}
   };
 
@@ -28,8 +30,25 @@ export default function Main() {
     } catch (e) {}
   };
 
+  const refreshCourse = () => {
+    try {
+      axios.get("/api/course").then((response) => {
+        const course = response?.data;
+        setCourses(course);
+      });
+    } catch (e) {}
+  };
+
   return (
     <Container>
+      <button
+        style={{ color: "#333", cursor: "pointer" }}
+        onClick={() => {
+          refreshCourse();
+        }}
+      >
+        UPDATE
+      </button>
       <Left>
         <input
           style={{ color: "#333", cursor: "pointer" }}
@@ -54,27 +73,27 @@ export default function Main() {
             <th style={{ width: "200px", textAlign: "center" }}>Id</th>
             <th style={{ width: "200px", textAlign: "center" }}>Name</th>
             <th style={{ width: "200px", textAlign: "center" }}>Exclude</th>
+            <th style={{ width: "200px", textAlign: "center" }}>Count</th>
           </tr>
           <tbody>
-            {courses
-              ?.filter((course) => {
-                return !course?.exclude?.includes(userDept);
-              })
-              ?.map((course) => {
-                return (
-                  <tr>
-                    <td style={{ width: "200px", textAlign: "center" }}>
-                      {course?.id}
-                    </td>
-                    <td style={{ width: "200px", textAlign: "center" }}>
-                      {course?.name}
-                    </td>
-                    <td style={{ width: "200px", textAlign: "center" }}>
-                      {course?.exclude}
-                    </td>
-                  </tr>
-                );
-              })}
+            {courses?.map((course, index) => {
+              return (
+                <tr>
+                  <td style={{ width: "200px", textAlign: "center" }}>
+                    {index}
+                  </td>
+                  <td style={{ width: "200px", textAlign: "center" }}>
+                    {course?.name}
+                  </td>
+                  <td style={{ width: "200px", textAlign: "center" }}>
+                    {course?.exclude}
+                  </td>{" "}
+                  <td style={{ width: "200px", textAlign: "center" }}>
+                    {course?.count}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
         <br />
@@ -113,7 +132,7 @@ export default function Main() {
             createCourse();
           }}
         >
-          CHECK
+          ADD
         </button>
       </Content>
     </Container>
