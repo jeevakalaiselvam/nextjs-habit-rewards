@@ -102,7 +102,11 @@ export default function Main2() {
   };
 
   let games = library
-    ?.filter((item) => item?.type == "GAME" && item?.genre?.includes(activeCat))
+    ?.filter(
+      (item) =>
+        (item?.type == "GAME" && item?.genre?.includes(activeCat)) ||
+        activeCat == "All"
+    )
     ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
 
   return (
