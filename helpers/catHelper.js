@@ -91,3 +91,18 @@ export const MOVIE_GENRES = [
     label: "Comedy",
   },
 ];
+
+export const G_STATUS = [
+  {
+    value: "NEW",
+    label: "New",
+  },
+  {
+    value: "INPROG",
+    label: "In Progress",
+  },
+  {
+    value: "COMPLETED",
+    label: "Completed",
+  },
+];

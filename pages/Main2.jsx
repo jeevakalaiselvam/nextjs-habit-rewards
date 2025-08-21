@@ -3,8 +3,13 @@ import NewProfile from "../ncomponents/NewProfile";
 import { useEffect, useState } from "react";
 import { FaGamepad } from "react-icons/fa6";
 import { BiSolidMoviePlay } from "react-icons/bi";
-import { TbFolderFilled } from "react-icons/tb";
-import { GAME_GENRES, GENRES, MOVIE_GENRES } from "../helpers/catHelper";
+import { TbFolderFilled, TbLayoutGridFilled } from "react-icons/tb";
+import {
+  G_STATUS,
+  GAME_GENRES,
+  GENRES,
+  MOVIE_GENRES,
+} from "../helpers/catHelper";
 import { Input, Modal, Radio, Row, Select, Spin } from "antd";
 import axios from "axios";
 import GameCdImage from "../components/GameCdImage";
@@ -14,6 +19,7 @@ export default function Main2() {
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [active, setActive] = useState("GAMES");
+  const [activeCat, setActiveCat] = useState("");
   const [hoverActive, setHoverActive] = useState("GAMES");
   const [searchTerm, setSearchTerm] = useState("");
   const [library, setLibrary] = useState([]);
@@ -23,6 +29,7 @@ export default function Main2() {
     genre: [],
     title: "",
     image: "",
+    status: "COMPLETED",
   });
 
   const refreshLibrary = () => {
@@ -37,6 +44,7 @@ export default function Main2() {
           genre: [],
           title: "",
           image: "",
+          status: "COMPLETED",
         });
       });
     } catch (e) {
@@ -46,6 +54,7 @@ export default function Main2() {
         genre: [],
         title: "",
         image: "",
+        status: "COMPLETED",
       });
     }
   };
@@ -88,13 +97,13 @@ export default function Main2() {
     refreshLibrary();
   }, []);
 
-  let games = library
-    ?.filter((item) => item?.type == "GAME")
-    ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
-
   const initiateEditForm = (game) => {
     setCreateForm(game);
   };
+
+  let games = library
+    ?.filter((item) => item?.type == "GAME" && item?.genre?.includes(activeCat))
+    ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
 
   return (
     <Container>
@@ -158,6 +167,18 @@ export default function Main2() {
               }}
             />
           </Row>
+          <Row style={{ marginBottom: ".5rem" }}>
+            <Select
+              value={createForm?.status}
+              style={{ width: "100%" }}
+              placeholder="Select Status.."
+              onChange={(e) => {
+                setCreateForm((old) => ({ ...old, status: e }));
+              }}
+              allowClear
+              options={G_STATUS}
+            />
+          </Row>
         </Modal>
       )}
       <Left>
@@ -181,7 +202,6 @@ export default function Main2() {
             <span>Games</span>
           </Link>
         </Links>
-        <Seperator></Seperator>
         <Links>
           <Link
             active={active == "MOVIES" || hoverActive == "MOVIES"}
@@ -201,7 +221,6 @@ export default function Main2() {
             <span>Movies</span>
           </Link>
         </Links>
-        <Seperator></Seperator>
         <Links>
           <Link
             active={active == "BOOKS" || hoverActive == "BOOKS"}
@@ -220,6 +239,75 @@ export default function Main2() {
             </span>
             <span>Books</span>
           </Link>
+        </Links>
+        <Seperator></Seperator>
+        <Links>
+          <Link
+            active={activeCat == "All" || hoverActive == "All"}
+            onMouseEnter={() => {
+              setHoverActive("All");
+            }}
+            onMouseLeave={() => {
+              setHoverActive("");
+            }}
+            onClick={() => {
+              setActiveCat("All");
+            }}
+          >
+            <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
+              <TbLayoutGridFilled />
+            </span>
+            <span style={{ width: "120px" }}>All</span>
+            <span
+              style={{
+                background: "#272F30",
+                padding: "0rem .25rem",
+                marginLeft: ".5rem",
+                borderRadius: ".25rem",
+              }}
+            >
+              {library?.length}
+            </span>
+          </Link>
+          {GAME_GENRES?.map((genre) => {
+            return (
+              <Link
+                active={
+                  activeCat == genre?.value || hoverActive == genre?.value
+                }
+                onMouseEnter={() => {
+                  setHoverActive(genre?.value);
+                }}
+                onMouseLeave={() => {
+                  setHoverActive("");
+                }}
+                onClick={() => {
+                  setActiveCat(genre?.value);
+                }}
+              >
+                <span
+                  style={{ transform: "translateY(2px)", marginRight: "1rem" }}
+                >
+                  <TbLayoutGridFilled />
+                </span>
+                <span style={{ width: "120px" }}>{genre?.label}</span>
+                <span
+                  style={{
+                    background: "#272F30",
+                    padding: "0rem .25rem",
+                    marginLeft: ".5rem",
+                    borderRadius: ".25rem",
+                  }}
+                >
+                  {
+                    library?.filter((item) =>
+                      item?.genre?.includes(genre?.value)
+                    )?.length
+                  }
+                </span>
+              </Link>
+            );
+          })}
         </Links>
       </Left>
       <Right>
@@ -248,7 +336,7 @@ export default function Main2() {
                   borderRadius: ".25rem",
                 }}
               >
-                {games?.length}
+                {library?.length}
               </span>
               <CreateButton
                 onClick={() => {
@@ -331,9 +419,9 @@ const Categories = styled.div`
 const Search = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   background-color: #161b1e;
-  width: 200px;
+  width: 250px;
   border-radius: 4px;
 
   & input {
@@ -343,6 +431,7 @@ const Search = styled.div`
     border: none;
     font-size: 0.8rem;
     padding: 0.5rem;
+    border-radius: 4px;
   }
 `;
 
@@ -357,7 +446,7 @@ const Top1 = styled.div`
 const Top2 = styled.div`
   display: flex;
   align-items: center;
-  padding: 1rem;
+  padding: 0rem 1rem;
   justify-content: flex-start;
   width: 100%;
 `;
@@ -428,7 +517,7 @@ const Content = styled.div`
   justify-content: flex-start;
   flex-wrap: wrap;
   width: 100%;
-  padding: 1rem 0.25rem;
+  padding: 1rem 0.5rem;
 `;
 
 const ContentC = styled.div`

@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const { title, type, genre, image, _id } = req.body;
+    const { title, type, genre, image, _id, status } = req.body;
 
     try {
       const client = await clientPromise;
@@ -17,6 +17,7 @@ export default async function handler(req, res) {
             type: type,
             genre: genre,
             image: image,
+            status,
           },
         }
       );
