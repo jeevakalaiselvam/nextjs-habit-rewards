@@ -34,17 +34,26 @@ export default function Main2() {
   const [active, setActive] = useState("GAMES");
   const [activeCat, setActiveCat] = useState("All");
   const [hoverActive, setHoverActive] = useState("GAMES");
-  const [activeFilter, setActiveFilter] = useState("INPROG");
+  const [activeFilter, setActiveFilter] = useState("All");
+  const [activeShelf, setActiveShelf] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [library, setLibrary] = useState([]);
+  const [shelf, setShelf] = useState([]);
   const [checkedGame, setCheckedGame] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showCreateShelfModal, setShowCreateShelfModal] = useState(false);
   const [createForm, setCreateForm] = useState({
     type: "GAME",
     genre: [],
     title: "",
     image: "",
     status: "NEW",
+    shelfName: "",
+  });
+  const [editModeShelf, setEditModeShelf] = useState(false);
+  const [shelfForm, setShelfForm] = useState({
+    type: "GAME",
+    shelfName: "",
   });
 
   const [positions, setPositions] = useState([]);
@@ -93,6 +102,7 @@ export default function Main2() {
           title: "",
           image: "",
           status: "DONE",
+          shelfName: "",
         });
         setEditMode(false);
       });
@@ -104,8 +114,35 @@ export default function Main2() {
         title: "",
         image: "",
         status: "DONE",
+        shelfName: "",
       });
       setEditMode(false);
+    }
+  };
+
+  const refreshShelfs = () => {
+    setLoading(true);
+    try {
+      axios.get("/api/jeevashelf").then((response) => {
+        let items = response?.data;
+        items = items?.sort(
+          (i1, i2) => new Date(i2?.created) - new Date(i1?.created)
+        );
+        setShelf(items);
+        setLoading(false);
+        setShelfForm({
+          type: "GAME",
+          shelfName: "",
+        });
+        setEditModeShelf(false);
+      });
+    } catch (e) {
+      setLoading(false);
+      setShelfForm({
+        type: "GAME",
+        shelfName: "",
+      });
+      setEditModeShelf(false);
     }
   };
 
@@ -116,11 +153,37 @@ export default function Main2() {
         .post("/api/jeevalibraryedit", { ...createForm })
         .then((response) => {
           setLoading(false);
-          refreshLibrary();
+          refreshAll();
         });
     } catch (e) {
       setLoading(false);
-      refreshLibrary();
+      refreshAll();
+    }
+  };
+
+  const saveFormShelf = () => {
+    setLoading(true);
+    try {
+      axios.post("/api/jeevashelf", { ...shelfForm }).then((response) => {
+        setLoading(false);
+        refreshAll();
+      });
+    } catch (e) {
+      setLoading(false);
+      refreshAll();
+    }
+  };
+
+  const saveEditShelf = () => {
+    setLoading(true);
+    try {
+      axios.post("/api/jeevashelfedit", { ...shelfForm }).then((response) => {
+        setLoading(false);
+        refreshAll();
+      });
+    } catch (e) {
+      setLoading(false);
+      refreshAll();
     }
   };
 
@@ -129,11 +192,11 @@ export default function Main2() {
     try {
       axios.post("/api/jeevalibrary", { ...createForm }).then((response) => {
         setLoading(false);
-        refreshLibrary();
+        refreshAll();
       });
     } catch (e) {
       setLoading(false);
-      refreshLibrary();
+      refreshAll();
     }
   };
 
@@ -144,8 +207,13 @@ export default function Main2() {
     { label: "BOOK", value: "BOOK" },
   ];
 
-  useEffect(() => {
+  const refreshAll = () => {
     refreshLibrary();
+    refreshShelfs();
+  };
+
+  useEffect(() => {
+    refreshAll();
   }, []);
 
   const initiateEditForm = (game) => {
@@ -183,9 +251,13 @@ export default function Main2() {
     );
   }
 
-  let filteredLib = library
-    ?.filter((item) => item?.status == activeFilter)
-    ?.sort((item1, item2) => item2?.completed - item1?.completed);
+  let shelfItems = library?.filter(
+    (item) => item?.shelfName == activeShelf || activeShelf == "All"
+  );
+
+  let filteredLib = shelfItems?.sort(
+    (item1, item2) => item2?.completed - item1?.completed
+  );
 
   let games = filteredLib
     ?.filter(
@@ -300,6 +372,69 @@ export default function Main2() {
                 options={GAME_GENRES}
               />
             </Col>
+          </Row>
+          <Row style={{ marginBottom: ".5rem" }} gutter={[16, 16]}>
+            <Col span={12}>
+              <Select
+                value={createForm?.shelfName}
+                style={{ width: "100%" }}
+                placeholder="Select Shelf.."
+                onChange={(e) => {
+                  setCreateForm((old) => ({ ...old, shelfName: e }));
+                }}
+                allowClear
+                options={shelf?.map((item) => ({
+                  value: item?.shelfName,
+                  value: item?.shelfName,
+                }))}
+              />
+            </Col>
+          </Row>
+        </Modal>
+      )}
+      {showCreateShelfModal && (
+        <Modal
+          width={800}
+          title={editModeShelf ? "Edit Shelf" : "Create Shelf"}
+          open={showCreateShelfModal}
+          onOk={() => {
+            setShowCreateShelfModal(false);
+            if (editModeShelf) {
+              saveEditShelf();
+            } else {
+              saveFormShelf();
+            }
+          }}
+          onCancel={() => {
+            setShowCreateShelfModal(false);
+          }}
+        >
+          <Row style={{ marginBottom: ".5rem" }}>
+            <Radio.Group
+              block
+              options={options}
+              defaultValue="GAME"
+              optionType="button"
+              buttonStyle="solid"
+              style={{ width: "100%" }}
+              onChange={(e) => {
+                setShelfForm((old) => ({ ...old, type: e.target.value }));
+              }}
+            />
+          </Row>
+          <Row style={{ marginBottom: ".5rem" }}></Row>
+          <Row style={{ marginBottom: ".5rem" }}>
+            <Input
+              style={{ borderRadius: ".25rem" }}
+              placeholder="Enter Title"
+              value={shelfForm?.shelfName}
+              onChange={(e) => {
+                setShelfForm((old) => ({
+                  ...old,
+                  shelfName: e?.target?.value,
+                }));
+              }}
+            />
           </Row>
         </Modal>
       )}
@@ -454,62 +589,50 @@ export default function Main2() {
           })}
         </Links>
         <Seperator></Seperator>
-
-        {G_STATUS?.map((item) => {
-          return (
-            <Link
-              active={hoverActive == item?.value || activeFilter == item?.value}
-              onMouseEnter={() => {
-                setHoverActive(item?.value);
-              }}
-              onMouseLeave={() => {
-                setHoverActive("");
-              }}
-              onClick={() => {
-                setActiveFilter(item?.value);
-              }}
-            >
-              <span
-                style={{ transform: "translateY(2px)", marginRight: "1rem" }}
-              >
-                <TbMenu2 />
-              </span>
-              <span style={{ width: "120px" }}>
-                {" "}
-                {item?.label == "NEW" ? "WISHLIST" : item?.label}
-              </span>
-              <span
-                style={{
-                  background: "#272F30",
-                  padding: "0rem .25rem",
-                  marginLeft: ".5rem",
-                  borderRadius: ".25rem",
-                }}
-              >
-                {items?.filter((inner) => inner?.status == item?.value)?.length}
-              </span>
-            </Link>
-          );
-        })}
-        <Seperator></Seperator>
         <Links>
           <Link
-            active={active == "CANVAS" || hoverActive == "CANVAS"}
+            active={activeShelf == "All" || hoverActive == "All"}
             onMouseEnter={() => {
-              setHoverActive("CANVAS");
+              setHoverActive("All");
             }}
             onMouseLeave={() => {
               setHoverActive("");
             }}
             onClick={() => {
-              setActive("CANVAS");
+              setActiveShelf("All");
             }}
           >
             <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
               <TbDeviceGamepad2 />
             </span>
-            <span>Canvas</span>
+            <span>All Shelf</span>
           </Link>
+          {shelf?.map((shelf, index) => {
+            return (
+              <Link
+                active={
+                  activeShelf == shelf?.shelfName ||
+                  hoverActive == shelf?.shelfName
+                }
+                onMouseEnter={() => {
+                  setHoverActive(shelf?.shelfName);
+                }}
+                onMouseLeave={() => {
+                  setHoverActive("");
+                }}
+                onClick={() => {
+                  setActiveShelf(shelf?.shelfName);
+                }}
+              >
+                <span
+                  style={{ transform: "translateY(2px)", marginRight: "1rem" }}
+                >
+                  <TbDeviceGamepad2 />
+                </span>
+                <span>{shelf?.shelfName}</span>
+              </Link>
+            );
+          })}
         </Links>
       </Left>
       <Right>
@@ -556,6 +679,31 @@ export default function Main2() {
                   {active == "TV" && "Register TV"}
                   {active == "BOOK" && "Register Book"}
                 </CreateButton>
+                <CreateButton
+                  onClick={() => {
+                    setShowCreateShelfModal(true);
+                  }}
+                >
+                  Create Shelf
+                </CreateButton>
+                {activeShelf?.length != 0 && activeShelf != "All" && (
+                  <CreateButton
+                    onClick={() => {
+                      setShowCreateShelfModal(true);
+                      setEditModeShelf(true);
+                      setShelfForm((old) => {
+                        console.log(shelf, activeShelf);
+                        return {
+                          ...shelf?.find(
+                            (item) => item?.shelfName == activeShelf
+                          ),
+                        };
+                      });
+                    }}
+                  >
+                    Edit Shelf
+                  </CreateButton>
+                )}
               </Top2L>
             </Categories>
           </Top1>
@@ -629,7 +777,7 @@ export default function Main2() {
                 );
               })}
             {active == "GAMES" && (
-              <CanvasLeft>
+              <CanvasLeft activeShelf={activeShelf}>
                 {games.map((item, index) => (
                   <Draggable
                     key={index}
@@ -730,11 +878,12 @@ const GameCD = styled.div`
 `;
 
 const CanvasLeft = styled.div`
-  width: calc(100vw - 200px);
+  width: calc(100vw - 600px);
   height: calc(100vh);
   position: relative;
   overflow: hidden;
-  background: url("./icons/shelf.png");
+  background: ${(props) =>
+    props.activeShelf == "All" ? "" : `url("./icons/shelf.png")`};
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center center;
