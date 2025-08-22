@@ -17,7 +17,7 @@ export const GAME_GENRES = [
   },
   {
     value: "G_RPG",
-    label: "Role Playing Game",
+    label: "RPG",
   },
   {
     value: "G_STEALTH",
