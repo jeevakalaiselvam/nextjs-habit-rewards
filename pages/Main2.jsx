@@ -301,7 +301,7 @@ export default function Main2() {
     <Container>
       {showCreateModal && (
         <Modal
-          width={800}
+          width={1200}
           title={editMode ? "Edit Product" : "Register Product"}
           open={showCreateModal}
           onOk={() => {
@@ -595,6 +595,40 @@ export default function Main2() {
         <Seperator></Seperator>
         <Links>
           <Link
+            active={activeShelf == "Wishlist" || hoverActive == "Wishlist"}
+            onMouseEnter={() => {
+              setHoverActive("Wishlist");
+            }}
+            onMouseLeave={() => {
+              setHoverActive("");
+            }}
+            onClick={() => {
+              setActiveShelf("Wishlist");
+            }}
+          >
+            <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
+              <TbDeviceGamepad2 />
+            </span>
+            <span>Wishlist</span>
+          </Link>
+          <Link
+            active={activeShelf == "Backlog" || hoverActive == "Backlog"}
+            onMouseEnter={() => {
+              setHoverActive("Backlog");
+            }}
+            onMouseLeave={() => {
+              setHoverActive("");
+            }}
+            onClick={() => {
+              setActiveShelf("Backlog");
+            }}
+          >
+            <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
+              <TbDeviceGamepad2 />
+            </span>
+            <span>Backlog</span>
+          </Link>
+          <Link
             active={activeShelf == "All" || hoverActive == "All"}
             onMouseEnter={() => {
               setHoverActive("All");
@@ -611,32 +645,40 @@ export default function Main2() {
             </span>
             <span>All Shelf</span>
           </Link>
-          {shelf?.map((shelf, index) => {
-            return (
-              <Link
-                active={
-                  activeShelf == shelf?.shelfName ||
-                  hoverActive == shelf?.shelfName
-                }
-                onMouseEnter={() => {
-                  setHoverActive(shelf?.shelfName);
-                }}
-                onMouseLeave={() => {
-                  setHoverActive("");
-                }}
-                onClick={() => {
-                  setActiveShelf(shelf?.shelfName);
-                }}
-              >
-                <span
-                  style={{ transform: "translateY(2px)", marginRight: "1rem" }}
+          {shelf
+            ?.filter(
+              (shelf) =>
+                shelf?.shelfName != "Wishlist" && shelf?.shelfName != "Backlog"
+            )
+            ?.map((shelf, index) => {
+              return (
+                <Link
+                  active={
+                    activeShelf == shelf?.shelfName ||
+                    hoverActive == shelf?.shelfName
+                  }
+                  onMouseEnter={() => {
+                    setHoverActive(shelf?.shelfName);
+                  }}
+                  onMouseLeave={() => {
+                    setHoverActive("");
+                  }}
+                  onClick={() => {
+                    setActiveShelf(shelf?.shelfName);
+                  }}
                 >
-                  <TbDeviceGamepad2 />
-                </span>
-                <span>{shelf?.shelfName}</span>
-              </Link>
-            );
-          })}
+                  <span
+                    style={{
+                      transform: "translateY(2px)",
+                      marginRight: "1rem",
+                    }}
+                  >
+                    <TbDeviceGamepad2 />
+                  </span>
+                  <span>{shelf?.shelfName}</span>
+                </Link>
+              );
+            })}
         </Links>
       </Left>
       <Right>
@@ -724,7 +766,7 @@ export default function Main2() {
                     zIndex={game?._id == checkedGame ? 999999999 : index}
                   >
                     <GameCdImageSmall
-                      scale={3}
+                      scale={2.85}
                       cover={game?.image}
                       onClick={() => {
                         initiateEditForm(game);
@@ -742,7 +784,7 @@ export default function Main2() {
               movies?.map((movie) => {
                 return (
                   <MovieCdImageSmall
-                    scale={3}
+                    scale={2.85}
                     cover={movie?.image}
                     onClick={() => {
                       initiateEditForm(movie);
@@ -756,7 +798,7 @@ export default function Main2() {
               tv?.map((movie) => {
                 return (
                   <MovieCdImageSmall
-                    scale={3}
+                    scale={2.85}
                     cover={movie?.image}
                     onClick={() => {
                       initiateEditForm(movie);
@@ -770,7 +812,7 @@ export default function Main2() {
               tv?.map((movie) => {
                 return (
                   <MovieCdImageSmall
-                    scale={3}
+                    scale={2.85}
                     cover={movie?.image}
                     onClick={() => {
                       initiateEditForm(movie);
@@ -804,9 +846,9 @@ export default function Main2() {
                     bounds="parent"
                   >
                     <GameCD zIndex={indexChecker?.[item?._id]}>
-                      <CdImage scale={1.25} onClick={(e) => {}}>
+                      <CdImage scale={2.85} onClick={(e) => {}}>
                         <CdInnerImage
-                          scale={1.25}
+                          scale={2.85}
                           cover={item?.image}
                           onDoubleClick={() => {
                             initiateEditForm(item);
@@ -882,12 +924,10 @@ const GameCD = styled.div`
 `;
 
 const CanvasLeft = styled.div`
-  width: calc(100vw - 600px);
+  width: calc(100vw - 200px);
   height: calc(100vh);
   position: relative;
   overflow: hidden;
-  background: ${(props) =>
-    props.activeShelf == "All" ? "" : `url("./icons/shelf.png")`};
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center center;
