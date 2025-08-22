@@ -48,6 +48,7 @@ export default function Main2() {
           image: "",
           status: "COMPLETED",
         });
+        setEditMode(false);
       });
     } catch (e) {
       setLoading(false);
@@ -58,6 +59,7 @@ export default function Main2() {
         image: "",
         status: "COMPLETED",
       });
+      setEditMode(false);
     }
   };
 
@@ -92,6 +94,7 @@ export default function Main2() {
   const options = [
     { label: "GAME", value: "GAME" },
     { label: "MOVIE", value: "MOVIE" },
+    { label: "TV", value: "TV" },
     { label: "BOOK", value: "BOOK" },
   ];
 
@@ -115,6 +118,22 @@ export default function Main2() {
     ?.filter(
       (item) =>
         item?.type == "MOVIE" &&
+        (item?.genre?.includes(activeCat) || activeCat == "All")
+    )
+    ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
+
+  let tv = library
+    ?.filter(
+      (item) =>
+        item?.type == "TV" &&
+        (item?.genre?.includes(activeCat) || activeCat == "All")
+    )
+    ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
+
+  let book = library
+    ?.filter(
+      (item) =>
+        item?.type == "BOOK" &&
         (item?.genre?.includes(activeCat) || activeCat == "All")
     )
     ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
@@ -240,6 +259,25 @@ export default function Main2() {
         </Links>
         <Links>
           <Link
+            active={active == "TV" || hoverActive == "TV"}
+            onMouseEnter={() => {
+              setHoverActive("TV");
+            }}
+            onMouseLeave={() => {
+              setHoverActive("");
+            }}
+            onClick={() => {
+              setActive("TV");
+            }}
+          >
+            <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
+              <BiSolidMoviePlay />
+            </span>
+            <span>TV Series</span>
+          </Link>
+        </Links>
+        <Links>
+          <Link
             active={active == "BOOKS" || hoverActive == "BOOKS"}
             onMouseEnter={() => {
               setHoverActive("BOOKS");
@@ -358,7 +396,10 @@ export default function Main2() {
                     setShowCreateModal(true);
                   }}
                 >
-                  ADD GAME
+                  {active == "GAMES" && "Register Game"}
+                  {active == "MOVIES" && "Register Movie"}
+                  {active == "TV" && "Register TV"}
+                  {active == "BOOK" && "Register Book"}
                 </CreateButton>
               </Top2L>
             </Categories>
@@ -383,6 +424,34 @@ export default function Main2() {
               })}{" "}
             {active == "MOVIES" &&
               movies?.map((movie) => {
+                return (
+                  <MovieCdImageSmall
+                    scale={3}
+                    cover={movie?.image}
+                    onClick={() => {
+                      initiateEditForm(movie);
+                      setShowCreateModal(true);
+                      setEditMode(true);
+                    }}
+                  />
+                );
+              })}
+            {active == "TV" &&
+              tv?.map((movie) => {
+                return (
+                  <MovieCdImageSmall
+                    scale={3}
+                    cover={movie?.image}
+                    onClick={() => {
+                      initiateEditForm(movie);
+                      setShowCreateModal(true);
+                      setEditMode(true);
+                    }}
+                  />
+                );
+              })}
+            {active == "BOOK" &&
+              tv?.map((movie) => {
                 return (
                   <MovieCdImageSmall
                     scale={3}
@@ -420,7 +489,6 @@ const CreateButton = styled.div`
   margin-left: 1rem;
   cursor: pointer;
   text-align: center;
-  text-transform: uppercase;
   transition: 0.5s;
   background-size: 200% auto;
   color: white;

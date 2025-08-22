@@ -24,6 +24,10 @@ export const GAME_GENRES = [
     label: "Stealth",
   },
   {
+    value: "G_CRIME",
+    label: "Crime",
+  },
+  {
     value: "G_PUZZLE",
     label: "Puzzle",
   },
