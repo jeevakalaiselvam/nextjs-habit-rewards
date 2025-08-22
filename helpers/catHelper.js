@@ -107,18 +107,18 @@ export const MOVIE_GENRES = [
 export const G_STATUS = [
   {
     value: "INPROG",
-    label: "INPROG",
+    label: "In Progress",
   },
   {
     value: "BACKLOG",
-    label: "BACKLOG",
+    label: "Backlog",
   },
   {
     value: "WISHLIST",
-    label: "WISHLIST",
+    label: "Wishlist",
   },
   {
     value: "DONE",
-    label: "DONE",
+    label: "Done",
   },
 ];
