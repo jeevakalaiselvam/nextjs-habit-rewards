@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import NewProfile from "../ncomponents/NewProfile";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaGamepad } from "react-icons/fa6";
 import { BiSolidMoviePlay } from "react-icons/bi";
 import {
@@ -26,6 +26,7 @@ import { LoadingOutlined } from "@ant-design/icons";
 import GameCdImageSmall from "../components/GameCdImageSmall";
 import MovieCdImageSmall from "../components/MovieCdImageSmall";
 import { COLOR_GREEN } from "../helpers/colorHelper";
+import Draggable from "react-draggable";
 
 export default function Main2() {
   const [loading, setLoading] = useState(false);
@@ -46,11 +47,37 @@ export default function Main2() {
     status: "NEW",
   });
 
+  const [positions, setPositions] = useState([]);
+  const [indexChecker, setIndexChecker] = useState({});
+  const [previousIndex, setPreviousIndex] = useState(0);
+
+  useEffect(() => {
+    // generate random initial positions
+    const newPositions = library.map(() => ({
+      x: Math.floor(Math.random() * (600 - 100)),
+      y: Math.floor(Math.random() * (400 - 100)),
+    }));
+    setPositions(newPositions);
+  }, [library]);
+
+  const handleDrag = (index, e, data) => {
+    const newPositions = [...positions];
+    newPositions[index] = { x: data.x, y: data.y };
+    setPositions(newPositions);
+  };
+
   const refreshLibrary = () => {
     setLoading(true);
     try {
       axios.get("/api/jeevalibrary").then((response) => {
         let items = response?.data;
+        let indexWrap = {};
+        items?.forEach((item) => {
+          if (!indexWrap?.[item?._id]) {
+            indexWrap[item?._id] = 1;
+          }
+        });
+        setIndexChecker(indexWrap);
         setLibrary(items);
         setLoading(false);
         setCreateForm({
@@ -420,7 +447,6 @@ export default function Main2() {
           })}
         </Links>
         <Seperator></Seperator>
-        <Links></Links>
 
         {G_STATUS?.map((item) => {
           return (
@@ -458,6 +484,26 @@ export default function Main2() {
             </Link>
           );
         })}
+        <Seperator></Seperator>
+        <Links>
+          <Link
+            active={active == "CANVAS" || hoverActive == "CANVAS"}
+            onMouseEnter={() => {
+              setHoverActive("CANVAS");
+            }}
+            onMouseLeave={() => {
+              setHoverActive("");
+            }}
+            onClick={() => {
+              setActive("CANVAS");
+            }}
+          >
+            <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
+              <TbDeviceGamepad2 />
+            </span>
+            <span>Canvas</span>
+          </Link>
+        </Links>
       </Left>
       <Right>
         <Top>
@@ -535,7 +581,7 @@ export default function Main2() {
         </Top>
         {!loading && (
           <Content>
-            {active == "GAMES" &&
+            {active == "GAMESS" &&
               games?.map((game, index) => {
                 return (
                   <CdInner
@@ -600,6 +646,38 @@ export default function Main2() {
                   />
                 );
               })}
+            {active == "GAMES" && (
+              <CanvasLeft>
+                {games.map((item, index) => (
+                  <Draggable
+                    key={index}
+                    position={positions[index]}
+                    onStart={() => {
+                      console.clear();
+                      console.log(indexChecker);
+                      let lastMax = Math.max(...Object.values(indexChecker));
+                      setIndexChecker((old) => {
+                        return {
+                          ...old,
+                          [item?._id]: lastMax + 1,
+                        };
+                      });
+                      setCheckedGame(item?._id);
+                    }}
+                    onDrag={(e, data) => {
+                      handleDrag(index, e, data);
+                    }}
+                    bounds="parent"
+                  >
+                    <GameCD zIndex={indexChecker?.[item?._id]}>
+                      <CdImage scale={3} onClick={(e) => {}}>
+                        <CdInnerImage scale={3} cover={item?.image} />
+                      </CdImage>
+                    </GameCD>
+                  </Draggable>
+                ))}
+              </CanvasLeft>
+            )}
           </Content>
         )}
         {loading && (
@@ -613,6 +691,61 @@ export default function Main2() {
     </Container>
   );
 }
+
+const BASE_WIDTH = 150;
+const BASE_HEIGHT = 187.5;
+const BASE_INNER_WIDTH = 143;
+const BASE_INNER_HEIGHT = 160;
+const BASE_TOP = 25;
+const BASE_LEFT = 0.5625;
+const BASE_TOP_C = 8;
+const BASE_LEFT_C = 10;
+
+const CdImage = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: ${(props) => props.scale * BASE_WIDTH}px;
+  height: ${(props) => props.scale * BASE_HEIGHT}px;
+  background: url("/icons/cover.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: relative;
+  margin: 1rem;
+  cursor: pointer;
+`;
+
+const CdInnerImage = styled.div`
+  width: ${(props) => props.scale * BASE_INNER_WIDTH}px;
+  height: ${(props) => props.scale * BASE_INNER_HEIGHT}px;
+  position: absolute;
+  top: ${(props) => props.scale * BASE_TOP}px;
+  left: ${(props) => props.scale * BASE_LEFT}px;
+  background: ${(props) => `url(${props.cover})`};
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 99;
+  background-position: center center;
+  cursor: pointer;
+`;
+
+const GameCD = styled.div`
+  width: ${(props) => props.scale * BASE_WIDTH}px;
+  height: ${(props) => props.scale * BASE_HEIGHT}px;
+  border-radius: 12px;
+  cursor: grab;
+  position: absolute;
+  z-index: ${(props) => props.zIndex};
+`;
+
+const CanvasLeft = styled.div`
+  width: 90vw;
+  height: 92vh;
+  position: relative;
+  overflow: hidden;
+  background: #060a0b;
+`;
 
 const CreateButton = styled.div`
   background-image: linear-gradient(
@@ -767,12 +900,12 @@ const Top = styled.div`
 
 const Content = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
   padding: 1rem 0.5rem;
   max-height: 100vh;
-  min-height: 100vh;
+  min-height: 90vh;
   overflow: scroll;
   position: relative;
 `;
