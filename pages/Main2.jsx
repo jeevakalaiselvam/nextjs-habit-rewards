@@ -33,7 +33,7 @@ export default function Main2() {
     genre: [],
     title: "",
     image: "",
-    status: "COMPLETED",
+    status: "DONE",
   });
 
   const refreshLibrary = () => {
@@ -48,7 +48,7 @@ export default function Main2() {
           genre: [],
           title: "",
           image: "",
-          status: "COMPLETED",
+          status: "DONE",
         });
         setEditMode(false);
       });
@@ -59,7 +59,7 @@ export default function Main2() {
         genre: [],
         title: "",
         image: "",
-        status: "COMPLETED",
+        status: "DONE",
       });
       setEditMode(false);
     }
