@@ -52,18 +52,25 @@ export default function Main2() {
   const [previousIndex, setPreviousIndex] = useState(0);
 
   useEffect(() => {
-    // generate random initial positions
-    const newPositions = library.map(() => ({
-      x: Math.floor(Math.random() * (600 - 100)),
-      y: Math.floor(Math.random() * (400 - 100)),
-    }));
-    setPositions(newPositions);
+    if (window) {
+      let oldPositions = JSON.parse(localStorage.getItem("POSITION")) ?? [];
+      setPositions(oldPositions);
+    } else {
+      const newPositions = library.map(() => ({
+        x: Math.floor(Math.random() * (600 - 100)),
+        y: Math.floor(Math.random() * (400 - 100)),
+      }));
+      setPositions(newPositions);
+    }
   }, [library]);
 
   const handleDrag = (index, e, data) => {
     const newPositions = [...positions];
     newPositions[index] = { x: data.x, y: data.y };
     setPositions(newPositions);
+    if (window) {
+      localStorage.setItem("POSITION", JSON.stringify(positions));
+    }
   };
 
   const refreshLibrary = () => {
@@ -671,7 +678,15 @@ export default function Main2() {
                   >
                     <GameCD zIndex={indexChecker?.[item?._id]}>
                       <CdImage scale={3} onClick={(e) => {}}>
-                        <CdInnerImage scale={3} cover={item?.image} />
+                        <CdInnerImage
+                          scale={3}
+                          cover={item?.image}
+                          onDoubleClick={() => {
+                            initiateEditForm(item);
+                            setShowCreateModal(true);
+                            setEditMode(true);
+                          }}
+                        />
                       </CdImage>
                     </GameCD>
                   </Draggable>
