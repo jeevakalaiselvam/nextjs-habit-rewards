@@ -33,7 +33,7 @@ export default function Main2() {
     genre: [],
     title: "",
     image: "",
-    status: "DONE",
+    status: "NEW",
   });
 
   const refreshLibrary = () => {
