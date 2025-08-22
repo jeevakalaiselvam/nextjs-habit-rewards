@@ -807,7 +807,7 @@ export default function Main2() {
 
 const BASE_WIDTH = 150;
 const BASE_HEIGHT = 187.5;
-const BASE_INNER_WIDTH = 143;
+const BASE_INNER_WIDTH = 142;
 const BASE_INNER_HEIGHT = 160;
 const BASE_TOP = 25;
 const BASE_LEFT = 0.5625;
