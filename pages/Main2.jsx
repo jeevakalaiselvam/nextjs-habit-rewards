@@ -572,7 +572,7 @@ export default function Main2() {
             <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
               <TbDeviceGamepad2 />
             </span>
-            <span>All Shelf</span>
+            <span>Unassigned</span>
           </Link>
           {shelf
             ?.filter(
@@ -839,6 +839,20 @@ const CdInnerImage = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   z-index: 99;
+  background-position: center center;
+  cursor: pointer;
+`;
+
+const Completed = styled.div`
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  bottom: 1rem;
+  right: 2rem;
+  background: ${(props) => `url("/icons/completed.png")`};
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 100;
   background-position: center center;
   cursor: pointer;
 `;
