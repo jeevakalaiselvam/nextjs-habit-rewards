@@ -1,16 +1,35 @@
 import styled from "styled-components";
 
-export default function GameCdImageSmall({ cover, scale = 1, onClick }) {
+export default function GameCdImageSmall({
+  cover,
+  scale = 1,
+  onClick,
+  onImageClick,
+}) {
   return (
-    <CdImage scale={scale} draggable onClick={onClick}>
+    <CdImage
+      scale={scale}
+      draggable
+      onClick={(e) => {
+        onClick();
+      }}
+    >
       <Completed scale={scale}></Completed>
-      <CdInnerImage scale={scale} cover={cover} />
+      <CdInnerImage
+        scale={scale}
+        cover={cover}
+        onClick={(e) => {
+          onImageClick();
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+      />
     </CdImage>
   );
 }
 
-const BASE_WIDTH = 150;
-const BASE_HEIGHT = 187.5;
+const BASE_WIDTH = 146;
+const BASE_HEIGHT = 186.75;
 const BASE_INNER_WIDTH = 142;
 const BASE_INNER_HEIGHT = 158;
 const BASE_TOP = 25;
@@ -30,6 +49,7 @@ const CdImage = styled.div`
   background-repeat: no-repeat;
   position: relative;
   margin: 1rem;
+  cursor: pointer;
 `;
 
 const CdInnerImage = styled.div`
@@ -43,6 +63,7 @@ const CdInnerImage = styled.div`
   background-repeat: no-repeat;
   z-index: 99;
   background-position: center center;
+  cursor: pointer;
 `;
 
 const Completed = styled.div`

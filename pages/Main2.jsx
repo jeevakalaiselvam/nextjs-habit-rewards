@@ -36,6 +36,7 @@ export default function Main2() {
   const [activeFilter, setActiveFilter] = useState("INPROG");
   const [searchTerm, setSearchTerm] = useState("");
   const [library, setLibrary] = useState([]);
+  const [checkedGame, setCheckedGame] = useState("");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [createForm, setCreateForm] = useState({
     type: "GAME",
@@ -183,6 +184,8 @@ export default function Main2() {
         (item?.genre?.includes(activeCat) || activeCat == "All")
     )
     ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
+
+  const MOVEMENT_SLIP = 50;
 
   return (
     <Container>
@@ -533,24 +536,33 @@ export default function Main2() {
         {!loading && (
           <Content>
             {active == "GAMES" &&
-              games?.map((game) => {
+              games?.map((game, index) => {
                 return (
-                  <GameCdImageSmall
-                    scale={2.5}
-                    cover={game?.image}
-                    onClick={() => {
-                      initiateEditForm(game);
-                      setShowCreateModal(true);
-                      setEditMode(true);
-                    }}
-                  />
+                  <CdInner
+                    top={index * MOVEMENT_SLIP}
+                    left={index * MOVEMENT_SLIP}
+                    zIndex={game?._id == checkedGame ? 999999999 : index}
+                  >
+                    <GameCdImageSmall
+                      scale={3}
+                      cover={game?.image}
+                      onClick={() => {
+                        initiateEditForm(game);
+                        setShowCreateModal(true);
+                        setEditMode(true);
+                      }}
+                      onImageClick={() => {
+                        setCheckedGame(game?._id);
+                      }}
+                    />
+                  </CdInner>
                 );
               })}{" "}
             {active == "MOVIES" &&
               movies?.map((movie) => {
                 return (
                   <MovieCdImageSmall
-                    scale={2.5}
+                    scale={3}
                     cover={movie?.image}
                     onClick={() => {
                       initiateEditForm(movie);
@@ -564,7 +576,7 @@ export default function Main2() {
               tv?.map((movie) => {
                 return (
                   <MovieCdImageSmall
-                    scale={2.5}
+                    scale={3}
                     cover={movie?.image}
                     onClick={() => {
                       initiateEditForm(movie);
@@ -578,7 +590,7 @@ export default function Main2() {
               tv?.map((movie) => {
                 return (
                   <MovieCdImageSmall
-                    scale={2.5}
+                    scale={3}
                     cover={movie?.image}
                     onClick={() => {
                       initiateEditForm(movie);
@@ -757,11 +769,22 @@ const Content = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  flex-wrap: wrap;
   width: 100%;
   padding: 1rem 0.5rem;
   max-height: 100vh;
+  min-height: 100vh;
   overflow: scroll;
+  position: relative;
+`;
+
+const CdInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: absolute;
+  left: ${(props) => `${props.left}px`};
+  top: ${(props) => `${props.top}px`};
+  z-index: ${(props) => props.zIndex};
 `;
 
 const ContentC = styled.div`
