@@ -10,6 +10,11 @@ import {
   getRarityBasedOnRarity,
 } from "../helpers/achHelper";
 
+const GAMES_INCLUDED = [
+  "1659040", //Hitman 3
+  "2358720", //Wukong
+];
+
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
   const [platinumDataLoading, setPlatinumDataLoading] = useState(false);
@@ -21,10 +26,12 @@ export default function Atom() {
   const refreshSteamGames = () => {
     setGamesLoading(true);
     try {
-      axios.get("/api/steam").then((response) => {
-        setGames(response?.data?.data ?? []);
-        setGamesLoading(false);
-      });
+      axios
+        .post("/api/steam", { gamesToInclude: GAMES_INCLUDED })
+        .then((response) => {
+          setGames(response?.data?.data ?? []);
+          setGamesLoading(false);
+        });
     } catch (e) {
       setGamesLoading(false);
     }
@@ -102,7 +109,10 @@ export default function Atom() {
         ...game,
         ...platinumGameData,
         achievements: [
-          ...sortedPlatinumTrophies,
+          ...sortedPlatinumTrophies?.filter(
+            (ach) => ach?.displayName != lastAch?.displayName
+          ),
+          { ...lastAch, color: "Gold" },
           {
             displayName: `Platinum`,
             description: `Achieved all Trophies in game`,
