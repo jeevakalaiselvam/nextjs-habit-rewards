@@ -8,6 +8,9 @@ export default function handler(req, res) {
     if (user == "jeeva") {
       department = "ECE";
     }
+    if (user == "sinduja") {
+      department = "EEE";
+    }
     res.status(200).json({ message: "API Success", department });
   } else {
     res.status(405).json({ message: "Method Not Allowed" });

@@ -1,10 +1,13 @@
-import clientPromise from "../../../lib/db";
+import sqlConnection from "../../../lib/db";
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
-      const client = await clientPromise;
-      const db = client.db("habittracker");
+      const db = await sqlConnection.createConnection({
+        hostName: "",
+        use,
+      });
+      const db = client.Sele();
 
       let allCourse = [];
 

@@ -1,11 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { TbCircleChevronRight } from "react-icons/tb";
 
 export default function Main() {
   const [userName, setUserName] = useState("");
   const [userDept, setUserDept] = useState("");
   const [courses, setCourses] = useState([]);
+  const [coursesRegisterd, setCoursesRegistered] = useState([]);
   const [courseForm, setCourseForm] = useState({
     name: "",
     exclude: "",
@@ -30,6 +32,16 @@ export default function Main() {
     } catch (e) {}
   };
 
+  const registerCourseForUser = (course, user) => {
+    try {
+      axios
+        .post("/api/register", { courseId: course?._id, userId: userName })
+        .then((response) => {
+          refreshAll();
+        });
+    } catch (e) {}
+  };
+
   const refreshCourse = () => {
     try {
       axios.get("/api/course").then((response) => {
@@ -39,15 +51,31 @@ export default function Main() {
     } catch (e) {}
   };
 
+  const refreshCourseRegistered = () => {
+    try {
+      axios.get("/api/register").then((response) => {
+        const courses = response?.data;
+        setCoursesRegistered(courses);
+      });
+    } catch (e) {}
+  };
+
+  const refreshAll = () => {
+    refreshCourse();
+    refreshCourseRegistered();
+  };
+
+  console.log(courses, coursesRegisterd);
+
   return (
     <Container>
       <button
         style={{ color: "#333", cursor: "pointer" }}
         onClick={() => {
-          refreshCourse();
+          refreshAll();
         }}
       >
-        UPDATE
+        FETCH
       </button>
       <Left>
         <input
@@ -74,24 +102,65 @@ export default function Main() {
             <th style={{ width: "200px", textAlign: "center" }}>Name</th>
             <th style={{ width: "200px", textAlign: "center" }}>Exclude</th>
             <th style={{ width: "200px", textAlign: "center" }}>Count</th>
+            <th style={{ width: "200px", textAlign: "center" }}>Actions</th>
           </tr>
-          {courses?.map((course, index) => {
-            return (
-              <tr>
-                <td style={{ width: "200px", textAlign: "center" }}>{index}</td>
-                <td style={{ width: "200px", textAlign: "center" }}>
-                  {course?.name}
-                </td>
-                <td style={{ width: "200px", textAlign: "center" }}>
-                  {course?.exclude}
-                </td>{" "}
-                <td style={{ width: "200px", textAlign: "center" }}>
-                  {course?.count}
-                </td>
-              </tr>
-            );
-          })}
+          {courses
+            ?.filter((course) => {
+              return (
+                !course?.exclude?.includes(userDept) || userName?.length == 0
+              );
+            })
+            ?.map((course, index) => {
+              return (
+                <tr>
+                  <td style={{ width: "200px", textAlign: "center" }}>
+                    {index}
+                  </td>
+                  <td style={{ width: "200px", textAlign: "center" }}>
+                    {course?.name}
+                  </td>
+                  <td style={{ width: "200px", textAlign: "center" }}>
+                    {course?.exclude}
+                  </td>{" "}
+                  <td style={{ width: "200px", textAlign: "center" }}>
+                    {course?.count -
+                      coursesRegisterd?.filter(
+                        (inner) => inner?.courseId == course?._id
+                      )?.length}
+                  </td>
+                  <td style={{ width: "200px", textAlign: "center" }}>
+                    {coursesRegisterd?.filter(
+                      (inner) => inner?.userId == userName
+                    )?.length == 0 && (
+                      <span
+                        style={{ color: "green", cursor: "pointer" }}
+                        onClick={() => {
+                          registerCourseForUser(course, userName);
+                        }}
+                      >
+                        <TbCircleChevronRight />
+                      </span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
         </table>
+        {coursesRegisterd?.filter((inner) => inner?.userId == userName)
+          ?.length != 0 && (
+          <RegisteredBox>
+            {userName} already registered for{" "}
+            {JSON.stringify(
+              courses?.find(
+                (course) =>
+                  course?._id ==
+                  coursesRegisterd?.filter((course) => {
+                    return course?.userId == userName;
+                  })?.[0]?.courseId
+              )?.name
+            )}
+          </RegisteredBox>
+        )}
         <br />
         <br />
         <br />
@@ -134,6 +203,13 @@ export default function Main() {
     </Container>
   );
 }
+
+const RegisteredBox = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+`;
 
 const Left = styled.div`
   display: flex;
