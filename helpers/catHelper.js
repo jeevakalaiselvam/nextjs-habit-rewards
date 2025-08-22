@@ -47,6 +47,10 @@ export const GAME_GENRES = [
     value: "G_FPS",
     label: "FPS",
   },
+  {
+    value: "G_SOULSLIKE",
+    label: "Souls Like",
+  },
 ];
 
 export const MOVIE_GENRES = [
@@ -99,14 +103,14 @@ export const MOVIE_GENRES = [
 export const G_STATUS = [
   {
     value: "NEW",
-    label: "New",
+    label: "NEW",
   },
   {
     value: "INPROG",
-    label: "In Progress",
+    label: "INPROG",
   },
   {
-    value: "COMPLETED",
-    label: "Completed",
+    value: "DONE",
+    label: "DONE",
   },
 ];

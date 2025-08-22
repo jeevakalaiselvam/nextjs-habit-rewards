@@ -17,6 +17,7 @@ export default async function handler(req, res) {
         type,
         image,
         status,
+        completed: status == "DONE" ? new Date() : "",
       });
 
       res.status(201).json({ message: "Item added successfully" });

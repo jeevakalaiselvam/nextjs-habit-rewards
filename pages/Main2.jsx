@@ -16,6 +16,7 @@ import GameCdImage from "../components/GameCdImage";
 import { LoadingOutlined } from "@ant-design/icons";
 import GameCdImageSmall from "../components/GameCdImageSmall";
 import MovieCdImageSmall from "../components/MovieCdImageSmall";
+import { COLOR_GREEN } from "../helpers/colorHelper";
 
 export default function Main2() {
   const [loading, setLoading] = useState(false);
@@ -23,6 +24,7 @@ export default function Main2() {
   const [active, setActive] = useState("GAMES");
   const [activeCat, setActiveCat] = useState("All");
   const [hoverActive, setHoverActive] = useState("GAMES");
+  const [activeFilter, setActiveFilter] = useState("INPROG");
   const [searchTerm, setSearchTerm] = useState("");
   const [library, setLibrary] = useState([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
@@ -106,7 +108,42 @@ export default function Main2() {
     setCreateForm(game);
   };
 
-  let games = library
+  let items = [];
+
+  if (active == "GAMES") {
+    items = library?.filter(
+      (item) =>
+        item?.type == "GAME" &&
+        (item?.genre?.includes(activeCat) || activeCat == "All")
+    );
+  }
+  if (active == "MOVIES") {
+    items = library?.filter(
+      (item) =>
+        item?.type == "MOVIE" &&
+        (item?.genre?.includes(activeCat) || activeCat == "All")
+    );
+  }
+  if (active == "TV") {
+    items = library?.filter(
+      (item) =>
+        item?.type == "TV" &&
+        (item?.genre?.includes(activeCat) || activeCat == "All")
+    );
+  }
+  if (active == "BOOK") {
+    items = library?.filter(
+      (item) =>
+        item?.type == "BOOK" &&
+        (item?.genre?.includes(activeCat) || activeCat == "All")
+    );
+  }
+
+  let filteredLib = library
+    ?.filter((item) => item?.status == activeFilter)
+    ?.sort((item1, item2) => item2?.completed - item1?.completed);
+
+  let games = filteredLib
     ?.filter(
       (item) =>
         item?.type == "GAME" &&
@@ -114,7 +151,7 @@ export default function Main2() {
     )
     ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
 
-  let movies = library
+  let movies = filteredLib
     ?.filter(
       (item) =>
         item?.type == "MOVIE" &&
@@ -122,7 +159,7 @@ export default function Main2() {
     )
     ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
 
-  let tv = library
+  let tv = filteredLib
     ?.filter(
       (item) =>
         item?.type == "TV" &&
@@ -130,7 +167,7 @@ export default function Main2() {
     )
     ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
 
-  let book = library
+  let book = filteredLib
     ?.filter(
       (item) =>
         item?.type == "BOOK" &&
@@ -341,7 +378,10 @@ export default function Main2() {
                 }}
               >
                 <span
-                  style={{ transform: "translateY(2px)", marginRight: "1rem" }}
+                  style={{
+                    transform: "translateY(2px)",
+                    marginRight: "1rem",
+                  }}
                 >
                   <TbLayoutGridFilled />
                 </span>
@@ -368,16 +408,43 @@ export default function Main2() {
       <Right>
         <Top>
           <Top1>
-            <Search>
-              <input
-                type="text"
+            <SearchLeft>
+              <Radio.Group
+                defaultValue={activeFilter}
                 onChange={(e) => {
-                  setSearchTerm(e?.target?.value);
+                  setActiveFilter(e.target.value);
                 }}
-                value={searchTerm}
-                placeholder="Search for Games..."
-              />
-            </Search>
+                size="small"
+                style={{ marginRight: "1rem" }}
+              >
+                {G_STATUS?.map((item) => {
+                  return (
+                    <Radio.Button value={item?.value}>
+                      {item?.label == "NEW" ? "WISHLIST" : item?.label}
+                      {"  "}
+                      <span>
+                        (
+                        {
+                          items?.filter((inner) => inner?.status == item?.value)
+                            ?.length
+                        }
+                        )
+                      </span>
+                    </Radio.Button>
+                  );
+                })}
+              </Radio.Group>
+              <Search>
+                <input
+                  type="text"
+                  onChange={(e) => {
+                    setSearchTerm(e?.target?.value);
+                  }}
+                  value={searchTerm}
+                  placeholder="Search for Games..."
+                />
+              </Search>
+            </SearchLeft>
             <Categories>
               <Top2L>
                 All Games
@@ -412,7 +479,7 @@ export default function Main2() {
               games?.map((game) => {
                 return (
                   <GameCdImageSmall
-                    scale={3}
+                    scale={2}
                     cover={game?.image}
                     onClick={() => {
                       initiateEditForm(game);
@@ -426,7 +493,7 @@ export default function Main2() {
               movies?.map((movie) => {
                 return (
                   <MovieCdImageSmall
-                    scale={3}
+                    scale={2}
                     cover={movie?.image}
                     onClick={() => {
                       initiateEditForm(movie);
@@ -440,7 +507,7 @@ export default function Main2() {
               tv?.map((movie) => {
                 return (
                   <MovieCdImageSmall
-                    scale={3}
+                    scale={2}
                     cover={movie?.image}
                     onClick={() => {
                       initiateEditForm(movie);
@@ -454,7 +521,7 @@ export default function Main2() {
               tv?.map((movie) => {
                 return (
                   <MovieCdImageSmall
-                    scale={3}
+                    scale={2}
                     cover={movie?.image}
                     onClick={() => {
                       initiateEditForm(movie);
@@ -514,6 +581,12 @@ const Categories = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const SearchLeft = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 `;
 
 const Search = styled.div`
