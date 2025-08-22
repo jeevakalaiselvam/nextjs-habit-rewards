@@ -27,6 +27,7 @@ const handler = async (req, res) => {
       });
 
       finalGamesResponse = finalGamesResponse?.filter((game) => {
+        return true;
         return gamesToInclude?.includes(String(game?.id));
       });
 
