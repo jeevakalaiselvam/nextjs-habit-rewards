@@ -3,7 +3,16 @@ import NewProfile from "../ncomponents/NewProfile";
 import { useEffect, useState } from "react";
 import { FaGamepad } from "react-icons/fa6";
 import { BiSolidMoviePlay } from "react-icons/bi";
-import { TbFolderFilled, TbLayoutGridFilled } from "react-icons/tb";
+import {
+  TbBook,
+  TbBookFilled,
+  TbDeviceGamepad2,
+  TbDeviceTv,
+  TbFolderFilled,
+  TbLayoutGridFilled,
+  TbMenu2,
+  TbMovie,
+} from "react-icons/tb";
 import {
   G_STATUS,
   GAME_GENRES,
@@ -273,7 +282,7 @@ export default function Main2() {
             }}
           >
             <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
-              <FaGamepad />
+              <TbDeviceGamepad2 />
             </span>
             <span>Games</span>
           </Link>
@@ -292,7 +301,7 @@ export default function Main2() {
             }}
           >
             <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
-              <BiSolidMoviePlay />
+              <TbMovie />
             </span>
             <span>Movies</span>
           </Link>
@@ -311,7 +320,7 @@ export default function Main2() {
             }}
           >
             <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
-              <BiSolidMoviePlay />
+              <TbDeviceTv />
             </span>
             <span>TV Series</span>
           </Link>
@@ -330,7 +339,7 @@ export default function Main2() {
             }}
           >
             <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
-              <BiSolidMoviePlay />
+              <TbBook />
             </span>
             <span>Books</span>
           </Link>
@@ -350,7 +359,7 @@ export default function Main2() {
             }}
           >
             <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
-              <TbLayoutGridFilled />
+              <TbFolderFilled />
             </span>
             <span style={{ width: "120px" }}>All</span>
             <span
@@ -386,7 +395,7 @@ export default function Main2() {
                     marginRight: "1rem",
                   }}
                 >
-                  <TbLayoutGridFilled />
+                  <TbFolderFilled />
                 </span>
                 <span style={{ width: "120px" }}>{genre?.label}</span>
                 <span
@@ -407,6 +416,45 @@ export default function Main2() {
             );
           })}
         </Links>
+        <Seperator></Seperator>
+        <Links></Links>
+
+        {G_STATUS?.map((item) => {
+          return (
+            <Link
+              active={hoverActive == item?.value || activeFilter == item?.value}
+              onMouseEnter={() => {
+                setHoverActive(item?.value);
+              }}
+              onMouseLeave={() => {
+                setHoverActive("");
+              }}
+              onClick={() => {
+                setActiveFilter(item?.value);
+              }}
+            >
+              <span
+                style={{ transform: "translateY(2px)", marginRight: "1rem" }}
+              >
+                <TbMenu2 />
+              </span>
+              <span style={{ width: "120px" }}>
+                {" "}
+                {item?.label == "NEW" ? "WISHLIST" : item?.label}
+              </span>
+              <span
+                style={{
+                  background: "#272F30",
+                  padding: "0rem .25rem",
+                  marginLeft: ".5rem",
+                  borderRadius: ".25rem",
+                }}
+              >
+                {items?.filter((inner) => inner?.status == item?.value)?.length}
+              </span>
+            </Link>
+          );
+        })}
       </Left>
       <Right>
         <Top>
@@ -488,7 +536,7 @@ export default function Main2() {
               games?.map((game) => {
                 return (
                   <GameCdImageSmall
-                    scale={1.75}
+                    scale={2.5}
                     cover={game?.image}
                     onClick={() => {
                       initiateEditForm(game);
@@ -502,7 +550,7 @@ export default function Main2() {
               movies?.map((movie) => {
                 return (
                   <MovieCdImageSmall
-                    scale={1.75}
+                    scale={2.5}
                     cover={movie?.image}
                     onClick={() => {
                       initiateEditForm(movie);
@@ -516,7 +564,7 @@ export default function Main2() {
               tv?.map((movie) => {
                 return (
                   <MovieCdImageSmall
-                    scale={1.75}
+                    scale={2.5}
                     cover={movie?.image}
                     onClick={() => {
                       initiateEditForm(movie);
@@ -530,7 +578,7 @@ export default function Main2() {
               tv?.map((movie) => {
                 return (
                   <MovieCdImageSmall
-                    scale={1.75}
+                    scale={2.5}
                     cover={movie?.image}
                     onClick={() => {
                       initiateEditForm(movie);
