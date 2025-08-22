@@ -51,6 +51,10 @@ export const GAME_GENRES = [
     value: "G_SOULSLIKE",
     label: "Souls Like",
   },
+  {
+    value: "G_INDIE",
+    label: "Indie",
+  },
 ];
 
 export const MOVIE_GENRES = [
@@ -102,12 +106,16 @@ export const MOVIE_GENRES = [
 
 export const G_STATUS = [
   {
-    value: "NEW",
-    label: "NEW",
-  },
-  {
     value: "INPROG",
     label: "INPROG",
+  },
+  {
+    value: "BACKLOG",
+    label: "BACKLOG",
+  },
+  {
+    value: "WISHLIST",
+    label: "WISHLIST",
   },
   {
     value: "DONE",

@@ -10,7 +10,7 @@ import {
   GENRES,
   MOVIE_GENRES,
 } from "../helpers/catHelper";
-import { Input, Modal, Radio, Row, Select, Spin } from "antd";
+import { Col, Input, Modal, Radio, Row, Select, Spin } from "antd";
 import axios from "axios";
 import GameCdImage from "../components/GameCdImage";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -207,19 +207,7 @@ export default function Main2() {
               }}
             />
           </Row>
-          <Row style={{ marginBottom: ".5rem" }}>
-            <Select
-              mode="multiple"
-              value={createForm?.genre}
-              style={{ width: "100%" }}
-              placeholder="Select Genre.."
-              onChange={(e) => {
-                setCreateForm((old) => ({ ...old, genre: e }));
-              }}
-              allowClear
-              options={GAME_GENRES}
-            />
-          </Row>
+          <Row style={{ marginBottom: ".5rem" }}></Row>
           <Row style={{ marginBottom: ".5rem" }}>
             <Input
               style={{ borderRadius: ".25rem" }}
@@ -240,17 +228,32 @@ export default function Main2() {
               }}
             />
           </Row>
-          <Row style={{ marginBottom: ".5rem" }}>
-            <Select
-              value={createForm?.status}
-              style={{ width: "100%" }}
-              placeholder="Select Status.."
-              onChange={(e) => {
-                setCreateForm((old) => ({ ...old, status: e }));
-              }}
-              allowClear
-              options={G_STATUS}
-            />
+          <Row style={{ marginBottom: ".5rem" }} gutter={[16, 16]}>
+            <Col span={12}>
+              <Select
+                value={createForm?.status}
+                style={{ width: "100%" }}
+                placeholder="Select Status.."
+                onChange={(e) => {
+                  setCreateForm((old) => ({ ...old, status: e }));
+                }}
+                allowClear
+                options={G_STATUS}
+              />
+            </Col>
+            <Col span={12}>
+              <Select
+                mode="multiple"
+                value={createForm?.genre}
+                style={{ width: "100%" }}
+                placeholder="Select Genre.."
+                onChange={(e) => {
+                  setCreateForm((old) => ({ ...old, genre: e }));
+                }}
+                allowClear
+                options={GAME_GENRES}
+              />
+            </Col>
           </Row>
         </Modal>
       )}
@@ -445,6 +448,12 @@ export default function Main2() {
                 />
               </Search>
             </SearchLeft>
+            <Zoom>
+              <ZoomItem></ZoomItem>
+              <ZoomItem></ZoomItem>
+              <ZoomItem></ZoomItem>
+              <ZoomItem></ZoomItem>
+            </Zoom>
             <Categories>
               <Top2L>
                 All Games
@@ -479,7 +488,7 @@ export default function Main2() {
               games?.map((game) => {
                 return (
                   <GameCdImageSmall
-                    scale={2}
+                    scale={1.75}
                     cover={game?.image}
                     onClick={() => {
                       initiateEditForm(game);
@@ -493,7 +502,7 @@ export default function Main2() {
               movies?.map((movie) => {
                 return (
                   <MovieCdImageSmall
-                    scale={2}
+                    scale={1.75}
                     cover={movie?.image}
                     onClick={() => {
                       initiateEditForm(movie);
@@ -507,7 +516,7 @@ export default function Main2() {
               tv?.map((movie) => {
                 return (
                   <MovieCdImageSmall
-                    scale={2}
+                    scale={1.75}
                     cover={movie?.image}
                     onClick={() => {
                       initiateEditForm(movie);
@@ -521,7 +530,7 @@ export default function Main2() {
               tv?.map((movie) => {
                 return (
                   <MovieCdImageSmall
-                    scale={2}
+                    scale={1.75}
                     cover={movie?.image}
                     onClick={() => {
                       initiateEditForm(movie);
@@ -575,6 +584,18 @@ const Top2L = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 0.9rem;
+`;
+
+const ZoomItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const Zoom = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 const Categories = styled.div`

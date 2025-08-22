@@ -1,13 +1,9 @@
 import styled from "styled-components";
-import { HEADER_IMAGE } from "../helpers/urlHelper";
-import { TbSettingsFilled } from "react-icons/tb";
-import { COLOR_ACCENT, COLOR_BLUE_DARK } from "../helpers/colorHelper";
-import EditGameForm from "./EditGameForm";
-import { useState } from "react";
 
 export default function GameCdImageSmall({ cover, scale = 1, onClick }) {
   return (
     <CdImage scale={scale} draggable onClick={onClick}>
+      <Completed scale={scale}></Completed>
       <CdInnerImage scale={scale} cover={cover} />
     </CdImage>
   );
@@ -19,6 +15,8 @@ const BASE_INNER_WIDTH = 142;
 const BASE_INNER_HEIGHT = 158;
 const BASE_TOP = 25;
 const BASE_LEFT = 0.5625;
+const BASE_TOP_C = 8;
+const BASE_LEFT_C = 10;
 
 const CdImage = styled.div`
   display: flex;
@@ -43,5 +41,19 @@ const CdInnerImage = styled.div`
   background: ${(props) => `url(${props.cover})`};
   background-size: cover;
   background-repeat: no-repeat;
+  z-index: 99;
   background-position: center center;
+`;
+
+const Completed = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  bottom: ${(props) => props.scale * BASE_TOP_C}px;
+  right: ${(props) => props.scale * BASE_LEFT_C}px;
+  width: 100px;
+  height: 100px;
+  z-index: 100;
+  background: url("/icons/completed.png");
 `;
