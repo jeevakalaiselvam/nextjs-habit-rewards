@@ -516,31 +516,6 @@ export default function Main2() {
         <Top>
           <Top1>
             <SearchLeft>
-              <Radio.Group
-                defaultValue={activeFilter}
-                onChange={(e) => {
-                  setActiveFilter(e.target.value);
-                }}
-                size="small"
-                style={{ marginRight: "1rem" }}
-              >
-                {G_STATUS?.map((item) => {
-                  return (
-                    <Radio.Button value={item?.value}>
-                      {item?.label == "NEW" ? "WISHLIST" : item?.label}
-                      {"  "}
-                      <span>
-                        (
-                        {
-                          items?.filter((inner) => inner?.status == item?.value)
-                            ?.length
-                        }
-                        )
-                      </span>
-                    </Radio.Button>
-                  );
-                })}
-              </Radio.Group>
               <Search>
                 <input
                   type="text"
@@ -677,9 +652,9 @@ export default function Main2() {
                     bounds="parent"
                   >
                     <GameCD zIndex={indexChecker?.[item?._id]}>
-                      <CdImage scale={3} onClick={(e) => {}}>
+                      <CdImage scale={1.25} onClick={(e) => {}}>
                         <CdInnerImage
-                          scale={3}
+                          scale={1.25}
                           cover={item?.image}
                           onDoubleClick={() => {
                             initiateEditForm(item);
@@ -755,11 +730,14 @@ const GameCD = styled.div`
 `;
 
 const CanvasLeft = styled.div`
-  width: 90vw;
-  height: 92vh;
+  width: calc(100vw - 200px);
+  height: calc(100vh);
   position: relative;
   overflow: hidden;
-  background: #060a0b;
+  background: url("./icons/shelf.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center center;
 `;
 
 const CreateButton = styled.div`
@@ -911,17 +889,18 @@ const Top = styled.div`
   justify-content: center;
   flex-direction: column;
   width: 100%;
+  height: 45px;
 `;
 
 const Content = styled.div`
   display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  width: 100%;
+  align-items: center;
+  justify-content: center;
+  width: 92vw;
   padding: 1rem 0.5rem;
-  max-height: 100vh;
-  min-height: 90vh;
-  overflow: scroll;
+  max-height: calc(100vh - 45px);
+  min-height: calc(100vh - 45px);
+  overflow: hidden;
   position: relative;
 `;
 
