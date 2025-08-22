@@ -649,10 +649,10 @@ export default function Main2() {
                     setShowCreateModal(true);
                   }}
                 >
-                  {active == "GAMES" && "Register Game"}
-                  {active == "MOVIES" && "Register Movie"}
-                  {active == "TV" && "Register TV"}
-                  {active == "BOOK" && "Register Book"}
+                  {active == "GAMES" && "Add Game"}
+                  {active == "MOVIES" && "Add Movie"}
+                  {active == "TV" && "Add TV"}
+                  {active == "BOOK" && "Add Book"}
                 </CreateButton>
                 <CreateButton
                   onClick={() => {
