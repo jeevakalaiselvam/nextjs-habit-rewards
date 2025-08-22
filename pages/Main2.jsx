@@ -14,12 +14,14 @@ import { Input, Modal, Radio, Row, Select, Spin } from "antd";
 import axios from "axios";
 import GameCdImage from "../components/GameCdImage";
 import { LoadingOutlined } from "@ant-design/icons";
+import GameCdImageSmall from "../components/GameCdImageSmall";
+import MovieCdImageSmall from "../components/MovieCdImageSmall";
 
 export default function Main2() {
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [active, setActive] = useState("GAMES");
-  const [activeCat, setActiveCat] = useState("");
+  const [activeCat, setActiveCat] = useState("All");
   const [hoverActive, setHoverActive] = useState("GAMES");
   const [searchTerm, setSearchTerm] = useState("");
   const [library, setLibrary] = useState([]);
@@ -104,8 +106,16 @@ export default function Main2() {
   let games = library
     ?.filter(
       (item) =>
-        (item?.type == "GAME" && item?.genre?.includes(activeCat)) ||
-        activeCat == "All"
+        item?.type == "GAME" &&
+        (item?.genre?.includes(activeCat) || activeCat == "All")
+    )
+    ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
+
+  let movies = library
+    ?.filter(
+      (item) =>
+        item?.type == "MOVIE" &&
+        (item?.genre?.includes(activeCat) || activeCat == "All")
     )
     ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
 
@@ -136,6 +146,9 @@ export default function Main2() {
               optionType="button"
               buttonStyle="solid"
               style={{ width: "100%" }}
+              onChange={(e) => {
+                setCreateForm((old) => ({ ...old, type: e.target.value }));
+              }}
             />
           </Row>
           <Row style={{ marginBottom: ".5rem" }}>
@@ -327,40 +340,55 @@ export default function Main2() {
                 placeholder="Search for Games..."
               />
             </Search>
-            <Categories></Categories>
+            <Categories>
+              <Top2L>
+                All Games
+                <span
+                  style={{
+                    background: "#272F30",
+                    padding: ".125rem .25rem",
+                    marginLeft: ".5rem",
+                    borderRadius: ".25rem",
+                  }}
+                >
+                  {library?.length}
+                </span>
+                <CreateButton
+                  onClick={() => {
+                    setShowCreateModal(true);
+                  }}
+                >
+                  ADD GAME
+                </CreateButton>
+              </Top2L>
+            </Categories>
           </Top1>
-          <Top2>
-            <Top2L>
-              All Games
-              <span
-                style={{
-                  background: "#272F30",
-                  padding: ".25rem",
-                  marginLeft: ".5rem",
-                  borderRadius: ".25rem",
-                }}
-              >
-                {library?.length}
-              </span>
-              <CreateButton
-                onClick={() => {
-                  setShowCreateModal(true);
-                }}
-              >
-                ADD GAME
-              </CreateButton>
-            </Top2L>
-          </Top2>
+          <Top2></Top2>
         </Top>
         {!loading && (
           <Content>
             {active == "GAMES" &&
               games?.map((game) => {
                 return (
-                  <GameCdImage
-                    game={game}
+                  <GameCdImageSmall
+                    scale={3}
+                    cover={game?.image}
                     onClick={() => {
                       initiateEditForm(game);
+                      setShowCreateModal(true);
+                      setEditMode(true);
+                    }}
+                  />
+                );
+              })}{" "}
+            {active == "MOVIES" &&
+              movies?.map((movie) => {
+                return (
+                  <MovieCdImageSmall
+                    scale={3}
+                    cover={movie?.image}
+                    onClick={() => {
+                      initiateEditForm(movie);
                       setShowCreateModal(true);
                       setEditMode(true);
                     }}
@@ -442,7 +470,7 @@ const Search = styled.div`
 const Top1 = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   padding: 1rem;
   width: 100%;
 `;
@@ -522,6 +550,8 @@ const Content = styled.div`
   flex-wrap: wrap;
   width: 100%;
   padding: 1rem 0.5rem;
+  max-height: 100vh;
+  overflow: scroll;
 `;
 
 const ContentC = styled.div`
