@@ -55,6 +55,14 @@ export const GAME_GENRES = [
     value: "G_INDIE",
     label: "Indie",
   },
+  {
+    value: "G_ROGUELIKE",
+    label: "Rogue Like",
+  },
+  {
+    value: "G_SIMULATION",
+    label: "Simulation",
+  },
 ];
 
 export const MOVIE_GENRES = [
