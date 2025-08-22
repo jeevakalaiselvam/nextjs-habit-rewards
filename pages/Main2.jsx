@@ -255,6 +255,10 @@ export default function Main2() {
     (item) => item?.shelfName == activeShelf || activeShelf == "All"
   );
 
+  if (activeShelf == "All") {
+    shelfItems = shelfItems?.filter((item) => !item?.shelfName?.length > 0);
+  }
+
   let filteredLib = shelfItems?.sort(
     (item1, item2) => item2?.completed - item1?.completed
   );
