@@ -822,11 +822,8 @@ export default function MainContent({
                     </Game1Line>
                     <Game2Line>
                       {[
-                        ...(selectedGame?.achievements ?? [])?.filter(
-                          (ach) => ach?.color == "Platinum"
-                        ),
                         ...(selectedGame?.achievements ?? [])
-                          ?.filter((ach) => ach?.color != "Platinum")
+                          ?.filter((ach) => ach?.achieved == 1)
                           ?.sort(
                             (ach1, ach2) => ach2?.percentage - ach1?.percentage
                           ),

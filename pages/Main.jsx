@@ -116,25 +116,7 @@ export default function Atom() {
         formedGame = {
           ...game,
           ...platinumGameData,
-          achievements: [
-            ...sortedPlatinumTrophies?.filter(
-              (ach) => ach?.displayName != lastAch?.displayName
-            ),
-            { ...lastAch, color: "Gold" },
-            {
-              displayName: `Platinum`,
-              description: `Achieved all Trophies in the game`,
-              hiddenDesc: `${game?.name}`,
-              percentage: lastAch?.percentage,
-              label: getRarityBasedOnRarity(lastAch?.percentage),
-              color: "Platinum",
-              achieved: isCompleted ? 1 : 0,
-              completedFinal: completed,
-              unlocktime: lastAch?.unlocktime,
-              icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
-              gameName: lastAch?.gameName,
-            },
-          ],
+          achievements: [...sortedPlatinumTrophies],
         };
       } else {
         formedGame = {
