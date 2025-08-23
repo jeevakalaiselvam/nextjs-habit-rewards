@@ -278,6 +278,14 @@ export default function Main2() {
     )
     ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
 
+  if (activeShelf == "Active" && active == "GAME") {
+    games = library?.filter(
+      (item) =>
+        (item?.type == "GAME" && item?.genre?.includes(activeCat)) ||
+        !item?.shelfName
+    );
+  }
+
   let movies = filteredLib
     ?.filter(
       (item) =>
@@ -592,14 +600,7 @@ export default function Main2() {
                   padding: ".06125rem .25rem",
                 }}
               >
-                {
-                  library?.filter(
-                    (item) =>
-                      item?.shelfName == "Active" &&
-                      item?.type == active &&
-                      item?.status != "DONE"
-                  )?.length
-                }
+                {library?.filter((item) => !item?.shelfName)?.length}
               </span>
             </span>
           </Link>
@@ -692,10 +693,8 @@ export default function Main2() {
                 shelf?.shelfName != "Active"
             )
             ?.map((shelf, index) => {
-              let count = library?.filter(
-                (item) =>
-                  item?.shelfName?.includes(shelf?.shelfName) &&
-                  item?.status != "DONE"
+              let count = library?.filter((item) =>
+                item?.shelfName?.includes(shelf?.shelfName)
               );
               return (
                 <Link
@@ -862,22 +861,9 @@ export default function Main2() {
                     bounds="parent"
                   >
                     <GameCD zIndex={indexChecker?.[item?._id]}>
-                      <CdImage scale={2.5} onClick={(e) => {}}>
-                        <CdRatingInner className="custom-rate">
-                          {item?.rating && (
-                            <Rate
-                              defaultValue={5}
-                              value={item?.rating}
-                              disabled
-                              allowHalf={true}
-                            />
-                          )}
-                          {!item?.rating && (
-                            <span style={{ color: COLOR_RED }}>NO RATING</span>
-                          )}
-                        </CdRatingInner>
+                      <CdImage scale={3} onClick={(e) => {}}>
                         <CdInnerImage
-                          scale={2.5}
+                          scale={3}
                           cover={item?.image}
                           onDoubleClick={() => {
                             initiateEditForm(item);
@@ -915,9 +901,9 @@ export default function Main2() {
                     bounds="parent"
                   >
                     <GameCDMovie zIndex={indexChecker?.[item?._id]}>
-                      <CdImageMovie scale={2.5} onClick={(e) => {}}>
+                      <CdImageMovie scale={3} onClick={(e) => {}}>
                         <CdInnerImageMovie
-                          scale={2.5}
+                          scale={3}
                           cover={item?.image}
                           onDoubleClick={() => {
                             initiateEditForm(item);
@@ -1051,7 +1037,6 @@ const CanvasLeft = styled.div`
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center center;
-  background: url("/icons/shelf.png");
   background-repeat: no-repeat;
 `;
 
