@@ -565,7 +565,12 @@ export default function Main2() {
                   padding: ".06125rem .25rem",
                 }}
               >
-                {library?.filter((item) => item?.shelfName == "Active")?.length}
+                {
+                  library?.filter(
+                    (item) =>
+                      item?.shelfName == "Active" && item?.type == active
+                  )?.length
+                }
               </span>
             </span>
           </Link>
