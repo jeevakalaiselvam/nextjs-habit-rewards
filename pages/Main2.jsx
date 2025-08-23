@@ -535,21 +535,39 @@ export default function Main2() {
         <Seperator></Seperator>
         <Links>
           <Link
-            active={activeShelf == "Wishlist" || hoverActive == "Wishlist"}
+            active={activeShelf == "Active" || hoverActive == "Active"}
             onMouseEnter={() => {
-              setHoverActive("Wishlist");
+              setHoverActive("Active");
             }}
             onMouseLeave={() => {
               setHoverActive("");
             }}
             onClick={() => {
-              setActiveShelf("Wishlist");
+              setActiveShelf("Active");
             }}
           >
             <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
               <TbDeviceGamepad2 />
             </span>
-            <span>Wishlist</span>
+            <span
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <span>Active</span>
+              <span
+                style={{
+                  color: "#fefefe7f",
+                  background: "#333",
+                  padding: ".06125rem .25rem",
+                }}
+              >
+                {library?.filter((item) => item?.shelfName == "Active")?.length}
+              </span>
+            </span>
           </Link>
           <Link
             active={activeShelf == "Backlog" || hoverActive == "Backlog"}
@@ -566,29 +584,73 @@ export default function Main2() {
             <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
               <TbDeviceGamepad2 />
             </span>
-            <span>Backlog</span>
+            <span
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <span>Backlog</span>
+              <span
+                style={{
+                  color: "#fefefe7f",
+                  background: "#333",
+                  padding: ".06125rem .25rem",
+                }}
+              >
+                {
+                  library?.filter((item) => item?.shelfName == "Backlog")
+                    ?.length
+                }
+              </span>
+            </span>
           </Link>
           <Link
-            active={activeShelf == "All" || hoverActive == "All"}
+            active={activeShelf == "Wishlist" || hoverActive == "Wishlist"}
             onMouseEnter={() => {
-              setHoverActive("All");
+              setHoverActive("Wishlist");
             }}
             onMouseLeave={() => {
               setHoverActive("");
             }}
             onClick={() => {
-              setActiveShelf("All");
+              setActiveShelf("Wishlist");
             }}
           >
             <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
               <TbDeviceGamepad2 />
             </span>
-            <span>Unassigned</span>
+            <span
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <span>Wishlist</span>
+              <span
+                style={{
+                  color: "#fefefe7f",
+                  background: "#333",
+                  padding: ".06125rem .25rem",
+                }}
+              >
+                {
+                  library?.filter((item) => item?.shelfName == "Wishlist")
+                    ?.length
+                }
+              </span>
+            </span>
           </Link>
           {filteredShelfItems
             ?.filter(
               (shelf) =>
-                shelf?.shelfName != "Wishlist" && shelf?.shelfName != "Backlog"
+                shelf?.shelfName != "Wishlist" &&
+                shelf?.shelfName != "Backlog" &&
+                shelf?.shelfName != "Active"
             )
             ?.map((shelf, index) => {
               console.log(library);
