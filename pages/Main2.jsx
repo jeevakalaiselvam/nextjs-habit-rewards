@@ -19,13 +19,13 @@ import {
   GENRES,
   MOVIE_GENRES,
 } from "../helpers/catHelper";
-import { Col, Input, Modal, Radio, Row, Select, Spin } from "antd";
+import { Col, Input, Modal, Radio, Rate, Row, Select, Spin } from "antd";
 import axios from "axios";
 import GameCdImage from "../components/GameCdImage";
 import { LoadingOutlined } from "@ant-design/icons";
 import GameCdImageSmall from "../components/GameCdImageSmall";
 import MovieCdImageSmall from "../components/MovieCdImageSmall";
-import { COLOR_GREEN } from "../helpers/colorHelper";
+import { COLOR_GREEN, COLOR_RED } from "../helpers/colorHelper";
 import Draggable from "react-draggable";
 
 export default function Main2() {
@@ -49,6 +49,7 @@ export default function Main2() {
     image: "",
     status: "NEW",
     shelfName: "",
+    rating: 0,
   });
   const [editModeShelf, setEditModeShelf] = useState(false);
   const [shelfForm, setShelfForm] = useState({
@@ -103,6 +104,7 @@ export default function Main2() {
           image: "",
           status: "DONE",
           shelfName: "",
+          rating: 0,
         });
         setEditMode(false);
       });
@@ -115,6 +117,7 @@ export default function Main2() {
         image: "",
         status: "DONE",
         shelfName: "",
+        rating: 0,
       });
       setEditMode(false);
     }
@@ -304,7 +307,7 @@ export default function Main2() {
     <Container>
       {showCreateModal && (
         <Modal
-          width={1200}
+          width={800}
           title={editMode ? "Edit Product" : "Register Product"}
           open={showCreateModal}
           onOk={() => {
@@ -401,6 +404,14 @@ export default function Main2() {
                   value: item?.shelfName,
                   value: item?.shelfName,
                 }))}
+              />
+            </Col>
+            <Col span={12} style={{ transform: "translateY(.45rem)" }}>
+              <Rate
+                value={createForm?.rating}
+                onChange={(e) => {
+                  setCreateForm((old) => ({ ...old, rating: e }));
+                }}
               />
             </Col>
           </Row>
@@ -829,6 +840,18 @@ export default function Main2() {
                   >
                     <GameCD zIndex={indexChecker?.[item?._id]}>
                       <CdImage scale={2.5} onClick={(e) => {}}>
+                        <CdRatingInner>
+                          {item?.rating && (
+                            <Rate
+                              defaultValue={5}
+                              value={item?.rating}
+                              disabled
+                            />
+                          )}
+                          {!item?.rating && (
+                            <span style={{ color: COLOR_RED }}>NO RATING</span>
+                          )}
+                        </CdRatingInner>
                         <CdInnerImage
                           scale={2.5}
                           cover={item?.image}
@@ -898,35 +921,12 @@ export default function Main2() {
   );
 }
 
-const CDRealInner = styled.div`
+const CdRatingInner = styled.div`
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-52.5%, -52.25%);
-  width: 470px;
-  height: 470px;
-  background: ${(props) => `url("${props?.image}")`};
-  background-position: 50% center;
-  background-size: cover;
-  cursor: pointer;
-  background-repeat: no-repeat;
-  mask: radial-gradient(circle 30px at center, transparent 100%, black 100%);
-  overflow: hidden;
-  border-radius: 100rem;
-`;
-const CDRealOuter = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  width: 550px;
-  height: 550px;
-  background: ${(props) => `url("/icons/cd.png")`};
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center center;
-  position: relative;
-  cursor: pointer;
+  bottom: 1rem;
+  right: 50%;
+  transform: translateX(50%);
+  z-index: 999;
 `;
 
 const BASE_WIDTH_MOVIE = 150;
