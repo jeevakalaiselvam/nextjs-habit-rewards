@@ -545,7 +545,6 @@ export default function Main2() {
           </Link>
         </Links>
         <Seperator></Seperator>
-        <Seperator></Seperator>
         <Links>
           <Link
             active={activeShelf == "Active" || hoverActive == "Active"}
@@ -669,6 +668,7 @@ export default function Main2() {
               </span>
             </span>
           </Link>
+          <Seperator></Seperator>
           {filteredShelfItems
             ?.filter(
               (shelf) =>
