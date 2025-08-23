@@ -66,17 +66,21 @@ export default function Main2() {
       let oldPositions = JSON.parse(localStorage.getItem("POSITION")) ?? [];
       setPositions(oldPositions);
     } else {
-      const newPositions = library.map(() => ({
-        x: Math.floor(Math.random() * (600 - 100)),
-        y: Math.floor(Math.random() * (400 - 100)),
-      }));
+      let newPositionsMap = {};
+      const newPositions = library.forEach((item) => {
+        let position = {
+          x: Math.floor(Math.random() * (600 - 100)),
+          y: Math.floor(Math.random() * (400 - 100)),
+        };
+        newPositions[item?._id] = position;
+      });
       setPositions(newPositions);
     }
   }, [library]);
 
-  const handleDrag = (index, e, data) => {
-    const newPositions = [...positions];
-    newPositions[index] = { x: data.x, y: data.y };
+  const handleDrag = (index, e, data, id) => {
+    const newPositions = { ...positions };
+    newPositions[id] = { x: data.x, y: data.y };
     setPositions(newPositions);
     if (window) {
       localStorage.setItem("POSITION", JSON.stringify(positions));
@@ -300,10 +304,19 @@ export default function Main2() {
 
   const MOVEMENT_SLIP = 50;
 
-  console.log(shelf);
   let filteredShelfItems = shelf
     ?.filter((item) => item?.type == active)
     ?.sort((s1, s2) => s1.shelfName.localeCompare(s2.shelfName));
+
+  const deleteGame = () => {
+    try {
+      axios
+        .delete(`/api/jeevalibrary?id=${createForm?._id}`)
+        .then((response) => {
+          refreshAll();
+        });
+    } catch (e) {}
+  };
 
   return (
     <Container>
@@ -321,8 +334,10 @@ export default function Main2() {
             }
           }}
           onCancel={() => {
+            deleteGame();
             setShowCreateModal(false);
           }}
+          cancelText={"Delete"}
         >
           <Row style={{ marginBottom: ".5rem" }}>
             <Radio.Group
@@ -677,7 +692,6 @@ export default function Main2() {
                 shelf?.shelfName != "Active"
             )
             ?.map((shelf, index) => {
-              console.log(library);
               let count = library?.filter(
                 (item) =>
                   item?.shelfName?.includes(shelf?.shelfName) &&
@@ -806,7 +820,6 @@ export default function Main2() {
                       setShowCreateShelfModal(true);
                       setEditModeShelf(true);
                       setShelfForm((old) => {
-                        console.log(shelf, activeShelf);
                         return {
                           ...shelf?.find(
                             (item) => item?.shelfName == activeShelf
@@ -830,7 +843,7 @@ export default function Main2() {
                 {games.map((item, index) => (
                   <Draggable
                     key={index}
-                    position={positions[index]}
+                    position={positions[item?._id]}
                     onStart={() => {
                       console.clear();
                       console.log(indexChecker);
@@ -844,7 +857,7 @@ export default function Main2() {
                       setCheckedGame(item?._id);
                     }}
                     onDrag={(e, data) => {
-                      handleDrag(index, e, data);
+                      handleDrag(index, e, data, item?._id);
                     }}
                     bounds="parent"
                   >

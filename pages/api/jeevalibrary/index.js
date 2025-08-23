@@ -1,3 +1,4 @@
+import { ObjectId } from "mongodb";
 import clientPromise from "../../../lib/db";
 
 export default async function handler(req, res) {
@@ -39,6 +40,25 @@ export default async function handler(req, res) {
       res.status(200).json(alllibrary);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch Jeeva Achievements" });
+    }
+  } else if (req.method === "DELETE") {
+    const { id } = req.query;
+    try {
+      const client = await clientPromise;
+      const db = client.db("habittracker");
+
+      const result = await db.collection("alllibrary").deleteOne({
+        _id: new ObjectId(id),
+      });
+
+      if (result.deletedCount === 1) {
+        res.status(200).json({ message: "Deleted successfully" });
+      } else {
+        res.status(404).json({ error: "Document not found" });
+      }
+    } catch (error) {
+      console.error("Error deleting document:", error);
+      res.status(500).json({ error: "Failed to delete achievement" });
     }
   } else {
     res.setHeader("Allow", ["POST"]);
