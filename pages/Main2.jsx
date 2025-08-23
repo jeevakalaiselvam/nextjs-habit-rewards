@@ -31,9 +31,9 @@ import Draggable from "react-draggable";
 export default function Main2() {
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
-  const [active, setActive] = useState("GAMES");
+  const [active, setActive] = useState("GAME");
   const [activeCat, setActiveCat] = useState("All");
-  const [hoverActive, setHoverActive] = useState("GAMES");
+  const [hoverActive, setHoverActive] = useState("GAME");
   const [activeFilter, setActiveFilter] = useState("All");
   const [activeShelf, setActiveShelf] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -222,14 +222,14 @@ export default function Main2() {
 
   let items = [];
 
-  if (active == "GAMES") {
+  if (active == "GAME") {
     items = library?.filter(
       (item) =>
         item?.type == "GAME" &&
         (item?.genre?.includes(activeCat) || activeCat == "All")
     );
   }
-  if (active == "MOVIES") {
+  if (active == "MOVIE") {
     items = library?.filter(
       (item) =>
         item?.type == "MOVIE" &&
@@ -297,6 +297,9 @@ export default function Main2() {
 
   const MOVEMENT_SLIP = 50;
 
+  console.log(shelf);
+  let filteredShelfItems = shelf?.filter((item) => item?.type == active);
+
   return (
     <Container>
       {showCreateModal && (
@@ -321,6 +324,7 @@ export default function Main2() {
               block
               options={options}
               defaultValue="GAME"
+              value={createForm?.type}
               optionType="button"
               buttonStyle="solid"
               style={{ width: "100%" }}
@@ -373,7 +377,13 @@ export default function Main2() {
                   setCreateForm((old) => ({ ...old, genre: e }));
                 }}
                 allowClear
-                options={GAME_GENRES}
+                options={
+                  active == "GAME"
+                    ? GAME_GENRES
+                    : active == "MOVIE"
+                    ? MOVIE_GENRES
+                    : MOVIE_GENRES
+                }
               />
             </Col>
           </Row>
@@ -387,7 +397,7 @@ export default function Main2() {
                   setCreateForm((old) => ({ ...old, shelfName: e }));
                 }}
                 allowClear
-                options={shelf?.map((item) => ({
+                options={filteredShelfItems?.map((item) => ({
                   value: item?.shelfName,
                   value: item?.shelfName,
                 }))}
@@ -418,6 +428,7 @@ export default function Main2() {
               block
               options={options}
               defaultValue="GAME"
+              value={shelfForm?.type}
               optionType="button"
               buttonStyle="solid"
               style={{ width: "100%" }}
@@ -446,15 +457,15 @@ export default function Main2() {
         <NewProfile />
         <Links>
           <Link
-            active={active == "GAMES" || hoverActive == "GAMES"}
+            active={active == "GAME" || hoverActive == "GAME"}
             onMouseEnter={() => {
-              setHoverActive("GAMES");
+              setHoverActive("GAME");
             }}
             onMouseLeave={() => {
               setHoverActive("");
             }}
             onClick={() => {
-              setActive("GAMES");
+              setActive("GAME");
             }}
           >
             <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
@@ -465,15 +476,15 @@ export default function Main2() {
         </Links>
         <Links>
           <Link
-            active={active == "MOVIES" || hoverActive == "MOVIES"}
+            active={active == "MOVIE" || hoverActive == "MOVIE"}
             onMouseEnter={() => {
-              setHoverActive("MOVIES");
+              setHoverActive("MOVIE");
             }}
             onMouseLeave={() => {
               setHoverActive("");
             }}
             onClick={() => {
-              setActive("MOVIES");
+              setActive("MOVIE");
             }}
           >
             <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
@@ -574,12 +585,16 @@ export default function Main2() {
             </span>
             <span>Unassigned</span>
           </Link>
-          {shelf
+          {filteredShelfItems
             ?.filter(
               (shelf) =>
                 shelf?.shelfName != "Wishlist" && shelf?.shelfName != "Backlog"
             )
             ?.map((shelf, index) => {
+              console.log(library);
+              let count = library?.filter((item) =>
+                item?.shelfName?.includes(shelf?.shelfName)
+              );
               return (
                 <Link
                   active={
@@ -604,7 +619,25 @@ export default function Main2() {
                   >
                     <TbDeviceGamepad2 />
                   </span>
-                  <span>{shelf?.shelfName}</span>
+                  <span
+                    style={{
+                      width: "100%",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <span>{shelf?.shelfName}</span>
+                    <span
+                      style={{
+                        color: "#fefefe7f",
+                        background: "#333",
+                        padding: ".06125rem .25rem",
+                      }}
+                    >
+                      {count?.length}
+                    </span>
+                  </span>
                 </Link>
               );
             })}
@@ -625,12 +658,6 @@ export default function Main2() {
                 />
               </Search>
             </SearchLeft>
-            <Zoom>
-              <ZoomItem></ZoomItem>
-              <ZoomItem></ZoomItem>
-              <ZoomItem></ZoomItem>
-              <ZoomItem></ZoomItem>
-            </Zoom>
             <Categories>
               <Top2L>
                 All Games
@@ -647,16 +674,40 @@ export default function Main2() {
                 <CreateButton
                   onClick={() => {
                     setShowCreateModal(true);
+                    if (active == "GAME") {
+                      setCreateForm((old) => ({ ...old, type: "GAME" }));
+                    }
+                    if (active == "MOVIE") {
+                      setCreateForm((old) => ({ ...old, type: "MOVIE" }));
+                    }
+                    if (active == "TV") {
+                      setCreateForm((old) => ({ ...old, type: "TV" }));
+                    }
+                    if (active == "BOOK") {
+                      setCreateForm((old) => ({ ...old, type: "BOOK" }));
+                    }
                   }}
                 >
-                  {active == "GAMES" && "Add Game"}
-                  {active == "MOVIES" && "Add Movie"}
+                  {active == "GAME" && "Add Game"}
+                  {active == "MOVIE" && "Add Movie"}
                   {active == "TV" && "Add TV"}
                   {active == "BOOK" && "Add Book"}
                 </CreateButton>
                 <CreateButton
                   onClick={() => {
                     setShowCreateShelfModal(true);
+                    if (active == "GAME") {
+                      setShelfForm((old) => ({ ...old, type: "GAME" }));
+                    }
+                    if (active == "MOVIE") {
+                      setShelfForm((old) => ({ ...old, type: "MOVIE" }));
+                    }
+                    if (active == "TV") {
+                      setShelfForm((old) => ({ ...old, type: "TV" }));
+                    }
+                    if (active == "BOOK") {
+                      setShelfForm((old) => ({ ...old, type: "BOOK" }));
+                    }
                   }}
                 >
                   Create Shelf
@@ -686,72 +737,7 @@ export default function Main2() {
         </Top>
         {!loading && (
           <Content>
-            {active == "GAMESS" &&
-              games?.map((game, index) => {
-                return (
-                  <CdInner
-                    top={index * MOVEMENT_SLIP}
-                    left={index * MOVEMENT_SLIP}
-                    zIndex={game?._id == checkedGame ? 999999999 : index}
-                  >
-                    <GameCdImageSmall
-                      scale={2.85}
-                      cover={game?.image}
-                      onClick={() => {
-                        initiateEditForm(game);
-                        setShowCreateModal(true);
-                        setEditMode(true);
-                      }}
-                      onImageClick={() => {
-                        setCheckedGame(game?._id);
-                      }}
-                    />
-                  </CdInner>
-                );
-              })}{" "}
-            {active == "MOVIES" &&
-              movies?.map((movie) => {
-                return (
-                  <MovieCdImageSmall
-                    scale={2.85}
-                    cover={movie?.image}
-                    onClick={() => {
-                      initiateEditForm(movie);
-                      setShowCreateModal(true);
-                      setEditMode(true);
-                    }}
-                  />
-                );
-              })}
-            {active == "TV" &&
-              tv?.map((movie) => {
-                return (
-                  <MovieCdImageSmall
-                    scale={2.85}
-                    cover={movie?.image}
-                    onClick={() => {
-                      initiateEditForm(movie);
-                      setShowCreateModal(true);
-                      setEditMode(true);
-                    }}
-                  />
-                );
-              })}
-            {active == "BOOK" &&
-              tv?.map((movie) => {
-                return (
-                  <MovieCdImageSmall
-                    scale={2.85}
-                    cover={movie?.image}
-                    onClick={() => {
-                      initiateEditForm(movie);
-                      setShowCreateModal(true);
-                      setEditMode(true);
-                    }}
-                  />
-                );
-              })}
-            {active == "GAMES" && (
+            {active == "GAME" && (
               <CanvasLeft activeShelf={activeShelf}>
                 {games.map((item, index) => (
                   <Draggable
@@ -791,6 +777,46 @@ export default function Main2() {
                 ))}
               </CanvasLeft>
             )}
+            {active == "MOVIE" && (
+              <CanvasLeft activeShelf={activeShelf}>
+                {movies.map((item, index) => (
+                  <Draggable
+                    key={index}
+                    position={positions[index]}
+                    onStart={() => {
+                      console.clear();
+                      console.log(indexChecker);
+                      let lastMax = Math.max(...Object.values(indexChecker));
+                      setIndexChecker((old) => {
+                        return {
+                          ...old,
+                          [item?._id]: lastMax + 1,
+                        };
+                      });
+                      setCheckedGame(item?._id);
+                    }}
+                    onDrag={(e, data) => {
+                      handleDrag(index, e, data);
+                    }}
+                    bounds="parent"
+                  >
+                    <GameCDMovie zIndex={indexChecker?.[item?._id]}>
+                      <CdImageMovie scale={2.85} onClick={(e) => {}}>
+                        <CdInnerImageMovie
+                          scale={2.85}
+                          cover={item?.image}
+                          onDoubleClick={() => {
+                            initiateEditForm(item);
+                            setShowCreateModal(true);
+                            setEditMode(true);
+                          }}
+                        />
+                      </CdImageMovie>
+                    </GameCDMovie>
+                  </Draggable>
+                ))}
+              </CanvasLeft>
+            )}
           </Content>
         )}
         {loading && (
@@ -805,22 +831,65 @@ export default function Main2() {
   );
 }
 
-const BASE_WIDTH = 150;
-const BASE_HEIGHT = 187.5;
-const BASE_INNER_WIDTH = 142;
-const BASE_INNER_HEIGHT = 160;
-const BASE_TOP = 25;
-const BASE_LEFT = 0.5625;
-const BASE_TOP_C = 8;
-const BASE_LEFT_C = 10;
+const BASE_WIDTH_MOVIE = 150;
+const BASE_HEIGHT_MOVIE = 187.5;
+const BASE_INNER_WIDTH_MOVIE = 144;
+const BASE_INNER_HEIGHT_MOVIE = 170;
+const BASE_TOP_MOVIE = 16;
+const BASE_LEFT_MOVIE = 0;
+
+const CdImageMovie = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: ${(props) => props.scale * BASE_WIDTH_MOVIE}px;
+  height: ${(props) => props.scale * BASE_HEIGHT_MOVIE}px;
+  background: url("/icons/blueray.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: relative;
+  margin: 1rem;
+  cursor: pointer;
+`;
+
+const CdInnerImageMovie = styled.div`
+  width: ${(props) => props.scale * BASE_INNER_WIDTH_MOVIE}px;
+  height: ${(props) => props.scale * BASE_INNER_HEIGHT_MOVIE}px;
+  position: absolute;
+  top: ${(props) => props.scale * BASE_TOP_MOVIE}px;
+  left: ${(props) => props.scale * BASE_LEFT_MOVIE}px;
+  background: ${(props) => `url(${props.cover})`};
+  background-size: cover;
+  background-repeat: no-repeat;
+  z-index: 99;
+  background-position: center center;
+  cursor: pointer;
+`;
+
+const GameCDMovie = styled.div`
+  width: ${(props) => props.scale * BASE_WIDTH_MOVIE}px;
+  height: ${(props) => props.scale * BASE_HEIGHT_MOVIE}px;
+  border-radius: 12px;
+  cursor: grab;
+  position: absolute;
+  z-index: ${(props) => props.zIndex};
+`;
+
+const BASE_WIDTH_GAME = 150;
+const BASE_HEIGHT_GAME = 187.5;
+const BASE_INNER_WIDTH_GAME = 142;
+const BASE_INNER_HEIGHT_GAME = 160;
+const BASE_TOP_GAME = 25;
+const BASE_LEFT_GAME = 0.5625;
 
 const CdImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  width: ${(props) => props.scale * BASE_WIDTH}px;
-  height: ${(props) => props.scale * BASE_HEIGHT}px;
+  width: ${(props) => props.scale * BASE_WIDTH_GAME}px;
+  height: ${(props) => props.scale * BASE_HEIGHT_GAME}px;
   background: url("/icons/cover.png");
   background-size: contain;
   background-repeat: no-repeat;
@@ -830,11 +899,11 @@ const CdImage = styled.div`
 `;
 
 const CdInnerImage = styled.div`
-  width: ${(props) => props.scale * BASE_INNER_WIDTH}px;
-  height: ${(props) => props.scale * BASE_INNER_HEIGHT}px;
+  width: ${(props) => props.scale * BASE_INNER_WIDTH_GAME}px;
+  height: ${(props) => props.scale * BASE_INNER_HEIGHT_GAME}px;
   position: absolute;
-  top: ${(props) => props.scale * BASE_TOP}px;
-  left: ${(props) => props.scale * BASE_LEFT}px;
+  top: ${(props) => props.scale * BASE_TOP_GAME}px;
+  left: ${(props) => props.scale * BASE_LEFT_GAME}px;
   background: ${(props) => `url(${props.cover})`};
   background-size: cover;
   background-repeat: no-repeat;
@@ -843,23 +912,9 @@ const CdInnerImage = styled.div`
   cursor: pointer;
 `;
 
-const Completed = styled.div`
-  width: 150px;
-  height: 150px;
-  position: absolute;
-  bottom: 1rem;
-  right: 2rem;
-  background: ${(props) => `url("/icons/completed.png")`};
-  background-size: cover;
-  background-repeat: no-repeat;
-  z-index: 100;
-  background-position: center center;
-  cursor: pointer;
-`;
-
 const GameCD = styled.div`
-  width: ${(props) => props.scale * BASE_WIDTH}px;
-  height: ${(props) => props.scale * BASE_HEIGHT}px;
+  width: ${(props) => props.scale * BASE_WIDTH_GAME}px;
+  height: ${(props) => props.scale * BASE_HEIGHT_GAME}px;
   border-radius: 12px;
   cursor: grab;
   position: absolute;

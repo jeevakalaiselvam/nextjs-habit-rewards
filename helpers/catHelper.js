@@ -63,6 +63,10 @@ export const GAME_GENRES = [
     value: "G_SIMULATION",
     label: "Simulation",
   },
+  {
+    value: "G_PLATFORMER",
+    label: "Platformer",
+  },
 ];
 
 export const MOVIE_GENRES = [
