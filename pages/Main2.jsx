@@ -823,9 +823,9 @@ export default function Main2() {
                     bounds="parent"
                   >
                     <GameCD zIndex={indexChecker?.[item?._id]}>
-                      <CdImage scale={3} onClick={(e) => {}}>
+                      <CdImage scale={2.5} onClick={(e) => {}}>
                         <CdInnerImage
-                          scale={3}
+                          scale={2.5}
                           cover={item?.image}
                           onDoubleClick={() => {
                             initiateEditForm(item);
@@ -863,9 +863,9 @@ export default function Main2() {
                     bounds="parent"
                   >
                     <GameCDMovie zIndex={indexChecker?.[item?._id]}>
-                      <CdImageMovie scale={3} onClick={(e) => {}}>
+                      <CdImageMovie scale={2.5} onClick={(e) => {}}>
                         <CdInnerImageMovie
-                          scale={3}
+                          scale={2.5}
                           cover={item?.image}
                           onDoubleClick={() => {
                             initiateEditForm(item);
@@ -1015,13 +1015,15 @@ const GameCD = styled.div`
 `;
 
 const CanvasLeft = styled.div`
-  width: calc(100vw - 200px);
+  width: calc(100vw - 100px);
   height: calc(100vh);
   position: relative;
   overflow: hidden;
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center center;
+  background: url("/icons/shelf.png");
+  background-repeat: no-repeat;
 `;
 
 const CreateButton = styled.div`
