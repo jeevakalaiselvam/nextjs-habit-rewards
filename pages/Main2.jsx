@@ -761,9 +761,9 @@ export default function Main2() {
                     bounds="parent"
                   >
                     <GameCD zIndex={indexChecker?.[item?._id]}>
-                      <CdImage scale={2.85} onClick={(e) => {}}>
+                      <CdImage scale={3} onClick={(e) => {}}>
                         <CdInnerImage
-                          scale={2.85}
+                          scale={3}
                           cover={item?.image}
                           onDoubleClick={() => {
                             initiateEditForm(item);
@@ -801,9 +801,9 @@ export default function Main2() {
                     bounds="parent"
                   >
                     <GameCDMovie zIndex={indexChecker?.[item?._id]}>
-                      <CdImageMovie scale={2.85} onClick={(e) => {}}>
+                      <CdImageMovie scale={3} onClick={(e) => {}}>
                         <CdInnerImageMovie
-                          scale={2.85}
+                          scale={3}
                           cover={item?.image}
                           onDoubleClick={() => {
                             initiateEditForm(item);
@@ -830,6 +830,37 @@ export default function Main2() {
     </Container>
   );
 }
+
+const CDRealInner = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-52.5%, -52.25%);
+  width: 470px;
+  height: 470px;
+  background: ${(props) => `url("${props?.image}")`};
+  background-position: 50% center;
+  background-size: cover;
+  cursor: pointer;
+  background-repeat: no-repeat;
+  mask: radial-gradient(circle 30px at center, transparent 100%, black 100%);
+  overflow: hidden;
+  border-radius: 100rem;
+`;
+const CDRealOuter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 550px;
+  height: 550px;
+  background: ${(props) => `url("/icons/cd.png")`};
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  position: relative;
+  cursor: pointer;
+`;
 
 const BASE_WIDTH_MOVIE = 150;
 const BASE_HEIGHT_MOVIE = 187.5;
