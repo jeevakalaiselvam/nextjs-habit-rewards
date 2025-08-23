@@ -301,7 +301,9 @@ export default function Main2() {
   const MOVEMENT_SLIP = 50;
 
   console.log(shelf);
-  let filteredShelfItems = shelf?.filter((item) => item?.type == active);
+  let filteredShelfItems = shelf
+    ?.filter((item) => item?.type == active)
+    ?.sort((s1, s2) => s1.shelfName.localeCompare(s2.shelfName));
 
   return (
     <Container>
@@ -579,7 +581,9 @@ export default function Main2() {
                 {
                   library?.filter(
                     (item) =>
-                      item?.shelfName == "Active" && item?.type == active
+                      item?.shelfName == "Active" &&
+                      item?.type == active &&
+                      item?.status != "DONE"
                   )?.length
                 }
               </span>
@@ -617,8 +621,10 @@ export default function Main2() {
                 }}
               >
                 {
-                  library?.filter((item) => item?.shelfName == "Backlog")
-                    ?.length
+                  library?.filter(
+                    (item) =>
+                      item?.shelfName == "Backlog" && item?.status != "DONE"
+                  )?.length
                 }
               </span>
             </span>
@@ -655,8 +661,10 @@ export default function Main2() {
                 }}
               >
                 {
-                  library?.filter((item) => item?.shelfName == "Wishlist")
-                    ?.length
+                  library?.filter(
+                    (item) =>
+                      item?.shelfName == "Wishlist" && item?.status != "DONE"
+                  )?.length
                 }
               </span>
             </span>
@@ -670,8 +678,10 @@ export default function Main2() {
             )
             ?.map((shelf, index) => {
               console.log(library);
-              let count = library?.filter((item) =>
-                item?.shelfName?.includes(shelf?.shelfName)
+              let count = library?.filter(
+                (item) =>
+                  item?.shelfName?.includes(shelf?.shelfName) &&
+                  item?.status != "DONE"
               );
               return (
                 <Link
@@ -840,12 +850,13 @@ export default function Main2() {
                   >
                     <GameCD zIndex={indexChecker?.[item?._id]}>
                       <CdImage scale={2.5} onClick={(e) => {}}>
-                        <CdRatingInner>
+                        <CdRatingInner className="custom-rate">
                           {item?.rating && (
                             <Rate
                               defaultValue={5}
                               value={item?.rating}
                               disabled
+                              allowHalf={true}
                             />
                           )}
                           {!item?.rating && (
