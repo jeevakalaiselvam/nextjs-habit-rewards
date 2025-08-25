@@ -1049,7 +1049,7 @@ export default function Main2() {
                           new Date() - new Date(lastRefresh)
                         ); // difference in milliseconds
                         const diffInSeconds = diffInMs / 1000; // convert to seconds
-                        if (diffInSeconds > 60) {
+                        if (diffInSeconds > 15) {
                           refreshTrophiesForGame(item?.appId);
                           localStorage.setItem(
                             "LAST_REFRESH",
