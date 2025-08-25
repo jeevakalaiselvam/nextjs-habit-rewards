@@ -24,6 +24,7 @@ import {
   Col,
   Input,
   Modal,
+  Popconfirm,
   Radio,
   Rate,
   Row,
@@ -467,14 +468,20 @@ export default function Main2() {
           }}
           cancelText={"Delete"}
           footer={[
-            <Button
-              key="extra"
-              onClick={() => {
+            <Popconfirm
+              placement="top"
+              title={"Delete Game"}
+              description={"Do you want to Delete?"}
+              okText="Yes"
+              cancelText="No"
+              onConfirm={() => {
                 deleteGame();
               }}
             >
-              Delete
-            </Button>,
+              <Button key="extra" onClick={() => {}}>
+                Delete
+              </Button>
+            </Popconfirm>,
             <Button key="back" onClick={() => setShowCreateModal(false)}>
               Cancel
             </Button>,
@@ -1034,7 +1041,22 @@ export default function Main2() {
                       handleDrag(index, e, data, item?._id);
                     }}
                     onStop={() => {
-                      refreshTrophiesForGame(item?.appId);
+                      let lastRefresh = "";
+                      if (window) {
+                        lastRefresh =
+                          localStorage.getItem("LAST_REFRESH") ?? "";
+                        const diffInMs = Math.abs(
+                          new Date() - new Date(lastRefresh)
+                        ); // difference in milliseconds
+                        const diffInSeconds = diffInMs / 1000; // convert to seconds
+                        if (diffInSeconds > 60) {
+                          refreshTrophiesForGame(item?.appId);
+                          localStorage.setItem(
+                            "LAST_REFRESH",
+                            String(new Date())
+                          );
+                        }
+                      }
                     }}
                     bounds="parent"
                   >
