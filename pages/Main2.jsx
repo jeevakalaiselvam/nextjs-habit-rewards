@@ -19,7 +19,17 @@ import {
   GENRES,
   MOVIE_GENRES,
 } from "../helpers/catHelper";
-import { Col, Input, Modal, Radio, Rate, Row, Select, Spin } from "antd";
+import {
+  Button,
+  Col,
+  Input,
+  Modal,
+  Radio,
+  Rate,
+  Row,
+  Select,
+  Spin,
+} from "antd";
 import axios from "axios";
 import GameCdImage from "../components/GameCdImage";
 import { LoadingOutlined } from "@ant-design/icons";
@@ -453,10 +463,36 @@ export default function Main2() {
             }
           }}
           onCancel={() => {
-            deleteGame();
             setShowCreateModal(false);
           }}
           cancelText={"Delete"}
+          footer={[
+            <Button
+              key="extra"
+              onClick={() => {
+                deleteGame();
+              }}
+            >
+              Delete
+            </Button>,
+            <Button key="back" onClick={() => setShowCreateModal(false)}>
+              Cancel
+            </Button>,
+            <Button
+              key="submit"
+              type="primary"
+              onClick={() => {
+                setShowCreateModal(false);
+                if (editMode) {
+                  saveEditGame();
+                } else {
+                  saveForm();
+                }
+              }}
+            >
+              Submit
+            </Button>,
+          ]}
         >
           <Row style={{ marginBottom: ".5rem" }}>
             <Radio.Group
@@ -997,15 +1033,13 @@ export default function Main2() {
                     onDrag={(e, data) => {
                       handleDrag(index, e, data, item?._id);
                     }}
+                    onStop={() => {
+                      refreshTrophiesForGame(item?.appId);
+                    }}
                     bounds="parent"
                   >
                     <GameCD zIndex={indexChecker?.[item?._id]}>
-                      <CdImage
-                        scale={3}
-                        onClick={(e) => {
-                          refreshTrophiesForGame(item?.appId);
-                        }}
-                      >
+                      <CdImage scale={3} onClick={(e) => {}}>
                         <CdInnerImage
                           scale={3}
                           cover={item?.image}
