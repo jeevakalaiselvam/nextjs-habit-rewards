@@ -1042,18 +1042,24 @@ export default function Main2() {
                     }}
                     onStop={() => {
                       let lastRefresh = "";
+                      let oldId = "";
                       if (window) {
                         lastRefresh =
                           localStorage.getItem("LAST_REFRESH") ?? "";
+                        oldId = localStorage.getItem("LAST_GAME") ?? "";
                         const diffInMs = Math.abs(
                           new Date() - new Date(lastRefresh)
                         ); // difference in milliseconds
                         const diffInSeconds = diffInMs / 1000; // convert to seconds
-                        if (diffInSeconds > 15) {
+                        if (diffInSeconds > 15 || oldId != item?.appId) {
                           refreshTrophiesForGame(item?.appId);
                           localStorage.setItem(
                             "LAST_REFRESH",
                             String(new Date())
+                          );
+                          localStorage.setItem(
+                            "LAST_GAME",
+                            String(item?.appid)
                           );
                         }
                       }
@@ -1117,137 +1123,141 @@ export default function Main2() {
                 ))}
               </CanvasLeft>
             )}
-            <CanvasRight>
-              {loadingTrophies && (
-                <Spin
-                  indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
-                />
-              )}
-              {!loadingTrophies &&
-                [
-                  ...(trophies?.achievements ?? [])?.filter(
-                    (ach) => ach?.color == "Platinum"
-                  ),
-                  ...(trophies?.achievements ?? [])?.filter(
-                    (ach) => ach?.color != "Platinum"
-                  ),
-                ]?.map((ach, index) => {
-                  let desc1 = ach?.hiddenDesc;
-                  let desc2 = ach?.description;
-                  let desc3 = ach?.hiddenDesc?.split(
-                    "Hidden achievement:"
-                  )?.[1];
-                  return (
-                    <AchCard
-                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                      achieved={ach?.achieved}
-                      platinum={ach?.color == "Platinum"}
-                    >
-                      {ach?.color != "Platinum" && (
-                        <AchIconOuter achieved={ach?.achieved}>
-                          <AchIcon
-                            icon={
-                              ach?.achieved == 1 ? ach?.icon : ach?.icongray
-                            }
+            {active == "GAME" && (
+              <CanvasRight>
+                {loadingTrophies && (
+                  <Spin
+                    indicator={
+                      <LoadingOutlined style={{ fontSize: 48 }} spin />
+                    }
+                  />
+                )}
+                {!loadingTrophies &&
+                  [
+                    ...(trophies?.achievements ?? [])?.filter(
+                      (ach) => ach?.color == "Platinum"
+                    ),
+                    ...(trophies?.achievements ?? [])?.filter(
+                      (ach) => ach?.color != "Platinum"
+                    ),
+                  ]?.map((ach, index) => {
+                    let desc1 = ach?.hiddenDesc;
+                    let desc2 = ach?.description;
+                    let desc3 = ach?.hiddenDesc?.split(
+                      "Hidden achievement:"
+                    )?.[1];
+                    return (
+                      <AchCard
+                        color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                        achieved={ach?.achieved}
+                        platinum={ach?.color == "Platinum"}
+                      >
+                        {ach?.color != "Platinum" && (
+                          <AchIconOuter achieved={ach?.achieved}>
+                            <AchIcon
+                              icon={
+                                ach?.achieved == 1 ? ach?.icon : ach?.icongray
+                              }
+                              onClick={() => {
+                                if (window !== "undefined") {
+                                  const searchQuery = `${
+                                    ach?.displayName
+                                  } achievement ${encodeURIComponent(
+                                    ach?.gameName
+                                  )} `;
+                                  window.open(
+                                    `https://www.google.com/search?q=${searchQuery}`
+                                  );
+                                }
+                              }}
+                            ></AchIcon>
+                          </AchIconOuter>
+                        )}
+                        {ach?.color == "Platinum" && (
+                          <AchIconOuterPlatinum
+                            achieved={ach?.achieved}
                             onClick={() => {
                               if (window !== "undefined") {
-                                const searchQuery = `${
-                                  ach?.displayName
-                                } achievement ${encodeURIComponent(
-                                  ach?.gameName
-                                )} `;
+                                const searchQuery = `${ach?.gameName} Platinum Trophy Guide} `;
                                 window.open(
                                   `https://www.google.com/search?q=${searchQuery}`
                                 );
                               }
                             }}
-                          ></AchIcon>
-                        </AchIconOuter>
-                      )}
-                      {ach?.color == "Platinum" && (
-                        <AchIconOuterPlatinum
-                          achieved={ach?.achieved}
-                          onClick={() => {
-                            if (window !== "undefined") {
-                              const searchQuery = `${ach?.gameName} Platinum Trophy Guide} `;
-                              window.open(
-                                `https://www.google.com/search?q=${searchQuery}`
-                              );
-                            }
-                          }}
-                        >
-                          {ach?.achieved == 1 && (
-                            <span
-                              style={{
-                                color: COLOR_GREEN,
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                transform: "scale(1.25)",
-                              }}
-                            >
-                              <FaCheck />
+                          >
+                            {ach?.achieved == 1 && (
+                              <span
+                                style={{
+                                  color: COLOR_GREEN,
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  transform: "scale(1.25)",
+                                }}
+                              >
+                                <FaCheck />
+                              </span>
+                            )}
+                            {ach?.achieved != 1 && (
+                              <span
+                                style={{
+                                  background: "#262D35",
+                                  width: "60px",
+                                  height: "60px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <PlatinumIcon />
+                              </span>
+                            )}
+                          </AchIconOuterPlatinum>
+                        )}
+                        <AchData>
+                          <AchTitle>{ach?.displayName}</AchTitle>
+                          <AchDesc>
+                            {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                          </AchDesc>
+                        </AchData>
+                        {ach?.achieved == 1 && (
+                          <Unlocked>
+                            <UnlockedT1>
+                              {formatDate1(new Date(ach?.unlocktime * 1000))}
+                            </UnlockedT1>
+                            <UnlockedT2>
+                              {formatDate2(new Date(ach?.unlocktime * 1000))}
+                            </UnlockedT2>
+                          </Unlocked>
+                        )}
+                        <SeperatorH padding={".25rem"} />
+                        {ach?.color != "Platinum" && (
+                          <AchRarity>
+                            <span style={{ fontSize: "1.2rem" }}>
+                              {ach?.percentage}%
                             </span>
-                          )}
-                          {ach?.achieved != 1 && (
-                            <span
-                              style={{
-                                background: "#262D35",
-                                width: "60px",
-                                height: "60px",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <PlatinumIcon />
+                            <span style={{ fontSize: ".7rem" }}>
+                              {ach?.label?.toUpperCase()}
                             </span>
-                          )}
-                        </AchIconOuterPlatinum>
-                      )}
-                      <AchData>
-                        <AchTitle>{ach?.displayName}</AchTitle>
-                        <AchDesc>
-                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
-                        </AchDesc>
-                      </AchData>
-                      {ach?.achieved == 1 && (
-                        <Unlocked>
-                          <UnlockedT1>
-                            {formatDate1(new Date(ach?.unlocktime * 1000))}
-                          </UnlockedT1>
-                          <UnlockedT2>
-                            {formatDate2(new Date(ach?.unlocktime * 1000))}
-                          </UnlockedT2>
-                        </Unlocked>
-                      )}
-                      <SeperatorH padding={".25rem"} />
-                      {ach?.color != "Platinum" && (
-                        <AchRarity>
-                          <span style={{ fontSize: "1.2rem" }}>
-                            {ach?.percentage}%
-                          </span>
-                          <span style={{ fontSize: ".7rem" }}>
-                            {ach?.label?.toUpperCase()}
-                          </span>
-                        </AchRarity>
-                      )}
-                      {ach?.color == "Platinum" && (
-                        <AchRarity>
-                          <span style={{ fontSize: ".7rem" }}>PLATINUM</span>
-                        </AchRarity>
-                      )}
-                      <SeperatorH padding={".25rem"} />
-                      <AchTrophy>
-                        {ach?.color == "Platinum" && <PlatinumIconS />}
-                        {ach?.color == "Gold" && <GoldIconS />}
-                        {ach?.color == "Silver" && <SilverIconS />}
-                        {ach?.color == "Bronze" && <BronzeIconS />}
-                      </AchTrophy>
-                    </AchCard>
-                  );
-                })}
-            </CanvasRight>
+                          </AchRarity>
+                        )}
+                        {ach?.color == "Platinum" && (
+                          <AchRarity>
+                            <span style={{ fontSize: ".7rem" }}>PLATINUM</span>
+                          </AchRarity>
+                        )}
+                        <SeperatorH padding={".25rem"} />
+                        <AchTrophy>
+                          {ach?.color == "Platinum" && <PlatinumIconS />}
+                          {ach?.color == "Gold" && <GoldIconS />}
+                          {ach?.color == "Silver" && <SilverIconS />}
+                          {ach?.color == "Bronze" && <BronzeIconS />}
+                        </AchTrophy>
+                      </AchCard>
+                    );
+                  })}
+              </CanvasRight>
+            )}
           </Content>
         )}
         {loading && (
