@@ -448,6 +448,23 @@ export default function Main2() {
     } catch (e) {}
   };
 
+  useEffect(() => {
+    if (false) {
+      let games = filteredLib
+        ?.filter(
+          (item) =>
+            item?.type == "GAME" &&
+            (item?.genre?.includes(activeCat) || activeCat == "All")
+        )
+        ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
+      let first = games?.[0];
+
+      if (first) {
+        refreshTrophiesForGame(first?.appId);
+      }
+    }
+  }, [activeShelf]);
+
   return (
     <Container>
       {showCreateModal && (
@@ -1021,66 +1038,78 @@ export default function Main2() {
           <Content>
             {active == "GAME" && (
               <CanvasLeft activeShelf={activeShelf}>
-                {games.map((item, index) => (
-                  <Draggable
-                    key={index}
-                    position={positions[item?._id]}
-                    onStart={() => {
-                      console.clear();
-                      console.log(indexChecker);
-                      let lastMax = Math.max(...Object.values(indexChecker));
-                      setIndexChecker((old) => {
-                        return {
-                          ...old,
-                          [item?._id]: lastMax + 1,
-                        };
-                      });
-                      setCheckedGame(item?._id);
-                    }}
-                    onDrag={(e, data) => {
-                      handleDrag(index, e, data, item?._id);
-                    }}
-                    onStop={() => {
-                      let lastRefresh = "";
-                      let oldId = "";
-                      if (window) {
-                        lastRefresh =
-                          localStorage.getItem("LAST_REFRESH") ?? "";
-                        oldId = localStorage.getItem("LAST_GAME") ?? "";
-                        const diffInMs = Math.abs(
-                          new Date() - new Date(lastRefresh)
-                        ); // difference in milliseconds
-                        const diffInSeconds = diffInMs / 1000; // convert to seconds
-                        if (diffInSeconds > 15 || oldId != item?.appId) {
-                          refreshTrophiesForGame(item?.appId);
-                          localStorage.setItem(
-                            "LAST_REFRESH",
-                            String(new Date())
-                          );
-                          localStorage.setItem(
-                            "LAST_GAME",
-                            String(item?.appid)
-                          );
+                {games.map((item, index) => {
+                  let allNotCompleted = trophies?.achievements?.filter(
+                    (ach) => ach?.achieved != 1
+                  );
+                  console.log({ allNotCompleted });
+                  let isPlatinum = allNotCompleted == 0;
+                  return (
+                    <Draggable
+                      key={index}
+                      position={positions[item?._id]}
+                      onStart={() => {
+                        console.clear();
+                        console.log(indexChecker);
+                        let lastMax = Math.max(...Object.values(indexChecker));
+                        setIndexChecker((old) => {
+                          return {
+                            ...old,
+                            [item?._id]: lastMax + 1,
+                          };
+                        });
+                        setCheckedGame(item?._id);
+                      }}
+                      onDrag={(e, data) => {
+                        handleDrag(index, e, data, item?._id);
+                      }}
+                      onStop={() => {
+                        let lastRefresh = "";
+                        let oldId = "";
+                        if (window) {
+                          lastRefresh =
+                            localStorage.getItem("LAST_REFRESH") ?? "";
+                          oldId = localStorage.getItem("LAST_GAME") ?? "";
+                          const diffInMs = Math.abs(
+                            new Date() - new Date(lastRefresh)
+                          ); // difference in milliseconds
+                          const diffInSeconds = diffInMs / 1000; // convert to seconds
+                          if (diffInSeconds > 15 || oldId != item?.appId) {
+                            refreshTrophiesForGame(item?.appId);
+                            localStorage.setItem(
+                              "LAST_REFRESH",
+                              String(new Date())
+                            );
+                            localStorage.setItem(
+                              "LAST_GAME",
+                              String(item?.appid)
+                            );
+                          }
                         }
-                      }
-                    }}
-                    bounds="parent"
-                  >
-                    <GameCD zIndex={indexChecker?.[item?._id]}>
-                      <CdImage scale={3} onClick={(e) => {}}>
-                        <CdInnerImage
-                          scale={3}
-                          cover={item?.image}
-                          onDoubleClick={() => {
-                            initiateEditForm(item);
-                            setShowCreateModal(true);
-                            setEditMode(true);
-                          }}
-                        />
-                      </CdImage>
-                    </GameCD>
-                  </Draggable>
-                ))}
+                      }}
+                      bounds="parent"
+                    >
+                      <GameCD zIndex={indexChecker?.[item?._id]}>
+                        <CdImage scale={3} onClick={(e) => {}}>
+                          <CdInnerImage
+                            scale={3}
+                            cover={item?.image}
+                            onDoubleClick={() => {
+                              initiateEditForm(item);
+                              setShowCreateModal(true);
+                              setEditMode(true);
+                            }}
+                          />
+                          {false && (
+                            <PlatinumWrapper isPlatinum={isPlatinum}>
+                              <PlatinumIcon />
+                            </PlatinumWrapper>
+                          )}
+                        </CdImage>
+                      </GameCD>
+                    </Draggable>
+                  );
+                })}
               </CanvasLeft>
             )}
             {active == "MOVIE" && (
@@ -1271,6 +1300,29 @@ export default function Main2() {
     </Container>
   );
 }
+
+const PlatinumWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  padding-top: 14rem;
+  padding-left: 10rem;
+  z-index: 999;
+  transform: scale(2);
+  animation: ${(props) =>
+    props.isPlatinum ? "blinkSmooth 1.5s ease-in-out infinite" : ""};
+
+  @keyframes blinkSmooth {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0;
+    }
+  }
+`;
 
 const Unlocked = styled.div`
   display: flex;
