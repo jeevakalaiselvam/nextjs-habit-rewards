@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import NewProfile from "../ncomponents/NewProfile";
 import { useEffect, useRef, useState } from "react";
-import { FaGamepad } from "react-icons/fa6";
+import { FaCheck, FaGamepad } from "react-icons/fa6";
 import { BiSolidMoviePlay } from "react-icons/bi";
 import {
   TbBook,
@@ -27,8 +27,20 @@ import GameCdImageSmall from "../components/GameCdImageSmall";
 import MovieCdImageSmall from "../components/MovieCdImageSmall";
 import { COLOR_GREEN, COLOR_RED } from "../helpers/colorHelper";
 import Draggable from "react-draggable";
+import TextArea from "antd/es/input/TextArea";
+import PlatinumIconS from "../components/PlatinumIconS";
+import GoldIconS from "../components/GoldIconS";
+import SilverIconS from "../components/SilverIconS";
+import BronzeIconS from "../components/BronzeIconS";
+import { formatDate1, formatDate2 } from "../helpers/dateHelper";
+import PlatinumIcon from "../components/PlatinumIcon";
+import {
+  getColorBasedOnRarity,
+  getRarityBasedOnRarity,
+} from "../helpers/achHelper";
 
 export default function Main2() {
+  const [loadingTrophies, setLoadingTrophies] = useState(false);
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [active, setActive] = useState("GAME");
@@ -50,6 +62,8 @@ export default function Main2() {
     status: "NEW",
     shelfName: "",
     rating: 0,
+    appId: "",
+    platinum: [],
   });
   const [editModeShelf, setEditModeShelf] = useState(false);
   const [shelfForm, setShelfForm] = useState({
@@ -60,6 +74,8 @@ export default function Main2() {
   const [positions, setPositions] = useState([]);
   const [indexChecker, setIndexChecker] = useState({});
   const [previousIndex, setPreviousIndex] = useState(0);
+
+  const [trophies, setTrophies] = useState([]);
 
   useEffect(() => {
     if (window) {
@@ -109,6 +125,8 @@ export default function Main2() {
           status: "DONE",
           shelfName: "",
           rating: 0,
+          appId: "",
+          platinum: [],
         });
         setEditMode(false);
       });
@@ -122,6 +140,8 @@ export default function Main2() {
         status: "DONE",
         shelfName: "",
         rating: 0,
+        appId: "",
+        platinum: [],
       });
       setEditMode(false);
     }
@@ -326,6 +346,97 @@ export default function Main2() {
     } catch (e) {}
   };
 
+  const refreshTrophiesForGame = (appId) => {
+    setLoadingTrophies(true);
+    try {
+      axios.post("/api/steam", { gamesToInclude: [appId] }).then((response) => {
+        let data = response?.data?.data;
+        let trophiesForGame = data;
+
+        let finalGames = trophiesForGame?.map((game) => {
+          let platinumGameData = JSON.parse(
+            library?.find((item) => item?.appId == game?.id)?.platinum ?? "[]"
+          );
+          let formedGame = {};
+          let platinumMapper = {};
+          let dlcMapper = {};
+
+          platinumGameData?.forEach((ach) => {
+            platinumMapper[ach?.title] = ach;
+          });
+
+          let sortedPlatinumTrophies = game?.achievements
+            ?.map((ach) => {
+              return {
+                ...ach,
+                label: getRarityBasedOnRarity(ach?.percentage),
+                color: getColorBasedOnRarity(ach?.percentage),
+                title: ach?.displayName,
+                hiddenDesc: platinumMapper[ach?.displayName]?.description,
+              };
+            })
+            ?.filter((ach) => {
+              if (platinumMapper[ach?.displayName]) {
+                return true;
+              } else {
+                return false;
+              }
+            })
+            ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
+
+          let lastAch =
+            sortedPlatinumTrophies?.[sortedPlatinumTrophies?.length - 1];
+
+          let total = sortedPlatinumTrophies?.length;
+          let completed = sortedPlatinumTrophies?.filter(
+            (ach) => ach?.achieved == "1"
+          )?.length;
+
+          total = Math.ceil(total * 1);
+          completed = completed > total ? total : completed;
+          let isCompleted = total == completed && total != 0;
+
+          if (platinumGameData) {
+            formedGame = {
+              ...game,
+              ...platinumGameData,
+              achievements: [
+                ...sortedPlatinumTrophies?.filter(
+                  (ach) => ach?.displayName != lastAch?.displayName
+                ),
+                { ...lastAch, color: "Gold" },
+                {
+                  displayName: `Platinum`,
+                  description: `Achieved all Trophies in the game`,
+                  hiddenDesc: `${game?.name}`,
+                  percentage: lastAch?.percentage,
+                  label: getRarityBasedOnRarity(lastAch?.percentage),
+                  color: "Platinum",
+                  achieved: isCompleted ? 1 : 0,
+                  completedFinal: completed,
+                  unlocktime: lastAch?.unlocktime,
+                  icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
+                  gameName: lastAch?.gameName,
+                },
+              ],
+            };
+          } else {
+            formedGame = {
+              ...game,
+            };
+          }
+
+          return formedGame;
+        });
+
+        let currentGame = finalGames?.find((item) => item?.id == appId);
+
+        setTrophies(currentGame);
+        setLoadingTrophies(false);
+      });
+    } catch (e) {}
+  };
+
   return (
     <Container>
       {showCreateModal && (
@@ -372,6 +483,34 @@ export default function Main2() {
               }}
             />
           </Row>
+          {createForm?.type == "GAME" && (
+            <Row style={{ marginBottom: ".5rem" }}>
+              <Input
+                style={{ borderRadius: ".25rem" }}
+                placeholder="Enter App Id"
+                value={createForm?.appId}
+                onChange={(e) => {
+                  setCreateForm((old) => ({ ...old, appId: e?.target?.value }));
+                }}
+              />
+            </Row>
+          )}
+          {createForm?.type == "GAME" && (
+            <Row style={{ marginBottom: ".5rem" }}>
+              <TextArea
+                rows={5}
+                style={{ borderRadius: ".25rem" }}
+                placeholder="Enter Trophies"
+                value={createForm?.platinum}
+                onChange={(e) => {
+                  setCreateForm((old) => ({
+                    ...old,
+                    platinum: e?.target?.value,
+                  }));
+                }}
+              />
+            </Row>
+          )}
           <Row style={{ marginBottom: ".5rem" }}>
             <Input
               style={{ borderRadius: ".25rem" }}
@@ -861,7 +1000,12 @@ export default function Main2() {
                     bounds="parent"
                   >
                     <GameCD zIndex={indexChecker?.[item?._id]}>
-                      <CdImage scale={3} onClick={(e) => {}}>
+                      <CdImage
+                        scale={3}
+                        onClick={(e) => {
+                          refreshTrophiesForGame(item?.appId);
+                        }}
+                      >
                         <CdInnerImage
                           scale={3}
                           cover={item?.image}
@@ -917,6 +1061,137 @@ export default function Main2() {
                 ))}
               </CanvasLeft>
             )}
+            <CanvasRight>
+              {loadingTrophies && (
+                <Spin
+                  indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
+                />
+              )}
+              {!loadingTrophies &&
+                [
+                  ...(trophies?.achievements ?? [])?.filter(
+                    (ach) => ach?.color == "Platinum"
+                  ),
+                  ...(trophies?.achievements ?? [])?.filter(
+                    (ach) => ach?.color != "Platinum"
+                  ),
+                ]?.map((ach, index) => {
+                  let desc1 = ach?.hiddenDesc;
+                  let desc2 = ach?.description;
+                  let desc3 = ach?.hiddenDesc?.split(
+                    "Hidden achievement:"
+                  )?.[1];
+                  return (
+                    <AchCard
+                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                      achieved={ach?.achieved}
+                      platinum={ach?.color == "Platinum"}
+                    >
+                      {ach?.color != "Platinum" && (
+                        <AchIconOuter achieved={ach?.achieved}>
+                          <AchIcon
+                            icon={
+                              ach?.achieved == 1 ? ach?.icon : ach?.icongray
+                            }
+                            onClick={() => {
+                              if (window !== "undefined") {
+                                const searchQuery = `${
+                                  ach?.displayName
+                                } achievement ${encodeURIComponent(
+                                  ach?.gameName
+                                )} `;
+                                window.open(
+                                  `https://www.google.com/search?q=${searchQuery}`
+                                );
+                              }
+                            }}
+                          ></AchIcon>
+                        </AchIconOuter>
+                      )}
+                      {ach?.color == "Platinum" && (
+                        <AchIconOuterPlatinum
+                          achieved={ach?.achieved}
+                          onClick={() => {
+                            if (window !== "undefined") {
+                              const searchQuery = `${ach?.gameName} Platinum Trophy Guide} `;
+                              window.open(
+                                `https://www.google.com/search?q=${searchQuery}`
+                              );
+                            }
+                          }}
+                        >
+                          {ach?.achieved == 1 && (
+                            <span
+                              style={{
+                                color: COLOR_GREEN,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                transform: "scale(1.25)",
+                              }}
+                            >
+                              <FaCheck />
+                            </span>
+                          )}
+                          {ach?.achieved != 1 && (
+                            <span
+                              style={{
+                                background: "#262D35",
+                                width: "60px",
+                                height: "60px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <PlatinumIcon />
+                            </span>
+                          )}
+                        </AchIconOuterPlatinum>
+                      )}
+                      <AchData>
+                        <AchTitle>{ach?.displayName}</AchTitle>
+                        <AchDesc>
+                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                        </AchDesc>
+                      </AchData>
+                      {ach?.achieved == 1 && (
+                        <Unlocked>
+                          <UnlockedT1>
+                            {formatDate1(new Date(ach?.unlocktime * 1000))}
+                          </UnlockedT1>
+                          <UnlockedT2>
+                            {formatDate2(new Date(ach?.unlocktime * 1000))}
+                          </UnlockedT2>
+                        </Unlocked>
+                      )}
+                      <SeperatorH padding={".25rem"} />
+                      {ach?.color != "Platinum" && (
+                        <AchRarity>
+                          <span style={{ fontSize: "1.2rem" }}>
+                            {ach?.percentage}%
+                          </span>
+                          <span style={{ fontSize: ".7rem" }}>
+                            {ach?.label?.toUpperCase()}
+                          </span>
+                        </AchRarity>
+                      )}
+                      {ach?.color == "Platinum" && (
+                        <AchRarity>
+                          <span style={{ fontSize: ".7rem" }}>PLATINUM</span>
+                        </AchRarity>
+                      )}
+                      <SeperatorH padding={".25rem"} />
+                      <AchTrophy>
+                        {ach?.color == "Platinum" && <PlatinumIconS />}
+                        {ach?.color == "Gold" && <GoldIconS />}
+                        {ach?.color == "Silver" && <SilverIconS />}
+                        {ach?.color == "Bronze" && <BronzeIconS />}
+                      </AchTrophy>
+                    </AchCard>
+                  );
+                })}
+            </CanvasRight>
           </Content>
         )}
         {loading && (
@@ -931,12 +1206,118 @@ export default function Main2() {
   );
 }
 
-const CdRatingInner = styled.div`
-  position: absolute;
-  bottom: 1rem;
-  right: 50%;
-  transform: translateX(50%);
-  z-index: 999;
+const Unlocked = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100px;
+  color: #579428;
+`;
+
+const UnlockedT1 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+`;
+
+const UnlockedT2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  padding-top: 0.25rem;
+`;
+
+const AchTitle = styled.div`
+  display: flex;
+  align-items: center;
+  padding-left: 0.5rem;
+  color: #fefefe;
+  justify-content: flex-start;
+  flex: 2;
+  font-size: 16px;
+  width: 100%;
+`;
+
+const AchDesc = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding-left: 0.5rem;
+  flex: 2;
+  width: 100%;
+  font-size: 12px;
+  color: #898989;
+`;
+
+const AchIconOuter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 65px;
+  height: 65px;
+`;
+
+const AchIconOuterPlatinum = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  margin: 0.125rem;
+  background-color: #262d35;
+`;
+
+const AchIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: ${(props) => `url(${props?.icon})`};
+  background-size: contain;
+  background-repeat: no-repeat;
+`;
+
+const AchData = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
+  flex: 1;
+  min-width: 300px;
+  height: 60px;
+`;
+
+const AchRarity = styled.div`
+  display: flex;
+  align-items: center;
+  width: 100px;
+  justify-content: flex-start;
+  flex-direction: column;
+  color: rgb(139, 146, 154);
+`;
+
+const AchTrophy = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  min-width: 50px;
+  transform: scale(1.5) translate(0.25rem, 0.25rem);
+`;
+
+const AchCard = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: #333;
+  width: 100%;
+  background-color: #080c11;
+  margin-bottom: 0.5rem;
+  opacity: ${(props) => (props?.achieved == 1 ? 1 : 1)};
 `;
 
 const BASE_WIDTH_MOVIE = 150;
@@ -1030,7 +1411,7 @@ const GameCD = styled.div`
 `;
 
 const CanvasLeft = styled.div`
-  width: calc(100vw - 100px);
+  flex: 1;
   height: calc(100vh);
   position: relative;
   overflow: hidden;
@@ -1038,6 +1419,17 @@ const CanvasLeft = styled.div`
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
+`;
+
+const CanvasRight = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  max-height: calc(100vh - 100px);
+  min-height: calc(100vh - 100px);
+  overflow: scroll;
 `;
 
 const CreateButton = styled.div`
@@ -1139,6 +1531,19 @@ const Seperator = styled.div`
   width: 100%;
   height: 2px;
   background-color: #373c3e;
+`;
+
+const SeperatorH = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  content: "";
+  height: 40px;
+  background: #eee;
+  opacity: 0.25;
+  width: 1px;
+  margin: ${(props) => (props.padding ? `0rem ${props.padding}` : `0rem 1rem`)};
+  top: calc(50% - 20px);
 `;
 
 const Links = styled.div`
