@@ -1037,122 +1037,6 @@ export default function Main2() {
         {!loading && (
           <Content>
             {active == "GAME" && (
-              <CanvasLeft activeShelf={activeShelf}>
-                {games.map((item, index) => {
-                  let allNotCompleted = trophies?.achievements?.filter(
-                    (ach) => ach?.achieved != 1
-                  );
-                  console.log({ allNotCompleted });
-                  let isPlatinum = allNotCompleted == 0;
-                  return (
-                    <Draggable
-                      key={index}
-                      position={positions[item?._id]}
-                      onStart={() => {
-                        console.clear();
-                        console.log(indexChecker);
-                        let lastMax = Math.max(...Object.values(indexChecker));
-                        setIndexChecker((old) => {
-                          return {
-                            ...old,
-                            [item?._id]: lastMax + 1,
-                          };
-                        });
-                        setCheckedGame(item?._id);
-                      }}
-                      onDrag={(e, data) => {
-                        handleDrag(index, e, data, item?._id);
-                      }}
-                      onStop={() => {
-                        let lastRefresh = "";
-                        let oldId = "";
-                        if (window) {
-                          lastRefresh =
-                            localStorage.getItem("LAST_REFRESH") ?? "";
-                          oldId = localStorage.getItem("LAST_GAME") ?? "";
-                          const diffInMs = Math.abs(
-                            new Date() - new Date(lastRefresh)
-                          ); // difference in milliseconds
-                          const diffInSeconds = diffInMs / 1000; // convert to seconds
-                          if (diffInSeconds > 15 || oldId != item?.appId) {
-                            refreshTrophiesForGame(item?.appId);
-                            localStorage.setItem(
-                              "LAST_REFRESH",
-                              String(new Date())
-                            );
-                            localStorage.setItem(
-                              "LAST_GAME",
-                              String(item?.appid)
-                            );
-                          }
-                        }
-                      }}
-                      bounds="parent"
-                    >
-                      <GameCD zIndex={indexChecker?.[item?._id]}>
-                        <CdImage scale={3} onClick={(e) => {}}>
-                          <CdInnerImage
-                            scale={3}
-                            cover={item?.image}
-                            onDoubleClick={() => {
-                              initiateEditForm(item);
-                              setShowCreateModal(true);
-                              setEditMode(true);
-                            }}
-                          />
-                          {false && (
-                            <PlatinumWrapper isPlatinum={isPlatinum}>
-                              <PlatinumIcon />
-                            </PlatinumWrapper>
-                          )}
-                        </CdImage>
-                      </GameCD>
-                    </Draggable>
-                  );
-                })}
-              </CanvasLeft>
-            )}
-            {active == "MOVIE" && (
-              <CanvasLeft activeShelf={activeShelf}>
-                {movies.map((item, index) => (
-                  <Draggable
-                    key={index}
-                    position={positions[index]}
-                    onStart={() => {
-                      console.clear();
-                      console.log(indexChecker);
-                      let lastMax = Math.max(...Object.values(indexChecker));
-                      setIndexChecker((old) => {
-                        return {
-                          ...old,
-                          [item?._id]: lastMax + 1,
-                        };
-                      });
-                      setCheckedGame(item?._id);
-                    }}
-                    onDrag={(e, data) => {
-                      handleDrag(index, e, data);
-                    }}
-                    bounds="parent"
-                  >
-                    <GameCDMovie zIndex={indexChecker?.[item?._id]}>
-                      <CdImageMovie scale={3} onClick={(e) => {}}>
-                        <CdInnerImageMovie
-                          scale={3}
-                          cover={item?.image}
-                          onDoubleClick={() => {
-                            initiateEditForm(item);
-                            setShowCreateModal(true);
-                            setEditMode(true);
-                          }}
-                        />
-                      </CdImageMovie>
-                    </GameCDMovie>
-                  </Draggable>
-                ))}
-              </CanvasLeft>
-            )}
-            {active == "GAME" && (
               <CanvasRight>
                 {loadingTrophies && (
                   <Spin
@@ -1287,6 +1171,122 @@ export default function Main2() {
                   })}
               </CanvasRight>
             )}
+            {active == "GAME" && (
+              <CanvasLeft activeShelf={activeShelf}>
+                {games.map((item, index) => {
+                  let allNotCompleted = trophies?.achievements?.filter(
+                    (ach) => ach?.achieved != 1
+                  );
+                  console.log({ allNotCompleted });
+                  let isPlatinum = allNotCompleted == 0;
+                  return (
+                    <Draggable
+                      key={index}
+                      position={positions[item?._id]}
+                      onStart={() => {
+                        console.clear();
+                        console.log(indexChecker);
+                        let lastMax = Math.max(...Object.values(indexChecker));
+                        setIndexChecker((old) => {
+                          return {
+                            ...old,
+                            [item?._id]: lastMax + 1,
+                          };
+                        });
+                        setCheckedGame(item?._id);
+                      }}
+                      onDrag={(e, data) => {
+                        handleDrag(index, e, data, item?._id);
+                      }}
+                      onStop={() => {
+                        let lastRefresh = "";
+                        let oldId = "";
+                        if (window) {
+                          lastRefresh =
+                            localStorage.getItem("LAST_REFRESH") ?? "";
+                          oldId = localStorage.getItem("LAST_GAME") ?? "";
+                          const diffInMs = Math.abs(
+                            new Date() - new Date(lastRefresh)
+                          ); // difference in milliseconds
+                          const diffInSeconds = diffInMs / 1000; // convert to seconds
+                          if (diffInSeconds > 15 || oldId != item?.appId) {
+                            refreshTrophiesForGame(item?.appId);
+                            localStorage.setItem(
+                              "LAST_REFRESH",
+                              String(new Date())
+                            );
+                            localStorage.setItem(
+                              "LAST_GAME",
+                              String(item?.appid)
+                            );
+                          }
+                        }
+                      }}
+                      bounds="parent"
+                    >
+                      <GameCD zIndex={indexChecker?.[item?._id]}>
+                        <CdImage scale={3} onClick={(e) => {}}>
+                          <CdInnerImage
+                            scale={3}
+                            cover={item?.image}
+                            onDoubleClick={() => {
+                              initiateEditForm(item);
+                              setShowCreateModal(true);
+                              setEditMode(true);
+                            }}
+                          />
+                          {false && (
+                            <PlatinumWrapper isPlatinum={isPlatinum}>
+                              <PlatinumIcon />
+                            </PlatinumWrapper>
+                          )}
+                        </CdImage>
+                      </GameCD>
+                    </Draggable>
+                  );
+                })}
+              </CanvasLeft>
+            )}
+            {active == "MOVIE" && (
+              <CanvasLeft activeShelf={activeShelf}>
+                {movies.map((item, index) => (
+                  <Draggable
+                    key={index}
+                    position={positions[index]}
+                    onStart={() => {
+                      console.clear();
+                      console.log(indexChecker);
+                      let lastMax = Math.max(...Object.values(indexChecker));
+                      setIndexChecker((old) => {
+                        return {
+                          ...old,
+                          [item?._id]: lastMax + 1,
+                        };
+                      });
+                      setCheckedGame(item?._id);
+                    }}
+                    onDrag={(e, data) => {
+                      handleDrag(index, e, data);
+                    }}
+                    bounds="parent"
+                  >
+                    <GameCDMovie zIndex={indexChecker?.[item?._id]}>
+                      <CdImageMovie scale={3} onClick={(e) => {}}>
+                        <CdInnerImageMovie
+                          scale={3}
+                          cover={item?.image}
+                          onDoubleClick={() => {
+                            initiateEditForm(item);
+                            setShowCreateModal(true);
+                            setEditMode(true);
+                          }}
+                        />
+                      </CdImageMovie>
+                    </GameCDMovie>
+                  </Draggable>
+                ))}
+              </CanvasLeft>
+            )}
           </Content>
         )}
         {loading && (
@@ -1366,7 +1366,7 @@ const AchDesc = styled.div`
   padding-left: 0.5rem;
   flex: 2;
   width: 100%;
-  font-size: 12px;
+  font-size: 14px;
   color: #898989;
 `;
 
@@ -1529,7 +1529,7 @@ const GameCD = styled.div`
 `;
 
 const CanvasLeft = styled.div`
-  flex: 1;
+  flex: 2;
   height: calc(100vh);
   position: relative;
   overflow: hidden;
