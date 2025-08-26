@@ -920,7 +920,7 @@ export default function Main2() {
         </Top>
         {!loading && (
           <Content>
-            {active == "GAME" && (
+            {false && active == "GAME" && (
               <CanvasRight>
                 {loadingTrophies && (
                   <Spin
@@ -1055,7 +1055,7 @@ export default function Main2() {
                   })}
               </CanvasRight>
             )}
-            {false && active == "GAME" && (
+            {active == "GAME" && (
               <CanvasLeft activeShelf={activeShelf}>
                 {games.map((item, index) => {
                   let allNotCompleted = trophies?.achievements?.filter(
