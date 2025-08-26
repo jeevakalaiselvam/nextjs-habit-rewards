@@ -767,10 +767,9 @@ export default function Main2() {
           {shelfDates?.map((shelf, index) => {
             let count = 0;
 
-            if (active == "GAME")
-              count = games?.filter(
-                (game) => game?.shelfName == shelf?.value
-              )?.length;
+            count = library?.filter(
+              (game) => game?.shelfName == shelf?.value
+            )?.length;
 
             return (
               <Link
@@ -1103,9 +1102,9 @@ export default function Main2() {
                       bounds="parent"
                     >
                       <GameCD zIndex={indexChecker?.[item?._id]}>
-                        <CdImage scale={3.75} onClick={(e) => {}}>
+                        <CdImage scale={3.6} onClick={(e) => {}}>
                           <CdInnerImage
-                            scale={3.75}
+                            scale={3.6}
                             cover={item?.image}
                             onDoubleClick={() => {
                               initiateEditForm(item);
@@ -1149,9 +1148,9 @@ export default function Main2() {
                     bounds="parent"
                   >
                     <GameCDMovie zIndex={indexChecker?.[item?._id]}>
-                      <CdImageMovie scale={3.75} onClick={(e) => {}}>
+                      <CdImageMovie scale={3.6} onClick={(e) => {}}>
                         <CdInnerImageMovie
-                          scale={3.75}
+                          scale={3.6}
                           cover={item?.image}
                           onDoubleClick={() => {
                             initiateEditForm(item);
