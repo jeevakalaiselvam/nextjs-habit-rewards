@@ -465,6 +465,32 @@ export default function Main2() {
     }
   }, [activeShelf]);
 
+  function generateMonthYearList(startYear = 2016, startMonth = 0) {
+    const result = [];
+    const startDate = new Date(startYear, startMonth); // Jan 2016
+    const today = new Date();
+
+    let current = new Date(startDate);
+
+    while (current <= today) {
+      const month = current.toLocaleString("en-US", { month: "long" });
+      const year = current.getFullYear();
+      result.push(`${month} ${year}`);
+
+      // move to next month
+      current.setMonth(current.getMonth() + 1);
+    }
+
+    return result;
+  }
+
+  let shelfDates = generateMonthYearList()
+    ?.map((item) => ({
+      value: item,
+      label: item,
+    }))
+    ?.reverse();
+
   return (
     <Container>
       {showCreateModal && (
@@ -543,34 +569,6 @@ export default function Main2() {
               }}
             />
           </Row>
-          {createForm?.type == "GAME" && (
-            <Row style={{ marginBottom: ".5rem" }}>
-              <Input
-                style={{ borderRadius: ".25rem" }}
-                placeholder="Enter App Id"
-                value={createForm?.appId}
-                onChange={(e) => {
-                  setCreateForm((old) => ({ ...old, appId: e?.target?.value }));
-                }}
-              />
-            </Row>
-          )}
-          {createForm?.type == "GAME" && (
-            <Row style={{ marginBottom: ".5rem" }}>
-              <TextArea
-                rows={5}
-                style={{ borderRadius: ".25rem" }}
-                placeholder="Enter Trophies"
-                value={createForm?.platinum}
-                onChange={(e) => {
-                  setCreateForm((old) => ({
-                    ...old,
-                    platinum: e?.target?.value,
-                  }));
-                }}
-              />
-            </Row>
-          )}
           <Row style={{ marginBottom: ".5rem" }}>
             <Input
               style={{ borderRadius: ".25rem" }}
@@ -624,10 +622,7 @@ export default function Main2() {
                   setCreateForm((old) => ({ ...old, shelfName: e }));
                 }}
                 allowClear
-                options={filteredShelfItems?.map((item) => ({
-                  value: item?.shelfName,
-                  value: item?.shelfName,
-                }))}
+                options={shelfDates}
               />
             </Col>
             <Col span={12} style={{ transform: "translateY(.45rem)" }}>
@@ -768,179 +763,60 @@ export default function Main2() {
         </Links>
         <Seperator></Seperator>
         <Links>
-          <Link
-            active={activeShelf == "Active" || hoverActive == "Active"}
-            onMouseEnter={() => {
-              setHoverActive("Active");
-            }}
-            onMouseLeave={() => {
-              setHoverActive("");
-            }}
-            onClick={() => {
-              setActiveShelf("Active");
-            }}
-          >
-            <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
-              <TbDeviceGamepad2 />
-            </span>
-            <span
-              style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <span>Active</span>
-              <span
-                style={{
-                  color: "#fefefe7f",
-                  background: "#333",
-                  padding: ".06125rem .25rem",
-                }}
-              >
-                {library?.filter((item) => !item?.shelfName)?.length}
-              </span>
-            </span>
-          </Link>
-          <Link
-            active={activeShelf == "Backlog" || hoverActive == "Backlog"}
-            onMouseEnter={() => {
-              setHoverActive("Backlog");
-            }}
-            onMouseLeave={() => {
-              setHoverActive("");
-            }}
-            onClick={() => {
-              setActiveShelf("Backlog");
-            }}
-          >
-            <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
-              <TbDeviceGamepad2 />
-            </span>
-            <span
-              style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <span>Backlog</span>
-              <span
-                style={{
-                  color: "#fefefe7f",
-                  background: "#333",
-                  padding: ".06125rem .25rem",
-                }}
-              >
-                {
-                  library?.filter(
-                    (item) =>
-                      item?.shelfName == "Backlog" && item?.status != "DONE"
-                  )?.length
-                }
-              </span>
-            </span>
-          </Link>
-          <Link
-            active={activeShelf == "Wishlist" || hoverActive == "Wishlist"}
-            onMouseEnter={() => {
-              setHoverActive("Wishlist");
-            }}
-            onMouseLeave={() => {
-              setHoverActive("");
-            }}
-            onClick={() => {
-              setActiveShelf("Wishlist");
-            }}
-          >
-            <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
-              <TbDeviceGamepad2 />
-            </span>
-            <span
-              style={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <span>Wishlist</span>
-              <span
-                style={{
-                  color: "#fefefe7f",
-                  background: "#333",
-                  padding: ".06125rem .25rem",
-                }}
-              >
-                {
-                  library?.filter(
-                    (item) =>
-                      item?.shelfName == "Wishlist" && item?.status != "DONE"
-                  )?.length
-                }
-              </span>
-            </span>
-          </Link>
           <Seperator></Seperator>
-          {filteredShelfItems
-            ?.filter(
-              (shelf) =>
-                shelf?.shelfName != "Wishlist" &&
-                shelf?.shelfName != "Backlog" &&
-                shelf?.shelfName != "Active"
-            )
-            ?.map((shelf, index) => {
-              let count = library?.filter((item) =>
-                item?.shelfName?.includes(shelf?.shelfName)
-              );
-              return (
-                <Link
-                  active={
-                    activeShelf == shelf?.shelfName ||
-                    hoverActive == shelf?.shelfName
-                  }
-                  onMouseEnter={() => {
-                    setHoverActive(shelf?.shelfName);
-                  }}
-                  onMouseLeave={() => {
-                    setHoverActive("");
-                  }}
-                  onClick={() => {
-                    setActiveShelf(shelf?.shelfName);
+          {shelfDates?.map((shelf, index) => {
+            let count = 0;
+
+            if (active == "GAME")
+              count = games?.filter(
+                (game) => game?.shelfName == shelf?.value
+              )?.length;
+
+            return (
+              <Link
+                active={
+                  activeShelf == shelf?.value || hoverActive == shelf?.value
+                }
+                onMouseEnter={() => {
+                  setHoverActive(shelf?.value);
+                }}
+                onMouseLeave={() => {
+                  setHoverActive("");
+                }}
+                onClick={() => {
+                  setActiveShelf(shelf?.value);
+                }}
+              >
+                <span
+                  style={{
+                    transform: "translateY(2px)",
+                    marginRight: "1rem",
                   }}
                 >
+                  <TbDeviceGamepad2 />
+                </span>
+                <span
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <span>{shelf?.value}</span>
                   <span
                     style={{
-                      transform: "translateY(2px)",
-                      marginRight: "1rem",
+                      background: "#333",
+                      padding: "2px 2px",
+                      opacity: count > 0 ? 1 : 0.25,
                     }}
                   >
-                    <TbDeviceGamepad2 />
+                    {count}
                   </span>
-                  <span
-                    style={{
-                      width: "100%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <span>{shelf?.shelfName}</span>
-                    <span
-                      style={{
-                        color: "#fefefe7f",
-                        background: "#333",
-                        padding: ".06125rem .25rem",
-                      }}
-                    >
-                      {count?.length}
-                    </span>
-                  </span>
-                </Link>
-              );
-            })}
+                </span>
+              </Link>
+            );
+          })}
         </Links>
       </Left>
       <Right>
@@ -993,26 +869,28 @@ export default function Main2() {
                   {active == "TV" && "Add TV"}
                   {active == "BOOK" && "Add Book"}
                 </CreateButton>
-                <CreateButton
-                  onClick={() => {
-                    setShowCreateShelfModal(true);
-                    if (active == "GAME") {
-                      setShelfForm((old) => ({ ...old, type: "GAME" }));
-                    }
-                    if (active == "MOVIE") {
-                      setShelfForm((old) => ({ ...old, type: "MOVIE" }));
-                    }
-                    if (active == "TV") {
-                      setShelfForm((old) => ({ ...old, type: "TV" }));
-                    }
-                    if (active == "BOOK") {
-                      setShelfForm((old) => ({ ...old, type: "BOOK" }));
-                    }
-                  }}
-                >
-                  Create Shelf
-                </CreateButton>
-                {activeShelf?.length != 0 && activeShelf != "All" && (
+                {false && (
+                  <CreateButton
+                    onClick={() => {
+                      setShowCreateShelfModal(true);
+                      if (active == "GAME") {
+                        setShelfForm((old) => ({ ...old, type: "GAME" }));
+                      }
+                      if (active == "MOVIE") {
+                        setShelfForm((old) => ({ ...old, type: "MOVIE" }));
+                      }
+                      if (active == "TV") {
+                        setShelfForm((old) => ({ ...old, type: "TV" }));
+                      }
+                      if (active == "BOOK") {
+                        setShelfForm((old) => ({ ...old, type: "BOOK" }));
+                      }
+                    }}
+                  >
+                    Create Shelf
+                  </CreateButton>
+                )}
+                {false && activeShelf?.length != 0 && activeShelf != "All" && (
                   <CreateButton
                     onClick={() => {
                       setShowCreateShelfModal(true);
@@ -1225,9 +1103,9 @@ export default function Main2() {
                       bounds="parent"
                     >
                       <GameCD zIndex={indexChecker?.[item?._id]}>
-                        <CdImage scale={3} onClick={(e) => {}}>
+                        <CdImage scale={3.75} onClick={(e) => {}}>
                           <CdInnerImage
-                            scale={3}
+                            scale={3.75}
                             cover={item?.image}
                             onDoubleClick={() => {
                               initiateEditForm(item);
@@ -1271,9 +1149,9 @@ export default function Main2() {
                     bounds="parent"
                   >
                     <GameCDMovie zIndex={indexChecker?.[item?._id]}>
-                      <CdImageMovie scale={3} onClick={(e) => {}}>
+                      <CdImageMovie scale={3.75} onClick={(e) => {}}>
                         <CdInnerImageMovie
-                          scale={3}
+                          scale={3.75}
                           cover={item?.image}
                           onDoubleClick={() => {
                             initiateEditForm(item);
@@ -1670,6 +1548,8 @@ const Links = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
+  max-height: 80vh;
+  overflow: scroll;
 `;
 
 const Link = styled.div`

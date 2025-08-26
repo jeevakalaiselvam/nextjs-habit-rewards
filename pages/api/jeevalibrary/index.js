@@ -3,17 +3,7 @@ import clientPromise from "../../../lib/db";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const {
-      title,
-      type,
-      genre,
-      image,
-      status,
-      shelfName,
-      rating,
-      appId,
-      platinum,
-    } = req.body;
+    const { title, type, genre, image, status, shelfName, rating } = req.body;
 
     if (!genre || !title || !genre || !image || !status) {
       return res.status(400).json({ error: "Field are required" });
@@ -31,8 +21,6 @@ export default async function handler(req, res) {
         completed: status == "DONE" ? new Date() : "",
         shelfName: shelfName ?? "",
         rating: rating ? rating : 0,
-        appId,
-        platinum,
       });
 
       res.status(201).json({ message: "Item added successfully" });
