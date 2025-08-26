@@ -711,63 +711,6 @@ export default function Main2() {
             <span>Games</span>
           </Link>
         </Links>
-        <Links>
-          <Link
-            active={active == "MOVIE" || hoverActive == "MOVIE"}
-            onMouseEnter={() => {
-              setHoverActive("MOVIE");
-            }}
-            onMouseLeave={() => {
-              setHoverActive("");
-            }}
-            onClick={() => {
-              setActive("MOVIE");
-            }}
-          >
-            <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
-              <TbMovie />
-            </span>
-            <span>Movies</span>
-          </Link>
-        </Links>
-        <Links>
-          <Link
-            active={active == "TV" || hoverActive == "TV"}
-            onMouseEnter={() => {
-              setHoverActive("TV");
-            }}
-            onMouseLeave={() => {
-              setHoverActive("");
-            }}
-            onClick={() => {
-              setActive("TV");
-            }}
-          >
-            <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
-              <TbDeviceTv />
-            </span>
-            <span>TV Series</span>
-          </Link>
-        </Links>
-        <Links>
-          <Link
-            active={active == "BOOKS" || hoverActive == "BOOKS"}
-            onMouseEnter={() => {
-              setHoverActive("BOOKS");
-            }}
-            onMouseLeave={() => {
-              setHoverActive("");
-            }}
-            onClick={() => {
-              setActive("BOOKS");
-            }}
-          >
-            <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
-              <TbBook />
-            </span>
-            <span>Books</span>
-          </Link>
-        </Links>
         <Seperator></Seperator>
         <Links>
           <Seperator></Seperator>
