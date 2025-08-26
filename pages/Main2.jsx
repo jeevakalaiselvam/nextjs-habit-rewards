@@ -920,7 +920,7 @@ export default function Main2() {
         </Top>
         {!loading && (
           <Content>
-            {false && active == "GAME" && (
+            {active == "GAME" && (
               <CanvasRight>
                 {loadingTrophies && (
                   <Spin
@@ -1085,7 +1085,7 @@ export default function Main2() {
                       onStop={() => {
                         let lastRefresh = "";
                         let oldId = "";
-                        if (window && false) {
+                        if (window) {
                           lastRefresh =
                             localStorage.getItem("LAST_REFRESH") ?? "";
                           oldId = localStorage.getItem("LAST_GAME") ?? "";
@@ -1424,7 +1424,7 @@ const CanvasLeft = styled.div`
 `;
 
 const CanvasRight = styled.div`
-  flex: 1;
+  flex: 1.5;
   display: flex;
   align-items: center;
   justify-content: flex-start;
