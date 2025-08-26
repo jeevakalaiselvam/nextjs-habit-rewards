@@ -552,7 +552,7 @@ export default function Main2() {
               }}
             />
           </Row>
-          <Row style={{ marginBottom: ".5rem" }}>
+          {/* <Row style={{ marginBottom: ".5rem" }}>
             <Input
               style={{ borderRadius: ".25rem" }}
               placeholder="Enter App Id"
@@ -575,7 +575,7 @@ export default function Main2() {
                 }));
               }}
             />
-          </Row>
+          </Row> */}
           <Row style={{ marginBottom: ".5rem" }}>
             <Input
               style={{ borderRadius: ".25rem" }}
@@ -1055,7 +1055,7 @@ export default function Main2() {
                   })}
               </CanvasRight>
             )}
-            {active == "GAME" && (
+            {false && active == "GAME" && (
               <CanvasLeft activeShelf={activeShelf}>
                 {games.map((item, index) => {
                   let allNotCompleted = trophies?.achievements?.filter(
@@ -1085,7 +1085,7 @@ export default function Main2() {
                       onStop={() => {
                         let lastRefresh = "";
                         let oldId = "";
-                        if (window) {
+                        if (window && false) {
                           lastRefresh =
                             localStorage.getItem("LAST_REFRESH") ?? "";
                           oldId = localStorage.getItem("LAST_GAME") ?? "";
