@@ -448,24 +448,7 @@ export default function Main2() {
     } catch (e) {}
   };
 
-  useEffect(() => {
-    if (false) {
-      let games = filteredLib
-        ?.filter(
-          (item) =>
-            item?.type == "GAME" &&
-            (item?.genre?.includes(activeCat) || activeCat == "All")
-        )
-        ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
-      let first = games?.[0];
-
-      if (first) {
-        refreshTrophiesForGame(first?.appId);
-      }
-    }
-  }, [activeShelf]);
-
-  function generateMonthYearList(startYear = 2016, startMonth = 0) {
+  function generateMonthYearList(startYear = 2025, startMonth = 5) {
     const result = [];
     const startDate = new Date(startYear, startMonth); // Jan 2016
     const today = new Date();
@@ -566,6 +549,30 @@ export default function Main2() {
               value={createForm?.title}
               onChange={(e) => {
                 setCreateForm((old) => ({ ...old, title: e?.target?.value }));
+              }}
+            />
+          </Row>
+          <Row style={{ marginBottom: ".5rem" }}>
+            <Input
+              style={{ borderRadius: ".25rem" }}
+              placeholder="Enter App Id"
+              value={createForm?.appId}
+              onChange={(e) => {
+                setCreateForm((old) => ({ ...old, appId: e?.target?.value }));
+              }}
+            />
+          </Row>
+          <Row style={{ marginBottom: ".5rem" }}>
+            <TextArea
+              rows={5}
+              style={{ borderRadius: ".25rem" }}
+              placeholder="Enter Platinum JSON"
+              value={createForm?.platinum}
+              onChange={(e) => {
+                setCreateForm((old) => ({
+                  ...old,
+                  platinum: e?.target?.value,
+                }));
               }}
             />
           </Row>
@@ -913,7 +920,7 @@ export default function Main2() {
         </Top>
         {!loading && (
           <Content>
-            {false && active == "GAME" && (
+            {active == "GAME" && (
               <CanvasRight>
                 {loadingTrophies && (
                   <Spin
@@ -1078,7 +1085,7 @@ export default function Main2() {
                       onStop={() => {
                         let lastRefresh = "";
                         let oldId = "";
-                        if (window && false) {
+                        if (window) {
                           lastRefresh =
                             localStorage.getItem("LAST_REFRESH") ?? "";
                           oldId = localStorage.getItem("LAST_GAME") ?? "";

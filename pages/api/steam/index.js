@@ -132,9 +132,8 @@ const handler = async (req, res) => {
       //Get all Games and Refresh data in File
       res.status(200).json({ status: "success", data: finalGamesResponse });
     } catch (error) {
-      console.error(error);
       //Get all Games and Refresh data in File
-      res.status(500).json({ status: "error", error: error });
+      res.status(200).json({ status: "error", error: error });
     }
   }
 };
