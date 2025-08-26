@@ -1136,7 +1136,7 @@ export default function Main2() {
                 {movies.map((item, index) => (
                   <Draggable
                     key={index}
-                    position={positions[index]}
+                    position={positions[item?._id]}
                     onStart={() => {
                       console.clear();
                       console.log(indexChecker);
@@ -1150,7 +1150,11 @@ export default function Main2() {
                       setCheckedGame(item?._id);
                     }}
                     onDrag={(e, data) => {
-                      handleDrag(index, e, data);
+                      handleDrag(index, e, data, item?._id);
+                    }}
+                    onStop={() => {
+                      let lastRefresh = "";
+                      let oldId = "";
                     }}
                     bounds="parent"
                   >
@@ -1324,10 +1328,10 @@ const AchCard = styled.div`
 
 const BASE_WIDTH_MOVIE = 150;
 const BASE_HEIGHT_MOVIE = 187.5;
-const BASE_INNER_WIDTH_MOVIE = 144;
+const BASE_INNER_WIDTH_MOVIE = 121;
 const BASE_INNER_HEIGHT_MOVIE = 170;
-const BASE_TOP_MOVIE = 16;
-const BASE_LEFT_MOVIE = 0;
+const BASE_TOP_MOVIE = 15;
+const BASE_LEFT_MOVIE = 1;
 
 const CdImageMovie = styled.div`
   display: flex;
@@ -1336,7 +1340,7 @@ const CdImageMovie = styled.div`
   cursor: pointer;
   width: ${(props) => props.scale * BASE_WIDTH_MOVIE}px;
   height: ${(props) => props.scale * BASE_HEIGHT_MOVIE}px;
-  background: url("/icons/blueray.png");
+  background: url("/icons/blueray2.png");
   background-size: contain;
   background-repeat: no-repeat;
   position: relative;
