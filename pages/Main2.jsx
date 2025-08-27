@@ -863,7 +863,7 @@ export default function Main2() {
         </Top>
         {!loading && (
           <Content>
-            {false && active == "GAME" && (
+            {active == "GAME" && (
               <CanvasRight>
                 {loadingTrophies && (
                   <Spin
@@ -1028,7 +1028,7 @@ export default function Main2() {
                       onStop={() => {
                         let lastRefresh = "";
                         let oldId = "";
-                        if (window && false) {
+                        if (window) {
                           lastRefresh =
                             localStorage.getItem("LAST_REFRESH") ?? "";
                           oldId = localStorage.getItem("LAST_GAME") ?? "";
