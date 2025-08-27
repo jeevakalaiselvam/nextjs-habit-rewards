@@ -474,6 +474,8 @@ export default function Main2() {
     }))
     ?.reverse();
 
+  const IGNORE_STEAM = false;
+
   return (
     <Container>
       {showCreateModal && (
@@ -863,7 +865,7 @@ export default function Main2() {
         </Top>
         {!loading && (
           <Content>
-            {active == "GAME" && (
+            {!IGNORE_STEAM && active == "GAME" && (
               <CanvasRight>
                 {loadingTrophies && (
                   <Spin
@@ -1028,7 +1030,7 @@ export default function Main2() {
                       onStop={() => {
                         let lastRefresh = "";
                         let oldId = "";
-                        if (window) {
+                        if (window && !IGNORE_STEAM) {
                           lastRefresh =
                             localStorage.getItem("LAST_REFRESH") ?? "";
                           oldId = localStorage.getItem("LAST_GAME") ?? "";
