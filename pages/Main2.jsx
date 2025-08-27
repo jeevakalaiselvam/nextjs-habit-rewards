@@ -1052,9 +1052,9 @@ export default function Main2() {
                       bounds="parent"
                     >
                       <GameCD zIndex={indexChecker?.[item?._id]}>
-                        <CdImage scale={3.6} onClick={(e) => {}}>
+                        <CdImage scale={3.2} onClick={(e) => {}}>
                           <CdInnerImage
-                            scale={3.6}
+                            scale={3.2}
                             cover={item?.image}
                             onDoubleClick={() => {
                               initiateEditForm(item);
@@ -1102,9 +1102,9 @@ export default function Main2() {
                     bounds="parent"
                   >
                     <GameCDMovie zIndex={indexChecker?.[item?._id]}>
-                      <CdImageMovie scale={3.6} onClick={(e) => {}}>
+                      <CdImageMovie scale={3.2} onClick={(e) => {}}>
                         <CdInnerImageMovie
-                          scale={3.6}
+                          scale={3.2}
                           cover={item?.image}
                           onDoubleClick={() => {
                             initiateEditForm(item);
