@@ -574,7 +574,9 @@ export default function MainContent({
                             >
                               {game?.name}
                             </GameTitle>
-                            <GameCompletion>{total} Trophies</GameCompletion>
+                            <GameCompletion>
+                              {completed} of {total} Trophies
+                            </GameCompletion>
                             <GameLastPlayed>
                               {lastUnlocked &&
                                 formatDate(
