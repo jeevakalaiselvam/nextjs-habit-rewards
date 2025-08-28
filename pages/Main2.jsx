@@ -36,7 +36,7 @@ import GameCdImage from "../components/GameCdImage";
 import { LoadingOutlined } from "@ant-design/icons";
 import GameCdImageSmall from "../components/GameCdImageSmall";
 import MovieCdImageSmall from "../components/MovieCdImageSmall";
-import { COLOR_GREEN, COLOR_RED } from "../helpers/colorHelper";
+import { COLOR_GREEN, COLOR_PLATINUM, COLOR_RED } from "../helpers/colorHelper";
 import Draggable from "react-draggable";
 import TextArea from "antd/es/input/TextArea";
 import PlatinumIconS from "../components/PlatinumIconS";
@@ -768,6 +768,15 @@ export default function Main2() {
             );
           })}
         </Links>
+        <PlatinumTitle>PLATINUM COUNT</PlatinumTitle>
+        <PlatinumData>
+          <span style={{ transform: "scale(3)" }}>
+            <PlatinumIcon />
+          </span>
+        </PlatinumData>
+        <PlatinumCount>
+          <span style={{ fontSize: "1.5rem", fontWeight: "bolder" }}>1</span>
+        </PlatinumCount>
       </Left>
       <Right>
         <Top>
@@ -1521,6 +1530,48 @@ const Link = styled.div`
   font-size: 0.8rem;
 `;
 
+const PlatinumTitle = styled.div`
+  position: absolute;
+  bottom: 3rem;
+  left: 0rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 2rem;
+  z-index: 1;
+  font-size: 0.9rem;
+  color: ${COLOR_PLATINUM};
+`;
+
+const PlatinumData = styled.div`
+  position: absolute;
+  bottom: 0rem;
+  left: 0rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 2rem;
+  z-index: 1;
+`;
+
+const PlatinumCount = styled.div`
+  position: absolute;
+  bottom: 1.5rem;
+  left: -0.15rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 1rem;
+  z-index: 5;
+  color: #2a447b;
+`;
+
 const Left = styled.div`
   display: flex;
   align-items: center;
@@ -1530,6 +1581,7 @@ const Left = styled.div`
   min-height: 100vh;
   max-height: 100vh;
   background-color: #161b1e;
+  position: relative;
 `;
 
 const Right = styled.div`
