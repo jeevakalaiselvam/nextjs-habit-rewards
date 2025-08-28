@@ -1022,7 +1022,6 @@ export default function Main2() {
                   let allNotCompleted = trophies?.achievements?.filter(
                     (ach) => ach?.achieved != 1
                   );
-                  console.log({ allNotCompleted });
                   let isPlatinum = allNotCompleted == 0;
                   return (
                     <Draggable
@@ -1080,7 +1079,7 @@ export default function Main2() {
                               setEditMode(true);
                             }}
                           />
-                          {false && (
+                          {isPlatinum && (
                             <PlatinumWrapper isPlatinum={isPlatinum}>
                               <PlatinumIcon />
                             </PlatinumWrapper>
