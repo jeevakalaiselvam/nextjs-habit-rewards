@@ -474,7 +474,7 @@ export default function Main2() {
     }))
     ?.reverse();
 
-  const IGNORE_STEAM = false;
+  const IGNORE_STEAM = true;
 
   return (
     <Container>
@@ -715,7 +715,6 @@ export default function Main2() {
         </Links>
         <Seperator></Seperator>
         <Links>
-          <Seperator></Seperator>
           {shelfDates?.map((shelf, index) => {
             let count = 0;
 
