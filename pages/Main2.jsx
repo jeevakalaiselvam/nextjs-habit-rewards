@@ -775,7 +775,13 @@ export default function Main2() {
           </span>
         </PlatinumData>
         <PlatinumCount>
-          <span style={{ fontSize: "1.5rem", fontWeight: "bolder" }}>1</span>
+          <span style={{ fontSize: "1.5rem", fontWeight: "bolder" }}>
+            {
+              library?.filter(
+                (item) => item?.type == "GAME" && item?.status == "PLATINUM"
+              )?.length
+            }
+          </span>
         </PlatinumCount>
       </Left>
       <Right>

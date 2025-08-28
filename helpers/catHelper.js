@@ -133,4 +133,8 @@ export const G_STATUS = [
     value: "DONE",
     label: "Done",
   },
+  {
+    value: "PLATINUM",
+    label: "Platinum",
+  },
 ];
