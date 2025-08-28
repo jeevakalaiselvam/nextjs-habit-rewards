@@ -474,7 +474,7 @@ export default function Main2() {
     }))
     ?.reverse();
 
-  const IGNORE_STEAM = true;
+  const IGNORE_STEAM = false;
 
   return (
     <Container>
@@ -988,11 +988,13 @@ export default function Main2() {
                           </AchRarity>
                         )}
                         <SeperatorH padding={".25rem"} />
-                        <AchTrophy>
+                        <AchTrophy achieved={ach?.achieved == "1"}>
+                          {ach?.achieved == "1" && ach?.color != "Platinum" && (
+                            <GoldIconS />
+                          )}
+                          {!ach?.achieved == "1" &&
+                            ach?.color != "Platinum" && <SilverIconS />}
                           {ach?.color == "Platinum" && <PlatinumIconS />}
-                          {ach?.color == "Gold" && <GoldIconS />}
-                          {ach?.color == "Silver" && <SilverIconS />}
-                          {ach?.color == "Bronze" && <BronzeIconS />}
                         </AchTrophy>
                       </AchCard>
                     );
@@ -1257,6 +1259,7 @@ const AchTrophy = styled.div`
   flex-direction: column;
   min-width: 50px;
   transform: scale(1.5) translate(0.25rem, 0.25rem);
+  opacity: ${(props) => (props.achieved ? "1" : "0.25")};
 `;
 
 const AchCard = styled.div`
