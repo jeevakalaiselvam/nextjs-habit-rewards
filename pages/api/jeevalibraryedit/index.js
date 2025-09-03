@@ -3,18 +3,7 @@ import { ObjectId } from "mongodb";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const {
-      title,
-      type,
-      genre,
-      image,
-      _id,
-      status,
-      shelfName,
-      rating,
-      appId,
-      platinum,
-    } = req.body;
+    const { title, type, image, _id } = req.body;
 
     try {
       const client = await clientPromise;
@@ -26,13 +15,8 @@ export default async function handler(req, res) {
           $set: {
             title: title,
             type: type,
-            genre: genre,
             image: image,
-            status,
-            shelfName,
-            rating: rating ? rating : 0,
-            appId,
-            platinum,
+            updated: new Date(),
           },
         }
       );

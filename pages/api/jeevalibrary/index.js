@@ -3,19 +3,9 @@ import clientPromise from "../../../lib/db";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const {
-      title,
-      type,
-      genre,
-      image,
-      status,
-      shelfName,
-      rating,
-      appId,
-      platinum,
-    } = req.body;
+    const { title, type, image } = req.body;
 
-    if (!genre || !title || !genre || !image || !status) {
+    if (!title || !image || !type) {
       return res.status(400).json({ error: "Field are required" });
     }
 
@@ -24,15 +14,10 @@ export default async function handler(req, res) {
       const db = client.db("habittracker");
       await db.collection("alllibrary").insertOne({
         title,
-        genre,
         type,
         image,
-        status,
-        completed: status == "DONE" ? new Date() : "",
-        shelfName: shelfName ?? "",
-        rating: rating ? rating : 0,
-        appId,
-        platinum,
+        created: new Date(),
+        updated: new Date(),
       });
 
       res.status(201).json({ message: "Item added successfully" });

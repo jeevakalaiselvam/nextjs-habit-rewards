@@ -297,25 +297,13 @@ export default function Main2() {
     shelfItems = shelfItems?.filter((item) => !item?.shelfName?.length > 0);
   }
 
-  let filteredLib = shelfItems?.sort(
-    (item1, item2) => item2?.completed - item1?.completed
-  );
+  let filteredLib = library;
 
   let games = filteredLib
-    ?.filter(
-      (item) =>
-        item?.type == "GAME" &&
-        (item?.genre?.includes(activeCat) || activeCat == "All")
-    )
-    ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
-
-  if (activeShelf == "Active" && active == "GAME") {
-    games = library?.filter(
-      (item) =>
-        (item?.type == "GAME" && item?.genre?.includes(activeCat)) ||
-        !item?.shelfName
+    ?.filter((item) => item?.type == "GAME")
+    ?.sort(
+      (game1, game2) => new Date(game2?.updated) - new Date(game1?.updated)
     );
-  }
 
   let movies = filteredLib
     ?.filter(
@@ -326,19 +314,11 @@ export default function Main2() {
     ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
 
   let tv = filteredLib
-    ?.filter(
-      (item) =>
-        item?.type == "TV" &&
-        (item?.genre?.includes(activeCat) || activeCat == "All")
-    )
+    ?.filter((item) => item?.type == "TV")
     ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
 
   let book = filteredLib
-    ?.filter(
-      (item) =>
-        item?.type == "BOOK" &&
-        (item?.genre?.includes(activeCat) || activeCat == "All")
-    )
+    ?.filter((item) => item?.type == "BOOK")
     ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
 
   const MOVEMENT_SLIP = 50;
@@ -474,7 +454,9 @@ export default function Main2() {
     }))
     ?.reverse();
 
-  const IGNORE_STEAM = false;
+  const IGNORE_STEAM = true;
+
+  console.log({ games });
 
   return (
     <Container>
@@ -554,30 +536,6 @@ export default function Main2() {
               }}
             />
           </Row>
-          {/* <Row style={{ marginBottom: ".5rem" }}>
-            <Input
-              style={{ borderRadius: ".25rem" }}
-              placeholder="Enter App Id"
-              value={createForm?.appId}
-              onChange={(e) => {
-                setCreateForm((old) => ({ ...old, appId: e?.target?.value }));
-              }}
-            />
-          </Row>
-          <Row style={{ marginBottom: ".5rem" }}>
-            <TextArea
-              rows={5}
-              style={{ borderRadius: ".25rem" }}
-              placeholder="Enter Platinum JSON"
-              value={createForm?.platinum}
-              onChange={(e) => {
-                setCreateForm((old) => ({
-                  ...old,
-                  platinum: e?.target?.value,
-                }));
-              }}
-            />
-          </Row> */}
           <Row style={{ marginBottom: ".5rem" }}>
             <Input
               style={{ borderRadius: ".25rem" }}
@@ -587,61 +545,6 @@ export default function Main2() {
                 setCreateForm((old) => ({ ...old, image: e?.target?.value }));
               }}
             />
-          </Row>
-          <Row style={{ marginBottom: ".5rem" }} gutter={[16, 16]}>
-            <Col span={12}>
-              <Select
-                value={createForm?.status}
-                style={{ width: "100%" }}
-                placeholder="Select Status.."
-                onChange={(e) => {
-                  setCreateForm((old) => ({ ...old, status: e }));
-                }}
-                allowClear
-                options={G_STATUS}
-              />
-            </Col>
-            <Col span={12}>
-              <Select
-                mode="multiple"
-                value={createForm?.genre}
-                style={{ width: "100%" }}
-                placeholder="Select Genre.."
-                onChange={(e) => {
-                  setCreateForm((old) => ({ ...old, genre: e }));
-                }}
-                allowClear
-                options={
-                  active == "GAME"
-                    ? GAME_GENRES
-                    : active == "MOVIE"
-                    ? MOVIE_GENRES
-                    : MOVIE_GENRES
-                }
-              />
-            </Col>
-          </Row>
-          <Row style={{ marginBottom: ".5rem" }} gutter={[16, 16]}>
-            <Col span={12}>
-              <Select
-                value={createForm?.shelfName}
-                style={{ width: "100%" }}
-                placeholder="Select Shelf.."
-                onChange={(e) => {
-                  setCreateForm((old) => ({ ...old, shelfName: e }));
-                }}
-                allowClear
-                options={shelfDates}
-              />
-            </Col>
-            <Col span={12} style={{ transform: "translateY(.45rem)" }}>
-              <Rate
-                value={createForm?.rating}
-                onChange={(e) => {
-                  setCreateForm((old) => ({ ...old, rating: e }));
-                }}
-              />
-            </Col>
           </Row>
         </Modal>
       )}
@@ -692,98 +595,21 @@ export default function Main2() {
           </Row>
         </Modal>
       )}
-      <Left>
-        <NewProfile />
-        <Links>
-          <Link
-            active={active == "GAME" || hoverActive == "GAME"}
-            onMouseEnter={() => {
-              setHoverActive("GAME");
-            }}
-            onMouseLeave={() => {
-              setHoverActive("");
-            }}
-            onClick={() => {
-              setActive("GAME");
-            }}
-          >
-            <span style={{ transform: "translateY(2px)", marginRight: "1rem" }}>
-              <TbDeviceGamepad2 />
-            </span>
-            <span>Games</span>
-          </Link>
-        </Links>
-        <Seperator></Seperator>
-        <Links>
-          {shelfDates?.map((shelf, index) => {
-            let count = 0;
-
-            count = library?.filter(
-              (game) => game?.shelfName == shelf?.value
-            )?.length;
-
-            return (
-              <Link
-                active={
-                  activeShelf == shelf?.value || hoverActive == shelf?.value
-                }
-                onMouseEnter={() => {
-                  setHoverActive(shelf?.value);
-                }}
-                onMouseLeave={() => {
-                  setHoverActive("");
-                }}
-                onClick={() => {
-                  setActiveShelf(shelf?.value);
-                }}
-              >
-                <span
-                  style={{
-                    transform: "translateY(2px)",
-                    marginRight: "1rem",
-                  }}
-                >
-                  <TbDeviceGamepad2 />
-                </span>
-                <span
-                  style={{
-                    width: "100%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <span>{shelf?.value}</span>
-                  <span
-                    style={{
-                      background: "#333",
-                      padding: "2px 2px",
-                      opacity: count > 0 ? 1 : 0.25,
-                    }}
-                  >
-                    {count}
-                  </span>
-                </span>
-              </Link>
-            );
-          })}
-        </Links>
-        <PlatinumTitle>PLATINUM COUNT</PlatinumTitle>
-        <PlatinumData>
-          <span style={{ transform: "scale(3)" }}>
-            <PlatinumIcon />
-          </span>
-        </PlatinumData>
-        <PlatinumCount>
-          <span style={{ fontSize: "1.5rem", fontWeight: "bolder" }}>
-            {
-              library?.filter(
-                (item) => item?.type == "GAME" && item?.status == "PLATINUM"
-              )?.length
-            }
-          </span>
-        </PlatinumCount>
-      </Left>
+      <PlatinumTitle>PLATINUM COUNT</PlatinumTitle>
+      <PlatinumData>
+        <span style={{ transform: "scale(3)" }}>
+          <PlatinumIcon />
+        </span>
+      </PlatinumData>
+      <PlatinumCount>
+        <span style={{ fontSize: "1.5rem", fontWeight: "bolder" }}>
+          {
+            library?.filter(
+              (item) => item?.type == "GAME" && item?.status == "PLATINUM"
+            )?.length
+          }
+        </span>
+      </PlatinumCount>
       <Right>
         <Top>
           <Top1>
@@ -1018,109 +844,15 @@ export default function Main2() {
             )}
             {active == "GAME" && (
               <CanvasLeft activeShelf={activeShelf}>
-                {games.map((item, index) => {
+                {[...games].map((item, index) => {
                   let allNotCompleted = trophies?.achievements?.filter(
                     (ach) => ach?.achieved != 1
                   );
                   let isPlatinum = allNotCompleted == 0;
                   return (
-                    <Draggable
-                      key={index}
-                      position={positions[item?._id]}
-                      onStart={() => {
-                        console.clear();
-                        console.log(indexChecker);
-                        let lastMax = Math.max(...Object.values(indexChecker));
-                        setIndexChecker((old) => {
-                          return {
-                            ...old,
-                            [item?._id]: lastMax + 1,
-                          };
-                        });
-                        setCheckedGame(item?._id);
-                      }}
-                      onDrag={(e, data) => {
-                        handleDrag(index, e, data, item?._id);
-                      }}
-                      onStop={() => {
-                        let lastRefresh = "";
-                        let oldId = "";
-                        if (window && !IGNORE_STEAM) {
-                          lastRefresh =
-                            localStorage.getItem("LAST_REFRESH") ?? "";
-                          oldId = localStorage.getItem("LAST_GAME") ?? "";
-                          const diffInMs = Math.abs(
-                            new Date() - new Date(lastRefresh)
-                          ); // difference in milliseconds
-                          const diffInSeconds = diffInMs / 1000; // convert to seconds
-                          if (diffInSeconds > 15 || oldId != item?.appId) {
-                            refreshTrophiesForGame(item?.appId);
-                            localStorage.setItem(
-                              "LAST_REFRESH",
-                              String(new Date())
-                            );
-                            localStorage.setItem(
-                              "LAST_GAME",
-                              String(item?.appid)
-                            );
-                          }
-                        }
-                      }}
-                      bounds="parent"
-                    >
-                      <GameCD zIndex={indexChecker?.[item?._id]}>
-                        <CdImage scale={3.2} onClick={(e) => {}}>
-                          <CdInnerImage
-                            scale={3.2}
-                            cover={item?.image}
-                            onDoubleClick={() => {
-                              initiateEditForm(item);
-                              setShowCreateModal(true);
-                              setEditMode(true);
-                            }}
-                          />
-                          {isPlatinum && (
-                            <PlatinumWrapper isPlatinum={isPlatinum}>
-                              <PlatinumIcon />
-                            </PlatinumWrapper>
-                          )}
-                        </CdImage>
-                      </GameCD>
-                    </Draggable>
-                  );
-                })}
-              </CanvasLeft>
-            )}
-            {active == "MOVIE" && (
-              <CanvasLeft activeShelf={activeShelf}>
-                {movies.map((item, index) => (
-                  <Draggable
-                    key={index}
-                    position={positions[item?._id]}
-                    onStart={() => {
-                      console.clear();
-                      console.log(indexChecker);
-                      let lastMax = Math.max(...Object.values(indexChecker));
-                      setIndexChecker((old) => {
-                        return {
-                          ...old,
-                          [item?._id]: lastMax + 1,
-                        };
-                      });
-                      setCheckedGame(item?._id);
-                    }}
-                    onDrag={(e, data) => {
-                      handleDrag(index, e, data, item?._id);
-                    }}
-                    onStop={() => {
-                      let lastRefresh = "";
-                      let oldId = "";
-                    }}
-                    bounds="parent"
-                  >
-                    <GameCDMovie zIndex={indexChecker?.[item?._id]}>
-                      <CdImageMovie scale={3.2} onClick={(e) => {}}>
-                        <CdInnerImageMovie
+                    <GameCD zIndex={indexChecker?.[item?._id]}>
+                      <CdImage scale={3.2} onClick={(e) => {}}>
+                        <CdInnerImage
                           scale={3.2}
                           cover={item?.image}
                           onDoubleClick={() => {
@@ -1129,10 +861,15 @@ export default function Main2() {
                             setEditMode(true);
                           }}
                         />
-                      </CdImageMovie>
-                    </GameCDMovie>
-                  </Draggable>
-                ))}
+                        {isPlatinum && (
+                          <PlatinumWrapper isPlatinum={isPlatinum}>
+                            <PlatinumIcon />
+                          </PlatinumWrapper>
+                        )}
+                      </CdImage>
+                    </GameCD>
+                  );
+                })}
               </CanvasLeft>
             )}
           </Content>
@@ -1373,19 +1110,23 @@ const GameCD = styled.div`
   height: ${(props) => props.scale * BASE_HEIGHT_GAME}px;
   border-radius: 12px;
   cursor: grab;
-  position: absolute;
   z-index: ${(props) => props.zIndex};
 `;
 
 const CanvasLeft = styled.div`
   flex: 2;
-  height: calc(100vh);
+  width: 100vw;
+  height: calc(100vh - 100px);
   position: relative;
-  overflow: hidden;
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  overflow: scroll;
 `;
 
 const CanvasRight = styled.div`
@@ -1583,8 +1324,6 @@ const Left = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 200px;
-  min-height: 100vh;
-  max-height: 100vh;
   background-color: #161b1e;
   position: relative;
 `;
@@ -1594,6 +1333,7 @@ const Right = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
+  flex-wrap: wrap;
   flex: 1;
   min-height: 100vh;
   max-height: 100vh;
