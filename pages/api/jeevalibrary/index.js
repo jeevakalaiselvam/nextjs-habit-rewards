@@ -14,7 +14,7 @@ export default async function handler(req, res) {
       const db = client.db("habittracker");
       await db.collection("alllibrary").insertOne({
         title,
-        type,
+        type: "GAME",
         image,
         created: new Date(),
         updated: new Date(),

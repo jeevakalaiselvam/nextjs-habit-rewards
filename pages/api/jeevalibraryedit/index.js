@@ -14,7 +14,7 @@ export default async function handler(req, res) {
         {
           $set: {
             title: title,
-            type: type,
+            type: "GAME",
             image: image,
             updated: new Date(),
           },

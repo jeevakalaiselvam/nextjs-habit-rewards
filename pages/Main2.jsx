@@ -36,7 +36,12 @@ import GameCdImage from "../components/GameCdImage";
 import { LoadingOutlined } from "@ant-design/icons";
 import GameCdImageSmall from "../components/GameCdImageSmall";
 import MovieCdImageSmall from "../components/MovieCdImageSmall";
-import { COLOR_GREEN, COLOR_PLATINUM, COLOR_RED } from "../helpers/colorHelper";
+import {
+  COLOR_GREEN,
+  COLOR_PLATINUM,
+  COLOR_RED,
+  generateDarkTextColorForLightBg,
+} from "../helpers/colorHelper";
 import Draggable from "react-draggable";
 import TextArea from "antd/es/input/TextArea";
 import PlatinumIconS from "../components/PlatinumIconS";
@@ -299,11 +304,9 @@ export default function Main2() {
 
   let filteredLib = library;
 
-  let games = filteredLib
-    ?.filter((item) => item?.type == "GAME")
-    ?.sort(
-      (game1, game2) => new Date(game2?.updated) - new Date(game1?.updated)
-    );
+  let games = filteredLib?.sort(
+    (game1, game2) => new Date(game2?.updated) - new Date(game1?.updated)
+  );
 
   let movies = filteredLib
     ?.filter(
@@ -511,20 +514,6 @@ export default function Main2() {
             </Button>,
           ]}
         >
-          <Row style={{ marginBottom: ".5rem" }}>
-            <Radio.Group
-              block
-              options={options}
-              defaultValue="GAME"
-              value={createForm?.type}
-              optionType="button"
-              buttonStyle="solid"
-              style={{ width: "100%" }}
-              onChange={(e) => {
-                setCreateForm((old) => ({ ...old, type: e.target.value }));
-              }}
-            />
-          </Row>
           <Row style={{ marginBottom: ".5rem" }}></Row>
           <Row style={{ marginBottom: ".5rem" }}>
             <Input
@@ -595,7 +584,6 @@ export default function Main2() {
           </Row>
         </Modal>
       )}
-      <PlatinumTitle>PLATINUM COUNT</PlatinumTitle>
       <PlatinumData>
         <span style={{ transform: "scale(3)" }}>
           <PlatinumIcon />
@@ -603,11 +591,7 @@ export default function Main2() {
       </PlatinumData>
       <PlatinumCount>
         <span style={{ fontSize: "1.5rem", fontWeight: "bolder" }}>
-          {
-            library?.filter(
-              (item) => item?.type == "GAME" && item?.status == "PLATINUM"
-            )?.length
-          }
+          {library?.length}
         </span>
       </PlatinumCount>
       <Right>
@@ -861,9 +845,10 @@ export default function Main2() {
                             setEditMode(true);
                           }}
                         />
-                        {isPlatinum && (
+                        {true && (
                           <PlatinumWrapper isPlatinum={isPlatinum}>
                             <PlatinumIcon />
+                            <CountInner>{games?.length - index}</CountInner>
                           </PlatinumWrapper>
                         )}
                       </CdImage>
@@ -886,15 +871,27 @@ export default function Main2() {
   );
 }
 
+const CountInner = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: 50%;
+  left: 50%;
+  font-size: 0.5rem;
+  color: ${generateDarkTextColorForLightBg(COLOR_PLATINUM, 40)};
+  transform: translate(-325%, -25%);
+`;
+
 const PlatinumWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.8rem;
-  padding-top: 14rem;
-  padding-left: 10rem;
+  padding-top: 16rem;
+  padding-left: 11.5rem;
   z-index: 999;
   transform: scale(2);
+  position: relative;
   animation: ${(props) =>
     props.isPlatinum ? "blinkSmooth 1.5s ease-in-out infinite" : ""};
 
@@ -1278,7 +1275,7 @@ const Link = styled.div`
 
 const PlatinumTitle = styled.div`
   position: absolute;
-  bottom: 3rem;
+  top: 3rem;
   left: 0rem;
   width: 100%;
   display: flex;
@@ -1293,22 +1290,22 @@ const PlatinumTitle = styled.div`
 
 const PlatinumData = styled.div`
   position: absolute;
-  bottom: 0rem;
-  left: 0rem;
-  width: 100%;
+  top: 0rem;
+  left: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  transform: translateX(-50%);
   padding: 2rem;
   z-index: 1;
 `;
 
 const PlatinumCount = styled.div`
   position: absolute;
-  bottom: 1.5rem;
-  left: -0.15rem;
-  width: 100%;
+  top: 0rem;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
