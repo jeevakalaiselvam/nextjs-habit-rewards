@@ -1712,8 +1712,8 @@ const AchIconOuter = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 67px;
-  height: 67px;
+  width: 65px;
+  height: 65px;
   background-color: ${(props) =>
     props?.achieved == 1 ? "#579428" : "#262d35"};
 `;
