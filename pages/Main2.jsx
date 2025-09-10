@@ -301,21 +301,11 @@ export default function Main2() {
     (item1, item2) => item2?.completed - item1?.completed
   );
 
-  let games = filteredLib
-    ?.filter(
-      (item) =>
-        item?.type == "GAME" &&
-        (item?.genre?.includes(activeCat) || activeCat == "All")
-    )
-    ?.sort((game1, game2) => game1.title.localeCompare(game2.title));
-
-  if (activeShelf == "Active" && active == "GAME") {
-    games = library?.filter(
-      (item) =>
-        (item?.type == "GAME" && item?.genre?.includes(activeCat)) ||
-        !item?.shelfName
+  let games = library
+    ?.filter((item) => item?.type == "GAME")
+    ?.sort(
+      (game1, game2) => new Date(game2?.updated) - new Date(game1?.updated)
     );
-  }
 
   let movies = filteredLib
     ?.filter(
@@ -474,7 +464,7 @@ export default function Main2() {
     }))
     ?.reverse();
 
-  const IGNORE_STEAM = false;
+  const IGNORE_STEAM = true;
 
   return (
     <Container>
@@ -1022,72 +1012,26 @@ export default function Main2() {
                   let allNotCompleted = trophies?.achievements?.filter(
                     (ach) => ach?.achieved != 1
                   );
-                  console.log({ allNotCompleted });
                   let isPlatinum = allNotCompleted == 0;
                   return (
-                    <Draggable
-                      key={index}
-                      position={positions[item?._id]}
-                      onStart={() => {
-                        console.clear();
-                        console.log(indexChecker);
-                        let lastMax = Math.max(...Object.values(indexChecker));
-                        setIndexChecker((old) => {
-                          return {
-                            ...old,
-                            [item?._id]: lastMax + 1,
-                          };
-                        });
-                        setCheckedGame(item?._id);
-                      }}
-                      onDrag={(e, data) => {
-                        handleDrag(index, e, data, item?._id);
-                      }}
-                      onStop={() => {
-                        let lastRefresh = "";
-                        let oldId = "";
-                        if (window && !IGNORE_STEAM) {
-                          lastRefresh =
-                            localStorage.getItem("LAST_REFRESH") ?? "";
-                          oldId = localStorage.getItem("LAST_GAME") ?? "";
-                          const diffInMs = Math.abs(
-                            new Date() - new Date(lastRefresh)
-                          ); // difference in milliseconds
-                          const diffInSeconds = diffInMs / 1000; // convert to seconds
-                          if (diffInSeconds > 15 || oldId != item?.appId) {
-                            refreshTrophiesForGame(item?.appId);
-                            localStorage.setItem(
-                              "LAST_REFRESH",
-                              String(new Date())
-                            );
-                            localStorage.setItem(
-                              "LAST_GAME",
-                              String(item?.appid)
-                            );
-                          }
-                        }
-                      }}
-                      bounds="parent"
-                    >
-                      <GameCD zIndex={indexChecker?.[item?._id]}>
-                        <CdImage scale={3.2} onClick={(e) => {}}>
-                          <CdInnerImage
-                            scale={3.2}
-                            cover={item?.image}
-                            onDoubleClick={() => {
-                              initiateEditForm(item);
-                              setShowCreateModal(true);
-                              setEditMode(true);
-                            }}
-                          />
-                          {false && (
-                            <PlatinumWrapper isPlatinum={isPlatinum}>
-                              <PlatinumIcon />
-                            </PlatinumWrapper>
-                          )}
-                        </CdImage>
-                      </GameCD>
-                    </Draggable>
+                    <GameCD zIndex={indexChecker?.[item?._id]}>
+                      <CdImage scale={3.2} onClick={(e) => {}}>
+                        <CdInnerImage
+                          scale={3.2}
+                          cover={item?.image}
+                          onDoubleClick={() => {
+                            initiateEditForm(item);
+                            setShowCreateModal(true);
+                            setEditMode(true);
+                          }}
+                        />
+                        {isPlatinum && (
+                          <PlatinumWrapper isPlatinum={isPlatinum}>
+                            <PlatinumIcon />
+                          </PlatinumWrapper>
+                        )}
+                      </CdImage>
+                    </GameCD>
                   );
                 })}
               </CanvasLeft>
@@ -1374,19 +1318,27 @@ const GameCD = styled.div`
   height: ${(props) => props.scale * BASE_HEIGHT_GAME}px;
   border-radius: 12px;
   cursor: grab;
-  position: absolute;
   z-index: ${(props) => props.zIndex};
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
 `;
 
 const CanvasLeft = styled.div`
   flex: 2;
+  width: 100vw;
   height: calc(100vh);
+  padding-top: 1rem;
   position: relative;
-  overflow: hidden;
   background-repeat: no-repeat;
   background-size: contain;
   background-position: center center;
   background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  overflow: scroll;
 `;
 
 const CanvasRight = styled.div`
