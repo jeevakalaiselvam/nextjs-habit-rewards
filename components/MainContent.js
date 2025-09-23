@@ -811,14 +811,11 @@ export default function MainContent({
                         {selectedGame?.name?.toUpperCase()} TROPHIES
                         <Visible
                           onClick={() => {
-                            if (completedBG >= totalBG) {
-                              setVisibleAll(false);
-                            } else {
-                              setVisibleAll(true);
-                            }
+                            setVisibleAll((old) => !old);
                           }}
                         >
-                          SHOW ALL
+                          {visibleAll && "UNLOCKED"}
+                          {!visibleAll && "ALL"}
                         </Visible>
                       </GameLeft>
                     </Game1Line>
@@ -828,7 +825,11 @@ export default function MainContent({
                           (ach) => ach?.color == "Platinum"
                         ),
                         ...(selectedGame?.achievements ?? [])
-                          ?.filter((ach) => ach?.color != "Platinum")
+                          ?.filter(
+                            (ach) =>
+                              ach?.color != "Platinum" &&
+                              (visibleAll ? true : ach?.achieved != 1)
+                          )
                           ?.sort(
                             (ach1, ach2) => ach2?.percentage - ach1?.percentage
                           ),
