@@ -16,7 +16,8 @@ import { Spin } from "antd";
 const GAMES_INCLUDED = [
   "1659040", //Hitman 3
   "2358720", //Wukong,
-  "1030300", //SilkSong
+  "1030300", //SilkSong,
+  "750920",
 ];
 
 export default function Atom() {
