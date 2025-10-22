@@ -12,8 +12,10 @@ import {
 
 const GAMES_INCLUDED = [
   "1659040", //Hitman 3
-  "2358720", //Wukong
-  "1030300", //SilkSong
+  "2358720", //Wukong,
+  "1030300", //SilkSong,
+  "750920",
+  "391220",
 ];
 
 export default function Atom() {
