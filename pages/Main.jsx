@@ -137,7 +137,11 @@ export default function Atom() {
 
   return (
     <Container>
-      <MainHeader games={finalGames} gamesLoading={gamesLoading} />
+      <MainHeader
+        games={finalGames}
+        gamesLoading={gamesLoading}
+        refreshData={refreshData}
+      />
       <MainContent
         games={finalGames}
         refreshData={refreshData}

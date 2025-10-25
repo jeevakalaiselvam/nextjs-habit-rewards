@@ -702,6 +702,8 @@ export default function MainContent({
                       completed = completed + 1;
                     }
 
+                    completed = completed > total ? total : completed;
+
                     let { color, rank } =
                       calculateRankForCompletion(completion);
                     let lastAch = game?.achievements?.sort(
@@ -824,9 +826,9 @@ export default function MainContent({
                             )}
                           </Trophies>
                           <Seperator></Seperator>
-                          <Platinum isPlatinum={total == completed}>
+                          <Platinum isPlatinum={completed >= total}>
                             <span
-                              style={{ opacity: total == completed ? 1 : 0.25 }}
+                              style={{ opacity: completed >= total ? 1 : 0.25 }}
                             >
                               <PlatinumIcon />
                             </span>
@@ -835,7 +837,7 @@ export default function MainContent({
                                 fontSize: ".7rem",
                                 marginTop: "4px",
                                 fontWeight: "bold",
-                                opacity: total == completed ? 1 : 0.75,
+                                opacity: completed >= total ? 1 : 0.25,
                               }}
                             >
                               {Number(lastAch?.percentage)} %
@@ -1613,7 +1615,7 @@ const Platinum = styled.div`
   justify-content: center;
   flex-direction: column;
   margin-right: 0.5rem;
-  color: #b9c7e5;
+  color: #7a96d1;
   min-width: 50px;
 `;
 
