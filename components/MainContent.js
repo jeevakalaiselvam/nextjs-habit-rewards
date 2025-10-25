@@ -55,6 +55,8 @@ export default function MainContent({
   setGamesLoading,
   gamesLoading,
   platinumDataLoading,
+  tabActive,
+  setTabActive,
 }) {
   const [gameHovered, setGameHovered] = useState("");
   const [selectedRarity, setSelectedRarity] = useState("COMMON");
@@ -253,18 +255,6 @@ export default function MainContent({
     weeklyUnlocks,
   } = calculateLevelForAchs(games);
 
-  useEffect(() => {
-    if (window) {
-      let old = localStorage.getItem("SELECTED_TAB") ?? "LIBRARY";
-      let oldGameId = localStorage.getItem("SELECTED_GAME") ?? "";
-      const game = games?.filter((game) => +game?.id == +oldGameId);
-      console.log({ game, oldGameId, old });
-      setSelected(old);
-      setSelectedMode(old);
-      setSelectedGame(games?.find((game) => +game?.id == +oldGameId));
-    }
-  }, [games]);
-
   return (
     <Container>
       {showEditModal && (
@@ -293,6 +283,7 @@ export default function MainContent({
             onClick={() => {
               setSelected("GAMES");
               setSelectedMode("GAMES");
+              setTabActive("GAMES");
               if (window) {
                 localStorage.setItem("SELECTED_TAB", "GAMES");
               }
@@ -643,7 +634,7 @@ export default function MainContent({
                 })}
               </Game2Line>
             )}
-            {selectedMode == "GAMES" && (
+            {tabActive == "GAMES" && (
               <Games>
                 <Games1Line>
                   <GamesLeft>GAMES</GamesLeft>
@@ -729,6 +720,7 @@ export default function MainContent({
                         onClick={() => {
                           setSelectedGame(game);
                           setSelectedMode("GAME");
+                          setTabActive("GAME");
                         }}
                         color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                       >
@@ -738,6 +730,7 @@ export default function MainContent({
                             onClick={() => {
                               setSelectedGame(game);
                               setSelectedMode("GAME");
+                              setTabActive("GAME");
                             }}
                           >
                             {game?.name}
@@ -854,7 +847,7 @@ export default function MainContent({
                 </Games2Line>
               </Games>
             )}
-            {selectedMode == "GAME" && (
+            {tabActive == "GAME" && (
               <>
                 <Game>
                   <Game1Line>

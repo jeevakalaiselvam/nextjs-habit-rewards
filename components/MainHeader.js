@@ -18,7 +18,13 @@ import { calculatePSLevelAndProgress } from "../helpers/trophyHelper";
 import LevelIcon from "./LevelIcon";
 import GameCdImage from "./GameCdImage";
 
-export default function MainHeader({ games, gamesLoading, refreshData }) {
+export default function MainHeader({
+  games,
+  gamesLoading,
+  refreshData,
+  setTabActive,
+  tabActive,
+}) {
   let image =
     "https://4kwallpapers.com/images/wallpapers/hogwarts-legacy-winter-1920x1200-20034.jpeg";
 
@@ -36,7 +42,6 @@ export default function MainHeader({ games, gamesLoading, refreshData }) {
   let total = 0;
 
   games?.forEach((game) => {
-    console.log("GAME", game?.name, game?.achievements);
     game?.achievements?.forEach((ach) => {
       if (ach?.achieved == 0) {
         unearned++;

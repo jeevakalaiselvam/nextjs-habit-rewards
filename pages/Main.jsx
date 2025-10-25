@@ -25,6 +25,7 @@ export default function Atom() {
   const [platinumData, setPlatinumData] = useState([]);
   const [finalGames, setFinalGames] = useState([]);
   const [refeshing, setRefreshing] = useState(false);
+  const [tabActive, setTabActive] = useState(0);
 
   const refreshSteamGames = () => {
     setGamesLoading(true);
@@ -138,11 +139,15 @@ export default function Atom() {
   return (
     <Container>
       <MainHeader
+        tabActive={tabActive}
+        setTabActive={setTabActive}
         games={finalGames}
         gamesLoading={gamesLoading}
         refreshData={refreshData}
       />
       <MainContent
+        tabActive={tabActive}
+        setTabActive={setTabActive}
         games={finalGames}
         refreshData={refreshData}
         setGamesLoading={setGamesLoading}
