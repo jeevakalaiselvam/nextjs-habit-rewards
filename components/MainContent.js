@@ -113,17 +113,16 @@ export default function MainContent({
   let targetToGet = 0;
   let targetObtained = 0;
 
-  targetToGet =
-    selectedGame?.price > 0 ? Math.ceil(selectedGame?.price / 100) : 1;
+  targetToGet = 1;
 
   targetObtained = selectedGame?.completed;
 
+  totalBG = selectedGame?.achievements?.length;
   let completedBG = selectedGame?.achievements?.filter(
     (item) => item?.achieved == 1
   )?.length;
 
-  let completionBG =
-    completedBG == 0 ? 0 : (targetObtained / targetToGet) * 100;
+  let completionBG = completedBG == 0 ? 0 : (completedBG / totalBG) * 100;
 
   let { color, rank } = calculateRankForCompletion(completionBG ?? 0);
   let lastAch = selectedGame?.achievements?.sort(
