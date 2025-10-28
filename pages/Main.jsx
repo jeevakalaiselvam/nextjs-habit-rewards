@@ -15,7 +15,8 @@ const GAMES_INCLUDED = [
   "2358720", //Wukong,
   "1030300", //SilkSong,
   "750920", //Rise of Tomb Raider
-  "391220", //Cyberpunk
+  "391220", //Cyberpunk,
+  "292030",
 ];
 
 export default function Atom() {
