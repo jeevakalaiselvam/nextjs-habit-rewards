@@ -159,7 +159,7 @@ export default function Atom() {
         onClick={() => {
           setRefreshing(true);
           if (window) {
-            window.location.reload();
+            refreshData();
           }
         }}
       >
