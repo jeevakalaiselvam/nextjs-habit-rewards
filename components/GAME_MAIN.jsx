@@ -15,6 +15,8 @@ import {
   COLOR_UNLOCKED,
   COLOR_UNLOCKED_DARK,
 } from "../helpers/colorHelper";
+import { useDrag } from "react-dnd";
+import ACH_CARD from "./ACH_CARD";
 
 export default function GAME_MAIN({ setTabActive, selectedGame }) {
   const categories = [
@@ -49,92 +51,13 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
                     "Hidden achievement:"
                   )?.[1];
                   return (
-                    <AchCard
-                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                      achieved={ach?.achieved}
-                    >
-                      {ach?.color != "Platinum" && (
-                        <AchIconOuter achieved={ach?.achieved}>
-                          <AchIcon
-                            icon={ach?.icon}
-                            onClick={() => {
-                              if (window !== "undefined") {
-                                const searchQuery = `${
-                                  ach?.displayName
-                                } achievement ${encodeURIComponent(
-                                  ach?.gameName
-                                )} `;
-                                window.open(
-                                  `https://www.google.com/search?q=${searchQuery}`
-                                );
-
-                                // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                              }
-                            }}
-                          ></AchIcon>
-                        </AchIconOuter>
-                      )}
-
-                      {ach?.color == "Platinum" && (
-                        <AchIconOuterPlatinum achieved={ach?.achieved}>
-                          <span
-                            style={{
-                              background: "#D5D6D6",
-                              width: "60px",
-                              height: "60px",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <PlatinumIcon />
-                          </span>
-                        </AchIconOuterPlatinum>
-                      )}
-
-                      <AchData>
-                        <AchTitle>{ach?.displayName}</AchTitle>
-                        <AchDesc>
-                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
-                        </AchDesc>
-                      </AchData>
-                      {false && ach?.achieved == 1 && (
-                        <Unlocked>
-                          <UnlockedT1>
-                            {formatDate1(new Date(ach?.unlocktime * 1000))}
-                          </UnlockedT1>
-                          <UnlockedT2>
-                            {formatDate2(new Date(ach?.unlocktime * 1000))}
-                          </UnlockedT2>
-                        </Unlocked>
-                      )}
-
-                      <Seperator padding={".25rem"} />
-                      {ach?.color != "Platinum" && (
-                        <AchRarity>
-                          <span style={{ fontSize: "1rem" }}>
-                            {ach?.percentage}%
-                          </span>
-                          <span style={{ fontSize: ".6rem" }}>
-                            {ach?.label?.toUpperCase()}
-                          </span>
-                        </AchRarity>
-                      )}
-
-                      {ach?.color == "Platinum" && (
-                        <AchRarity>
-                          <span style={{ fontSize: ".7rem" }}>PLATINUM</span>
-                        </AchRarity>
-                      )}
-
-                      <Seperator padding={".25rem"} />
-                      <AchTrophy>
-                        {ach?.color == "Platinum" && <PlatinumIconS />}
-                        {ach?.color == "Gold" && <GoldIconS />}
-                        {ach?.color == "Silver" && <SilverIconS />}
-                        {ach?.color == "Bronze" && <BronzeIconS />}
-                      </AchTrophy>
-                    </AchCard>
+                    <ACH_CARD
+                      ach={ach}
+                      index={index}
+                      desc1={desc1}
+                      desc2={desc2}
+                      desc3={desc3}
+                    />
                   );
                 })}
               </KanbanData>
