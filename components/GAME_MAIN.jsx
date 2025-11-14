@@ -17,6 +17,7 @@ import {
 } from "../helpers/colorHelper";
 import { useDrag } from "react-dnd";
 import ACH_CARD from "./ACH_CARD";
+import KANBAN_COLUMN from "./KANBAN_COLUMN";
 
 export default function GAME_MAIN({ setTabActive, selectedGame }) {
   const categories = [
@@ -41,78 +42,17 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
           );
 
           return (
-            <KanbanSingle>
-              <KanbanTitle index={index}>{category}</KanbanTitle>
-              <KanbanData>
-                {currentAchievements?.map((ach, index) => {
-                  let desc1 = ach?.hiddenDesc;
-                  let desc2 = ach?.description;
-                  let desc3 = ach?.hiddenDesc?.split(
-                    "Hidden achievement:"
-                  )?.[1];
-                  return (
-                    <ACH_CARD
-                      ach={ach}
-                      index={index}
-                      desc1={desc1}
-                      desc2={desc2}
-                      desc3={desc3}
-                    />
-                  );
-                })}
-              </KanbanData>
-            </KanbanSingle>
+            <KANBAN_COLUMN
+              index={index}
+              category={category}
+              currentAchievements={currentAchievements}
+            />
           );
         })}
       </Game2Line>
     </Game>
   );
 }
-
-const KanbanTitle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  background-color: #336291;
-  padding: 0.25rem 1rem;
-  width: 100%;
-  color: #fefefe;
-`;
-
-const KanbanData = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  max-height: 60vh;
-  min-height: 600vh;
-  overflow: scroll;
-  color: #717171;
-`;
-
-const KanbanSingle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  margin: 0.25rem;
-  flex: 1;
-  background-color: #e7e7e7;
-`;
-
-const Seperator = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  content: "";
-  height: 40px;
-  background: #000000;
-  opacity: 0.25;
-  width: 1px;
-  margin: ${(props) => (props.padding ? `0rem ${props.padding}` : `0rem 1rem`)};
-  top: calc(50% - 20px);
-`;
 
 const GameLeft = styled.div`
   display: flex;
