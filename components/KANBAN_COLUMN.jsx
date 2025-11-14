@@ -51,7 +51,7 @@ const KanbanTitle = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   background-color: #336291;
-  padding: 0.25rem 1rem;
+  padding: 0rem 0.25rem;
   width: 100%;
   color: #fefefe;
 `;
@@ -72,7 +72,7 @@ const KanbanSingle = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  margin: 0.25rem;
+  margin: 0.25rem 1rem;
   flex: 1;
   background-color: #e7e7e7;
 `;

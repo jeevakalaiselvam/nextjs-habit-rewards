@@ -22,7 +22,7 @@ export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
     () => ({
       type: "ACH_CARD",
       item: { achId, ach, fromLane: lane },
-      canDrag: lane !== "COMPLETED", // Cannot drag completed achievements
+      canDrag: true, // Cannot drag completed achievements
       collect: (monitor) => ({ isDragging: monitor.isDragging() }),
     }),
     [lane, achId]
@@ -204,7 +204,6 @@ const AchData = styled.div`
   justify-content: center;
   flex-direction: column;
   flex: 1;
-  min-width: 300px;
   height: 60px;
 `;
 
@@ -222,7 +221,7 @@ const AchTrophy = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   min-width: 50px;
-  transform: scale(2) translate(0.25rem, 0.25rem);
+  transform: translate(0.25rem, 0.25rem);
 `;
 
 const AchCard = styled.div`
@@ -230,7 +229,7 @@ const AchCard = styled.div`
   align-items: center;
   justify-content: flex-start;
   color: #333;
-  width: 500px;
+  width: 480px;
   background-color: ${(props) =>
     props.achieved ? COLOR_UNLOCKED : props.color};
   border: 1px solid #eee;

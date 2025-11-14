@@ -405,7 +405,6 @@ export default function MainContent({
           </TabLink>
         </FRRight>
       </FirstRow>
-      <RECENT_ACHIEVEMENTS allUnlocked={allUnlocked} activeAch={activeAch} />
       <SecondRow>
         {gamesLoading && (
           <SRLeft>
@@ -436,6 +435,7 @@ export default function MainContent({
           </SRLeft>
         )}
       </SecondRow>
+      <RECENT_ACHIEVEMENTS allUnlocked={allUnlocked} activeAch={activeAch} />
     </Container>
   );
 }

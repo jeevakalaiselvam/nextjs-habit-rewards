@@ -26,8 +26,8 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
 
   const allCategories = [
     "ALL",
-    "COMPLETED",
     "MISSABLE",
+    "STORY",
     "EASY",
     "HARD",
     "GRIND",
@@ -36,9 +36,6 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
 
   return (
     <Game>
-      <Game1Line>
-        <GameLeft>{selectedGame?.name?.toUpperCase()} TROPHIES</GameLeft>
-      </Game1Line>
       <Game2Line>
         {allCategories.map((category) => {
           let currentAchievements = [];
@@ -46,9 +43,7 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
           if (category === "ALL") {
             currentAchievements = selectedGame.achievements.filter(
               (ach) =>
-                !allCategories.some((cat) =>
-                  gameData[cat]?.includes(ach.name)
-                ) && !ach.achieved
+                !allCategories.some((cat) => gameData[cat]?.includes(ach.name))
             );
           } else if (category === "COMPLETED") {
             currentAchievements = selectedGame.achievements
