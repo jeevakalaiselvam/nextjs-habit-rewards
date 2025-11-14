@@ -19,7 +19,7 @@ const GAMES_INCLUDED = [
   "292030",
 ];
 
-export default function Atom() {
+export default function Main() {
   const [gamesLoading, setGamesLoading] = useState(false);
   const [platinumDataLoading, setPlatinumDataLoading] = useState(false);
   const [games, setGames] = useState([]);

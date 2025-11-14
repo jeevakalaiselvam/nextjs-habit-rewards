@@ -1,11 +1,9 @@
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { useDispatch, useSelector } from "react-redux";
 import Main from "./Main";
-import { DndProvider } from "react-dnd";
 
 export default function Home() {
-  return (
-    <DndProvider backend={HTML5Backend}>
-      <Main />
-    </DndProvider>
-  );
+  const dispatch = useDispatch();
+  const { name, isLoggedIn } = useSelector((s) => s.user);
+
+  return <Main />;
 }

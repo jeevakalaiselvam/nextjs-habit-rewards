@@ -1,39 +1,41 @@
-// store/store.js
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import {
-  persistStore,
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from "redux-persist";
+import { createStore, combineReducers, compose } from "redux";
+import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-import gamesSlice from "./gameSlice";
+// ----- REDUCERS -----
+const initialUserState = { name: "", isLoggedIn: false };
+
+function userReducer(state = initialUserState, action) {
+  switch (action.type) {
+    case "LOGIN":
+      return { ...state, name: action.payload, isLoggedIn: true };
+    case "LOGOUT":
+      return { ...state, name: "", isLoggedIn: false };
+    default:
+      return state;
+  }
+}
 
 const rootReducer = combineReducers({
-  habittracker: gamesSlice,
+  user: userReducer,
 });
 
+// ---- Persist config ----
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["games"], // slices to persist
+  whitelist: ["user"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-export const store = configureStore({
-  reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }),
-});
+// ---- Safe DevTools enhancer ----
+const composeEnhancers =
+  typeof window !== "undefined" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    : compose;
+
+// ---- Store ----
+export const store = createStore(persistedReducer, composeEnhancers());
 
 export const persistor = persistStore(store);

@@ -203,7 +203,7 @@ const AchData = styled.div`
   flex-direction: column;
   flex: 1;
   min-width: 300px;
-  height: 60px;
+  height: 80px;
 `;
 
 const AchRarity = styled.div`
