@@ -530,7 +530,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
-  width: 3200px;
+  width: 3600px;
   border-radius: 4px;
   transform: translateY(-2rem);
   background-color: #292b2d;

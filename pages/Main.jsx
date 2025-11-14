@@ -178,7 +178,7 @@ const RefreshButton = styled.div`
   justify-content: flex-start;
   position: fixed;
   right: 2rem;
-  top: 1rem;
+  bottom: 1rem;
   background-color: ${COLOR_ACCENT};
   padding: 0.25rem 0.5rem;
   cursor: pointer;

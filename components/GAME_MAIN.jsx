@@ -6,112 +6,175 @@ import GoldIconS from "./GoldIconS";
 import SilverIconS from "./SilverIconS";
 import BronzeIconS from "./BronzeIconS";
 import PlatinumIcon from "./PlatinumIcon";
-import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from "../helpers/colorHelper";
+import {
+  COLOR_ACCENT_DARK,
+  COLOR_BLUE,
+  COLOR_BLUE_DARK,
+  COLOR_BLUE_LIGHT,
+  COLOR_GREY,
+  COLOR_UNLOCKED,
+  COLOR_UNLOCKED_DARK,
+} from "../helpers/colorHelper";
 
 export default function GAME_MAIN({ setTabActive, selectedGame }) {
+  const categories = [
+    "ALL",
+    "STORY",
+    "MISSABLE",
+    "EASY",
+    "GRIND",
+    "HARD",
+    "ONLINE",
+  ];
+
   return (
     <Game>
       <Game1Line>
         <GameLeft>{selectedGame?.name?.toUpperCase()} TROPHIES</GameLeft>
       </Game1Line>
       <Game2Line>
-        {selectedGame?.achievements
-          ?.filter((ach) => ach?.achieved == 1)
-          ?.map((ach, index) => {
-            let desc1 = ach?.hiddenDesc;
-            let desc2 = ach?.description;
-            let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
-            return (
-              <AchCard
-                color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                achieved={ach?.achieved}
-              >
-                {ach?.color != "Platinum" && (
-                  <AchIconOuter achieved={ach?.achieved}>
-                    <AchIcon
-                      icon={ach?.icon}
-                      onClick={() => {
-                        if (window !== "undefined") {
-                          const searchQuery = `${
-                            ach?.displayName
-                          } achievement ${encodeURIComponent(ach?.gameName)} `;
-                          window.open(
-                            `https://www.google.com/search?q=${searchQuery}`
-                          );
+        {categories?.map((category, index) => {
+          const currentAchievements = selectedGame?.achievements?.filter(
+            (ach) => ach?.kanbanLane == category || category == "ALL"
+          );
 
-                          // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                        }
-                      }}
-                    ></AchIcon>
-                  </AchIconOuter>
-                )}
-
-                {ach?.color == "Platinum" && (
-                  <AchIconOuterPlatinum achieved={ach?.achieved}>
-                    <span
-                      style={{
-                        background: "#D5D6D6",
-                        width: "60px",
-                        height: "60px",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
+          return (
+            <KanbanSingle>
+              <KanbanTitle index={index}>{category}</KanbanTitle>
+              <KanbanData>
+                {currentAchievements?.map((ach, index) => {
+                  let desc1 = ach?.hiddenDesc;
+                  let desc2 = ach?.description;
+                  let desc3 = ach?.hiddenDesc?.split(
+                    "Hidden achievement:"
+                  )?.[1];
+                  return (
+                    <AchCard
+                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                      achieved={ach?.achieved}
                     >
-                      <PlatinumIcon />
-                    </span>
-                  </AchIconOuterPlatinum>
-                )}
+                      {ach?.color != "Platinum" && (
+                        <AchIconOuter achieved={ach?.achieved}>
+                          <AchIcon
+                            icon={ach?.icon}
+                            onClick={() => {
+                              if (window !== "undefined") {
+                                const searchQuery = `${
+                                  ach?.displayName
+                                } achievement ${encodeURIComponent(
+                                  ach?.gameName
+                                )} `;
+                                window.open(
+                                  `https://www.google.com/search?q=${searchQuery}`
+                                );
 
-                <AchData>
-                  <AchTitle>{ach?.displayName}</AchTitle>
-                  <AchDesc>{desc2 ? desc2 : desc3 ? desc3 : desc1}</AchDesc>
-                </AchData>
-                {ach?.achieved == 1 && (
-                  <Unlocked>
-                    <UnlockedT1>
-                      {formatDate1(new Date(ach?.unlocktime * 1000))}
-                    </UnlockedT1>
-                    <UnlockedT2>
-                      {formatDate2(new Date(ach?.unlocktime * 1000))}
-                    </UnlockedT2>
-                  </Unlocked>
-                )}
+                                // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                              }
+                            }}
+                          ></AchIcon>
+                        </AchIconOuter>
+                      )}
 
-                <Seperator padding={".25rem"} />
-                {ach?.color != "Platinum" && (
-                  <AchRarity>
-                    <span style={{ fontSize: "1.2rem" }}>
-                      {ach?.percentage}%
-                    </span>
-                    <span style={{ fontSize: ".7rem" }}>
-                      {ach?.label?.toUpperCase()}
-                    </span>
-                  </AchRarity>
-                )}
+                      {ach?.color == "Platinum" && (
+                        <AchIconOuterPlatinum achieved={ach?.achieved}>
+                          <span
+                            style={{
+                              background: "#D5D6D6",
+                              width: "60px",
+                              height: "60px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <PlatinumIcon />
+                          </span>
+                        </AchIconOuterPlatinum>
+                      )}
 
-                {ach?.color == "Platinum" && (
-                  <AchRarity>
-                    <span style={{ fontSize: ".7rem" }}>PLATINUM</span>
-                  </AchRarity>
-                )}
+                      <AchData>
+                        <AchTitle>{ach?.displayName}</AchTitle>
+                        <AchDesc>
+                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                        </AchDesc>
+                      </AchData>
+                      {false && ach?.achieved == 1 && (
+                        <Unlocked>
+                          <UnlockedT1>
+                            {formatDate1(new Date(ach?.unlocktime * 1000))}
+                          </UnlockedT1>
+                          <UnlockedT2>
+                            {formatDate2(new Date(ach?.unlocktime * 1000))}
+                          </UnlockedT2>
+                        </Unlocked>
+                      )}
 
-                <Seperator padding={".25rem"} />
-                <AchTrophy>
-                  {ach?.color == "Platinum" && <PlatinumIconS />}
-                  {ach?.color == "Gold" && <GoldIconS />}
-                  {ach?.color == "Silver" && <SilverIconS />}
-                  {ach?.color == "Bronze" && <BronzeIconS />}
-                </AchTrophy>
-              </AchCard>
-            );
-          })}
+                      <Seperator padding={".25rem"} />
+                      {ach?.color != "Platinum" && (
+                        <AchRarity>
+                          <span style={{ fontSize: "1rem" }}>
+                            {ach?.percentage}%
+                          </span>
+                          <span style={{ fontSize: ".6rem" }}>
+                            {ach?.label?.toUpperCase()}
+                          </span>
+                        </AchRarity>
+                      )}
+
+                      {ach?.color == "Platinum" && (
+                        <AchRarity>
+                          <span style={{ fontSize: ".7rem" }}>PLATINUM</span>
+                        </AchRarity>
+                      )}
+
+                      <Seperator padding={".25rem"} />
+                      <AchTrophy>
+                        {ach?.color == "Platinum" && <PlatinumIconS />}
+                        {ach?.color == "Gold" && <GoldIconS />}
+                        {ach?.color == "Silver" && <SilverIconS />}
+                        {ach?.color == "Bronze" && <BronzeIconS />}
+                      </AchTrophy>
+                    </AchCard>
+                  );
+                })}
+              </KanbanData>
+            </KanbanSingle>
+          );
+        })}
       </Game2Line>
     </Game>
   );
 }
 
-// Styles
+const KanbanTitle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  background-color: #e5e5e5;
+  padding: 0.25rem 1rem;
+  width: 100%;
+  color: #444;
+`;
+
+const KanbanData = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  max-height: 60vh;
+  overflow: scroll;
+`;
+
+const KanbanSingle = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  margin: 0.25rem;
+  flex: 1;
+  background-color: #e7e7e7;
+`;
 
 const Seperator = styled.div`
   display: flex;
@@ -146,14 +209,14 @@ const UnlockedT1 = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8rem;
+  font-size: 0.5rem;
 `;
 
 const UnlockedT2 = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.7rem;
+  font-size: 0.5rem;
   padding-top: 0.25rem;
 `;
 
@@ -172,7 +235,7 @@ const AchDesc = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  padding-left: 0.5rem;
+  padding: 0.5rem;
   flex: 2;
   width: 100%;
   opacity: 0.75;
@@ -183,8 +246,8 @@ const AchIconOuter = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 65px;
-  height: 65px;
+  width: 56px;
+  height: 56px;
   background: ${(props) =>
     props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
 `;
@@ -193,8 +256,8 @@ const AchIconOuterPlatinum = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 65px;
-  height: 65px;
+  width: 60px;
+  height: 60px;
   background: ${(props) =>
     props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
 `;
@@ -203,8 +266,8 @@ const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 60px;
-  height: 60px;
+  width: 55px;
+  height: 55px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;
@@ -242,18 +305,21 @@ const AchCard = styled.div`
   align-items: center;
   justify-content: flex-start;
   color: #333;
-  width: 100%;
+  width: 500px;
   background-color: ${(props) =>
     props.achieved ? COLOR_UNLOCKED : props.color};
   border: 1px solid #eee;
+  cursor: pointer;
+
+  &:hover {
+    border: 1px solid #d3d3d3;
+  }
 `;
 
 const Game2Line = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
-  flex-direction: column;
-  overflow: scroll;
   width: 100%;
   padding: 0.25rem 0.25rem;
 `;
