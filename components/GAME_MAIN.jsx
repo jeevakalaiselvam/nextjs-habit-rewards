@@ -19,7 +19,7 @@ import {
 export default function GAME_MAIN({ setTabActive, selectedGame }) {
   const categories = [
     "ALL",
-    "STORY",
+    "COMPLETED",
     "MISSABLE",
     "EASY",
     "GRIND",
@@ -151,10 +151,10 @@ const KanbanTitle = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  background-color: #e5e5e5;
+  background-color: #336291;
   padding: 0.25rem 1rem;
   width: 100%;
-  color: #444;
+  color: #fefefe;
 `;
 
 const KanbanData = styled.div`
@@ -163,7 +163,9 @@ const KanbanData = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   max-height: 60vh;
+  min-height: 600vh;
   overflow: scroll;
+  color: #717171;
 `;
 
 const KanbanSingle = styled.div`
