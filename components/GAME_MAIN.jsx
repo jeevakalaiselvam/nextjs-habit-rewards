@@ -18,15 +18,19 @@ import {
 import { useDrag } from "react-dnd";
 import ACH_CARD from "./ACH_CARD";
 import KANBAN_COLUMN from "./KANBAN_COLUMN";
+import { useSelector } from "react-redux";
 
 export default function GAME_MAIN({ setTabActive, selectedGame }) {
-  const categories = [
+  const { kanbanObj } = useSelector((state) => state.kanban);
+  const gameData = kanbanObj?.[selectedGame?.id] || {};
+
+  const allCategories = [
     "ALL",
     "COMPLETED",
     "MISSABLE",
     "EASY",
-    "GRIND",
     "HARD",
+    "GRIND",
     "ONLINE",
   ];
 
@@ -36,24 +40,32 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
         <GameLeft>{selectedGame?.name?.toUpperCase()} TROPHIES</GameLeft>
       </Game1Line>
       <Game2Line>
-        {categories?.map((category, index) => {
-          let currentAchievements = selectedGame?.achievements?.filter(
-            (ach) =>
-              (ach?.kanbanLane == category || category == "ALL") &&
-              ach?.achieved != 1
-          );
+        {allCategories.map((category) => {
+          let currentAchievements = [];
 
-          if (category == "COMPLETED") {
-            currentAchievements = selectedGame?.achievements
-              ?.filter((ach) => ach?.achieved == 1)
-              ?.sort((ach1, ach2) => ach2?.unlocktime - ach1?.unlocktime);
+          if (category === "ALL") {
+            currentAchievements = selectedGame.achievements.filter(
+              (ach) =>
+                !allCategories.some((cat) =>
+                  gameData[cat]?.includes(ach.name)
+                ) && !ach.achieved
+            );
+          } else if (category === "COMPLETED") {
+            currentAchievements = selectedGame.achievements
+              .filter((ach) => ach.achieved)
+              .sort((a, b) => b.unlocktime - a.unlocktime);
+          } else {
+            currentAchievements = selectedGame.achievements.filter((ach) =>
+              gameData[category]?.includes(ach.name)
+            );
           }
 
           return (
             <KANBAN_COLUMN
-              index={index}
+              key={category}
               category={category}
               currentAchievements={currentAchievements}
+              gameId={selectedGame.id}
             />
           );
         })}

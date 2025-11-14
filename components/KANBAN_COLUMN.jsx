@@ -2,19 +2,23 @@ import React from "react";
 import styled from "styled-components";
 import ACH_CARD from "./ACH_CARD";
 import { useDrop } from "react-dnd";
+import { moveAchievement } from "../store/store";
+import { useDispatch } from "react-redux";
 
 export default function KANBAN_COLUMN({
   index,
   category,
   currentAchievements,
+  gameId,
 }) {
-  const [{ canDrop, isOver }, drop] = useDrop(() => ({
-    accept: "box",
-    drop: () => ({ name: category }),
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
+  const dispatch = useDispatch();
+
+  const [, drop] = useDrop(() => ({
+    accept: "ACH_CARD",
+    drop: (item) => {
+      if (category === "ALL" || category === "COMPLETED") return; // Don't drop here
+      dispatch(moveAchievement(gameId, item.ach.name, item.fromLane, category));
+    },
   }));
 
   return (
@@ -32,6 +36,7 @@ export default function KANBAN_COLUMN({
               desc1={desc1}
               desc2={desc2}
               desc3={desc3}
+              lane={category}
             />
           );
         })}
@@ -57,7 +62,7 @@ const KanbanData = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   max-height: 60vh;
-  min-height: 600vh;
+  min-height: 60vh;
   overflow: scroll;
   color: #717171;
 `;

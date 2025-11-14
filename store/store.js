@@ -1,41 +1,60 @@
-import { createStore, combineReducers, compose } from "redux";
+// redux/store.js
+import { createStore, combineReducers } from "redux";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
-// ----- REDUCERS -----
-const initialUserState = { name: "", isLoggedIn: false };
+// Action Types
+const MOVE_ACHIEVEMENT = "MOVE_ACHIEVEMENT";
 
-function userReducer(state = initialUserState, action) {
+// Actions
+export const moveAchievement = (gameId, achName, fromLane, toLane) => ({
+  type: MOVE_ACHIEVEMENT,
+  payload: { gameId, achName, fromLane, toLane },
+});
+
+// Initial State
+const initialState = {
+  kanbanObj: {}, // { [gameId]: { MISSABLE: [], EASY: [], ... } }
+};
+
+// Reducer
+const kanbanReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "LOGIN":
-      return { ...state, name: action.payload, isLoggedIn: true };
-    case "LOGOUT":
-      return { ...state, name: "", isLoggedIn: false };
+    case MOVE_ACHIEVEMENT: {
+      const { gameId, achName, fromLane, toLane } = action.payload;
+      const kanbanObj = { ...state.kanbanObj };
+      if (!kanbanObj[gameId]) kanbanObj[gameId] = {};
+      const gameKanban = { ...kanbanObj[gameId] };
+
+      // Remove from old lane
+      if (fromLane && gameKanban[fromLane]) {
+        gameKanban[fromLane] = gameKanban[fromLane].filter(
+          (a) => a !== achName
+        );
+      }
+
+      // Add to new lane
+      if (!gameKanban[toLane]) gameKanban[toLane] = [];
+      if (!gameKanban[toLane].includes(achName))
+        gameKanban[toLane].push(achName);
+
+      kanbanObj[gameId] = gameKanban;
+      return { ...state, kanbanObj };
+    }
+
     default:
       return state;
   }
-}
+};
 
-const rootReducer = combineReducers({
-  user: userReducer,
-});
-
-// ---- Persist config ----
+// Persist Config
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["user"],
 };
 
+const rootReducer = combineReducers({ kanban: kanbanReducer });
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// ---- Safe DevTools enhancer ----
-const composeEnhancers =
-  typeof window !== "undefined" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
-    : compose;
-
-// ---- Store ----
-export const store = createStore(persistedReducer, composeEnhancers());
-
+export const store = createStore(persistedReducer);
 export const persistor = persistStore(store);

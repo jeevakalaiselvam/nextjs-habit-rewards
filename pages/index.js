@@ -3,7 +3,7 @@ import Main from "./Main";
 
 export default function Home() {
   const dispatch = useDispatch();
-  const { name, isLoggedIn } = useSelector((s) => s.user);
+  const { kanbanObj } = useSelector((s) => s.kanban);
 
   return <Main />;
 }

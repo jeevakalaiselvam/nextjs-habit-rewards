@@ -8,22 +8,24 @@ import GoldIconS from "./GoldIconS";
 import SilverIconS from "./SilverIconS";
 import BronzeIconS from "./BronzeIconS";
 import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from "../helpers/colorHelper";
+import { useDispatch } from "react-redux";
+import { actionAddAchToKanban } from "../store/actions/games.actions";
+import { useSelector } from "react-redux";
 
-export default function ACH_CARD({ index, desc1, desc2, desc3, ach }) {
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: "box",
-    item: { name },
-    end: (item, monitor) => {
-      const dropResult = monitor.getDropResult();
-      if (item && dropResult) {
-        alert(`You dropped ${item.name} into ${dropResult.name}!`);
-      }
-    },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-      handlerId: monitor.getHandlerId(),
+export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
+  const dispatch = useDispatch();
+  const { kanbanObj } = useSelector((s) => s.kanban);
+
+  const [{ isDragging }, drag] = useDrag(
+    () => ({
+      type: "ACH_CARD",
+      item: { ach, fromLane: lane },
+      // Only allow dragging if not in COMPLETED
+      canDrag: lane !== "COMPLETED",
+      collect: (monitor) => ({ isDragging: monitor.isDragging() }),
     }),
-  }));
+    [lane]
+  );
 
   return (
     <AchCard

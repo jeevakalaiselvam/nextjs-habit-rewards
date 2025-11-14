@@ -2,6 +2,7 @@ import * as TYPES from "../types/games.types";
 
 const INITIAL_STATE = {
   games: [],
+  kanban: {},
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -24,6 +25,17 @@ const reducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         games: [],
+      };
+
+    case TYPES.ADD_GAME_ACH_TO_KANBAN:
+      return {
+        ...state,
+        kanban: {
+          ...kanban,
+          [payload?.gameId]: {
+            ...payload?.updatedKanbanObj,
+          },
+        },
       };
 
     default:
