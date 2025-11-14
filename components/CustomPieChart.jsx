@@ -3,10 +3,10 @@ import { PieChart } from "@mui/x-charts/PieChart";
 import styled from "styled-components";
 import { formatNumberWithCommas } from "../helpers/achHelper";
 
-export default function DonutChart({ data, center, centerCount }) {
+export default function DonutChart({ data, center, centerCount, size }) {
   const settings = {
     margin: { right: 5 },
-    width: 200,
+    width: size,
     height: 200,
     hideLegend: true,
   };
@@ -14,7 +14,7 @@ export default function DonutChart({ data, center, centerCount }) {
   const pieData = data?.filter((item) => item?.value > 0);
 
   return (
-    <MainContainer>
+    <MainContainer size={size}>
       <PieLeft>
         <PieChart
           series={[
@@ -138,7 +138,7 @@ const PieRight = styled.div`
 `;
 
 const MainContainer = styled.div`
-  width: 415px;
+  width: ${(props) => `${props.size}px`};
   display: flex;
   align-items: center;
   justify-content: center;

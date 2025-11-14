@@ -27,7 +27,7 @@ import {
 } from "../helpers/colorHelper";
 import { getAchsBasedOnRarity } from "../helpers/trophyHelper";
 
-export default function StatInformation({ games }) {
+export default function StatInformation({ games, size }) {
   const {
     ultrarare,
     veryrare,
@@ -293,33 +293,37 @@ export default function StatInformation({ games }) {
     <StatWrapper>
       <StatWrapperInner>
         <CustomPieChart
+          size={size / 6.4}
           data={gamesData}
           center={"Games"}
           centerCount={games?.length}
         />
         <CustomPieChart
+          size={size / 6.4}
           data={trophyData}
           center={"Trophies"}
           centerCount={platinum + gold + silver + bronze}
         />{" "}
         <CustomPieChart
+          size={size / 6.4}
           data={trophyDataPoints}
           center={"Points"}
           centerCount={platinum * 300 + gold * 90 + silver * 30 + bronze * 15}
         />
-      </StatWrapperInner>
-      <StatWrapperInner>
         <CustomPieChart
+          size={size / 6.4}
           data={rarityDataPoints}
           center={"Rarity"}
           centerCount={`${averageRarity} %`}
         />
         <CustomPieChart
+          size={size / 6.4}
           data={averageDataPoints}
           center={"Average"}
           centerCount={averationCompletion}
         />{" "}
         <CustomPieChart
+          size={size / 6.4}
           data={rankDataPoints}
           center={"Average"}
           centerCount={averageRank}
@@ -334,7 +338,7 @@ const StatWrapper = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
-  width: 1350px;
+  width: 100%;
 `;
 
 const StatWrapperInner = styled.div`

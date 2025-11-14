@@ -17,7 +17,7 @@ export default function LevelProgressChart({ dailyUnlocks, size }) {
     <Container>
       <Inner>
         <LineChart
-          width={size ? size : 1200}
+          width={size ? size : 3600}
           height={400}
           data={data}
           margin={{
@@ -58,5 +58,5 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: center;
-  min-width: 100%;
+  width: 100%;
 `;
