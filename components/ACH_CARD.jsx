@@ -16,17 +16,17 @@ export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
   const dispatch = useDispatch();
   const { kanbanObj } = useSelector((s) => s.kanban);
 
+  const achId = `${ach.gameId}-${ach.name}`;
+
   const [{ isDragging }, drag] = useDrag(
     () => ({
       type: "ACH_CARD",
-      item: { ach, fromLane: lane },
-      // Only allow dragging if not in COMPLETED
-      canDrag: lane !== "COMPLETED",
+      item: { achId, ach, fromLane: lane },
+      canDrag: lane !== "COMPLETED", // Cannot drag completed achievements
       collect: (monitor) => ({ isDragging: monitor.isDragging() }),
     }),
-    [lane]
+    [lane, achId]
   );
-
   return (
     <AchCard
       ref={drag}
