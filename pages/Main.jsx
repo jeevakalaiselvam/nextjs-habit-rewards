@@ -26,7 +26,7 @@ export default function Main() {
   const [platinumData, setPlatinumData] = useState([]);
   const [finalGames, setFinalGames] = useState([]);
   const [refeshing, setRefreshing] = useState(false);
-  const [tabActive, setTabActive] = useState(0);
+  const [tabActive, setTabActive] = useState("GAMES");
 
   const refreshSteamGames = () => {
     setGamesLoading(true);

@@ -379,18 +379,7 @@ export default function MainContent({
       )}
 
       <FirstRow>
-        <GameSearch>
-          <input
-            placeholder="Search Games..."
-            value={gameSearch}
-            onChange={(e) => setGameSearch(e.target.value)}
-          />
-        </GameSearch>
-      </FirstRow>
-      <FirstRow>
-        <FRItem>P</FRItem>
-        <FRLeft>OBSIDIANLOGAN'S PROFILE</FRLeft>
-        <FRRight>
+        <FRLeft>
           <TabLink
             onClick={() => {
               setSelectedMode("GAMES");
@@ -403,6 +392,15 @@ export default function MainContent({
           >
             GAMES
           </TabLink>
+        </FRLeft>
+        <FRRight>
+          <GameSearch>
+            <input
+              placeholder="Search Games..."
+              value={gameSearch}
+              onChange={(e) => setGameSearch(e.target.value)}
+            />
+          </GameSearch>
         </FRRight>
       </FirstRow>
       <SecondRow>
@@ -481,8 +479,8 @@ const TabLink = styled.div`
   cursor: pointer;
   position: relative;
   font-size: 0.8rem;
-  margin-right: 1rem;
-  padding-bottom: 0.25rem;
+  margin-left: 1rem;
+  padding: 0.25rem;
   font-weight: ${(props) => (props.active ? "bold" : "300")};
   border-bottom: ${(props) =>
     props.active ? `2px solid ${COLOR_ACCENT}` : `2px solid #00000000`};
