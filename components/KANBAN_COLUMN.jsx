@@ -10,7 +10,7 @@ export default function KANBAN_COLUMN({
 }) {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: "box",
-    drop: () => ({ name: "Dustbin" }),
+    drop: () => ({ name: category }),
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       canDrop: monitor.canDrop(),

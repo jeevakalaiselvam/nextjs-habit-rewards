@@ -162,7 +162,7 @@ const AchDesc = styled.div`
   flex: 2;
   width: 100%;
   opacity: 0.75;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
 `;
 
 const AchIconOuter = styled.div`
@@ -203,7 +203,7 @@ const AchData = styled.div`
   flex-direction: column;
   flex: 1;
   min-width: 300px;
-  height: 80px;
+  height: 60px;
 `;
 
 const AchRarity = styled.div`

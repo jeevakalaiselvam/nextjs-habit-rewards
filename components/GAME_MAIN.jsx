@@ -37,9 +37,17 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
       </Game1Line>
       <Game2Line>
         {categories?.map((category, index) => {
-          const currentAchievements = selectedGame?.achievements?.filter(
-            (ach) => ach?.kanbanLane == category || category == "ALL"
+          let currentAchievements = selectedGame?.achievements?.filter(
+            (ach) =>
+              (ach?.kanbanLane == category || category == "ALL") &&
+              ach?.achieved != 1
           );
+
+          if (category == "COMPLETED") {
+            currentAchievements = selectedGame?.achievements
+              ?.filter((ach) => ach?.achieved == 1)
+              ?.sort((ach1, ach2) => ach2?.unlocktime - ach1?.unlocktime);
+          }
 
           return (
             <KANBAN_COLUMN
