@@ -130,6 +130,7 @@ export const COLOR_UNLOCKED_DARK = "#61BF19";
 export const COLOR_ULTRA_RARE = "#CD2103";
 export const COLOR_VERY_RARE = "#D84A02";
 export const COLOR_RARE = "#EC7C00";
+export const COLOR_COPPER = "#EC7C00";
 export const COLOR_UNCOMMON = "#FFB100";
 export const COLOR_COMMON = "#FFEA00";
 
