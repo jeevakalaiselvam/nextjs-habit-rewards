@@ -121,6 +121,7 @@ export default function Main() {
           {
             displayName: `Platinum`,
             description: `Achieved all Trophies in game`,
+            name: `${game?.id}-PLATINUM`,
             hiddenDesc: `${game?.name}`,
             percentage: lastAch?.percentage,
             label: getRarityBasedOnRarity(lastAch?.percentage),

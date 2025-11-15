@@ -31,7 +31,7 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
     "EASY",
     "HARD",
     "GRIND",
-    "ONLINE",
+    "COMPLETED",
   ];
 
   return (
@@ -43,15 +43,18 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
           if (category === "ALL") {
             currentAchievements = selectedGame.achievements.filter(
               (ach) =>
-                !allCategories.some((cat) => gameData[cat]?.includes(ach.name))
+                !allCategories.some((cat) =>
+                  gameData[cat]?.includes(ach.name)
+                ) && ach.achieved != 1
             );
           } else if (category === "COMPLETED") {
             currentAchievements = selectedGame.achievements
               .filter((ach) => ach.achieved)
               .sort((a, b) => b.unlocktime - a.unlocktime);
           } else {
-            currentAchievements = selectedGame.achievements.filter((ach) =>
-              gameData[category]?.includes(ach.name)
+            currentAchievements = selectedGame.achievements.filter(
+              (ach) =>
+                gameData[category]?.includes(ach.name) && ach.achieved != 1
             );
           }
 
