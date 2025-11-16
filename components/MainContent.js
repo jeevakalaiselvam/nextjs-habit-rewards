@@ -421,6 +421,7 @@ export default function MainContent({
                 setSelectedMode={setSelectedMode}
                 setGameData={setGameData}
                 setTabActive={setTabActive}
+                setShowEditModal={setShowEditModal}
               />
             )}
 

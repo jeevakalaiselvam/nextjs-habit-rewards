@@ -19,6 +19,7 @@ export default function GAMES_MAIN({
   setSelectedMode,
   setGameData,
   setTabActive,
+  setShowEditModal,
 }) {
   return (
     <Games>
