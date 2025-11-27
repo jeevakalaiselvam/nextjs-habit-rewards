@@ -1015,9 +1015,9 @@ export default function Main2() {
                   let isPlatinum = allNotCompleted == 0;
                   return (
                     <GameCD zIndex={indexChecker?.[item?._id]}>
-                      <CdImage scale={3.2} onClick={(e) => {}}>
+                      <CdImage scale={3.1} onClick={(e) => {}}>
                         <CdInnerImage
-                          scale={3.2}
+                          scale={3.1}
                           cover={item?.image}
                           onDoubleClick={() => {
                             initiateEditForm(item);
