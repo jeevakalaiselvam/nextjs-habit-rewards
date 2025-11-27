@@ -301,7 +301,7 @@ export default function Main2() {
     (item1, item2) => item2?.completed - item1?.completed
   );
 
-  let games = library
+  let games = filteredLib
     ?.filter((item) => item?.type == "GAME")
     ?.sort(
       (game1, game2) => new Date(game2?.updated) - new Date(game1?.updated)
@@ -457,12 +457,15 @@ export default function Main2() {
     return result;
   }
 
-  let shelfDates = generateMonthYearList()
-    ?.map((item) => ({
-      value: item,
-      label: item,
-    }))
-    ?.reverse();
+  let shelfDates = [
+    { value: "All", value: "All" },
+    ...generateMonthYearList()
+      ?.map((item) => ({
+        value: item,
+        label: item,
+      }))
+      ?.reverse(),
+  ];
 
   const IGNORE_STEAM = true;
 
@@ -544,30 +547,6 @@ export default function Main2() {
               }}
             />
           </Row>
-          {/* <Row style={{ marginBottom: ".5rem" }}>
-            <Input
-              style={{ borderRadius: ".25rem" }}
-              placeholder="Enter App Id"
-              value={createForm?.appId}
-              onChange={(e) => {
-                setCreateForm((old) => ({ ...old, appId: e?.target?.value }));
-              }}
-            />
-          </Row>
-          <Row style={{ marginBottom: ".5rem" }}>
-            <TextArea
-              rows={5}
-              style={{ borderRadius: ".25rem" }}
-              placeholder="Enter Platinum JSON"
-              value={createForm?.platinum}
-              onChange={(e) => {
-                setCreateForm((old) => ({
-                  ...old,
-                  platinum: e?.target?.value,
-                }));
-              }}
-            />
-          </Row> */}
           <Row style={{ marginBottom: ".5rem" }}>
             <Input
               style={{ borderRadius: ".25rem" }}
