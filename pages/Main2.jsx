@@ -758,7 +758,7 @@ export default function Main2() {
             );
           })}
         </Links>
-        <PlatinumTitle>PLATINUM COUNT</PlatinumTitle>
+        <PlatinumTitle>GAMES COUNT</PlatinumTitle>
         <PlatinumData>
           <span style={{ transform: "scale(3)" }}>
             <PlatinumIcon />
@@ -768,7 +768,7 @@ export default function Main2() {
           <span style={{ fontSize: "1.5rem", fontWeight: "bolder" }}>
             {
               library?.filter(
-                (item) => item?.type == "GAME" && item?.status == "PLATINUM"
+                (item) => item?.type == "GAME" && item?.status == "DONE"
               )?.length
             }
           </span>
