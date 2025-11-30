@@ -492,6 +492,43 @@ export default function MainContent({
                 })}
               </Game2Line>
             )}
+            {selectedMode == "ICON_VIEW" && (
+              <Game3Line>
+                {allUnlocked?.map((ach, index) => {
+                  let desc1 = ach?.hiddenDesc;
+                  let desc2 = ach?.description;
+                  let desc3 = ach?.hiddenDesc?.split(
+                    "Hidden achievement:"
+                  )?.[1];
+                  return (
+                    <AchCardIcon
+                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                      achieved={ach?.achieved}
+                    >
+                      <span style={{ marginLeft: "1rem" }}></span>
+                      <AchIconOuter achieved={ach?.achieved}>
+                        <AchIcon
+                          icon={ach?.icon}
+                          onClick={() => {
+                            if (window !== "undefined") {
+                              const searchQuery = `${
+                                ach?.displayName
+                              } achievement ${encodeURIComponent(
+                                ach?.gameName
+                              )} `;
+                              window.open(
+                                `https://www.google.com/search?q=${searchQuery}`
+                              );
+                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                            }
+                          }}
+                        ></AchIcon>
+                      </AchIconOuter>
+                    </AchCardIcon>
+                  );
+                })}
+              </Game3Line>
+            )}
           </SRLeft>
         )}
       </SecondRow>
@@ -739,6 +776,16 @@ const AchCard = styled.div`
   border: 1px solid #eee;
 `;
 
+const AchCardIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: #333;
+  background-color: ${(props) => (props.achieved ? props.color : props.color)};
+  border: 1px solid #eee;
+  cursor: pointer;
+`;
+
 const Game2Line = styled.div`
   display: flex;
   align-items: center;
@@ -746,6 +793,16 @@ const Game2Line = styled.div`
   flex-direction: column;
   overflow: scroll;
   width: 100%;
+  padding: 0.25rem 0.25rem;
+`;
+
+const Game3Line = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  overflow: scroll;
+  width: 100%;
+  flex-wrap: wrap;
   padding: 0.25rem 0.25rem;
 `;
 
