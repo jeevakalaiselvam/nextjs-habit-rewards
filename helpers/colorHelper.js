@@ -125,7 +125,7 @@ export const COLOR_SILVER2 = "#777777";
 export const COLOR_BRONZE = "#C46438";
 export const COLOR_PLATINUM = "#7A96D1";
 export const COLOR_UNLOCKED = "#ECF8EA";
-export const COLOR_UNLOCKED_DARK = "#61BF19";
+export const COLOR_UNLOCKED_DARK = "#FEFEFE";
 
 export const COLOR_ULTRA_RARE = "#CD2103";
 export const COLOR_VERY_RARE = "#D84A02";

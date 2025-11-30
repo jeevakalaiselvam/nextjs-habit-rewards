@@ -219,64 +219,6 @@ export default function MainHeader({
         </HeaderInner>
       </MainWrapper>
       <Overlay></Overlay>
-      <BottomStats>
-        <Section>
-          <Top>{games?.length}</Top>
-          <Bottom>GAMES</Bottom>
-        </Section>
-        <Section>
-          <Top>{completed}</Top>
-          <Bottom>PLATINUM GAMES</Bottom>
-        </Section>
-        {/* <Section>
-          <Top>{0}</Top>
-          <Bottom>COMPLETION</Bottom>
-        </Section> */}
-        <Section color={COLOR_PLATINUM}>
-          <Top>
-            {platinumA}
-            <span
-              style={{ transform: "translateY(-2.75px)", marginLeft: ".5rem" }}
-            >
-              <PlatinumIcon />
-            </span>
-          </Top>
-          <Bottom>PLATINUM AVAILABLE</Bottom>
-        </Section>
-        <Section color={COLOR_GOLD}>
-          <Top>
-            {goldA}
-            <span
-              style={{ transform: "translateY(-2.75px)", marginLeft: ".5rem" }}
-            >
-              <GoldIcon />
-            </span>
-          </Top>
-          <Bottom>GOLD AVAILABLE</Bottom>
-        </Section>
-        <Section color={COLOR_SILVER}>
-          <Top>
-            {silverA}
-            <span
-              style={{ transform: "translateY(-2.75px)", marginLeft: ".5rem" }}
-            >
-              <SilverIcon />
-            </span>
-          </Top>
-          <Bottom>SILVER AVAILABLE</Bottom>
-        </Section>
-        <Section color={COLOR_BRONZE}>
-          <Top>
-            {bronzeA}
-            <span
-              style={{ transform: "translateY(-2.75px)", marginLeft: ".5rem" }}
-            >
-              <BronzeIcon />
-            </span>
-          </Top>
-          <Bottom>BRONZE AVAILABLE</Bottom>
-        </Section>
-      </BottomStats>
     </Container>
   );
 }
@@ -441,7 +383,6 @@ const HeaderInner = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 1600px;
   border: 4px solid #989898;
   padding: 0.5rem;
   margin: 0.5rem;
@@ -457,8 +398,7 @@ const GameCDCollection = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 300px;
-  min-width: 1400px;
+  height: 125px;
   flex-wrap: wrap;
   max-width: 1400px;
   overflow: scroll;
@@ -469,7 +409,7 @@ const Overlay = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  height: 300px;
+  height: 125px;
   width: 100%;
   background-color: rgba(0, 0, 0, 0.65);
 `;
@@ -479,7 +419,7 @@ const Container = styled.div`
   align-items: flex-start;
   justify-content: center;
   width: 100%;
-  height: 300px;
+  height: 125px;
   background: ${(props) => `url(${props.background})`};
   background-repeat: no-repeat;
   background-size: cover;

@@ -1,6 +1,7 @@
-import styled from 'styled-components';
-import Main from './Main';
+import styled from "styled-components";
+import Main from "./Main";
+import Onepage from "../components/Onepage";
 
 export default function Home() {
-  return <Main />;
+  return <Onepage />;
 }
