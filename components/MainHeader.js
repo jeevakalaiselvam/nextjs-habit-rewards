@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { HEADER_IMAGE } from "../helpers/urlHelper";
-import { FaTrophy } from "react-icons/fa";
+import { FaGamepad, FaTrophy } from "react-icons/fa";
 import {
   COLOR_BRONZE,
   COLOR_GOLD,
@@ -140,6 +140,21 @@ export default function MainHeader({
             </HeaderProfileLevel>
           )}
           <HeaderCounts>
+            <Section color={COLOR_PLATINUM}>
+              <Top>
+                <span
+                  style={{
+                    transform: "translateY(2.5px)",
+                    marginRight: ".5rem",
+                  }}
+                >
+                  <FaGamepad />
+                </span>
+                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+                  {games?.length}
+                </span>
+              </Top>
+            </Section>
             <Section color={COLOR_WHITE}>
               <Top onClick={() => {}}>
                 <span
@@ -152,21 +167,6 @@ export default function MainHeader({
                 </span>
                 <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
                   {total}
-                </span>
-              </Top>
-            </Section>
-            <Section color={COLOR_PLATINUM}>
-              <Top>
-                <span
-                  style={{
-                    transform: "translateY(-2.5px)",
-                    marginRight: ".25rem",
-                  }}
-                >
-                  <PlatinumIcon />
-                </span>
-                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
-                  {platinum}
                 </span>
               </Top>
             </Section>

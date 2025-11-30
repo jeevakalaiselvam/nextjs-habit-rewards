@@ -57,6 +57,7 @@ export default function Atom() {
   const refreshData = () => {
     refreshSteamGames();
     refreshPlatinumData();
+    setRefreshing(false);
   };
 
   useEffect(() => {
@@ -118,17 +119,6 @@ export default function Atom() {
             (ach) => ach?.displayName != lastAch?.displayName
           ),
           { ...lastAch, color: "Gold" },
-          {
-            displayName: `Platinum`,
-            description: `Achieved all Trophies in game`,
-            hiddenDesc: `${game?.name}`,
-            percentage: lastAch?.percentage,
-            label: getRarityBasedOnRarity(lastAch?.percentage),
-            color: "Platinum",
-            achieved: isCompleted ? 1 : 0,
-            unlocktime: lastAch?.unlocktime,
-            icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
-          },
         ],
       };
 
@@ -139,22 +129,27 @@ export default function Atom() {
 
   return (
     <Container>
-      <MainHeader
-        tabActive={tabActive}
-        setTabActive={setTabActive}
-        games={finalGames}
-        gamesLoading={gamesLoading}
-        refreshData={refreshData}
-      />
-      <MainContent
-        tabActive={tabActive}
-        setTabActive={setTabActive}
-        games={finalGames}
-        refreshData={refreshData}
-        setGamesLoading={setGamesLoading}
-        gamesLoading={gamesLoading}
-        platinumDataLoading={platinumDataLoading}
-      />
+      {!refeshing && (
+        <MainHeader
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          games={finalGames}
+          gamesLoading={gamesLoading}
+          refreshData={refreshData}
+        />
+      )}
+      {!refeshing && (
+        <MainContent
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          games={finalGames}
+          refreshData={refreshData}
+          setGamesLoading={setGamesLoading}
+          gamesLoading={gamesLoading}
+          platinumDataLoading={platinumDataLoading}
+          refeshing={refeshing}
+        />
+      )}
       <RefreshButton
         onClick={() => {
           setRefreshing(true);

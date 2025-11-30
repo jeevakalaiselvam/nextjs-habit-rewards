@@ -57,6 +57,7 @@ export default function Atom() {
   const refreshData = () => {
     refreshSteamGames();
     refreshPlatinumData();
+    setRefreshing(false);
   };
 
   useEffect(() => {
@@ -118,17 +119,6 @@ export default function Atom() {
             (ach) => ach?.displayName != lastAch?.displayName
           ),
           { ...lastAch, color: "Gold" },
-          {
-            displayName: `Platinum`,
-            description: `Achieved all Trophies in game`,
-            hiddenDesc: `${game?.name}`,
-            percentage: lastAch?.percentage,
-            label: getRarityBasedOnRarity(lastAch?.percentage),
-            color: "Platinum",
-            achieved: isCompleted ? 1 : 0,
-            unlocktime: lastAch?.unlocktime,
-            icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
-          },
         ],
       };
 
@@ -146,15 +136,17 @@ export default function Atom() {
         gamesLoading={gamesLoading}
         refreshData={refreshData}
       />
-      <MainContent
-        tabActive={tabActive}
-        setTabActive={setTabActive}
-        games={finalGames}
-        refreshData={refreshData}
-        setGamesLoading={setGamesLoading}
-        gamesLoading={gamesLoading}
-        platinumDataLoading={platinumDataLoading}
-      />
+      {!refreshing && (
+        <MainContent
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          games={finalGames}
+          refreshData={refreshData}
+          setGamesLoading={setGamesLoading}
+          gamesLoading={gamesLoading}
+          platinumDataLoading={platinumDataLoading}
+        />
+      )}
       <RefreshButton
         onClick={() => {
           setRefreshing(true);

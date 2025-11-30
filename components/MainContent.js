@@ -57,10 +57,11 @@ export default function MainContent({
   platinumDataLoading,
   tabActive,
   setTabActive,
+  refeshing,
 }) {
   const [gameHovered, setGameHovered] = useState("");
   const [selectedRarity, setSelectedRarity] = useState("COMMON");
-  const [selectedMode, setSelectedMode] = useState("GAMES");
+  const [selectedMode, setSelectedMode] = useState("TROPHY_LOG");
   const [selectedGame, setSelectedGame] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
   const [selected, setSelected] = useState("GAMES");
@@ -380,6 +381,9 @@ export default function MainContent({
     weeklyUnlocks,
   } = calculateLevelForAchs(games);
 
+  if (refeshing) {
+    return <></>;
+  }
   return (
     <Container>
       {showEditModal && (
