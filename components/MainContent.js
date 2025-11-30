@@ -1351,6 +1351,7 @@ const Container = styled.div`
   border-radius: 4px;
   transform: translateY(-2rem);
   background-color: #292b2d;
+  min-width: 1000px;
 `;
 
 const RecentAch = styled.div`

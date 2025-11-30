@@ -193,4 +193,5 @@ const Container = styled.div`
   background-color: #292b2d;
   color: #fefefe;
   position: relative;
+  min-width: 1000px;
 `;
