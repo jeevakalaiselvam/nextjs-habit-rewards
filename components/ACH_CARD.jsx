@@ -97,7 +97,6 @@ export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
         </AchRarity>
       )}
 
-      <Seperator padding={".25rem"} />
       <AchTrophy>
         {ach?.color == "Platinum" && <PlatinumIconS />}
         {ach?.color == "Gold" && <GoldIconS />}
@@ -229,7 +228,7 @@ const AchCard = styled.div`
   align-items: center;
   justify-content: flex-start;
   color: #333;
-  width: 480px;
+  width: 440px;
   background-color: ${(props) =>
     props.achieved ? COLOR_UNLOCKED : props.color};
   border: 1px solid #eee;

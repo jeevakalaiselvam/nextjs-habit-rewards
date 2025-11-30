@@ -134,4 +134,5 @@ body {
      -moz-user-select: none; /* Firefox */
       -ms-user-select: none; /* IE10+ */
           user-select: none; /* Standard */
+  background: #292b2d !important;
 }
