@@ -438,7 +438,7 @@ export default function Main2() {
     } catch (e) {}
   };
 
-  function generateMonthYearList(startYear = 2025, startMonth = 5) {
+  function generateMonthYearList(startYear = 2010, startMonth = 0) {
     const result = [];
     const startDate = new Date(startYear, startMonth); // Jan 2016
     const today = new Date();
@@ -994,9 +994,9 @@ export default function Main2() {
                   let isPlatinum = allNotCompleted == 0;
                   return (
                     <GameCD zIndex={indexChecker?.[item?._id]}>
-                      <CdImage scale={3.1} onClick={(e) => {}}>
+                      <CdImage scale={2.75} onClick={(e) => {}}>
                         <CdInnerImage
-                          scale={3.1}
+                          scale={2.75}
                           cover={item?.image}
                           onDoubleClick={() => {
                             initiateEditForm(item);
@@ -1451,7 +1451,7 @@ const Links = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  max-height: 80vh;
+  max-height: 70vh;
   overflow: scroll;
 `;
 
