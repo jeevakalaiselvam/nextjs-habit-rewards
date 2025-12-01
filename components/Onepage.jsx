@@ -10,14 +10,7 @@ import {
   getRarityBasedOnRarity,
 } from "../helpers/achHelper";
 
-const GAMES_INCLUDED = [
-  "1659040", //Hitman 3
-  "2358720", //Wukong,
-  "1030300", //SilkSong,
-  "750920", //Rise of Tomb Raider
-  "391220", //Cyberpunk,
-  "292030",
-];
+const GAMES_INCLUDED = [];
 
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
@@ -150,19 +143,6 @@ export default function Atom() {
           refeshing={refeshing}
         />
       )}
-      <RefreshButton
-        onClick={() => {
-          setRefreshing(true);
-          if (window) {
-            refreshData();
-          }
-        }}
-      >
-        <span style={{ transform: "translateY(2px)", marginRight: ".5rem" }}>
-          <TbRefresh />
-        </span>
-        <span>{refeshing ? "Refreshing..." : "Refresh"}</span>
-      </RefreshButton>
     </Container>
   );
 }
@@ -190,7 +170,7 @@ const Container = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  background-color: #292b2d;
+  background-color: #141a21;
   color: #fefefe;
   position: relative;
   min-width: 1000px;

@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { HEADER_IMAGE } from "../helpers/urlHelper";
 import { FaGamepad, FaTrophy } from "react-icons/fa";
 import {
+  COLOR_ACCENT,
   COLOR_BRONZE,
   COLOR_GOLD,
   COLOR_GOLD2,
@@ -17,6 +18,9 @@ import WhiteTrophy from "./WhiteTrophy";
 import { calculatePSLevelAndProgress } from "../helpers/trophyHelper";
 import LevelIcon from "./LevelIcon";
 import GameCdImage from "./GameCdImage";
+import { TbRefresh } from "react-icons/tb";
+import "react-loading-skeleton/dist/skeleton.css";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 
 export default function MainHeader({
   games,
@@ -24,6 +28,8 @@ export default function MainHeader({
   refreshData,
   setTabActive,
   tabActive,
+  refeshing,
+  setRefreshing,
 }) {
   let image =
     "https://4kwallpapers.com/images/wallpapers/hogwarts-legacy-winter-1920x1200-20034.jpeg";
@@ -139,6 +145,18 @@ export default function MainHeader({
               </LevelData>
             </HeaderProfileLevel>
           )}
+          {gamesLoading && (
+            <HeaderProfileLevel>
+              <div style={{ width: "50px", height: "50px" }}>
+                <SkeletonTheme baseColor="#141A21" highlightColor="#161D25">
+                  <p>
+                    <Skeleton count={3} />
+                  </p>
+                </SkeletonTheme>
+              </div>
+            </HeaderProfileLevel>
+          )}
+
           <HeaderCounts>
             <Section color={COLOR_PLATINUM}>
               <Top>
@@ -152,21 +170,6 @@ export default function MainHeader({
                 </span>
                 <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
                   {games?.length}
-                </span>
-              </Top>
-            </Section>
-            <Section color={COLOR_WHITE}>
-              <Top onClick={() => {}}>
-                <span
-                  style={{
-                    transform: "translateY(-2.5px)",
-                    marginRight: ".25rem",
-                  }}
-                >
-                  <WhiteTrophy />
-                </span>
-                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
-                  {total}
                 </span>
               </Top>
             </Section>
@@ -216,12 +219,42 @@ export default function MainHeader({
               </Top>
             </Section>
           </HeaderCounts>
+          <RefreshButton
+            onClick={() => {
+              if (window) {
+                refreshData();
+              }
+            }}
+          >
+            <span
+              style={{ transform: "translateY(2px)", marginRight: ".5rem" }}
+            >
+              <TbRefresh />
+            </span>
+            <span>{refeshing ? "Refreshing..." : "Refresh"}</span>
+          </RefreshButton>
         </HeaderInner>
       </MainWrapper>
-      <Overlay></Overlay>
     </Container>
   );
 }
+
+const RefreshButton = styled.div`
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+  justify-content: flex-start;
+  background-color: #12171d;
+  color: #5e6e86;
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  z-index: 100;
+
+  &:hover {
+    color: #fafbfc;
+    border-radius: 4px;
+  }
+`;
 
 const LevelIconWrapper = styled.div`
   display: flex;
@@ -303,35 +336,12 @@ const Top = styled.div`
   font-weight: 300;
 `;
 
-const Bottom = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  margin-top: 0.25rem;
-  font-weight: bold;
-`;
-
-const BottomStats = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  padding: 1rem 1rem 2.5rem 1rem;
-  bottom: 0;
-  width: 1400px;
-`;
-
 const MainWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
-  top: 0;
-  left: 50%;
   width: 100%;
   z-index: 1;
-  transform: translateX(-50%);
 `;
 
 const Country = styled.div`
@@ -383,35 +393,10 @@ const HeaderInner = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  border: 4px solid #989898;
+  background-color: #12171dff;
   padding: 0.5rem;
   margin: 0.5rem;
   border-radius: 2px;
-  background-color: rgba(0, 0, 0, 0.5);
-`;
-
-const GameCDCollection = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 125px;
-  flex-wrap: wrap;
-  max-width: 1400px;
-  overflow: scroll;
-  z-index: 100;
-`;
-
-const Overlay = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 125px;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.65);
 `;
 
 const Container = styled.div`
@@ -419,10 +404,8 @@ const Container = styled.div`
   align-items: flex-start;
   justify-content: center;
   width: 100%;
-  height: 125px;
-  background: ${(props) => `url(${props.background})`};
+  background-color: #12171dff;
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
-  background-color: #292b2d;
 `;
