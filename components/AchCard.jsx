@@ -95,13 +95,14 @@ export default function AchCard({ ach, index, platinumFlag, onDeleteClick }) {
       <AchData>
         <AchTitle>{platinumFlag ? ach?.title : ach?.displayName}</AchTitle>
         <AchDesc>
-          {platinumFlag
+          {(platinumFlag
             ? ach?.description
             : desc2
             ? desc2
             : desc3
             ? desc3
-            : desc1}
+            : desc1
+          )?.replaceAll("Hidden achievement:", "")}
         </AchDesc>
       </AchData>
       {!platinumFlag && ach?.achieved == 1 && (
