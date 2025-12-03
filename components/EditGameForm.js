@@ -138,10 +138,16 @@ export default function EditGameForm({
                 platinumFlag
                 onDeleteClick={(achInner) => {
                   setGameForm((old) => {
+                    console.log({ old: old });
+                    let newGameForm = { ...gameForm };
                     let newPlats = JSON.parse(gameForm?.platinum)?.filter(
                       (item) => item?.title != achInner?.title
                     );
-                    return JSON.stringify(newPlats);
+                    let newPlatsObj = {
+                      ...newGameForm,
+                      platinum: JSON.stringify(newPlats),
+                    };
+                    return newPlatsObj;
                   });
                 }}
               />

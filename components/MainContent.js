@@ -50,6 +50,7 @@ import MultiProgressChart from "./MultiProgressChart";
 import BarProgressChart from "./BarProgressChart";
 import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
+import AchCard from "./AchCard";
 
 export default function MainContent({
   games,
@@ -606,7 +607,9 @@ export default function MainContent({
                 <Games2Line>
                   {games
                     ?.filter((game) => {
-                      return JSON.parse(gamesToInclude)?.includes(game?.id);
+                      return JSON.parse(gamesToInclude ?? "[]")?.includes(
+                        game?.id
+                      );
                     })
                     ?.map((game, index) => {
                       let allCompletion = 0;
@@ -681,6 +684,8 @@ export default function MainContent({
                       let lastUnlocked = allUnlocked?.[allUnlocked?.length - 1];
 
                       let isPlatinumNotAdded = game?.achievements?.length == 1;
+
+                      console.log("JEEVA", { selectedGame });
 
                       return (
                         <GameContainer
@@ -818,6 +823,7 @@ export default function MainContent({
                 </Games2Line>
               </Games>
             )}
+
             {selectedMode == "GAME" && (
               <>
                 <Game>
@@ -1411,17 +1417,6 @@ const AchTrophy2 = styled.div`
   flex-direction: column;
   min-width: 50px;
   transform: scale(1) translate(0.25rem, 0.25rem);
-`;
-
-const AchCard = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  color: #333;
-  width: 100%;
-  background-color: ${(props) =>
-    props.achieved ? COLOR_UNLOCKED : props.color};
-  border: 1px solid #eee;
 `;
 
 const Game2Line = styled.div`

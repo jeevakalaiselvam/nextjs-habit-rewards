@@ -62,8 +62,12 @@ export default function Atom() {
   useEffect(() => {
     let finalGames = [];
 
+    console.log("JEEVA", { platinumData });
+
     finalGames = games?.map((game) => {
-      let platinumGameData = platinumData?.find((item) => item?.id == game?.id);
+      let platinumGameData = platinumData?.find(
+        (item) => +item?.id == +game?.id
+      );
       let formedGame = {};
       let platinumMapper = {};
       let dlcMapper = {};
