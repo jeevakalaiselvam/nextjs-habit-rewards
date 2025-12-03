@@ -10,15 +10,7 @@ import {
   getRarityBasedOnRarity,
 } from "../helpers/achHelper";
 
-const GAMES_INCLUDED = [
-  "1659040", //Hitman 3
-  "2358720", //Wukong,
-  "1030300", //SilkSong,
-  "750920", //Rise of Tomb Raider
-  "391220", //Cyberpunk,
-  "292030",
-  "1629520",
-];
+const GAMES_INCLUDED = [];
 
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
@@ -149,6 +141,7 @@ export default function Atom() {
         refreshData={refreshData}
       />
       <MainContent
+        GAMES_INCLUDED={GAMES_INCLUDED}
         tabActive={tabActive}
         setTabActive={setTabActive}
         games={finalGames}

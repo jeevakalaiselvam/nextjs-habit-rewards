@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }) {
         />
         <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/icons/icon-192x192.png" />
-        <meta name="theme-color" content="#000000" />
+        <meta name="theme-color" content="#F7F7F7" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Your App Name" />
@@ -28,11 +28,11 @@ function MyApp({ Component, pageProps }) {
         theme={{
           token: {
             colorPrimary: "#1890ff",
-            colorBgBase: "#100d0d",
-            colorTextBase: "#fefefe",
+            colorBgBase: "#F7F7F7",
+            colorTextBase: "#000",
             colorLink: "#1890ff",
             colorPrimaryBorder: "#000",
-            colorBgContainer: CARD_BACKGROUND,
+            colorBgContainer: "#e2e2e2",
           },
           components: {
             Select: {

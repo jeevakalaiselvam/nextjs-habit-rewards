@@ -3,6 +3,7 @@ import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import AchCard from "./AchCard";
 
 export default function EditGameForm({
   showEditModal,
@@ -75,16 +76,18 @@ export default function EditGameForm({
     }));
   }, [gameData]);
 
+  let platinumAchs = JSON.parse(gameForm?.platinum);
+
   return (
     <Modal
-      width={1500}
+      width={700}
       title="Edit Game"
       closable={{ "aria-label": "Custom Close Button" }}
       open={showEditModal}
       onOk={handleOk}
       onCancel={handleCancel}
     >
-      <Row style={{ marginBottom: "1rem" }}>
+      {/* <Row style={{ marginBottom: "1rem" }}>
         <Input
           placeholder="Enter Game Id..."
           type="number"
@@ -94,8 +97,8 @@ export default function EditGameForm({
             setGameForm((old) => ({ ...old, id: e.target.value }))
           }
         />
-      </Row>
-      <Row style={{ marginBottom: "1rem" }}>
+      </Row> */}
+      {/* <Row style={{ marginBottom: "1rem" }}>
         <Input
           placeholder="Enter Price..."
           type="number"
@@ -104,8 +107,8 @@ export default function EditGameForm({
             setGameForm((old) => ({ ...old, price: e.target.value }))
           }
         />
-      </Row>
-      <Row style={{ marginBottom: "1rem" }}>
+      </Row> */}
+      {/* <Row style={{ marginBottom: "1rem" }}>
         <Input
           placeholder="Enter Cover URL..."
           value={gameForm?.cover}
@@ -113,7 +116,7 @@ export default function EditGameForm({
             setGameForm((old) => ({ ...old, cover: e.target.value }))
           }
         />
-      </Row>
+      </Row> */}
       <Row style={{ marginBottom: "1rem" }}>
         <TextArea
           rows={3}
@@ -125,6 +128,35 @@ export default function EditGameForm({
           }
         />
       </Row>
+      <Row style={{ marginBottom: "1rem" }}>
+        <AchWrapper>
+          {platinumAchs?.map((ach, index) => {
+            return (
+              <AchCard
+                ach={ach}
+                index={index}
+                platinumFlag
+                onDeleteClick={(achInner) => {
+                  setGameForm((old) => {
+                    let newPlats = JSON.parse(gameForm?.platinum)?.filter(
+                      (item) => item?.title != achInner?.title
+                    );
+                    return JSON.stringify(newPlats);
+                  });
+                }}
+              />
+            );
+          })}
+        </AchWrapper>
+      </Row>
     </Modal>
   );
 }
+
+const AchWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  min-height: 500px;
+`;
