@@ -104,7 +104,7 @@ export default function AchCard({ ach, index, platinumFlag, onDeleteClick }) {
             : desc1}
         </AchDesc>
       </AchData>
-      {ach?.achieved == 1 && (
+      {!platinumFlag && ach?.achieved == 1 && (
         <Unlocked>
           <UnlockedT1>
             {formatDate1(new Date(ach?.unlocktime * 1000))}

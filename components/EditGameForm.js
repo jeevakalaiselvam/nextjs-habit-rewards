@@ -11,6 +11,7 @@ export default function EditGameForm({
   gameData,
   refreshData,
   setGamesLoading,
+  games,
 }) {
   const [gameForm, setGameForm] = useState({
     id: gameData?.id,
@@ -78,6 +79,16 @@ export default function EditGameForm({
 
   let platinumAchs = JSON.parse(gameForm?.platinum);
 
+  let selectedGameNow = games?.find((game) => game?.id == gameData?.id);
+
+  console.log("JEEVA", { selectedGameNow });
+
+  let achCompletionMapper = {};
+
+  selectedGameNow?.achievements?.forEach((ach) => {
+    achCompletionMapper[ach?.title] = ach?.achieved;
+  });
+
   return (
     <Modal
       width={700}
@@ -133,7 +144,7 @@ export default function EditGameForm({
           {platinumAchs?.map((ach, index) => {
             return (
               <AchCard
-                ach={ach}
+                ach={{ ...ach, achieved: achCompletionMapper?.[ach?.title] }}
                 index={index}
                 platinumFlag
                 onDeleteClick={(achInner) => {

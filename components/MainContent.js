@@ -416,6 +416,7 @@ export default function MainContent({
     <Container>
       {showEditModal && (
         <EditGameForm
+          games={games}
           gameData={gameData}
           showEditModal={showEditModal}
           setShowEditModal={setShowEditModal}
