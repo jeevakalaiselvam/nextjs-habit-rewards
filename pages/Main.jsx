@@ -17,6 +17,7 @@ const GAMES_INCLUDED = [
   "750920", //Rise of Tomb Raider
   "391220", //Cyberpunk,
   "292030",
+  "1629520",
 ];
 
 export default function Main() {
