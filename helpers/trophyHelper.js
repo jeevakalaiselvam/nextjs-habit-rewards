@@ -161,7 +161,7 @@ export const calculateLevelForAchs = (games) => {
   const monthlyMap = {};
 
   // Initialize last 45 days in dailyMap
-  for (let i = 45; i >= 0; i--) {
+  for (let i = 30; i >= 0; i--) {
     const date = new Date(today);
     date.setDate(today.getDate() - (i - 1));
     const key = formatDate3(date); // YYYY-MM-DD

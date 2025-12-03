@@ -60,7 +60,7 @@ export default function MainContent({
 }) {
   const [gameHovered, setGameHovered] = useState("");
   const [selectedRarity, setSelectedRarity] = useState("COMMON");
-  const [selectedMode, setSelectedMode] = useState("GAMES");
+  const [selectedMode, setSelectedMode] = useState(tabActive ?? "GAMES");
   const [selectedGame, setSelectedGame] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
   const [selected, setSelected] = useState("GAMES");
@@ -542,234 +542,11 @@ export default function MainContent({
                   date: formatDate3(new Date(ach?.unlocktime * 1000)),
                   Level: ach?.levelReached,
                 }))}
-                size={1550}
+                size={1370}
               />
             )}
-            {selectedMode == "LEVEL_HISTORY" && (
-              <Game2LineLH>
-                {levelAchs?.reverse().map((ach, index) => {
-                  let desc1 = ach?.hiddenDesc;
-                  let desc2 = ach?.description;
-                  let desc3 = ach?.hiddenDesc?.split(
-                    "Hidden achievement:"
-                  )?.[1];
-                  return (
-                    <AchCard color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}>
-                      <GameSubLeftImageSmall
-                        image={HEADER_IMAGE(ach?.gameId)}
-                      />
-                      <span style={{ marginLeft: "1rem" }}></span>
-                      <AchIconOuter achieved={ach?.achieved}>
-                        <AchIcon
-                          icon={ach?.icon}
-                          onClick={() => {
-                            if (window !== "undefined") {
-                              const searchQuery = `${
-                                ach?.displayName
-                              } achievement ${encodeURIComponent(
-                                ach?.gameName
-                              )} `;
-                              window.open(
-                                `https://www.google.com/search?q=${searchQuery}`
-                              );
-                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                            }
-                          }}
-                        ></AchIcon>
-                      </AchIconOuter>
-                      <AchData>
-                        <AchTitle>{ach?.displayName}</AchTitle>
-                        <AchDesc>
-                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
-                        </AchDesc>
-                      </AchData>
-                      <AchTrophy2>
-                        <LevelUpIcon />
-                      </AchTrophy2>
-                      <span
-                        style={{
-                          fontSize: "1.25rem",
-                          padding: "1rem 0.5rem",
-                          opacity: 0.75,
-                          transform: "translate(-.66rem,.4rem)",
-                        }}
-                      >
-                        {ach?.levelReached}
-                      </span>
-                      <Seperator padding={".25rem"} />
-                      {ach?.achieved == 1 && (
-                        <Unlocked>
-                          <UnlockedT1>
-                            {formatDate1(new Date(ach?.unlocktime * 1000))}
-                          </UnlockedT1>
-                          <UnlockedT2>
-                            {formatDate2(new Date(ach?.unlocktime * 1000))}
-                          </UnlockedT2>
-                        </Unlocked>
-                      )}
-                      <Seperator padding={".25rem"} />
-                      <AchRarity>
-                        <span style={{ fontSize: "1.2rem" }}>
-                          {ach?.percentage}%
-                        </span>
-                        <span style={{ fontSize: ".7rem" }}>
-                          {ach?.label?.toUpperCase()}
-                        </span>
-                      </AchRarity>
-                      <Seperator padding={".25rem"} />
-                      <AchTrophy>
-                        {ach?.color == "Platinum" && <PlatinumIconS />}
-                        {ach?.color == "Gold" && <GoldIconS />}
-                        {ach?.color == "Silver" && <SilverIconS />}
-                        {ach?.color == "Bronze" && <BronzeIconS />}
-                      </AchTrophy>
-                    </AchCard>
-                  );
-                })}
-              </Game2LineLH>
-            )}
-            {selectedMode == "TROPHY_LOG" && (
-              <Game2Line>
-                {allUnlocked?.map((ach, index) => {
-                  let desc1 = ach?.hiddenDesc;
-                  let desc2 = ach?.description;
-                  let desc3 = ach?.hiddenDesc?.split(
-                    "Hidden achievement:"
-                  )?.[1];
-                  return (
-                    <AchCard
-                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                      achieved={ach?.achieved}
-                    >
-                      <GameSubLeftImageSmall
-                        image={HEADER_IMAGE(ach?.gameId)}
-                      />
-                      <span style={{ marginLeft: "1rem" }}></span>
-                      <AchIconOuter achieved={ach?.achieved}>
-                        <AchIcon
-                          icon={ach?.icon}
-                          onClick={() => {
-                            if (window !== "undefined") {
-                              const searchQuery = `${
-                                ach?.displayName
-                              } achievement ${encodeURIComponent(
-                                ach?.gameName
-                              )} `;
-                              window.open(
-                                `https://www.google.com/search?q=${searchQuery}`
-                              );
-                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                            }
-                          }}
-                        ></AchIcon>
-                      </AchIconOuter>
-                      <AchData>
-                        <AchTitle>{ach?.displayName}</AchTitle>
-                        <AchDesc>
-                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
-                        </AchDesc>
-                      </AchData>
-                      <span style={{ padding: "0rem 1rem", opacity: 0.75 }}>
-                        #{allUnlocked?.length - index}
-                      </span>
-                      <Seperator padding={".25rem"} />
-                      {ach?.achieved == 1 && (
-                        <Unlocked>
-                          <UnlockedT1>
-                            {formatDate1(new Date(ach?.unlocktime * 1000))}
-                          </UnlockedT1>
-                          <UnlockedT2>
-                            {formatDate2(new Date(ach?.unlocktime * 1000))}
-                          </UnlockedT2>
-                        </Unlocked>
-                      )}
-                      <Seperator padding={".25rem"} />
-                      <AchRarity>
-                        <span style={{ fontSize: "1.2rem" }}>
-                          {ach?.percentage}%
-                        </span>
-                        <span style={{ fontSize: ".7rem" }}>
-                          {ach?.label?.toUpperCase()}
-                        </span>
-                      </AchRarity>
-                      <Seperator padding={".25rem"} />
-                      <AchTrophy>
-                        {ach?.color == "Platinum" && <PlatinumIconS />}
-                        {ach?.color == "Gold" && <GoldIconS />}
-                        {ach?.color == "Silver" && <SilverIconS />}
-                        {ach?.color == "Bronze" && <BronzeIconS />}
-                      </AchTrophy>
-                    </AchCard>
-                  );
-                })}
-              </Game2Line>
-            )}
-            {selectedMode == "TROPHY_ADVISOR" && (
-              <Game2Line>
-                {notUnlocked?.map((ach, index) => {
-                  let desc1 = ach?.hiddenDesc;
-                  let desc2 = ach?.description;
-                  let desc3 = ach?.hiddenDesc?.split(
-                    "Hidden achievement:"
-                  )?.[1];
-                  return (
-                    <AchCard
-                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                      achieved={ach?.achieved}
-                    >
-                      <GameSubLeftImageSmall
-                        image={HEADER_IMAGE(ach?.gameId)}
-                      />
-                      <span style={{ marginLeft: "1rem" }}></span>
-                      <AchIconOuter achieved={ach?.achieved}>
-                        <AchIcon
-                          icon={ach?.icon}
-                          onClick={() => {
-                            if (window !== "undefined") {
-                              const searchQuery = `${
-                                ach?.displayName
-                              } achievement ${encodeURIComponent(
-                                ach?.gameName
-                              )} `;
-                              window.open(
-                                `https://www.google.com/search?q=${searchQuery}`
-                              );
-                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                            }
-                          }}
-                        ></AchIcon>
-                      </AchIconOuter>
-                      <AchData>
-                        <AchTitle>{ach?.displayName}</AchTitle>
-                        <AchDesc>
-                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
-                        </AchDesc>
-                      </AchData>
-                      <span style={{ padding: "0rem 1rem", opacity: 0.75 }}>
-                        #{index + 1}
-                      </span>
-                      <Seperator padding={".25rem"} />
-                      <AchRarity>
-                        <span style={{ fontSize: "1.2rem" }}>
-                          {ach?.percentage}%
-                        </span>
-                        <span style={{ fontSize: ".7rem" }}>
-                          {ach?.label?.toUpperCase()}
-                        </span>
-                      </AchRarity>
-                      <Seperator padding={".25rem"} />
-                      <AchTrophy>
-                        {ach?.color == "Platinum" && <PlatinumIconS />}
-                        {ach?.color == "Gold" && <GoldIconS />}
-                        {ach?.color == "Silver" && <SilverIconS />}
-                        {ach?.color == "Bronze" && <BronzeIconS />}
-                      </AchTrophy>
-                    </AchCard>
-                  );
-                })}
-              </Game2Line>
-            )}
-            {tabActive == "GAMES" && (
+
+            {selectedMode == "GAMES" && (
               <Games>
                 <Games1Line>
                   <GamesLeft>BACKLOG</GamesLeft>
@@ -982,7 +759,7 @@ export default function MainContent({
                 </Games2Line>
               </Games>
             )}
-            {tabActive == "GAME" && (
+            {selectedMode == "GAME" && (
               <>
                 <Game>
                   <Game1Line>
@@ -1086,6 +863,147 @@ export default function MainContent({
                 </Game>
               </>
             )}
+            {selectedMode == "TROPHY_LOG" && (
+              <Game2Line>
+                {allUnlocked?.map((ach, index) => {
+                  let desc1 = ach?.hiddenDesc;
+                  let desc2 = ach?.description;
+                  let desc3 = ach?.hiddenDesc?.split(
+                    "Hidden achievement:"
+                  )?.[1];
+                  return (
+                    <AchCard
+                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                      achieved={ach?.achieved}
+                    >
+                      <GameSubLeftImageSmall
+                        image={HEADER_IMAGE(ach?.gameId)}
+                      />
+                      <span style={{ marginLeft: "1rem" }}></span>
+                      <AchIconOuter achieved={ach?.achieved}>
+                        <AchIcon
+                          icon={ach?.icon}
+                          onClick={() => {
+                            if (window !== "undefined") {
+                              const searchQuery = `${
+                                ach?.displayName
+                              } achievement ${encodeURIComponent(
+                                ach?.gameName
+                              )} `;
+                              window.open(
+                                `https://www.google.com/search?q=${searchQuery}`
+                              );
+                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                            }
+                          }}
+                        ></AchIcon>
+                      </AchIconOuter>
+                      <AchData>
+                        <AchTitle>{ach?.displayName}</AchTitle>
+                        <AchDesc>
+                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                        </AchDesc>
+                      </AchData>
+                      <span style={{ padding: "0rem 1rem", opacity: 0.75 }}>
+                        #{allUnlocked?.length - index}
+                      </span>
+                      <Seperator padding={".25rem"} />
+                      {ach?.achieved == 1 && (
+                        <Unlocked>
+                          <UnlockedT1>
+                            {formatDate1(new Date(ach?.unlocktime * 1000))}
+                          </UnlockedT1>
+                          <UnlockedT2>
+                            {formatDate2(new Date(ach?.unlocktime * 1000))}
+                          </UnlockedT2>
+                        </Unlocked>
+                      )}
+                      <Seperator padding={".25rem"} />
+                      <AchRarity>
+                        <span style={{ fontSize: "1.2rem" }}>
+                          {ach?.percentage}%
+                        </span>
+                        <span style={{ fontSize: ".7rem" }}>
+                          {ach?.label?.toUpperCase()}
+                        </span>
+                      </AchRarity>
+                      <Seperator padding={".25rem"} />
+                      <AchTrophy>
+                        {ach?.color == "Platinum" && <PlatinumIconS />}
+                        {ach?.color == "Gold" && <GoldIconS />}
+                        {ach?.color == "Silver" && <SilverIconS />}
+                        {ach?.color == "Bronze" && <BronzeIconS />}
+                      </AchTrophy>
+                    </AchCard>
+                  );
+                })}
+              </Game2Line>
+            )}
+            {selectedMode == "TROPHY_ADVISOR" && (
+              <Game2Line>
+                {notUnlocked?.map((ach, index) => {
+                  let desc1 = ach?.hiddenDesc;
+                  let desc2 = ach?.description;
+                  let desc3 = ach?.hiddenDesc?.split(
+                    "Hidden achievement:"
+                  )?.[1];
+                  return (
+                    <AchCard
+                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                      achieved={ach?.achieved}
+                    >
+                      <GameSubLeftImageSmall
+                        image={HEADER_IMAGE(ach?.gameId)}
+                      />
+                      <span style={{ marginLeft: "1rem" }}></span>
+                      <AchIconOuter achieved={ach?.achieved}>
+                        <AchIcon
+                          icon={ach?.icon}
+                          onClick={() => {
+                            if (window !== "undefined") {
+                              const searchQuery = `${
+                                ach?.displayName
+                              } achievement ${encodeURIComponent(
+                                ach?.gameName
+                              )} `;
+                              window.open(
+                                `https://www.google.com/search?q=${searchQuery}`
+                              );
+                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                            }
+                          }}
+                        ></AchIcon>
+                      </AchIconOuter>
+                      <AchData>
+                        <AchTitle>{ach?.displayName}</AchTitle>
+                        <AchDesc>
+                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                        </AchDesc>
+                      </AchData>
+                      <span style={{ padding: "0rem 1rem", opacity: 0.75 }}>
+                        #{index + 1}
+                      </span>
+                      <Seperator padding={".25rem"} />
+                      <AchRarity>
+                        <span style={{ fontSize: "1.2rem" }}>
+                          {ach?.percentage}%
+                        </span>
+                        <span style={{ fontSize: ".7rem" }}>
+                          {ach?.label?.toUpperCase()}
+                        </span>
+                      </AchRarity>
+                      <Seperator padding={".25rem"} />
+                      <AchTrophy>
+                        {ach?.color == "Platinum" && <PlatinumIconS />}
+                        {ach?.color == "Gold" && <GoldIconS />}
+                        {ach?.color == "Silver" && <SilverIconS />}
+                        {ach?.color == "Bronze" && <BronzeIconS />}
+                      </AchTrophy>
+                    </AchCard>
+                  );
+                })}
+              </Game2Line>
+            )}
             {selectedMode == "STATS" && (
               <GamesR>
                 <GameLineHours>
@@ -1109,7 +1027,7 @@ export default function MainContent({
                   <StatWrapper2>
                     <LevelProgressChart
                       dailyUnlocks={monthlyUnlocks}
-                      size={1550}
+                      size={1370}
                     />
                   </StatWrapper2>
                 </GameLineHours>
@@ -1124,7 +1042,7 @@ export default function MainContent({
                   </Games1Line>
                   <StatWrapper2>
                     <MultiProgressChart
-                      size={1550}
+                      size={1370}
                       dailyTypeBreakdown={dailyTypeBreakdown}
                     />
                   </StatWrapper2>
@@ -1141,7 +1059,7 @@ export default function MainContent({
                   <StatWrapper2>
                     <BarProgressChart
                       dailyUnlocks={hourlyUnlocks}
-                      size={1550}
+                      size={1370}
                     />
                   </StatWrapper2>
                 </GameLineHours>
@@ -1157,23 +1075,107 @@ export default function MainContent({
                   <StatWrapper2>
                     <BarProgressChart
                       dailyUnlocks={weeklyUnlocks}
-                      size={1550}
+                      size={1370}
                     />
                   </StatWrapper2>
                 </GameLineHours>
               </GamesR>
-            )}{" "}
+            )}
+
+            {selectedMode == "LEVEL_HISTORY" && (
+              <Game2LineLH>
+                {levelAchs?.reverse().map((ach, index) => {
+                  let desc1 = ach?.hiddenDesc;
+                  let desc2 = ach?.description;
+                  let desc3 = ach?.hiddenDesc?.split(
+                    "Hidden achievement:"
+                  )?.[1];
+                  return (
+                    <AchCard color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}>
+                      <GameSubLeftImageSmall
+                        image={HEADER_IMAGE(ach?.gameId)}
+                      />
+                      <span style={{ marginLeft: "1rem" }}></span>
+                      <AchIconOuter achieved={ach?.achieved}>
+                        <AchIcon
+                          icon={ach?.icon}
+                          onClick={() => {
+                            if (window !== "undefined") {
+                              const searchQuery = `${
+                                ach?.displayName
+                              } achievement ${encodeURIComponent(
+                                ach?.gameName
+                              )} `;
+                              window.open(
+                                `https://www.google.com/search?q=${searchQuery}`
+                              );
+                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                            }
+                          }}
+                        ></AchIcon>
+                      </AchIconOuter>
+                      <AchData>
+                        <AchTitle>{ach?.displayName}</AchTitle>
+                        <AchDesc>
+                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
+                        </AchDesc>
+                      </AchData>
+                      <AchTrophy2>
+                        <LevelUpIcon />
+                      </AchTrophy2>
+                      <span
+                        style={{
+                          fontSize: "1.25rem",
+                          padding: "1rem 0.5rem",
+                          opacity: 0.75,
+                          transform: "translate(-.66rem,.4rem)",
+                        }}
+                      >
+                        {ach?.levelReached}
+                      </span>
+                      <Seperator padding={".25rem"} />
+                      {ach?.achieved == 1 && (
+                        <Unlocked>
+                          <UnlockedT1>
+                            {formatDate1(new Date(ach?.unlocktime * 1000))}
+                          </UnlockedT1>
+                          <UnlockedT2>
+                            {formatDate2(new Date(ach?.unlocktime * 1000))}
+                          </UnlockedT2>
+                        </Unlocked>
+                      )}
+                      <Seperator padding={".25rem"} />
+                      <AchRarity>
+                        <span style={{ fontSize: "1.2rem" }}>
+                          {ach?.percentage}%
+                        </span>
+                        <span style={{ fontSize: ".7rem" }}>
+                          {ach?.label?.toUpperCase()}
+                        </span>
+                      </AchRarity>
+                      <Seperator padding={".25rem"} />
+                      <AchTrophy>
+                        {ach?.color == "Platinum" && <PlatinumIconS />}
+                        {ach?.color == "Gold" && <GoldIconS />}
+                        {ach?.color == "Silver" && <SilverIconS />}
+                        {ach?.color == "Bronze" && <BronzeIconS />}
+                      </AchTrophy>
+                    </AchCard>
+                  );
+                })}
+              </Game2LineLH>
+            )}
             {selectedMode == "SETTINGS" && (
               <GamesR>
                 <GameLineHours>
                   <Games1Line>
-                    <GamesLeft>TROPHIES BY DAY</GamesLeft>
+                    <GamesLeft>SETTINGS</GamesLeft>
                     <GamesRight></GamesRight>
                   </Games1Line>
                   <StatWrapper2>
                     <BarProgressChart
                       dailyUnlocks={weeklyUnlocks}
-                      size={1550}
+                      size={1370}
                     />
                   </StatWrapper2>
                 </GameLineHours>

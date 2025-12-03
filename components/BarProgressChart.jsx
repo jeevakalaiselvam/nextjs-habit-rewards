@@ -21,7 +21,7 @@ export default function BarProgressChart({ dailyUnlocks, size }) {
     <Container>
       <Inner>
         <BarChart
-          width={size ? size : 1200}
+          width={size ? size : 800}
           height={400}
           data={data}
           margin={{

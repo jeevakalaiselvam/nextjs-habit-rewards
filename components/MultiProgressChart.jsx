@@ -26,7 +26,7 @@ export default function MultiProgressChart({ dailyTypeBreakdown, size }) {
     <Container>
       <Inner>
         <AreaChart
-          width={size ? size : 1200}
+          width={size ? size : 800}
           height={400}
           data={data}
           margin={{
