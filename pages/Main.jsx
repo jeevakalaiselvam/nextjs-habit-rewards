@@ -17,6 +17,7 @@ const GAMES_INCLUDED = [
   "750920", //Rise of Tomb Raider
   "391220", //Cyberpunk,
   "292030",
+  "1629520",
 ];
 
 export default function Atom() {
@@ -26,7 +27,7 @@ export default function Atom() {
   const [platinumData, setPlatinumData] = useState([]);
   const [finalGames, setFinalGames] = useState([]);
   const [refeshing, setRefreshing] = useState(false);
-  const [tabActive, setTabActive] = useState(0);
+  const [tabActive, setTabActive] = useState("GAMES");
 
   const refreshSteamGames = () => {
     setGamesLoading(true);
@@ -57,6 +58,7 @@ export default function Atom() {
   const refreshData = () => {
     refreshSteamGames();
     refreshPlatinumData();
+    setRefreshing(false);
   };
 
   useEffect(() => {
@@ -178,7 +180,7 @@ const RefreshButton = styled.div`
   justify-content: flex-start;
   position: fixed;
   right: 2rem;
-  top: 1rem;
+  bottom: 1rem;
   background-color: ${COLOR_ACCENT};
   padding: 0.25rem 0.5rem;
   cursor: pointer;
