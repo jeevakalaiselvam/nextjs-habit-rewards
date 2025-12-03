@@ -76,7 +76,7 @@ export default function Atom() {
         platinumMapper[ach?.title] = ach;
       });
 
-      console.log({ platinumMapper });
+      console.log("JEEVA", { platinumMapper });
 
       let gameName = game?.achievements?.[0]?.gameName;
 

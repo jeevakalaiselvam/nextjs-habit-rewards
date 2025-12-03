@@ -412,6 +412,8 @@ export default function MainContent({
     refreshIncludedGames();
   }, []);
 
+  console.log("JEEVA", { selected: selectedGame?.achievements });
+
   return (
     <Container>
       {showEditModal && (
