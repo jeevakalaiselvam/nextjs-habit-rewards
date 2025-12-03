@@ -165,4 +165,5 @@ const AchWrapper = styled.div`
   justify-content: center;
   flex-direction: column;
   min-height: 500px;
+  width: 100%;
 `;
