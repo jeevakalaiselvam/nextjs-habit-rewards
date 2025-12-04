@@ -50,7 +50,13 @@ import LevelProgressChart from "./LevelProgressChart";
 import MultiProgressChart from "./MultiProgressChart";
 import BarProgressChart from "./BarProgressChart";
 
-export default function AchCard({ ach, index, platinumFlag, onDeleteClick }) {
+export default function AchCard({
+  ach,
+  index,
+  platinumFlag,
+  onDeleteClick,
+  selectedGameNow,
+}) {
   let desc1 = ach?.hiddenDesc;
   let desc2 = ach?.description;
   let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
@@ -67,8 +73,8 @@ export default function AchCard({ ach, index, platinumFlag, onDeleteClick }) {
             onClick={() => {
               if (window !== "undefined") {
                 const searchQuery = `${
-                  ach?.displayName
-                } achievement ${encodeURIComponent(ach?.gameName)} `;
+                  ach?.title
+                } achievement ${encodeURIComponent(selectedGameNow?.name)} `;
                 window.open(`https://www.google.com/search?q=${searchQuery}`);
                 // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
               }

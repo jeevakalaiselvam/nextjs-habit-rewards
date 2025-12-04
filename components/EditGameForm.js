@@ -144,6 +144,7 @@ export default function EditGameForm({
           {platinumAchs?.map((ach, index) => {
             return (
               <AchCard
+                selectedGameNow={selectedGameNow}
                 ach={{ ...ach, achieved: achCompletionMapper?.[ach?.title] }}
                 index={index}
                 platinumFlag
