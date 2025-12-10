@@ -51,6 +51,7 @@ import BarProgressChart from "./BarProgressChart";
 import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
 import AchCard from "./AchCard";
+import GameCdImageSmall from "./GameCdImageSmall";
 
 export default function MainContent({
   games,
@@ -699,7 +700,7 @@ export default function MainContent({
                           }}
                           color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                         >
-                          <GameCdImage game={game}/>
+                          <GameCdImageSmall cover={game?.cover} scale={2} />
                           <GameData>
                             <GameTitle
                               onClick={() => {
@@ -732,14 +733,14 @@ export default function MainContent({
                               )}
                             <Started></Started>
                           </GameData>
-                            <Ps5
-                              onClick={() => {
-                                setShowEditModal(true);
-                                setGameData((old) => game);
-                              }}
-                            >
-                              PS5
-                            </Ps5>
+                          <Ps5
+                            onClick={() => {
+                              setShowEditModal(true);
+                              setGameData((old) => game);
+                            }}
+                          >
+                            PS5
+                          </Ps5>
                           <GameInfo>
                             <Rank>
                               <span
@@ -835,9 +836,12 @@ export default function MainContent({
                     </GameLeft>
                   </Game1Line>
                   <Game2Line>
-                    {selectedGame?.achievements?.map((ach, index) => {
-                      return <AchCard ach={ach} index={index} />;
-                    })}
+                    <Game2Left></Game2Left>
+                    <Game2Right>
+                      {selectedGame?.achievements?.map((ach, index) => {
+                        return <AchCard ach={ach} index={index} />;
+                      })}
+                    </Game2Right>
                   </Game2Line>
                 </Game>
               </>
@@ -1424,10 +1428,28 @@ const AchTrophy2 = styled.div`
 const Game2Line = styled.div`
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.25rem 0.25rem;
+`;
+
+const Game2Left = styled.div`
+  display: flex;
+  align-items: center;
   justify-content: flex-start;
   flex-direction: column;
   overflow: scroll;
-  width: 100%;
+  flex: 1;
+  padding: 0.25rem 0.25rem;
+`;
+
+const Game2Right = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  overflow: scroll;
+  flex: 1;
   padding: 0.25rem 0.25rem;
 `;
 
@@ -1653,7 +1675,7 @@ const GameTitle = styled.div`
   width: 100%6;
   justify-content: center;
   color: #057fcc;
-  padding: .25rem 0;
+  padding: 0.25rem 0;
 `;
 
 const Warning = styled.div`
@@ -1703,8 +1725,6 @@ const GameCompletion = styled.div`
   color: #666666;
 `;
 
-
-
 const Started = styled.div`
   display: flex;
   align-items: center;
@@ -1718,7 +1738,6 @@ const GameData = styled.div`
   flex-direction: column;
 `;
 
-
 const GameInfo = styled.div`
   display: flex;
   flex: 2;
@@ -1726,7 +1745,6 @@ const GameInfo = styled.div`
   justify-content: flex-end;
   padding: 1rem 0;
 `;
-
 
 const GameContainer = styled.div`
   display: flex;
@@ -1737,10 +1755,9 @@ const GameContainer = styled.div`
   color: #333;
   border: 1px solid #ddd;
   cursor: pointer;
-  flex-direction:column;
+  width: 16.66%;
+  flex-direction: column;
 `;
-
-
 
 const Games2Line = styled.div`
   display: flex;
@@ -1749,8 +1766,6 @@ const Games2Line = styled.div`
   width: 100%;
   flex-wrap: wrap;
 `;
-
-
 
 const Games1Line = styled.div`
   display: flex;
@@ -1964,7 +1979,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
-  width: 1400px;
+  width: 2350px;
   border-radius: 4px;
   transform: translateY(-2rem);
   background-color: #292b2d;

@@ -9,6 +9,8 @@ import {
   getColorBasedOnRarity,
   getRarityBasedOnRarity,
 } from "../helpers/achHelper";
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 const GAMES_INCLUDED = [];
 
@@ -135,40 +137,56 @@ export default function Atom() {
     setFinalGames(finalGames);
   }, [games, platinumData]);
 
-  return (
+  if (refeshing) {
     <Container>
-      <MainHeader
-        tabActive={tabActive}
-        setTabActive={setTabActive}
-        games={finalGames}
-        gamesLoading={gamesLoading}
-        refreshData={refreshData}
+      <Spin
+        indicator={
+          <LoadingOutlined
+            style={{
+              fontSize: 48,
+              marginTop: "2rem",
+            }}
+            spin
+          />
+        }
       />
-      <MainContent
-        GAMES_INCLUDED={GAMES_INCLUDED}
-        tabActive={tabActive}
-        setTabActive={setTabActive}
-        games={finalGames}
-        refreshData={refreshData}
-        setGamesLoading={setGamesLoading}
-        gamesLoading={gamesLoading}
-        platinumDataLoading={platinumDataLoading}
-      />
-      <RefreshButton
-        onClick={() => {
-          setRefreshing(true);
-          if (window) {
-            refreshData();
-          }
-        }}
-      >
-        <span style={{ transform: "translateY(2px)", marginRight: ".5rem" }}>
-          <TbRefresh />
-        </span>
-        <span>{refeshing ? "Refreshing..." : "Refresh"}</span>
-      </RefreshButton>
-    </Container>
-  );
+    </Container>;
+  } else {
+    return (
+      <Container>
+        <MainHeader
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          games={finalGames}
+          gamesLoading={gamesLoading}
+          refreshData={refreshData}
+        />
+        <MainContent
+          GAMES_INCLUDED={GAMES_INCLUDED}
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          games={finalGames}
+          refreshData={refreshData}
+          setGamesLoading={setGamesLoading}
+          gamesLoading={gamesLoading}
+          platinumDataLoading={platinumDataLoading}
+        />
+        <RefreshButton
+          onClick={() => {
+            setRefreshing(true);
+            if (window) {
+              refreshData();
+            }
+          }}
+        >
+          <span style={{ transform: "translateY(2px)", marginRight: ".5rem" }}>
+            <TbRefresh />
+          </span>
+          <span>{refeshing ? "Refreshing..." : "Refresh"}</span>
+        </RefreshButton>
+      </Container>
+    );
+  }
 }
 
 const RefreshButton = styled.div`

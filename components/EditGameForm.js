@@ -119,7 +119,7 @@ export default function EditGameForm({
           }
         />
       </Row> */}
-      {/* <Row style={{ marginBottom: "1rem" }}>
+      <Row style={{ marginBottom: "1rem" }}>
         <Input
           placeholder="Enter Cover URL..."
           value={gameForm?.cover}
@@ -127,7 +127,7 @@ export default function EditGameForm({
             setGameForm((old) => ({ ...old, cover: e.target.value }))
           }
         />
-      </Row> */}
+      </Row>
       <Row style={{ marginBottom: "1rem" }}>
         <TextArea
           rows={3}
