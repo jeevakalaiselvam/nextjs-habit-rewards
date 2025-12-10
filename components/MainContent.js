@@ -699,7 +699,7 @@ export default function MainContent({
                           }}
                           color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                         >
-                          <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
+                          <GameCdImage game={game}/>
                           <GameData>
                             <GameTitle
                               onClick={() => {
@@ -732,7 +732,6 @@ export default function MainContent({
                               )}
                             <Started></Started>
                           </GameData>
-                          <GameInfo>
                             <Ps5
                               onClick={() => {
                                 setShowEditModal(true);
@@ -741,7 +740,7 @@ export default function MainContent({
                             >
                               PS5
                             </Ps5>
-                            <Seperator></Seperator>
+                          <GameInfo>
                             <Rank>
                               <span
                                 style={{ fontSize: "1.5rem", color: color }}
@@ -1654,6 +1653,7 @@ const GameTitle = styled.div`
   width: 100%6;
   justify-content: center;
   color: #057fcc;
+  padding: .25rem 0;
 `;
 
 const Warning = styled.div`
@@ -1703,24 +1703,7 @@ const GameCompletion = styled.div`
   color: #666666;
 `;
 
-const GameCompletionCD = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  padding: 0.5rem;
-  color: #666666;
-`;
 
-const GamePrice = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  padding: 0.5rem;
-  color: #666666;
-  color: ${COLOR_GREEN2};
-`;
 
 const Started = styled.div`
   display: flex;
@@ -1729,96 +1712,45 @@ const Started = styled.div`
 `;
 const GameData = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
-  padding: 0rem 1rem;
+  padding: 1rem 1rem;
   flex-direction: column;
 `;
 
-const GameDataCD = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0rem 1rem;
-  flex-direction: column;
-`;
-
-const GameInfoCD = styled.div`
-  display: flex;
-  flex: 2;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 0.5rem;
-`;
 
 const GameInfo = styled.div`
   display: flex;
   flex: 2;
   align-items: center;
   justify-content: flex-end;
+  padding: 1rem 0;
 `;
 
-const GameImage = styled.div`
-  width: 200px;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: ${(props) => `url(${props.url})`};
-  background-size: cover;
-  background-repeat: no-repeat;
-  cursor: pointer;
-  position: relative;
-`;
 
 const GameContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 100%;
+  padding: 1rem;
   background-color: ${(props) => props.color};
   color: #333;
-  padding: 4px;
   border: 1px solid #ddd;
   cursor: pointer;
+  flex-direction:column;
 `;
 
-const GameContainerCD = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  background-color: ${(props) => props.color};
-  color: #333;
-  padding: 8px;
-  flex-direction: column;
-  border: 1px solid #ddd;
-  cursor: pointer;
-  width: 350px;
-`;
+
 
 const Games2Line = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  flex-direction: column;
   width: 100%;
+  flex-wrap: wrap;
 `;
 
-const Games2LineCDL = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  width: 100%;
-`;
 
-const Games2LineCD = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  width: 93%;
-`;
 
 const Games1Line = styled.div`
   display: flex;
