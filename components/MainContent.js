@@ -602,18 +602,57 @@ export default function MainContent({
               />
             )}
 
-            {selectedMode == "GAMES" && (
+            {(selectedMode == "GAMES" || selectedMode == "GAME") && (
               <Games>
-                <Games1Line>
-                  <GamesLeft>BACKLOG</GamesLeft>
-                  <GamesRight></GamesRight>
-                </Games1Line>
+                <Games3Line>
+                  <Games3Line1>
+                    <Game1Line>
+                      <GameLeft>
+                        {selectedGame?.name?.toUpperCase()} TROPHIES
+                      </GameLeft>
+                    </Game1Line>
+                  </Games3Line1>
+                  <Games3Line2>
+                    {selectedGame?.achievements?.map((ach, index) => {
+                      return <AchCard ach={ach} index={index} />;
+                    })}
+                  </Games3Line2>
+                </Games3Line>
                 <Games2Line>
                   {games
                     ?.filter((game) => {
                       return JSON.parse(gamesToInclude ?? "[]")?.includes(
                         game?.id
                       );
+                    })
+                    ?.sort((game1, game2) => {
+                      let total1 = 0;
+
+                      game1?.achievements?.forEach((ach) => {
+                        total1++;
+                      });
+
+                      let completed1 = game1?.achievements?.filter(
+                        (item) => item?.achieved == 1
+                      )?.length;
+                      let completion1 = (
+                        completed1 == 0 ? 0 : (completed1 / total1) * 100
+                      )?.toFixed(2);
+
+                      let total2 = 0;
+
+                      game2?.achievements?.forEach((ach) => {
+                        total2++;
+                      });
+
+                      let completed2 = game2?.achievements?.filter(
+                        (item) => item?.achieved == 1
+                      )?.length;
+                      let completion2 = (
+                        completed2 == 0 ? 0 : (completed2 / total2) * 100
+                      )?.toFixed(2);
+
+                      return completion1 - completion2;
                     })
                     ?.map((game, index) => {
                       let allCompletion = 0;
@@ -689,8 +728,6 @@ export default function MainContent({
 
                       let isPlatinumNotAdded = game?.achievements?.length == 1;
 
-                      console.log("JEEVA", { selectedGame });
-
                       return (
                         <GameContainer
                           onClick={() => {
@@ -699,6 +736,7 @@ export default function MainContent({
                             setTabActive("GAME");
                           }}
                           color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                          isSelected={game?.id == selectedGame?.id}
                         >
                           <GameCdImageSmall cover={game?.cover} scale={2} />
                           <GameData>
@@ -827,25 +865,6 @@ export default function MainContent({
               </Games>
             )}
 
-            {selectedMode == "GAME" && (
-              <>
-                <Game>
-                  <Game1Line>
-                    <GameLeft>
-                      {selectedGame?.name?.toUpperCase()} TROPHIES
-                    </GameLeft>
-                  </Game1Line>
-                  <Game2Line>
-                    <Game2Left></Game2Left>
-                    <Game2Right>
-                      {selectedGame?.achievements?.map((ach, index) => {
-                        return <AchCard ach={ach} index={index} />;
-                      })}
-                    </Game2Right>
-                  </Game2Line>
-                </Game>
-              </>
-            )}
             {selectedMode == "TROPHY_LOG" && (
               <Game2Line>
                 {allUnlocked?.map((ach, index) => {
@@ -1450,6 +1469,7 @@ const Game2Right = styled.div`
   flex-direction: column;
   overflow: scroll;
   flex: 1;
+  width: 100%;
   padding: 0.25rem 0.25rem;
 `;
 
@@ -1751,20 +1771,44 @@ const GameContainer = styled.div`
   align-items: center;
   justify-content: flex-start;
   padding: 1rem;
-  background-color: ${(props) => props.color};
-  color: #333;
+  background-color: ${(props) => (props.isSelected ? "#F1F5FD" : "#F9F9F9")};
+  color: #333;rgba(227, 232, 241, 1);
   border: 1px solid #ddd;
   cursor: pointer;
-  width: 16.66%;
   flex-direction: column;
 `;
 
 const Games2Line = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex: 4;
+  flex-wrap: wrap;
+`;
+
+const Games3Line = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-direction: column;
+  flex: 2;
+`;
+
+const Games3Line1 = styled.div`
+  display: flex;
+  align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
+`;
+
+const Games3Line2 = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
   flex-wrap: wrap;
+  flex: 1;
+  width: 100%;
+  padding: 0.25rem;
 `;
 
 const Games1Line = styled.div`
@@ -1773,7 +1817,6 @@ const Games1Line = styled.div`
   background-color: #336291;
   padding: 0.75rem 0.5rem;
   justify-content: center;
-  width: 100%;
 `;
 
 const GamesCD = styled.div`
@@ -1790,9 +1833,8 @@ const GamesCD = styled.div`
 
 const Games = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  flex-direction: column;
   width: 98%;
   color: #fefefe;
   font-size: 0.9rem;
