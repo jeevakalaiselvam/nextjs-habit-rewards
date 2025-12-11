@@ -74,6 +74,7 @@ export default function MainContent({
   const [gameSearch, setGameSearch] = useState("");
   const [activeAch, setActiveAch] = useState(0);
   const [gamesToInclude, setGamesToInclude] = useState(GAMES_INCLUDED);
+  const [gameDelayed, setGameDelayed] = useState(true);
 
   let unearnedBG = 0;
   let platinumABG = 0;
@@ -413,7 +414,15 @@ export default function MainContent({
     refreshIncludedGames();
   }, []);
 
-  console.log("JEEVA", { selected: selectedGame?.achievements });
+  useEffect(() => {
+    setGameDelayed(true);
+    let timer = setTimeout(() => {
+      setGameDelayed(false);
+    }, 1000);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [selectedGame?.id]);
 
   return (
     <Container>
@@ -509,7 +518,7 @@ export default function MainContent({
       </FirstRow>
       <RecentAchs>
         {allUnlocked
-          ?.slice(0, 18)
+          ?.slice(0, 31)
           ?.filter((ach) => ach?.color != "Platinum")
           ?.map((ach, index) => {
             let desc1 = ach?.hiddenDesc;
@@ -612,12 +621,30 @@ export default function MainContent({
                       </GameLeft>
                     </Game1Line>
                   </Games3Line1>
-                  <Games3Line2>
-                    {selectedGame?.achievements?.map((ach, index) => {
-                      return <AchCard ach={ach} index={index} />;
-                    })}
-                  </Games3Line2>
+                  {gameDelayed && (
+                    <Games3Line2>
+                      <Spin
+                        indicator={
+                          <LoadingOutlined
+                            style={{
+                              fontSize: 48,
+                              marginTop: "2rem",
+                            }}
+                            spin
+                          />
+                        }
+                      />
+                    </Games3Line2>
+                  )}
+                  {!gameDelayed && (
+                    <Games3Line2>
+                      {selectedGame?.achievements?.map((ach, index) => {
+                        return <AchCard ach={ach} index={index} />;
+                      })}
+                    </Games3Line2>
+                  )}
                 </Games3Line>
+
                 <Games2Line>
                   {games
                     ?.filter((game) => {
@@ -1803,9 +1830,10 @@ const Games3Line1 = styled.div`
 
 const Games3Line2 = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-start;
   flex-wrap: wrap;
+  flex-direction: column;
   flex: 1;
   width: 100%;
   padding: 0.25rem;
