@@ -765,7 +765,7 @@ export default function MainContent({
                           color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
                           isSelected={game?.id == selectedGame?.id}
                         >
-                          <GameCdImageSmall cover={game?.cover} scale={2} />
+                          <GameCdImageSmall cover={game?.cover} scale={2.5} />
                           <GameData>
                             <GameTitle
                               onClick={() => {
@@ -1798,6 +1798,7 @@ const GameContainer = styled.div`
   align-items: center;
   justify-content: flex-start;
   padding: 1rem;
+  width: 33%;
   background-color: ${(props) => (props.isSelected ? "#F1F5FD" : "#F9F9F9")};
   color: #333;rgba(227, 232, 241, 1);
   border: 1px solid #ddd;
