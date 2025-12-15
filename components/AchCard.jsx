@@ -284,7 +284,7 @@ const AchTitle = styled.div`
   color: #4486c6;
   justify-content: flex-start;
   flex: 2;
-  font-size: 0.8rem;
+  font-size: 1rem;
   width: 100%;
 `;
 
@@ -296,7 +296,7 @@ const AchDesc = styled.div`
   flex: 2;
   width: 100%;
   opacity: 0.75;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 `;
 
 const AchUnlocked = styled.div`

@@ -22,6 +22,7 @@ export default function Atom() {
   const [finalGames, setFinalGames] = useState([]);
   const [refeshing, setRefreshing] = useState(false);
   const [tabActive, setTabActive] = useState("GAMES");
+  const [gamesToInclude, setGamesToInclude] = useState([]);
 
   const refreshSteamGames = () => {
     setGamesLoading(true);
@@ -137,6 +138,19 @@ export default function Atom() {
     setFinalGames(finalGames);
   }, [games, platinumData]);
 
+  const refreshIncludedGames = async () => {
+    try {
+      const res = await axios.get("/api/include/include");
+      setGamesToInclude(res.data[0]?.games || []); // assuming games stored in one document
+    } catch (error) {
+      console.error("Failed to refresh games", error);
+    }
+  };
+
+  useEffect(() => {
+    refreshIncludedGames();
+  }, []);
+
   if (refeshing) {
     <Container>
       <Spin
@@ -160,6 +174,7 @@ export default function Atom() {
           games={finalGames}
           gamesLoading={gamesLoading}
           refreshData={refreshData}
+          gamesToInclude={gamesToInclude}
         />
         <MainContent
           GAMES_INCLUDED={GAMES_INCLUDED}
@@ -170,6 +185,8 @@ export default function Atom() {
           setGamesLoading={setGamesLoading}
           gamesLoading={gamesLoading}
           platinumDataLoading={platinumDataLoading}
+          gamesToInclude={gamesToInclude}
+          setGamesToInclude={setGamesToInclude}
         />
         <RefreshButton
           onClick={() => {
