@@ -1793,7 +1793,7 @@ const GameContainer = styled.div`
   align-items: center;
   justify-content: flex-start;
   padding: 1rem;
-  width: 33%;
+  width: 50%;
   background-color: ${(props) => (props.isSelected ? "#F1F5FD" : "#F9F9F9")};
   color: #333;rgba(227, 232, 241, 1);
   border: 1px solid #ddd;
@@ -1805,8 +1805,10 @@ const Games2Line = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  flex: 4;
+  flex: 2;
   flex-wrap: wrap;
+  max-height: 74vh;
+  overflow: scroll;
 `;
 
 const Games3Line = styled.div`
@@ -1814,6 +1816,8 @@ const Games3Line = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   flex-direction: column;
+  max-height: 74vh;
+  overflow: scroll;
   flex: 2;
 `;
 
@@ -1863,7 +1867,6 @@ const Games = styled.div`
   color: #fefefe;
   font-size: 0.9rem;
   border: 1px solid #ddd;
-  margin-bottom: 1rem;
 `;
 
 const GamesR = styled.div`

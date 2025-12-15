@@ -34,7 +34,7 @@ import { FaEdge, FaPlay, FaRemoveFormat } from "react-icons/fa";
 import EditGameForm from "./EditGameForm";
 import PlatinumIconS from "./PlatinumIconS";
 import { LoadingOutlined } from "@ant-design/icons";
-import { Col, Row, Spin } from "antd";
+import { Col, Popover, Row, Spin } from "antd";
 import GameCdImage from "./GameCdImage";
 import {
   formatDate,
@@ -67,20 +67,39 @@ export default function AchCard({
       achieved={ach?.achieved}
     >
       {ach?.color != "Platinum" && (
-        <AchIconOuter achieved={ach?.achieved}>
-          <AchIcon
-            icon={platinumFlag ? ach?.img : ach?.icon}
-            onClick={() => {
-              if (window !== "undefined") {
-                const searchQuery = `${
-                  ach?.title
-                } achievement ${encodeURIComponent(selectedGameNow?.name)} `;
-                window.open(`https://www.google.com/search?q=${searchQuery}`);
-                // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-              }
-            }}
-          ></AchIcon>
-        </AchIconOuter>
+        <Popover
+          placement="left"
+          title={""}
+          content={
+            <AchIconLarge
+              icon={platinumFlag ? ach?.img : ach?.icon}
+              onClick={() => {
+                if (window !== "undefined") {
+                  const searchQuery = `${
+                    ach?.title
+                  } achievement ${encodeURIComponent(selectedGameNow?.name)} `;
+                  window.open(`https://www.google.com/search?q=${searchQuery}`);
+                  // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                }
+              }}
+            ></AchIconLarge>
+          }
+        >
+          <AchIconOuter achieved={ach?.achieved}>
+            <AchIcon
+              icon={platinumFlag ? ach?.img : ach?.icon}
+              onClick={() => {
+                if (window !== "undefined") {
+                  const searchQuery = `${
+                    ach?.title
+                  } achievement ${encodeURIComponent(selectedGameNow?.name)} `;
+                  window.open(`https://www.google.com/search?q=${searchQuery}`);
+                  // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                }
+              }}
+            ></AchIcon>
+          </AchIconOuter>
+        </Popover>
       )}
       {ach?.color == "Platinum" && (
         <AchIconOuterPlatinum achieved={ach?.achieved}>
@@ -242,49 +261,14 @@ const UnlockedT2 = styled.div`
   padding-top: 0.25rem;
 `;
 
-const GameSubLeftImageSmall = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 200px;
-  height: 100px;
-  background: ${(props) => `url(${props.image})`};
-  background-size: cover;
-  position: relative;
-`;
-
-const GameSubLeft = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 0 1rem;
-`;
-
-const GameSubRight = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  margin-left: 1rem;
-`;
-
-const GameSubLine = styled.div`
-  display: flex;
-  align-items: center;
-  color: #333;
-  padding: 0.75rem 0.5rem;
-  justify-content: center;
-  width: 100%;
-`;
-
 const AchTitle = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   padding-left: 0.5rem;
   color: #4486c6;
   justify-content: flex-start;
-  flex: 2;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  padding: 0.25rem 1rem 0.25rem 1rem;
   width: 100%;
 `;
 
@@ -292,22 +276,11 @@ const AchDesc = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  padding-left: 0.5rem;
-  flex: 2;
-  width: 100%;
-  opacity: 0.75;
-  font-size: 0.8rem;
-`;
-
-const AchUnlocked = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding-left: 0.5rem;
   flex: 1;
   width: 100%;
   opacity: 0.75;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  padding: 0rem 1rem;
 `;
 
 const AchIconOuter = styled.div`
@@ -336,6 +309,17 @@ const AchIcon = styled.div`
   justify-content: center;
   width: 60px;
   height: 60px;
+  background: ${(props) => `url(${props?.icon})`};
+  background-size: contain;
+  background-repeat: no-repeat;
+`;
+
+const AchIconLarge = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 300px;
+  height: 300px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;
