@@ -5,9 +5,9 @@ import { COLOR_ACCENT, COLOR_BLUE_DARK } from "../helpers/colorHelper";
 import EditGameForm from "./EditGameForm";
 import { useState } from "react";
 
-export default function GameCdImageSmall({ cover, scale = 1 }) {
+export default function GameCdImageSmall({ cover, scale = 1, onClick }) {
   return (
-    <CdImage scale={scale} draggable>
+    <CdImage scale={scale} draggable onClick={onClick}>
       <CdInnerImage scale={scale} cover={cover} />
     </CdImage>
   );

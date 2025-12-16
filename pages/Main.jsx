@@ -18,6 +18,7 @@ const GAMES_INCLUDED = [
   "391220", //Cyberpunk,
   "292030",
   "1629520",
+  "1693980",
 ];
 
 export default function Main() {

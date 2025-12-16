@@ -61,8 +61,9 @@ const KanbanData = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  max-height: 60vh;
-  min-height: 60vh;
+  max-height: 72vh;
+  min-height: 72vh;
+  width: 100%;
   overflow: scroll;
   color: #717171;
 `;

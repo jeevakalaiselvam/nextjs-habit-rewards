@@ -24,15 +24,7 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
   const { kanbanObj } = useSelector((state) => state.kanban);
   const gameData = kanbanObj?.[selectedGame?.id] || {};
 
-  const allCategories = [
-    "ALL",
-    "MISSABLE",
-    "STORY",
-    "EASY",
-    "HARD",
-    "GRIND",
-    "COMPLETED",
-  ];
+  const allCategories = ["ALL", "MISSABLE", "EASY", "HARD", "GRIND"];
 
   return (
     <Game>
@@ -45,7 +37,7 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
               (ach) =>
                 !allCategories.some((cat) =>
                   gameData[cat]?.includes(ach.name)
-                ) && ach.achieved != 1
+                ) || ach.achieved == 1
             );
           } else if (category === "COMPLETED") {
             currentAchievements = selectedGame.achievements

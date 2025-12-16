@@ -15,7 +15,7 @@ export default function RECENT_ACHIEVEMENTS({ allUnlocked, activeAch }) {
   return (
     <RecentAchs>
       {allUnlocked
-        ?.slice(0, 42)
+        ?.slice(0, 36)
         ?.filter((ach) => ach?.color != "Platinum")
         ?.map((ach, index) => {
           let desc1 = ach?.hiddenDesc;

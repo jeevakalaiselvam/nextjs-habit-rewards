@@ -529,7 +529,7 @@ const Container = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: flex-start;
-  width: 3400px;
+  width: 100%;
   border-radius: 4px;
   transform: translateY(-2rem);
   background-color: #292b2d;

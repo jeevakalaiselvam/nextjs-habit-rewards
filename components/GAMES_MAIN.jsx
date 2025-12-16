@@ -12,6 +12,8 @@ import {
 import GoldIconS from "./GoldIconS";
 import SilverIconS from "./SilverIconS";
 import BronzeIconS from "./BronzeIconS";
+import GameCdImage from "./GameCdImage";
+import GameCdImageSmall from "./GameCdImageSmall";
 
 export default function GAMES_MAIN({
   sortedGames,
@@ -101,56 +103,19 @@ export default function GAMES_MAIN({
 
           return (
             <GameContainer
-              onClick={() => {
-                setSelectedGame(game);
-                setSelectedMode("GAME");
-                setTabActive("GAME");
-              }}
+              onClick={() => {}}
               color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
             >
-              <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
-              <GameData>
-                <GameTitle
-                  onClick={() => {
-                    setSelectedGame(game);
-                    setSelectedMode("GAME");
-                    setTabActive("GAME");
-                  }}
-                >
-                  {game?.name}
-                </GameTitle>
-                <GameCompletion>
-                  {completed} of {total} Trophies
-                </GameCompletion>
-                <GameLastPlayed>
-                  {lastUnlocked &&
-                    formatDate(new Date(lastUnlocked?.unlocktime * 1000))}
-
-                  {!lastUnlocked && "Yet to Start"}
-                </GameLastPlayed>
-                <GameHours>
-                  {game?.playtime == 0
-                    ? "Yet to Start"
-                    : (game?.playtime / 60)?.toFixed(1)}
-                  {" Hours"}
-                </GameHours>
-                {isPlatinumNotAdded &&
-                  !(gamesLoading || platinumDataLoading) && (
-                    <Warning> PLATINUM DATA MISSING !</Warning>
-                  )}
-
-                <Started></Started>
-              </GameData>
+              <GameCdImageSmall
+                cover={game.cover}
+                scale={3}
+                onClick={() => {
+                  setSelectedGame(game);
+                  setSelectedMode("GAME");
+                  setTabActive("GAME");
+                }}
+              />
               <GameInfo>
-                <Ps5
-                  onClick={() => {
-                    setShowEditModal(true);
-                    setGameData(() => game);
-                  }}
-                >
-                  PS5
-                </Ps5>
-                <Seperator></Seperator>
                 <Rank>
                   <span style={{ fontSize: "1.5rem", color: color }}>
                     {rank}
@@ -158,7 +123,12 @@ export default function GAMES_MAIN({
                   <span style={{ fontSize: ".7rem" }}>RANK</span>
                 </Rank>
                 <Seperator></Seperator>
-                <Trophies>
+                <Trophies
+                  onClick={() => {
+                    setShowEditModal(true);
+                    setGameData(() => game);
+                  }}
+                >
                   <TTop>
                     <TSingle>
                       <GoldIconS />
@@ -238,7 +208,7 @@ const Platinum = styled.div`
   flex-direction: column;
   margin-right: 0.5rem;
   color: #7a96d1;
-  min-width: 50px;
+  flex: 1;
 `;
 
 const Text = styled.div`
@@ -305,6 +275,7 @@ const Trophies = styled.div`
   align-items: center;
   flex-direction: column;
   justify-content: center;
+  flex: 1;
 `;
 
 const Rank = styled.div`
@@ -313,6 +284,7 @@ const Rank = styled.div`
   flex-direction: column;
   justify-content: center;
   min-width: 50px;
+  flex: 1;
 `;
 
 const Seperator = styled.div`
@@ -410,9 +382,10 @@ const GameData = styled.div`
 
 const GameInfo = styled.div`
   display: flex;
-  flex: 2;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  width: 100%;
 `;
 
 const GameImage = styled.div`
@@ -432,11 +405,12 @@ const GameContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 100%;
+  width: 19%;
   background-color: ${(props) => props.color};
   color: #333;
   padding: 4px;
   border: 1px solid #ddd;
+  flex-direction: column;
   cursor: pointer;
 `;
 
@@ -444,7 +418,7 @@ const Games2Line = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  flex-direction: column;
+  flex-wrap: wrap;
   width: 100%;
 `;
 
