@@ -403,6 +403,7 @@ export default function MainContent({
           </GameSearch>
         </FRRight>
       </FirstRow>
+      <RECENT_ACHIEVEMENTS allUnlocked={allUnlocked} activeAch={activeAch} />
       <SecondRow>
         {gamesLoading && (
           <SRLeft>
@@ -434,7 +435,6 @@ export default function MainContent({
           </SRLeft>
         )}
       </SecondRow>
-      <RECENT_ACHIEVEMENTS allUnlocked={allUnlocked} activeAch={activeAch} />
     </Container>
   );
 }
@@ -531,6 +531,6 @@ const Container = styled.div`
   justify-content: flex-start;
   width: 100%;
   border-radius: 4px;
-  transform: translateY(-2rem);
+  transform: translateY(-1.5rem);
   background-color: #292b2d;
 `;

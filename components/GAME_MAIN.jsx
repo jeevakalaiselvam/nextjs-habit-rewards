@@ -23,6 +23,7 @@ import { useSelector } from "react-redux";
 export default function GAME_MAIN({ setTabActive, selectedGame }) {
   const { kanbanObj } = useSelector((state) => state.kanban);
   const gameData = kanbanObj?.[selectedGame?.id] || {};
+  const [showingAll, setShowingAll] = React.useState(false);
 
   const allCategories = ["ALL", "MISSABLE", "EASY", "HARD", "GRIND"];
 
@@ -33,12 +34,18 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
           let currentAchievements = [];
 
           if (category === "ALL") {
-            currentAchievements = selectedGame.achievements.filter(
-              (ach) =>
-                !allCategories.some((cat) =>
-                  gameData[cat]?.includes(ach.name)
-                ) || ach.achieved == 1
-            );
+            if (showingAll) {
+              currentAchievements = selectedGame.achievements.filter(
+                (ach) =>
+                  !allCategories.some((cat) =>
+                    gameData[cat]?.includes(ach.name)
+                  ) && ach.achieved != 1
+              );
+            } else {
+              currentAchievements = selectedGame.achievements.filter(
+                (ach) => ach.achieved == 1
+              );
+            }
           } else if (category === "COMPLETED") {
             currentAchievements = selectedGame.achievements
               .filter((ach) => ach.achieved)
@@ -52,6 +59,8 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
 
           return (
             <KANBAN_COLUMN
+              setShowingAll={setShowingAll}
+              showingAll={showingAll}
               key={category}
               category={category}
               currentAchievements={currentAchievements}

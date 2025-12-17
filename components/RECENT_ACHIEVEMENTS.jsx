@@ -15,7 +15,7 @@ export default function RECENT_ACHIEVEMENTS({ allUnlocked, activeAch }) {
   return (
     <RecentAchs>
       {allUnlocked
-        ?.slice(0, 36)
+        ?.slice(0, 35)
         ?.filter((ach) => ach?.color != "Platinum")
         ?.map((ach, index) => {
           let desc1 = ach?.hiddenDesc;
@@ -186,9 +186,9 @@ const Seperator = styled.div`
 const RecentAchs = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: centera;
   background-color: #e7e7e7;
-  padding: 1rem;
+  padding: 0.25rem 1.5rem;
   width: 100%;
   overflow: scroll;
   color: #44484b;

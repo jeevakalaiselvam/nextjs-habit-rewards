@@ -10,6 +10,8 @@ export default function KANBAN_COLUMN({
   category,
   currentAchievements,
   gameId,
+  setShowingAll,
+  showingAll,
 }) {
   const dispatch = useDispatch();
 
@@ -23,7 +25,16 @@ export default function KANBAN_COLUMN({
 
   return (
     <KanbanSingle ref={drop}>
-      <KanbanTitle index={index}>{category}</KanbanTitle>
+      <KanbanTitle
+        index={index}
+        onClick={() => {
+          if (category == "ALL") {
+            setShowingAll((old) => !old);
+          }
+        }}
+      >
+        {category == "ALL" ? (showingAll ? "ALL" : "COMPLETED") : category}
+      </KanbanTitle>
       <KanbanData>
         {currentAchievements?.map((ach, index) => {
           let desc1 = ach?.hiddenDesc;
@@ -49,6 +60,7 @@ const KanbanTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  cursor: pointer;
   flex-direction: column;
   background-color: #336291;
   padding: 0rem 0.25rem;
