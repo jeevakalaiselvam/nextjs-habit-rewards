@@ -21,6 +21,7 @@ const GAMES_INCLUDED = [
   "292030",
   "1629520",
   "1693980",
+  "1245620",
 ];
 
 export default function Main() {
