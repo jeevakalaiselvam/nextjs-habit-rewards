@@ -152,17 +152,19 @@ export default function Main() {
         refreshData={refreshData}
       />
       {(platinumDataLoading || refeshing || gamesLoading) && (
-        <Spin
-          indicator={
-            <LoadingOutlined
-              style={{
-                fontSize: 48,
-                marginTop: "2rem",
-              }}
-              spin
-            />
-          }
-        />
+        <SpinnerContainer>
+          <Spin
+            indicator={
+              <LoadingOutlined
+                style={{
+                  fontSize: 48,
+                  marginTop: "2rem",
+                }}
+                spin
+              />
+            }
+          />
+        </SpinnerContainer>
       )}
       {!platinumDataLoading && !refeshing && !gamesLoading && (
         <MainContent
@@ -194,6 +196,14 @@ export default function Main() {
   );
 }
 
+const SpinnerContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 80vh;
+`;
+
 const RefreshButton = styled.div`
   display: flex;
   align-items: center;
@@ -217,7 +227,6 @@ const Container = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  background-color: #292b2d;
   color: #fefefe;
   position: relative;
 `;

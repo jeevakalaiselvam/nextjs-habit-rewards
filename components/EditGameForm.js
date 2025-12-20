@@ -86,7 +86,7 @@ export default function EditGameForm({
 
   return (
     <Modal
-      width={1500}
+      width={1000}
       title={`Edit Game - ${gameData?.name}`}
       closable={{ "aria-label": "Custom Close Button" }}
       open={showEditModal}
