@@ -151,7 +151,7 @@ export default function Main() {
         gamesLoading={gamesLoading}
         refreshData={refreshData}
       />
-      {refeshing && (
+      {(platinumDataLoading || refeshing || gamesLoading) && (
         <Spin
           indicator={
             <LoadingOutlined
@@ -164,7 +164,7 @@ export default function Main() {
           }
         />
       )}
-      {!refeshing && (
+      {!platinumDataLoading && !refeshing && !gamesLoading && (
         <MainContent
           tabActive={tabActive}
           setTabActive={setTabActive}

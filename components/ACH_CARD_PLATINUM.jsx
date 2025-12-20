@@ -79,7 +79,9 @@ export default function ACH_CARD_PLATINUM({
 
       <AchData>
         <AchTitle>{ach?.title}</AchTitle>
-        <AchDesc>{ach?.description}</AchDesc>
+        <AchDesc>
+          {ach?.description?.replace("Hidden achievement: ", "")}
+        </AchDesc>
       </AchData>
       {false && ach?.achieved == 1 && (
         <Unlocked>

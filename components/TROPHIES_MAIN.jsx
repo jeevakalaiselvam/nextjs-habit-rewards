@@ -14,8 +14,10 @@ import SilverIconS from "./SilverIconS";
 import BronzeIconS from "./BronzeIconS";
 import GameCdImage from "./GameCdImage";
 import GameCdImageSmall from "./GameCdImageSmall";
+import ACH_CARD from "./ACH_CARD";
+import { Popover } from "antd";
 
-export default function GAMES_MAIN({
+export default function TROPHIES_MAIN({
   sortedGames,
   setSelectedGame,
   setSelectedMode,
@@ -23,183 +25,78 @@ export default function GAMES_MAIN({
   setTabActive,
   setShowEditModal,
 }) {
+  let allAchs = [];
+
+  sortedGames?.forEach((game) => {
+    game?.achievements?.forEach((ach) => {
+      if (ach?.achieved == 1 && ach?.color != "Platinum") {
+        allAchs?.push(ach);
+      }
+    });
+  });
+
+  allAchs = allAchs?.sort((ach1, ach2) => ach2?.unlocktime - ach1?.unlocktime);
+
   return (
     <Games>
       <Games1Line>
-        <GamesLeft>PLATINUM</GamesLeft>
+        <GamesLeft>ALL TROPHIES</GamesLeft>
         <GamesRight></GamesRight>
       </Games1Line>
       <Games2Line>
-        {sortedGames?.map((game, index) => {
-          let allCompletion = 0;
-          let total = 0;
-          let unearned = 0;
-          let platinumA = 0;
-          let goldA = 0;
-          let silverA = 0;
-          let bronzeA = 0;
-          let platinum = 0;
-          let gold = 0;
-          let silver = 0;
-          let bronze = 0;
-
-          game?.achievements?.forEach((ach) => {
-            total++;
-            if (ach?.achieved == 0) {
-              unearned++;
-              if (ach?.color == "Platinum") {
-                platinumA++;
-              }
-              if (ach?.color == "Gold") {
-                goldA++;
-              }
-              if (ach?.color == "Silver") {
-                silverA++;
-              }
-              if (ach?.color == "Bronze") {
-                bronzeA++;
-              }
-            } else {
-              if (ach?.color == "Platinum") {
-                platinum++;
-              }
-              if (ach?.color == "Gold") {
-                gold++;
-              }
-              if (ach?.color == "Silver") {
-                silver++;
-              }
-              if (ach?.color == "Bronze") {
-                bronze++;
-              }
-            }
-          });
-
-          let completed = game?.achievements?.filter(
-            (item) => item?.achieved == 1
-          )?.length;
-          let completion = (
-            completed == 0 ? 0 : (completed / total) * 100
-          )?.toFixed(2);
-          allCompletion = allCompletion + completion;
-          if (total == completed) {
-            completed = completed + 1;
-          }
-
-          completed = completed > total ? total : completed;
-
-          let { color, rank } = calculateRankForCompletion(completion);
-          let lastAch = game?.achievements?.sort(
-            (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
-          )?.[game?.achievements?.length - 1];
-
-          let allUnlocked = game?.achievements
-            ?.filter((ach) => ach?.achieved == 1)
-            ?.sort((ach1, ach2) => +ach2?.percentage - +ach1?.percentage);
-
-          let lastUnlocked = allUnlocked?.[allUnlocked?.length - 1];
-
-          let isPlatinumNotAdded = game?.achievements?.length == 1;
+        {allAchs?.map((ach, index) => {
+          let desc1 = ach?.hiddenDesc;
+          let desc2 = ach?.description;
+          let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
 
           return (
-            <GameContainer
-              onClick={() => {}}
-              color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+            <Popover
+              content={
+                <ACH_CARD
+                  ach={ach}
+                  desc1={desc1}
+                  desc2={desc2}
+                  desc3={desc3}
+                  index={index}
+                />
+              }
+              title=""
             >
-              <GameCdImageSmall
-                cover={game.cover}
-                scale={3}
+              <AchIcon
+                icon={ach?.icon}
                 onClick={() => {
-                  setSelectedGame(game);
-                  setSelectedMode("GAME");
-                  setTabActive("GAME");
+                  if (window !== "undefined") {
+                    const searchQuery = `${
+                      ach?.displayName
+                    } achievement ${encodeURIComponent(ach?.gameName)} `;
+                    window.open(
+                      `https://www.google.com/search?q=${searchQuery}`
+                    );
+
+                    // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                  }
                 }}
-              />
-              <GameInfo>
-                <Rank>
-                  <span style={{ fontSize: "1.5rem", color: color }}>
-                    {rank}
-                  </span>
-                  <span style={{ fontSize: ".7rem" }}>RANK</span>
-                </Rank>
-                <Seperator></Seperator>
-                <Trophies
-                  onClick={() => {
-                    setShowEditModal(true);
-                    setGameData(() => game);
-                  }}
-                >
-                  <TTop>
-                    <TSingle>
-                      <GoldIconS />
-                      <span
-                        style={{
-                          transform: "translate(-.5rem,-.25rem)",
-                          color: COLOR_GOLD,
-                          fontSize: "1rem",
-                        }}
-                      >
-                        {gold}
-                      </span>
-                    </TSingle>
-                    <TSingle>
-                      <SilverIconS />
-                      <span
-                        style={{
-                          transform: "translate(-.5rem,-.25rem)",
-                          color: COLOR_SILVER2,
-                          fontSize: "1rem",
-                        }}
-                      >
-                        {silver}
-                      </span>
-                    </TSingle>
-                    <TSingle>
-                      <BronzeIconS />
-                      <span
-                        style={{
-                          transform: "translate(-.5rem,-.25rem)",
-                          color: COLOR_BRONZE,
-                          fontSize: "1rem",
-                        }}
-                      >
-                        {bronze}
-                      </span>
-                    </TSingle>
-                  </TTop>
-                  {true && (
-                    <TBottom>
-                      <Outer>
-                        <Inner percentage={completion}></Inner>
-                        <Text>{completion} %</Text>
-                      </Outer>
-                    </TBottom>
-                  )}
-                </Trophies>
-                <Seperator></Seperator>
-                <Platinum isPlatinum={completed >= total}>
-                  <span style={{ opacity: completed >= total ? 1 : 0.25 }}>
-                    <PlatinumIcon />
-                  </span>
-                  <span
-                    style={{
-                      fontSize: ".7rem",
-                      marginTop: "4px",
-                      fontWeight: "bold",
-                      opacity: completed >= total ? 1 : 0.25,
-                    }}
-                  >
-                    {Number(lastAch?.percentage)} %
-                  </span>
-                </Platinum>
-              </GameInfo>
-            </GameContainer>
+              ></AchIcon>
+            </Popover>
           );
         })}
       </Games2Line>
     </Games>
   );
 }
+
+const AchIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 68px;
+  height: 68px;
+  background: ${(props) => `url(${props?.icon})`};
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin: 0.5rem;
+  cursor: pointer;
+`;
 
 const Platinum = styled.div`
   display: flex;
@@ -216,7 +113,7 @@ const Text = styled.div`
   align-items: center;
   justify-content: center;
   height: 12px;
-  top: 55%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   position: absolute;
@@ -416,10 +313,12 @@ const GameContainer = styled.div`
 
 const Games2Line = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   flex-wrap: wrap;
   width: 100%;
+  min-height: 70vh;
+  overflow: scroll;
 `;
 
 const Games1Line = styled.div`

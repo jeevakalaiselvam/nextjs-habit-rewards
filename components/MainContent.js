@@ -44,6 +44,7 @@ import STATS from "./STATS";
 import RECENT_ACHIEVEMENTS from "./RECENT_ACHIEVEMENTS";
 import GAMES_MAIN from "./GAMES_MAIN";
 import GAME_MAIN from "./GAME_MAIN";
+import TROPHIES_MAIN from "./TROPHIES_MAIN";
 
 export default function MainContent({
   games,
@@ -392,6 +393,18 @@ export default function MainContent({
           >
             GAMES
           </TabLink>
+          <TabLink
+            onClick={() => {
+              setSelectedMode("TROPHIES");
+              setTabActive("TROPHIES");
+              if (window) {
+                localStorage.setItem("SELECTED_TAB", "TROPHIES");
+              }
+            }}
+            active={selectedMode == "TROPHIES"}
+          >
+            TROPHIES
+          </TabLink>
         </FRLeft>
         <FRRight>
           <GameSearch>
@@ -417,6 +430,17 @@ export default function MainContent({
           <SRLeft>
             {tabActive == "GAMES" && (
               <GAMES_MAIN
+                sortedGames={sortedGames}
+                setSelectedGame={setSelectedGame}
+                setSelectedMode={setSelectedMode}
+                setGameData={setGameData}
+                setTabActive={setTabActive}
+                setShowEditModal={setShowEditModal}
+              />
+            )}
+
+            {tabActive == "TROPHIES" && (
+              <TROPHIES_MAIN
                 sortedGames={sortedGames}
                 setSelectedGame={setSelectedGame}
                 setSelectedMode={setSelectedMode}
