@@ -9,6 +9,8 @@ import {
   getColorBasedOnRarity,
   getRarityBasedOnRarity,
 } from "../helpers/achHelper";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
 
 const GAMES_INCLUDED = [
   "1659040", //Hitman 3
@@ -149,15 +151,30 @@ export default function Main() {
         gamesLoading={gamesLoading}
         refreshData={refreshData}
       />
-      <MainContent
-        tabActive={tabActive}
-        setTabActive={setTabActive}
-        games={finalGames}
-        refreshData={refreshData}
-        setGamesLoading={setGamesLoading}
-        gamesLoading={gamesLoading}
-        platinumDataLoading={platinumDataLoading}
-      />
+      {refeshing && (
+        <Spin
+          indicator={
+            <LoadingOutlined
+              style={{
+                fontSize: 48,
+                marginTop: "2rem",
+              }}
+              spin
+            />
+          }
+        />
+      )}
+      {!refeshing && (
+        <MainContent
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          games={finalGames}
+          refreshData={refreshData}
+          setGamesLoading={setGamesLoading}
+          gamesLoading={gamesLoading}
+          platinumDataLoading={platinumDataLoading}
+        />
+      )}
       {false && (
         <RefreshButton
           onClick={() => {

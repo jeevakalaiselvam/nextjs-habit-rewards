@@ -3,6 +3,8 @@ import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import ACH_CARD from "./ACH_CARD";
+import ACH_CARD_PLATINUM from "./ACH_CARD_PLATINUM";
 
 export default function EditGameForm({
   showEditModal,
@@ -75,10 +77,17 @@ export default function EditGameForm({
     }));
   }, [gameData]);
 
+  const onAchDelete = (ach) => {
+    let removedJSON = JSON.parse(gameForm?.platinum ?? [])?.filter(
+      (inner) => inner?.title != ach?.title
+    );
+    setGameForm((old) => ({ ...old, platinum: JSON.stringify(removedJSON) }));
+  };
+
   return (
     <Modal
       width={1500}
-      title="Edit Game"
+      title={`Edit Game - ${gameData?.name}`}
       closable={{ "aria-label": "Custom Close Button" }}
       open={showEditModal}
       onOk={handleOk}
@@ -95,7 +104,7 @@ export default function EditGameForm({
           }
         />
       </Row>
-      <Row style={{ marginBottom: "1rem" }}>
+      {/* <Row style={{ marginBottom: "1rem" }}>
         <Input
           placeholder="Enter Price..."
           type="number"
@@ -104,7 +113,7 @@ export default function EditGameForm({
             setGameForm((old) => ({ ...old, price: e.target.value }))
           }
         />
-      </Row>
+      </Row> */}
       <Row style={{ marginBottom: "1rem" }}>
         <Input
           placeholder="Enter Cover URL..."
@@ -124,6 +133,20 @@ export default function EditGameForm({
             setGameForm((old) => ({ ...old, platinum: e.target.value }))
           }
         />
+      </Row>
+      <Row>
+        <AllAchs>
+          {JSON.parse(gameForm?.platinum ?? [])?.map((ach) => {
+            return (
+              <ACH_CARD_PLATINUM
+                ach={ach}
+                onDelete={(ach) => {
+                  onAchDelete(ach);
+                }}
+              />
+            );
+          })}
+        </AllAchs>
       </Row>
       {/* <Row style={{ marginBottom: "1rem" }}>
         <Input
@@ -268,3 +291,13 @@ export default function EditGameForm({
     </Modal>
   );
 }
+
+const AllAchs = styled.div`
+  max-height: 800px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: column;
+  overflow: scroll;
+`;

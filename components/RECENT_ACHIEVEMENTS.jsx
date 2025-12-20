@@ -126,8 +126,8 @@ const AchIconOuter = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 60px;
-  height: 60px;
+  width: 68px;
+  height: 68px;
   background: ${(props) =>
     props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
 `;
@@ -146,8 +146,8 @@ const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 55px;
-  height: 55px;
+  width: 66px;
+  height: 66px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;

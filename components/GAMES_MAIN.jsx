@@ -233,8 +233,8 @@ const Outer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 120px;
-  height: 14px;
+  width: 150px;
+  height: 16px;
   background-color: #bababa;
   position: relative;
 `;
@@ -246,7 +246,7 @@ const Inner = styled.div`
   position: absolute;
   left: 0;
   top: 0;
-  height: 14px;
+  height: 16px;
   background-color: #336291;
   width: ${(props) => `${props.percentage}%`};
 `;
