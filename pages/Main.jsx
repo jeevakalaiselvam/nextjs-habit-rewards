@@ -158,19 +158,21 @@ export default function Main() {
         gamesLoading={gamesLoading}
         platinumDataLoading={platinumDataLoading}
       />
-      <RefreshButton
-        onClick={() => {
-          setRefreshing(true);
-          if (window) {
-            refreshData();
-          }
-        }}
-      >
-        <span style={{ transform: "translateY(2px)", marginRight: ".5rem" }}>
-          <TbRefresh />
-        </span>
-        <span>{refeshing ? "Refreshing..." : "Refresh"}</span>
-      </RefreshButton>
+      {false && (
+        <RefreshButton
+          onClick={() => {
+            setRefreshing(true);
+            if (window) {
+              refreshData();
+            }
+          }}
+        >
+          <span style={{ transform: "translateY(2px)", marginRight: ".5rem" }}>
+            <TbRefresh />
+          </span>
+          <span>{refeshing ? "Refreshing..." : "Refresh"}</span>
+        </RefreshButton>
+      )}
     </Container>
   );
 }
