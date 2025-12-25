@@ -23,7 +23,7 @@ import { useSelector } from "react-redux";
 export default function GAME_MAIN({ setTabActive, selectedGame }) {
   const { kanbanObj } = useSelector((state) => state.kanban);
   const gameData = kanbanObj?.[selectedGame?.id] || {};
-  const [showingAll, setShowingAll] = React.useState(true);
+  const [showingAll, setShowingAll] = React.useState(false);
 
   const allCategories = ["ALL", "MISSABLE", "STORY", "GRIND"];
 

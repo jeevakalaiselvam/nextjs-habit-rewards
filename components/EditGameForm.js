@@ -12,6 +12,8 @@ export default function EditGameForm({
   gameData,
   refreshData,
   setGamesLoading,
+  games,
+  selectedGame,
 }) {
   const [gameForm, setGameForm] = useState({
     id: gameData?.id,
@@ -84,6 +86,15 @@ export default function EditGameForm({
     setGameForm((old) => ({ ...old, platinum: JSON.stringify(removedJSON) }));
   };
 
+  let current = games?.find((game) => game.id == gameData.id) ?? [];
+
+  let obtainedMap = {};
+
+  current?.achievements?.forEach((ach) => {
+    obtainedMap[ach?.displayName] = ach?.achieved;
+  });
+  console.log({ obtainedMap });
+
   return (
     <Modal
       width={1000}
@@ -139,7 +150,10 @@ export default function EditGameForm({
           {JSON.parse(gameForm?.platinum ?? [])?.map((ach) => {
             return (
               <ACH_CARD_PLATINUM
-                ach={ach}
+                ach={{
+                  ...ach,
+                  achieved: obtainedMap[ach?.title],
+                }}
                 onDelete={(ach) => {
                   onAchDelete(ach);
                 }}

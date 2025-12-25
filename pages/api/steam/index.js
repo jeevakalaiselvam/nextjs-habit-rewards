@@ -25,9 +25,9 @@ const handler = async (req, res) => {
         return newGame;
       });
 
-      finalGamesResponse = finalGamesResponse?.filter((game) => {
-        return gamesToInclude?.includes(String(game?.id));
-      });
+      // finalGamesResponse = finalGamesResponse?.filter((game) => {
+      //   return gamesToInclude?.includes(String(game?.id));
+      // });
 
       //Get All Achievements Schema for All Games
       finalGamesResponse = await Promise.all(

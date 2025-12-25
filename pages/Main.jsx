@@ -32,12 +32,13 @@ export default function Main() {
   const [finalGames, setFinalGames] = useState([]);
   const [refeshing, setRefreshing] = useState(false);
   const [tabActive, setTabActive] = useState("GAMES");
+  const [gamesToInclude, setGamesToInclude] = useState([]);
 
   const refreshSteamGames = () => {
     setGamesLoading(true);
     try {
       axios
-        .post("/api/steam", { gamesToInclude: GAMES_INCLUDED })
+        .post("/api/steam", { gamesToInclude: gamesToInclude })
         .then((response) => {
           setGames(response?.data?.data ?? []);
           setGamesLoading(false);
@@ -61,14 +62,8 @@ export default function Main() {
 
   const refreshData = () => {
     refreshSteamGames();
-    refreshPlatinumData();
+    refreshIncludedGames();
   };
-
-  useEffect(() => {
-    if (games?.length == 0) {
-      refreshData();
-    }
-  }, []);
 
   useEffect(() => {
     let finalGames = [];
@@ -96,13 +91,6 @@ export default function Main() {
             title: ach?.displayName,
             hiddenDesc: platinumMapper[ach?.displayName]?.description,
           };
-        })
-        ?.filter((ach) => {
-          if (platinumMapper[ach?.displayName]) {
-            return true;
-          } else {
-            return false;
-          }
         })
         ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
 
@@ -143,6 +131,15 @@ export default function Main() {
     setFinalGames(finalGames);
   }, [games, platinumData]);
 
+  const refreshIncludedGames = async () => {
+    try {
+      const res = await axios.get("/api/include/include");
+      setGamesToInclude(res.data[0]?.games || []);
+    } catch (error) {
+      console.error("Failed to refresh games", error);
+    }
+  };
+
   return (
     <Container>
       <MainHeader
@@ -151,6 +148,8 @@ export default function Main() {
         games={finalGames}
         gamesLoading={gamesLoading}
         refreshData={refreshData}
+        gamesToInclude={gamesToInclude}
+        setGamesToInclude={setGamesToInclude}
       />
       {(platinumDataLoading || refeshing || gamesLoading) && (
         <SpinnerContainer>
@@ -176,6 +175,9 @@ export default function Main() {
           setGamesLoading={setGamesLoading}
           gamesLoading={gamesLoading}
           platinumDataLoading={platinumDataLoading}
+          gamesToInclude={gamesToInclude}
+          setGamesToInclude={setGamesToInclude}
+          refreshIncludedGames={refreshIncludedGames}
         />
       )}
       {true && (

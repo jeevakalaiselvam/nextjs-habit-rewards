@@ -28,7 +28,7 @@ import PlatinumIcon from "./PlatinumIcon";
 import EditGameForm from "./EditGameForm";
 import PlatinumIconS from "./PlatinumIconS";
 import { LoadingOutlined } from "@ant-design/icons";
-import { Spin } from "antd";
+import { Button, Row, Spin } from "antd";
 
 import {
   formatDate,
@@ -45,6 +45,9 @@ import RECENT_ACHIEVEMENTS from "./RECENT_ACHIEVEMENTS";
 import GAMES_MAIN from "./GAMES_MAIN";
 import GAME_MAIN from "./GAME_MAIN";
 import TROPHIES_MAIN from "./TROPHIES_MAIN";
+import SETTINGS_MAIN from "./SETTINGS_MAIN";
+import TextArea from "antd/es/input/TextArea";
+import axios from "axios";
 
 export default function MainContent({
   games,
@@ -54,6 +57,9 @@ export default function MainContent({
   platinumDataLoading,
   tabActive,
   setTabActive,
+  gamesToInclude,
+  setGamesToInclude,
+  refreshIncludedGames,
 }) {
   const [selectedRarity] = useState("COMMON");
   const [selectedMode, setSelectedMode] = useState("GAMES");
@@ -158,9 +164,9 @@ export default function MainContent({
     }
   });
 
-  let sortedGames = games.sort((a, b) =>
-    a?.name.localeCompare(b?.name, undefined, { sensitivity: "base" })
-  );
+  let sortedGames = games.sort((a, b) => {
+    return a?.name.localeCompare(b?.name, undefined, { sensitivity: "base" });
+  });
 
   let platinumGames = [];
   let nonPlatinumGames = [];
@@ -367,10 +373,26 @@ export default function MainContent({
 
   const { levelAchs } = calculateLevelForAchs(games);
 
+  const saveIncludedGame = async () => {
+    try {
+      await axios.post("/api/include/include", {
+        games: gamesToInclude,
+      });
+      refreshIncludedGames();
+      setSelectedMode("GAMES");
+
+      console.log("Games updated successfully");
+    } catch (error) {
+      console.error("Error saving games", error);
+    }
+  };
+
   return (
     <Container>
       {showEditModal && (
         <EditGameForm
+          games={games}
+          selectedGame={selectedGame}
           gameData={gameData}
           showEditModal={showEditModal}
           setShowEditModal={setShowEditModal}
@@ -405,6 +427,18 @@ export default function MainContent({
           >
             TROPHIES
           </TabLink>
+          <TabLink
+            onClick={() => {
+              setSelectedMode("SETTINGS");
+              setTabActive("SETTINGS");
+              if (window) {
+                localStorage.setItem("SELECTED_TAB", "SETTINGS");
+              }
+            }}
+            active={selectedMode == "SETTINGS"}
+          >
+            SETTINGS
+          </TabLink>
         </FRLeft>
         <FRRight>
           <GameSearch>
@@ -430,7 +464,7 @@ export default function MainContent({
           <SRLeft>
             {tabActive == "GAMES" && (
               <GAMES_MAIN
-                sortedGames={sortedGames}
+                sortedGames={[...nonPlatinumGames, ...platinumGames]}
                 setSelectedGame={setSelectedGame}
                 setSelectedMode={setSelectedMode}
                 setGameData={setGameData}
@@ -456,12 +490,133 @@ export default function MainContent({
                 selectedGame={selectedGame}
               />
             )}
+
+            {selectedMode == "SETTINGS" && (
+              <GamesR>
+                <GameLineHours>
+                  <Games1Line>
+                    <GamesLeft>SETTINGS</GamesLeft>
+                    <GamesRight></GamesRight>
+                  </Games1Line>
+                  <StatWrapper2>
+                    <Row style={{ marginBottom: "1rem", width: "100%" }}>
+                      <TextArea
+                        rows={10}
+                        placeholder="Enter Platinum JSON..."
+                        type="text"
+                        value={gamesToInclude}
+                        onChange={(e) => {
+                          setGamesToInclude(e.target.value);
+                        }}
+                      />
+                    </Row>
+                    <Row
+                      style={{
+                        marginRight: "1rem",
+                        display: "flex",
+                        width: "100%",
+                        justifyContent: "flex-end",
+                      }}
+                    >
+                      <Button
+                        type="primary"
+                        onClick={() => {
+                          saveIncludedGame();
+                        }}
+                      >
+                        Save
+                      </Button>
+                    </Row>
+                  </StatWrapper2>
+                </GameLineHours>
+              </GamesR>
+            )}
           </SRLeft>
         )}
       </SecondRow>
     </Container>
   );
 }
+
+const StatWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+`;
+
+const StatWrapper2 = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 1rem 0rem;
+`;
+
+const GamesLeft = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+`;
+
+const GameLeft = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex: 1;
+`;
+
+const GamesRight = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex: 1;
+`;
+
+const Games1Line = styled.div`
+  display: flex;
+  align-items: center;
+  background-color: #336291;
+  padding: 0.75rem 0.5rem;
+  justify-content: center;
+`;
+
+const GamesR = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 98%;
+  color: #fefefe;
+  font-size: 0.9rem;
+`;
+
+const GameLineTime = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fefefe;
+  flex-direction: column;
+  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  flex: 1;
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+`;
+
+const GameLineHours = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: #fefefe;
+  font-size: 0.9rem;
+  width: 100%;
+  border: 1px solid #ddd;
+  margin-bottom: 1rem;
+`;
 
 // Styles
 

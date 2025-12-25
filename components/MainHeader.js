@@ -106,7 +106,7 @@ export default function MainHeader({
           <HeaderName>
             <Country></Country>
             <NameSection>
-              <Name>N7ShadowX</Name>
+              <Name>PhaseShiftX95</Name>
               <Subtext>Love to collect trophies!</Subtext>
             </NameSection>
           </HeaderName>
