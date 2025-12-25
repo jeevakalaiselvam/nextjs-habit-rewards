@@ -107,22 +107,9 @@ export default function Main() {
         ...game,
         ...platinumGameData,
         achievements: [
-          ...sortedPlatinumTrophies?.filter(
-            (ach) => ach?.displayName != lastAch?.displayName
-          ),
-          { ...lastAch, color: "Gold" },
-          {
-            displayName: `Platinum`,
-            description: `Achieved all Trophies in game`,
-            name: `${game?.id}-PLATINUM`,
-            hiddenDesc: `${game?.name}`,
-            percentage: lastAch?.percentage,
-            label: getRarityBasedOnRarity(lastAch?.percentage),
-            color: "Platinum",
-            achieved: isCompleted ? 1 : 0,
-            unlocktime: lastAch?.unlocktime + 1000,
-            icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
-          },
+          ...sortedPlatinumTrophies?.map((ach) => {
+            return { ...ach, color: getColorBasedOnRarity(ach?.percentage) };
+          }),
         ],
       };
 

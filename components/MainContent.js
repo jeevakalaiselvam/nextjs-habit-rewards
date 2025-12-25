@@ -427,7 +427,7 @@ export default function MainContent({
           >
             TROPHIES
           </TabLink>
-          <TabLink
+          {/* <TabLink
             onClick={() => {
               setSelectedMode("SETTINGS");
               setTabActive("SETTINGS");
@@ -438,7 +438,7 @@ export default function MainContent({
             active={selectedMode == "SETTINGS"}
           >
             SETTINGS
-          </TabLink>
+          </TabLink> */}
         </FRLeft>
         <FRRight>
           <GameSearch>

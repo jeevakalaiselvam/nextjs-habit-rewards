@@ -155,7 +155,7 @@ export default function MainHeader({
                 </span>
               </Top>
             </Section>
-            <Section color={COLOR_PLATINUM}>
+            {/* <Section color={COLOR_PLATINUM}>
               <Top>
                 <span
                   style={{
@@ -169,7 +169,7 @@ export default function MainHeader({
                   {platinum}
                 </span>
               </Top>
-            </Section>
+            </Section> */}
             <Section color={COLOR_GOLD}>
               <Top>
                 <span

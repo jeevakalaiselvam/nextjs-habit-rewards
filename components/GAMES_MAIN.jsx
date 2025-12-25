@@ -26,7 +26,7 @@ export default function GAMES_MAIN({
   return (
     <Games>
       <Games1Line>
-        <GamesLeft>PLATINUM</GamesLeft>
+        <GamesLeft>ALL GAMES</GamesLeft>
         <GamesRight></GamesRight>
       </Games1Line>
       <Games2Line>
@@ -111,8 +111,8 @@ export default function GAMES_MAIN({
                 scale={3}
                 onClick={() => {
                   setSelectedGame(game);
-                  setSelectedMode("GAME");
-                  setTabActive("GAME");
+                  // setSelectedMode("GAME");
+                  // setTabActive("GAME");
                 }}
               />
               <GameInfo>
