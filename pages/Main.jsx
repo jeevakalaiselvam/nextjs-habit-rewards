@@ -178,7 +178,7 @@ export default function Main() {
           platinumDataLoading={platinumDataLoading}
         />
       )}
-      {false && (
+      {true && (
         <RefreshButton
           onClick={() => {
             setRefreshing(true);

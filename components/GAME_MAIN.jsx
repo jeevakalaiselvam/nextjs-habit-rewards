@@ -35,14 +35,14 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
 
           if (category === "ALL") {
             if (showingAll) {
-              currentAchievements = selectedGame.achievements.filter(
+              currentAchievements = (selectedGame?.achievements ?? [])?.filter(
                 (ach) =>
                   !allCategories.some((cat) =>
                     gameData[cat]?.includes(ach.name)
                   ) && ach.achieved != 1
               );
             } else {
-              currentAchievements = selectedGame.achievements.filter(
+              currentAchievements = (selectedGame?.achievements ?? [])?.filter(
                 (ach) => ach.achieved == 1
               );
             }
@@ -51,7 +51,7 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
               .filter((ach) => ach.achieved)
               .sort((a, b) => b.unlocktime - a.unlocktime);
           } else {
-            currentAchievements = selectedGame.achievements.filter(
+            currentAchievements = (selectedGame?.achievements ?? [])?.filter(
               (ach) =>
                 gameData[category]?.includes(ach.name) && ach.achieved != 1
             );

@@ -390,29 +390,13 @@ const HeaderInner = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
 `;
 
-const GameCDCollection = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 300px;
-  min-width: 1400px;
-  flex-wrap: wrap;
-  max-width: 1400px;
-  overflow: scroll;
-  z-index: 100;
-`;
-
 const Overlay = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  height: 124px;
+  height: 100px;
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.65);
+  background-color: rgba(0, 0, 0, 0.45);
 `;
 
 const Container = styled.div`
@@ -420,7 +404,7 @@ const Container = styled.div`
   align-items: flex-start;
   justify-content: center;
   width: 100%;
-  height: 124px;
+  height: 100px;
   background: ${(props) => `url(${props.background})`};
   background-repeat: no-repeat;
   background-size: cover;

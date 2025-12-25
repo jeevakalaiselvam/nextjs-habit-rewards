@@ -555,6 +555,5 @@ const Container = styled.div`
   justify-content: flex-start;
   width: 100%;
   border-radius: 4px;
-  transform: translateY(-1.5rem);
   background-color: #292b2d;
 `;
