@@ -238,25 +238,25 @@ export const calculateLevelForAchs = (games) => {
 };
 
 export const calculateRankForCompletion = (completion) => {
-  if (completion == 100) {
+  if (completion < 100 && completion >= 75) {
     return { color: COLOR_RANK_S, rank: "S" };
   }
-  if (completion < 100 && completion >= 90) {
+  if (completion < 75 && completion >= 60) {
     return { color: COLOR_RANK_A, rank: "A" };
   }
-  if (completion < 90 && completion >= 80) {
+  if (completion < 60 && completion >= 40) {
     return { color: COLOR_RANK_B, rank: "B" };
   }
-  if (completion < 80 && completion >= 70) {
+  if (completion < 40 && completion >= 20) {
     return { color: COLOR_RANK_C, rank: "C" };
   }
-  if (completion < 70 && completion >= 50) {
+  if (completion < 20 && completion >= 10) {
     return { color: COLOR_RANK_D, rank: "D" };
   }
-  if (completion < 50 && completion >= 20) {
+  if (completion < 10 && completion >= 5) {
     return { color: COLOR_RANK_E, rank: "E" };
   }
-  if (completion < 20 && completion >= 0) {
+  if (completion < 5 && completion >= 0) {
     return { color: COLOR_RANK_F, rank: "F" };
   }
   return { color: COLOR_RANK_F, rank: "F" };

@@ -14,6 +14,7 @@ import SilverIconS from "./SilverIconS";
 import BronzeIconS from "./BronzeIconS";
 import GameCdImage from "./GameCdImage";
 import GameCdImageSmall from "./GameCdImageSmall";
+import { FaCheck, FaCheckCircle, FaCircle } from "react-icons/fa";
 
 export default function GAMES_MAIN({
   sortedGames,
@@ -120,7 +121,7 @@ export default function GAMES_MAIN({
                   <span style={{ fontSize: "1.5rem", color: color }}>
                     {rank}
                   </span>
-                  <span style={{ fontSize: ".7rem" }}>RANK</span>
+                  <span style={{ fontSize: ".9rem", color: color }}>RANK</span>
                 </Rank>
                 <Seperator></Seperator>
                 <Trophies
@@ -177,19 +178,17 @@ export default function GAMES_MAIN({
                   )}
                 </Trophies>
                 <Seperator></Seperator>
-                <Platinum isPlatinum={completed >= total}>
-                  <span style={{ opacity: completed >= total ? 1 : 0.25 }}>
-                    <PlatinumIcon />
+                <Platinum isPlatinum={completed >= total} color={color}>
+                  <span style={{ fontSize: "1.25rem" }}>
+                    <FaCheckCircle />
                   </span>
                   <span
                     style={{
-                      fontSize: ".7rem",
-                      marginTop: "4px",
-                      fontWeight: "bold",
-                      opacity: completed >= total ? 1 : 0.25,
+                      fontSize: ".9rem",
+                      fontWeight: 500,
                     }}
                   >
-                    {Number(lastAch?.percentage)} %
+                    {Number(lastUnlocked?.percentage)} %
                   </span>
                 </Platinum>
               </GameInfo>
@@ -207,7 +206,7 @@ const Platinum = styled.div`
   justify-content: center;
   flex-direction: column;
   margin-right: 0.5rem;
-  color: #7a96d1;
+  color: ${(props) => props.color};
   flex: 1;
 `;
 
