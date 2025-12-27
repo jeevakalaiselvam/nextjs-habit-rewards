@@ -25,7 +25,14 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
   const gameData = kanbanObj?.[selectedGame?.id] || {};
   const [showingAll, setShowingAll] = React.useState(false);
 
-  const allCategories = ["ALL", "MISSABLE", "EASY", "HARD", "GRIND"];
+  const allCategories = [
+    "COMPLETED",
+    "ALL",
+    "MISSABLE",
+    "EASY",
+    "HARD",
+    "GRIND",
+  ];
 
   return (
     <Game>
