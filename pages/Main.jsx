@@ -62,6 +62,7 @@ export default function Main() {
 
   const refreshData = () => {
     refreshSteamGames();
+    refreshPlatinumData();
     refreshIncludedGames();
   };
 

@@ -14,4 +14,5 @@ const Container = styled.div`
   margin-right: 2px;
   background-repeat: no-repeat;
   background-size: 100px 558px;
+  transform: scale(1.25);
 `;

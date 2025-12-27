@@ -33,25 +33,23 @@ export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
       color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
       achieved={ach?.achieved}
     >
-      {ach?.color != "Platinum" && (
-        <AchIconOuter achieved={ach?.achieved}>
-          <AchIcon
-            icon={ach?.icon}
-            onClick={() => {
-              if (window !== "undefined") {
-                const searchQuery = `${
-                  ach?.displayName
-                } achievement ${encodeURIComponent(ach?.gameName)} `;
-                window.open(`https://www.google.com/search?q=${searchQuery}`);
+      <AchIconOuter achieved={ach?.achieved}>
+        <AchIcon
+          icon={ach?.icon}
+          onClick={() => {
+            if (window !== "undefined") {
+              const searchQuery = `${
+                ach?.displayName
+              } achievement ${encodeURIComponent(ach?.gameName)} `;
+              window.open(`https://www.google.com/search?q=${searchQuery}`);
 
-                // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-              }
-            }}
-          ></AchIcon>
-        </AchIconOuter>
-      )}
+              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+            }
+          }}
+        ></AchIcon>
+      </AchIconOuter>
 
-      {ach?.color == "Platinum" && (
+      {ach?.colors == "Platinum" && (
         <AchIconOuterPlatinum achieved={ach?.achieved}>
           <span
             style={{
@@ -86,8 +84,10 @@ export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
       <Seperator padding={".25rem"} />
       {ach?.color != "Platinum" && (
         <AchRarity>
-          <span style={{ fontSize: "1rem" }}>{ach?.percentage}%</span>
-          <span style={{ fontSize: ".6rem" }}>{ach?.label?.toUpperCase()}</span>
+          <span style={{ fontSize: "1.25rem" }}>{ach?.percentage}%</span>
+          <span style={{ fontSize: ".75rem" }}>
+            {ach?.label?.toUpperCase()}
+          </span>
         </AchRarity>
       )}
 
@@ -151,7 +151,7 @@ const AchTitle = styled.div`
   color: #4486c6;
   justify-content: flex-start;
   flex: 2;
-  font-size: 0.8rem;
+  font-size: 1rem;
   width: 100%;
 `;
 
@@ -163,15 +163,15 @@ const AchDesc = styled.div`
   flex: 2;
   width: 100%;
   opacity: 0.75;
-  font-size: 0.7rem;
+  font-size: 0.9rem;
 `;
 
 const AchIconOuter = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 56px;
-  height: 56px;
+  width: 65px;
+  height: 65px;
   background: ${(props) =>
     props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
 `;
@@ -180,8 +180,8 @@ const AchIconOuterPlatinum = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 60px;
-  height: 60px;
+  width: 63px;
+  height: 63px;
   background: ${(props) =>
     props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
 `;
@@ -190,8 +190,8 @@ const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 55px;
-  height: 55px;
+  width: 63px;
+  height: 63px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;
@@ -220,7 +220,7 @@ const AchTrophy = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   min-width: 50px;
-  transform: translate(0.25rem, 0.25rem);
+  transform: translate(0.25rem, 0.25rem) scale(1.5);
 `;
 
 const AchCard = styled.div`

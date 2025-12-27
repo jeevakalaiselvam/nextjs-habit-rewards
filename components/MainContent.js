@@ -658,7 +658,7 @@ const TabLink = styled.div`
   justify-content: center;
   cursor: pointer;
   position: relative;
-  font-size: 0.8rem;
+  font-size: 1rem;
   margin-left: 1rem;
   padding: 0.25rem;
   font-weight: ${(props) => (props.active ? "bold" : "300")};

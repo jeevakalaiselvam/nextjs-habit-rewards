@@ -96,7 +96,7 @@ const AchTitle = styled.div`
   color: #4486c6;
   justify-content: flex-start;
   flex: 2;
-  font-size: 0.8rem;
+  font-size: 1rem;
   width: 100%;
 `;
 
@@ -108,7 +108,7 @@ const AchDesc = styled.div`
   flex: 2;
   width: 100%;
   opacity: 0.75;
-  font-size: 0.75rem;
+  font-size: 0.9rem;
 `;
 
 const AchUnlocked = styled.div`
@@ -220,7 +220,7 @@ const RecentAchs = styled.div`
   align-items: center;
   justify-content: centera;
   background-color: #e7e7e7;
-  padding: 0.25rem 1.5rem;
+  padding: 0.25rem 1.5rem 0.25rem 3rem;
   width: 100%;
   overflow: scroll;
   color: #44484b;

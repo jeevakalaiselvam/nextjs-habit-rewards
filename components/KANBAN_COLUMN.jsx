@@ -63,7 +63,7 @@ const KanbanTitle = styled.div`
   cursor: pointer;
   flex-direction: column;
   background-color: #336291;
-  padding: 0rem 0.25rem;
+  padding: 0.25rem 0.25rem;
   width: 100%;
   color: #fefefe;
 `;

@@ -111,8 +111,8 @@ export default function GAMES_MAIN({
                 scale={3}
                 onClick={() => {
                   setSelectedGame(game);
-                  // setSelectedMode("GAME");
-                  // setTabActive("GAME");
+                  setSelectedMode("GAME");
+                  setTabActive("GAME");
                 }}
               />
               <GameInfo>
@@ -136,7 +136,7 @@ export default function GAMES_MAIN({
                         style={{
                           transform: "translate(-.5rem,-.25rem)",
                           color: COLOR_GOLD,
-                          fontSize: "1rem",
+                          fontSize: "1.25rem",
                         }}
                       >
                         {gold}
@@ -148,7 +148,7 @@ export default function GAMES_MAIN({
                         style={{
                           transform: "translate(-.5rem,-.25rem)",
                           color: COLOR_SILVER2,
-                          fontSize: "1rem",
+                          fontSize: "1.25rem",
                         }}
                       >
                         {silver}
@@ -160,7 +160,7 @@ export default function GAMES_MAIN({
                         style={{
                           transform: "translate(-.5rem,-.25rem)",
                           color: COLOR_BRONZE,
-                          fontSize: "1rem",
+                          fontSize: "1.25rem",
                         }}
                       >
                         {bronze}
@@ -220,7 +220,7 @@ const Text = styled.div`
   left: 50%;
   transform: translate(-50%, -50%);
   position: absolute;
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3), -1px -1px 1px rgba(0, 0, 0, 0.3),
     1px -1px 1px rgba(0, 0, 0, 0.3), -1px 1px 1px rgba(0, 0, 0, 0.3);
   color: #f9f9f9;
@@ -234,7 +234,7 @@ const Outer = styled.div`
   align-items: center;
   justify-content: center;
   width: 150px;
-  height: 16px;
+  height: 18px;
   background-color: #bababa;
   position: relative;
 `;
@@ -246,7 +246,7 @@ const Inner = styled.div`
   position: absolute;
   left: 0;
   top: 0;
-  height: 16px;
+  height: 18px;
   background-color: #336291;
   width: ${(props) => `${props.percentage}%`};
 `;
