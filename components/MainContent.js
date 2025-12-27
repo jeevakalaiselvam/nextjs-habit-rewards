@@ -450,7 +450,7 @@ export default function MainContent({
           </GameSearch>
         </FRRight>
       </FirstRow>
-      <RECENT_ACHIEVEMENTS allUnlocked={allUnlocked} activeAch={activeAch} />
+      {/* <RECENT_ACHIEVEMENTS allUnlocked={allUnlocked} activeAch={activeAch} /> */}
       <SecondRow>
         {gamesLoading && (
           <SRLeft>

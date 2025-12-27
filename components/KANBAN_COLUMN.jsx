@@ -33,7 +33,7 @@ export default function KANBAN_COLUMN({
           }
         }}
       >
-        {category == "ALL" ? (showingAll ? "ALL" : "COMPLETED") : category}
+        {category == "ALL" ? (showingAll ? "ALL" : "ALL") : category}
       </KanbanTitle>
       <KanbanData>
         {currentAchievements?.map((ach, index) => {

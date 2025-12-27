@@ -25,49 +25,51 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
   const gameData = kanbanObj?.[selectedGame?.id] || {};
   const [showingAll, setShowingAll] = React.useState(false);
 
-  const allCategories = ["ALL", "MISSABLE", "STORY", "GRIND"];
+  const allCategories = ["ALL", "MISSABLE", "EASY", "HARD", "GRIND"];
 
   return (
     <Game>
       <Game2Line>
-        {allCategories.map((category) => {
-          let currentAchievements = [];
+        {true &&
+          allCategories.map((category) => {
+            let currentAchievements = [];
 
-          if (category === "ALL") {
-            if (showingAll) {
-              currentAchievements = (selectedGame?.achievements ?? [])?.filter(
-                (ach) =>
-                  !allCategories.some((cat) =>
-                    gameData[cat]?.includes(ach.name)
-                  ) && ach.achieved != 1
-              );
+            if (category === "ALL") {
+              if (true) {
+                currentAchievements = (
+                  selectedGame?.achievements ?? []
+                )?.filter(
+                  (ach) =>
+                    !allCategories.some((cat) =>
+                      gameData[cat]?.includes(ach.name)
+                    ) && ach.achieved != 1
+                );
+              } else {
+                currentAchievements = (
+                  selectedGame?.achievements ?? []
+                )?.filter((ach) => ach.achieved == 1);
+              }
+            } else if (category === "COMPLETED") {
+              currentAchievements = selectedGame.achievements
+                .filter((ach) => ach.achieved)
+                .sort((a, b) => b.unlocktime - a.unlocktime);
             } else {
               currentAchievements = (selectedGame?.achievements ?? [])?.filter(
-                (ach) => ach.achieved == 1
+                (ach) => gameData[category]?.includes(ach.name)
               );
             }
-          } else if (category === "COMPLETED") {
-            currentAchievements = selectedGame.achievements
-              .filter((ach) => ach.achieved)
-              .sort((a, b) => b.unlocktime - a.unlocktime);
-          } else {
-            currentAchievements = (selectedGame?.achievements ?? [])?.filter(
-              (ach) =>
-                gameData[category]?.includes(ach.name) && ach.achieved != 1
-            );
-          }
 
-          return (
-            <KANBAN_COLUMN
-              setShowingAll={setShowingAll}
-              showingAll={showingAll}
-              key={category}
-              category={category}
-              currentAchievements={currentAchievements}
-              gameId={selectedGame.id}
-            />
-          );
-        })}
+            return (
+              <KANBAN_COLUMN
+                setShowingAll={setShowingAll}
+                showingAll={showingAll}
+                key={category}
+                category={category}
+                currentAchievements={currentAchievements}
+                gameId={selectedGame.id}
+              />
+            );
+          })}
       </Game2Line>
     </Game>
   );
@@ -205,6 +207,17 @@ const Game2Line = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
+  padding: 0.25rem 0.25rem;
+`;
+
+const Game2LineContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  width: 100%;
+  min-height: 70vh;
+  flex-wrap: wrap;
+  overflow: scroll;
   padding: 0.25rem 0.25rem;
 `;
 

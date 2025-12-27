@@ -404,10 +404,10 @@ const GameContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 19%;
+  width: 500px;
   background-color: ${(props) => props.color};
   color: #333;
-  padding: 4px;
+  padding: 16px 4px;
   border: 1px solid #ddd;
   flex-direction: column;
   cursor: pointer;

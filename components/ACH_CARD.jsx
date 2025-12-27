@@ -35,7 +35,7 @@ export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
     >
       <AchIconOuter achieved={ach?.achieved}>
         <AchIcon
-          icon={ach?.icon}
+          icon={ach?.achieved == "1" ? ach?.icon : ach?.icongray}
           onClick={() => {
             if (window !== "undefined") {
               const searchQuery = `${

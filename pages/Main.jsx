@@ -127,6 +127,9 @@ export default function Main() {
       console.error("Failed to refresh games", error);
     }
   };
+  useEffect(() => {
+    refreshData();
+  }, []);
 
   return (
     <Container>
