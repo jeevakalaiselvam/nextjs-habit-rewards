@@ -18,7 +18,6 @@ export default function KANBAN_COLUMN({
   const [, drop] = useDrop(() => ({
     accept: "ACH_CARD",
     drop: (item) => {
-      if (category === "ALL" || category === "COMPLETED") return; // Don't drop here
       dispatch(moveAchievement(gameId, item.ach.name, item.fromLane, category));
     },
   }));
