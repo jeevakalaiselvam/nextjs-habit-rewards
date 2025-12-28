@@ -28,7 +28,8 @@ const handler = async (req, res) => {
       finalGamesResponse = finalGamesResponse?.filter((game) => {
         return ![
           "230230", //Divinity Origin Sin 1 Original Version
-          "412020", //Metro Exodus - Non Enhanced Version
+          "412020", //Metro Exodus - Non Enhanced Version,
+          "952070",
         ]?.includes(String(game?.id));
       });
 
