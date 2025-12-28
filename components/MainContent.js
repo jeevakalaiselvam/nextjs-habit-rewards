@@ -363,6 +363,15 @@ export default function MainContent({
     };
   }, [games]);
 
+  useEffect(() => {
+    if (window) {
+      let oldId = "";
+      oldId = localStorage.getItem("SELECTED_GAME_ID");
+      let game = games?.find((game) => game?.id == oldId);
+      setSelectedGame(game);
+    }
+  }, [games]);
+
   let shouldShowRight =
     selectedMode !== "LIBRARY" &&
     selectedMode !== "LIBRARY_NEW" &&
@@ -470,6 +479,7 @@ export default function MainContent({
                 setGameData={setGameData}
                 setTabActive={setTabActive}
                 setShowEditModal={setShowEditModal}
+                selectedGame={selectedGame}
               />
             )}
 

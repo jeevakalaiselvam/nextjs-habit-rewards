@@ -23,6 +23,7 @@ export default function GAMES_MAIN({
   setGameData,
   setTabActive,
   setShowEditModal,
+  selectedGame,
 }) {
   return (
     <Games>
@@ -114,6 +115,9 @@ export default function GAMES_MAIN({
                   setSelectedGame(game);
                   setSelectedMode("GAME");
                   setTabActive("GAME");
+                  if (window) {
+                    localStorage.setItem("SELECTED_GAME_ID", game?.id);
+                  }
                 }}
               />
               <GameInfo>

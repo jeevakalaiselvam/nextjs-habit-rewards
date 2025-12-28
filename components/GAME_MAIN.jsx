@@ -34,6 +34,8 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
     "GRIND",
   ];
 
+  console.log({ selectedGame });
+
   return (
     <Game>
       <Game2Line>
@@ -57,9 +59,9 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
                 )?.filter((ach) => ach.achieved == 1);
               }
             } else if (category === "COMPLETED") {
-              currentAchievements = selectedGame.achievements
-                .filter((ach) => ach.achieved)
-                .sort((a, b) => b.unlocktime - a.unlocktime);
+              currentAchievements = selectedGame?.achievements
+                ?.filter((ach) => ach.achieved)
+                ?.sort((a, b) => b.unlocktime - a.unlocktime);
             } else {
               currentAchievements = (selectedGame?.achievements ?? [])?.filter(
                 (ach) => gameData[category]?.includes(ach.name)
