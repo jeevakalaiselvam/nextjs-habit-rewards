@@ -414,15 +414,27 @@ export default function MainContent({
         <FRLeft>
           <TabLink
             onClick={() => {
-              setSelectedMode("GAMES");
-              setTabActive("GAMES");
+              setSelectedMode("ACTIVE");
+              setTabActive("ACTIVE");
               if (window) {
-                localStorage.setItem("SELECTED_TAB", "GAMES");
+                localStorage.setItem("SELECTED_TAB", "ACTIVE");
               }
             }}
-            active={selectedMode == "GAMES"}
+            active={selectedMode == "ACTIVE"}
           >
-            GAMES
+            ACTIVE
+          </TabLink>
+          <TabLink
+            onClick={() => {
+              setSelectedMode("BACKLOG");
+              setTabActive("BACKLOG");
+              if (window) {
+                localStorage.setItem("SELECTED_TAB", "BACKLOG");
+              }
+            }}
+            active={selectedMode == "BACKLOG"}
+          >
+            BACKLOG
           </TabLink>
           <TabLink
             onClick={() => {
@@ -471,7 +483,7 @@ export default function MainContent({
 
         {!gamesLoading && (
           <SRLeft>
-            {tabActive == "GAMES" && (
+            {tabActive == "ACTIVE" && (
               <GAMES_MAIN
                 sortedGames={[...nonPlatinumGames, ...platinumGames]}
                 setSelectedGame={setSelectedGame}
@@ -480,6 +492,20 @@ export default function MainContent({
                 setTabActive={setTabActive}
                 setShowEditModal={setShowEditModal}
                 selectedGame={selectedGame}
+                active={true}
+              />
+            )}
+
+            {tabActive == "BACKLOG" && (
+              <GAMES_MAIN
+                sortedGames={[...nonPlatinumGames, ...platinumGames]}
+                setSelectedGame={setSelectedGame}
+                setSelectedMode={setSelectedMode}
+                setGameData={setGameData}
+                setTabActive={setTabActive}
+                setShowEditModal={setShowEditModal}
+                selectedGame={selectedGame}
+                active={false}
               />
             )}
 

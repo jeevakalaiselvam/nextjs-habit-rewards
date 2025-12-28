@@ -25,6 +25,8 @@ const handler = async (req, res) => {
         return newGame;
       });
 
+      console.log({ gamesData });
+
       finalGamesResponse = finalGamesResponse?.filter((game) => {
         return ![
           "230230", //Divinity Origin Sin 1 Original Version

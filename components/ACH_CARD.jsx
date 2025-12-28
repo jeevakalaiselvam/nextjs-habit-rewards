@@ -11,6 +11,8 @@ import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from "../helpers/colorHelper";
 import { useDispatch } from "react-redux";
 import { actionAddAchToKanban } from "../store/actions/games.actions";
 import { useSelector } from "react-redux";
+import { Popover } from "antd";
+import ACH_CARD_BIG_ICON from "./ACH_CARD_BIG_ICON";
 
 export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
   const dispatch = useDispatch();
@@ -34,19 +36,33 @@ export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
       achieved={ach?.achieved}
     >
       <AchIconOuter achieved={ach?.achieved}>
-        <AchIcon
-          icon={ach?.achieved == "1" ? ach?.icon : ach?.icongray}
-          onClick={() => {
-            if (window !== "undefined") {
-              const searchQuery = `${
-                ach?.displayName
-              } achievement ${encodeURIComponent(ach?.gameName)} `;
-              window.open(`https://www.google.com/search?q=${searchQuery}`);
+        <Popover
+          placement="left"
+          content={
+            <ACH_CARD_BIG_ICON
+              ach={ach}
+              desc1={desc1}
+              desc2={desc2}
+              desc3={desc3}
+              index={index}
+            />
+          }
+          title=""
+        >
+          <AchIcon
+            icon={ach?.achieved == "1" ? ach?.icon : ach?.icon}
+            onClick={() => {
+              if (window !== "undefined") {
+                const searchQuery = `${
+                  ach?.displayName
+                } achievement ${encodeURIComponent(ach?.gameName)} `;
+                window.open(`https://www.google.com/search?q=${searchQuery}`);
 
-              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-            }
-          }}
-        ></AchIcon>
+                // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+              }
+            }}
+          ></AchIcon>
+        </Popover>
       </AchIconOuter>
 
       {ach?.colors == "Platinum" && (
@@ -170,8 +186,8 @@ const AchIconOuter = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 65px;
-  height: 65px;
+  width: 103px;
+  height: 103px;
   background: ${(props) =>
     props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
 `;
@@ -180,8 +196,8 @@ const AchIconOuterPlatinum = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 63px;
-  height: 63px;
+  width: 100px;
+  height: 100px;
   background: ${(props) =>
     props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
 `;
@@ -190,8 +206,8 @@ const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 63px;
-  height: 63px;
+  width: 100px;
+  height: 100px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;

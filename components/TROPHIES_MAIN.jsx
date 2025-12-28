@@ -62,21 +62,24 @@ export default function TROPHIES_MAIN({
               }
               title=""
             >
-              <AchIcon
-                icon={ach?.icon}
-                onClick={() => {
-                  if (window !== "undefined") {
-                    const searchQuery = `${
-                      ach?.displayName
-                    } achievement ${encodeURIComponent(ach?.gameName)} `;
-                    window.open(
-                      `https://www.google.com/search?q=${searchQuery}`
-                    );
+              <IconWrapper>
+                <AchIcon
+                  icon={ach?.icon}
+                  onClick={() => {
+                    if (window !== "undefined") {
+                      const searchQuery = `${
+                        ach?.displayName
+                      } achievement ${encodeURIComponent(ach?.gameName)} `;
+                      window.open(
+                        `https://www.google.com/search?q=${searchQuery}`
+                      );
 
-                    // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                  }
-                }}
-              ></AchIcon>
+                      // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+                    }
+                  }}
+                ></AchIcon>
+                <IconCount>{index + 1}</IconCount>
+              </IconWrapper>
             </Popover>
           );
         })}
@@ -85,12 +88,25 @@ export default function TROPHIES_MAIN({
   );
 }
 
+const IconCount = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+`;
+
 const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 300px;
-  height: 300px;
+  width: 100px;
+  height: 100px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;

@@ -13,6 +13,8 @@
     "@emotion/styled": "^11.14.1",
     "@mui/material": "^7.2.0",
     "@mui/x-charts": "^8.9.0",
+    "@tensorflow/tfjs": "^4.11.0",
+    "@upscalerjs/esrgan-slim": "^1.0.0-beta.12",
     "antd": "^5.23.1",
     "axios": "^1.10.0",
     "cheerio": "^1.1.0",
@@ -41,6 +43,7 @@
     "redux-thunk": "^3.1.0",
     "styled-components": "^6.1.14",
     "swr": "^2.3.3",
+    "upscaler": "^1.0.0-beta.19",
     "use-long-press": "^3.2.0",
     "uuid": "^13.0.0"
   },

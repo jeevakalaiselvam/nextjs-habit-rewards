@@ -24,6 +24,7 @@ export default function GAMES_MAIN({
   setTabActive,
   setShowEditModal,
   selectedGame,
+  active,
 }) {
   return (
     <Games>
@@ -32,178 +33,184 @@ export default function GAMES_MAIN({
         <GamesRight></GamesRight>
       </Games1Line>
       <Games2Line>
-        {sortedGames?.map((game, index) => {
-          let allCompletion = 0;
-          let total = 0;
-          let unearned = 0;
-          let platinumA = 0;
-          let goldA = 0;
-          let silverA = 0;
-          let bronzeA = 0;
-          let platinum = 0;
-          let gold = 0;
-          let silver = 0;
-          let bronze = 0;
+        {sortedGames
+          ?.filter((game) => {
+            return active ? game?.completion > 0 : game?.completion == 0;
+          })
+          ?.map((game, index) => {
+            let allCompletion = 0;
+            let total = 0;
+            let unearned = 0;
+            let platinumA = 0;
+            let goldA = 0;
+            let silverA = 0;
+            let bronzeA = 0;
+            let platinum = 0;
+            let gold = 0;
+            let silver = 0;
+            let bronze = 0;
 
-          game?.achievements?.forEach((ach) => {
-            total++;
-            if (ach?.achieved == 0) {
-              unearned++;
-              if (ach?.color == "Platinum") {
-                platinumA++;
+            game?.achievements?.forEach((ach) => {
+              total++;
+              if (ach?.achieved == 0) {
+                unearned++;
+                if (ach?.color == "Platinum") {
+                  platinumA++;
+                }
+                if (ach?.color == "Gold") {
+                  goldA++;
+                }
+                if (ach?.color == "Silver") {
+                  silverA++;
+                }
+                if (ach?.color == "Bronze") {
+                  bronzeA++;
+                }
+              } else {
+                if (ach?.color == "Platinum") {
+                  platinum++;
+                }
+                if (ach?.color == "Gold") {
+                  gold++;
+                }
+                if (ach?.color == "Silver") {
+                  silver++;
+                }
+                if (ach?.color == "Bronze") {
+                  bronze++;
+                }
               }
-              if (ach?.color == "Gold") {
-                goldA++;
-              }
-              if (ach?.color == "Silver") {
-                silverA++;
-              }
-              if (ach?.color == "Bronze") {
-                bronzeA++;
-              }
-            } else {
-              if (ach?.color == "Platinum") {
-                platinum++;
-              }
-              if (ach?.color == "Gold") {
-                gold++;
-              }
-              if (ach?.color == "Silver") {
-                silver++;
-              }
-              if (ach?.color == "Bronze") {
-                bronze++;
-              }
+            });
+
+            let completed = game?.achievements?.filter(
+              (item) => item?.achieved == 1
+            )?.length;
+            let completion = (
+              completed == 0 ? 0 : (completed / total) * 100
+            )?.toFixed(2);
+            allCompletion = allCompletion + completion;
+            if (total == completed) {
+              completed = completed + 1;
             }
-          });
 
-          let completed = game?.achievements?.filter(
-            (item) => item?.achieved == 1
-          )?.length;
-          let completion = (
-            completed == 0 ? 0 : (completed / total) * 100
-          )?.toFixed(2);
-          allCompletion = allCompletion + completion;
-          if (total == completed) {
-            completed = completed + 1;
-          }
+            completed = completed > total ? total : completed;
 
-          completed = completed > total ? total : completed;
+            let { color, rank } = calculateRankForCompletion(completion);
+            let lastAch = game?.achievements?.sort(
+              (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
+            )?.[game?.achievements?.length - 1];
 
-          let { color, rank } = calculateRankForCompletion(completion);
-          let lastAch = game?.achievements?.sort(
-            (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
-          )?.[game?.achievements?.length - 1];
+            let allUnlocked = game?.achievements
+              ?.filter((ach) => ach?.achieved == 1)
+              ?.sort((ach1, ach2) => +ach2?.percentage - +ach1?.percentage);
 
-          let allUnlocked = game?.achievements
-            ?.filter((ach) => ach?.achieved == 1)
-            ?.sort((ach1, ach2) => +ach2?.percentage - +ach1?.percentage);
+            let lastUnlocked = allUnlocked?.[allUnlocked?.length - 1];
 
-          let lastUnlocked = allUnlocked?.[allUnlocked?.length - 1];
+            let isPlatinumNotAdded = game?.achievements?.length == 1;
 
-          let isPlatinumNotAdded = game?.achievements?.length == 1;
-
-          return (
-            <GameContainer
-              onClick={() => {}}
-              color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-            >
-              <GameCdImageSmall
-                cover={game.cover}
-                scale={3}
-                onClick={() => {
-                  setSelectedGame(game);
-                  setSelectedMode("GAME");
-                  setTabActive("GAME");
-                  if (window) {
-                    localStorage.setItem("SELECTED_GAME_ID", game?.id);
-                  }
-                }}
-              />
-              <GameInfo>
-                <Rank>
-                  <span style={{ fontSize: "1.5rem", color: color }}>
-                    {rank}
-                  </span>
-                  <span style={{ fontSize: ".9rem", color: color }}>RANK</span>
-                </Rank>
-                <Seperator></Seperator>
-                <Trophies
+            return (
+              <GameContainer
+                onClick={() => {}}
+                color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+              >
+                <GameCdImageSmall
+                  cover={game.cover}
+                  scale={3}
                   onClick={() => {
-                    setShowEditModal(true);
-                    setGameData(() => game);
+                    setSelectedGame(game);
+                    setSelectedMode("GAME");
+                    setTabActive("GAME");
+                    if (window) {
+                      localStorage.setItem("SELECTED_GAME_ID", game?.id);
+                    }
                   }}
-                >
-                  <TTop>
-                    <TSingle>
-                      <GoldIconS />
-                      <span
-                        style={{
-                          transform: "translate(-.5rem,-.25rem)",
-                          color: COLOR_GOLD,
-                          fontSize: "1.25rem",
-                        }}
-                      >
-                        {gold}
-                      </span>
-                    </TSingle>
-                    <TSingle>
-                      <SilverIconS />
-                      <span
-                        style={{
-                          transform: "translate(-.5rem,-.25rem)",
-                          color: COLOR_SILVER2,
-                          fontSize: "1.25rem",
-                        }}
-                      >
-                        {silver}
-                      </span>
-                    </TSingle>
-                    <TSingle>
-                      <BronzeIconS />
-                      <span
-                        style={{
-                          transform: "translate(-.5rem,-.25rem)",
-                          color: COLOR_BRONZE,
-                          fontSize: "1.25rem",
-                        }}
-                      >
-                        {bronze}
-                      </span>
-                    </TSingle>
-                  </TTop>
-                  {true && (
-                    <TBottom>
-                      <Outer>
-                        <Inner percentage={completion}></Inner>
-                        <Text>{completion} %</Text>
-                      </Outer>
-                    </TBottom>
-                  )}
-                </Trophies>
-                <Seperator></Seperator>
-                <Platinum isPlatinum={completed >= total} color={color}>
-                  <span style={{ fontSize: "1.25rem" }}>
-                    <FaCheckCircle />
-                  </span>
-                  <span
-                    style={{
-                      fontSize: ".9rem",
-                      fontWeight: 500,
+                />
+                <GameInfo>
+                  <Rank>
+                    <span style={{ fontSize: "1.5rem", color: color }}>
+                      {rank}
+                    </span>
+                    <span style={{ fontSize: ".9rem", color: color }}>
+                      RANK
+                    </span>
+                  </Rank>
+                  <Seperator></Seperator>
+                  <Trophies
+                    onClick={() => {
+                      setShowEditModal(true);
+                      setGameData(() => game);
                     }}
                   >
-                    {Number(
-                      lastUnlocked?.percentage >= 0
-                        ? lastUnlocked?.percentage
-                        : 0
-                    )}{" "}
-                    %
-                  </span>
-                </Platinum>
-              </GameInfo>
-            </GameContainer>
-          );
-        })}
+                    <TTop>
+                      <TSingle>
+                        <GoldIconS />
+                        <span
+                          style={{
+                            transform: "translate(-.5rem,-.25rem)",
+                            color: COLOR_GOLD,
+                            fontSize: "1.25rem",
+                          }}
+                        >
+                          {gold}
+                        </span>
+                      </TSingle>
+                      <TSingle>
+                        <SilverIconS />
+                        <span
+                          style={{
+                            transform: "translate(-.5rem,-.25rem)",
+                            color: COLOR_SILVER2,
+                            fontSize: "1.25rem",
+                          }}
+                        >
+                          {silver}
+                        </span>
+                      </TSingle>
+                      <TSingle>
+                        <BronzeIconS />
+                        <span
+                          style={{
+                            transform: "translate(-.5rem,-.25rem)",
+                            color: COLOR_BRONZE,
+                            fontSize: "1.25rem",
+                          }}
+                        >
+                          {bronze}
+                        </span>
+                      </TSingle>
+                    </TTop>
+                    {true && (
+                      <TBottom>
+                        <Outer>
+                          <Inner percentage={completion}></Inner>
+                          <Text>{completion} %</Text>
+                        </Outer>
+                      </TBottom>
+                    )}
+                  </Trophies>
+                  <Seperator></Seperator>
+                  <Platinum isPlatinum={completed >= total} color={color}>
+                    <span style={{ fontSize: "1.25rem" }}>
+                      <FaCheckCircle />
+                    </span>
+                    <span
+                      style={{
+                        fontSize: ".9rem",
+                        fontWeight: 500,
+                      }}
+                    >
+                      {Number(
+                        lastUnlocked?.percentage >= 0
+                          ? lastUnlocked?.percentage
+                          : 0
+                      )}{" "}
+                      %
+                    </span>
+                  </Platinum>
+                </GameInfo>
+              </GameContainer>
+            );
+          })}
       </Games2Line>
     </Games>
   );

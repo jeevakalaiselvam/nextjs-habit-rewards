@@ -11,8 +11,9 @@ import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from "../helpers/colorHelper";
 import { useDispatch } from "react-redux";
 import { actionAddAchToKanban } from "../store/actions/games.actions";
 import { useSelector } from "react-redux";
+import { Popover } from "antd";
 
-export default function ACH_CARD_PLATINUM({
+export default function ACH_CARD_BIG_ICON({
   index,
   desc1,
   desc2,
@@ -55,62 +56,9 @@ export default function ACH_CARD_PLATINUM({
           }}
         ></AchIcon>
       </AchIconOuter>
-
-      {ach?.colors == "Platinum" && (
-        <AchIconOuterPlatinum achieved={ach?.achieved}>
-          <span
-            style={{
-              background: "#D5D6D6",
-              width: "60px",
-              height: "60px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <PlatinumIcon />
-          </span>
-        </AchIconOuterPlatinum>
-      )}
-
-      <BottomLayer>
-        <AchData>
-          <AchTitle>{ach?.displayName}</AchTitle>
-          <AchDesc>{desc2 ? desc2 : desc3 ? desc3 : desc1}</AchDesc>
-        </AchData>
-
-        <Seperator padding={".25rem"} />
-        {ach?.color != "Platinum" && (
-          <AchRarity>
-            <span style={{ fontSize: "1.25rem" }}>{ach?.percentage}%</span>
-            <span style={{ fontSize: ".75rem" }}>
-              {ach?.label?.toUpperCase()}
-            </span>
-          </AchRarity>
-        )}
-
-        {ach?.color == "Platinum" && (
-          <AchRarity>
-            <span style={{ fontSize: ".7rem" }}>PLATINUM</span>
-          </AchRarity>
-        )}
-
-        <AchTrophy>
-          {ach?.color == "Platinum" && <PlatinumIconS />}
-          {ach?.color == "Gold" && <GoldIconS />}
-          {ach?.color == "Silver" && <SilverIconS />}
-          {ach?.color == "Bronze" && <BronzeIconS />}
-        </AchTrophy>
-      </BottomLayer>
     </AchCard>
   );
 }
-
-const BottomLayer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 const Seperator = styled.div`
   display: flex;
@@ -185,8 +133,8 @@ const AchIconOuterPlatinum = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 63px;
-  height: 63px;
+  width: 100px;
+  height: 100px;
   background: ${(props) =>
     props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
 `;
@@ -232,7 +180,6 @@ const AchCard = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  flex-direction: column;
   color: #333;
   width: 100%;
   background-color: ${(props) =>

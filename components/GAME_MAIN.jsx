@@ -19,6 +19,7 @@ import { useDrag } from "react-dnd";
 import ACH_CARD from "./ACH_CARD";
 import KANBAN_COLUMN from "./KANBAN_COLUMN";
 import { useSelector } from "react-redux";
+import ACH_CARD_PLATINUM from "./ACH_CARD_PLATINUM";
 
 export default function GAME_MAIN({ setTabActive, selectedGame }) {
   const { kanbanObj } = useSelector((state) => state.kanban);
