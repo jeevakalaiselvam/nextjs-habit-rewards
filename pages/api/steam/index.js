@@ -25,9 +25,12 @@ const handler = async (req, res) => {
         return newGame;
       });
 
-      // finalGamesResponse = finalGamesResponse?.filter((game) => {
-      //   return gamesToInclude?.includes(String(game?.id));
-      // });
+      finalGamesResponse = finalGamesResponse?.filter((game) => {
+        return ![
+          "230230", //Divinity Origin Sin 1 Original Version
+          "412020", //Metro Exodus - Non Enhanced Version
+        ]?.includes(String(game?.id));
+      });
 
       //Get All Achievements Schema for All Games
       finalGamesResponse = await Promise.all(

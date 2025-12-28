@@ -188,7 +188,12 @@ export default function GAMES_MAIN({
                       fontWeight: 500,
                     }}
                   >
-                    {Number(lastUnlocked?.percentage)} %
+                    {Number(
+                      lastUnlocked?.percentage >= 0
+                        ? lastUnlocked?.percentage
+                        : 0
+                    )}{" "}
+                    %
                   </span>
                 </Platinum>
               </GameInfo>
