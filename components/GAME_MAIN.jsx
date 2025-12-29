@@ -33,46 +33,20 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
   return (
     <Game>
       <Game2Line>
-        {true &&
-          allCategories.map((category) => {
-            let currentAchievements = [];
-
-            if (category === 'ALL') {
-              if (true) {
-                currentAchievements = (
-                  selectedGame?.achievements ?? []
-                )?.filter(
-                  (ach) =>
-                    !allCategories.some((cat) =>
-                      gameData[cat]?.includes(ach.name)
-                    ) && ach.achieved != 1
-                );
-              } else {
-                currentAchievements = (
-                  selectedGame?.achievements ?? []
-                )?.filter((ach) => ach.achieved == 1);
-              }
-            } else if (category === 'COMPLETED') {
-              currentAchievements = selectedGame?.achievements
-                ?.filter((ach) => ach.achieved)
-                ?.sort((a, b) => b.unlocktime - a.unlocktime);
-            } else {
-              currentAchievements = (selectedGame?.achievements ?? [])?.filter(
-                (ach) => gameData[category]?.includes(ach.name)
-              );
-            }
-
-            return (
-              <KANBAN_COLUMN
-                setShowingAll={setShowingAll}
-                showingAll={showingAll}
-                key={category}
-                category={category}
-                currentAchievements={currentAchievements}
-                gameId={selectedGame.id}
-              />
-            );
-          })}
+        {selectedGame?.achievements?.map((ach, index) => {
+          let desc1 = ach?.hiddenDesc;
+          let desc2 = ach?.description;
+          let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
+          return (
+            <ACH_CARD
+              ach={ach}
+              index={index}
+              desc1={desc1}
+              desc2={desc2}
+              desc3={desc3}
+            />
+          );
+        })}
       </Game2Line>
     </Game>
   );
@@ -211,6 +185,9 @@ const Game2Line = styled.div`
   justify-content: flex-start;
   width: 100%;
   padding: 0.25rem 0.25rem;
+  flex-direction: column;
+  max-height: 85vh;
+  overflow: scroll;
 `;
 
 const Game2LineContainer = styled.div`

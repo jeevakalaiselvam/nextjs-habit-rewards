@@ -1,27 +1,27 @@
-import styled from "styled-components";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import MainHeader from "../components/MainHeader";
-import MainContent from "../components/MainContent";
-import { TbRefresh } from "react-icons/tb";
-import { COLOR_ACCENT } from "../helpers/colorHelper";
+import styled from 'styled-components';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import MainHeader from '../components/MainHeader';
+import MainContent from '../components/MainContent';
+import { TbRefresh } from 'react-icons/tb';
+import { COLOR_ACCENT } from '../helpers/colorHelper';
 import {
   getColorBasedOnRarity,
   getRarityBasedOnRarity,
-} from "../helpers/achHelper";
-import { LoadingOutlined } from "@ant-design/icons";
-import { Spin } from "antd";
+} from '../helpers/achHelper';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Spin } from 'antd';
 
 const GAMES_INCLUDED = [
-  "1659040", //Hitman 3
-  "2358720", //Wukong,
-  "1030300", //SilkSong,
-  "750920", //Rise of Tomb Raider
-  "391220", //Cyberpunk,
-  "292030",
-  "1629520",
-  "1693980",
-  "1245620",
+  '1659040', //Hitman 3
+  '2358720', //Wukong,
+  '1030300', //SilkSong,
+  '750920', //Rise of Tomb Raider
+  '391220', //Cyberpunk,
+  '292030',
+  '1629520',
+  '1693980',
+  '1245620',
 ];
 
 export default function Main() {
@@ -31,14 +31,14 @@ export default function Main() {
   const [platinumData, setPlatinumData] = useState([]);
   const [finalGames, setFinalGames] = useState([]);
   const [refeshing, setRefreshing] = useState(false);
-  const [tabActive, setTabActive] = useState("GAMES");
+  const [tabActive, setTabActive] = useState('GAMES');
   const [gamesToInclude, setGamesToInclude] = useState([]);
 
   const refreshSteamGames = () => {
     setGamesLoading(true);
     try {
       axios
-        .post("/api/steam", { gamesToInclude: gamesToInclude })
+        .post('/api/steam', { gamesToInclude: gamesToInclude })
         .then((response) => {
           setGames(response?.data?.data ?? []);
           setGamesLoading(false);
@@ -51,7 +51,7 @@ export default function Main() {
   const refreshPlatinumData = () => {
     setPlatinumDataLoading(true);
     try {
-      axios.get("/api/platinum").then((response) => {
+      axios.get('/api/platinum').then((response) => {
         setPlatinumData(response?.data);
         setPlatinumDataLoading(false);
       });
@@ -100,7 +100,7 @@ export default function Main() {
 
       let total = sortedPlatinumTrophies?.length;
       let completed = sortedPlatinumTrophies?.filter(
-        (ach) => ach?.achieved == "1"
+        (ach) => ach?.achieved == '1'
       )?.length;
       let isCompleted = total == completed;
 
@@ -121,10 +121,10 @@ export default function Main() {
 
   const refreshIncludedGames = async () => {
     try {
-      const res = await axios.get("/api/include/include");
+      const res = await axios.get('/api/include/include');
       setGamesToInclude(res.data[0]?.games || []);
     } catch (error) {
-      console.error("Failed to refresh games", error);
+      console.error('Failed to refresh games', error);
     }
   };
   useEffect(() => {
@@ -149,7 +149,7 @@ export default function Main() {
               <LoadingOutlined
                 style={{
                   fontSize: 48,
-                  marginTop: "2rem",
+                  marginTop: '2rem',
                 }}
                 spin
               />
@@ -171,7 +171,7 @@ export default function Main() {
           refreshIncludedGames={refreshIncludedGames}
         />
       )}
-      {true && (
+      {false && (
         <RefreshButton
           onClick={() => {
             setRefreshing(true);
@@ -180,10 +180,10 @@ export default function Main() {
             }
           }}
         >
-          <span style={{ transform: "translateY(2px)", marginRight: ".5rem" }}>
+          <span style={{ transform: 'translateY(2px)', marginRight: '.5rem' }}>
             <TbRefresh />
           </span>
-          <span>{refeshing ? "Refreshing..." : "Refresh"}</span>
+          <span>{refeshing ? 'Refreshing...' : 'Refresh'}</span>
         </RefreshButton>
       )}
     </Container>

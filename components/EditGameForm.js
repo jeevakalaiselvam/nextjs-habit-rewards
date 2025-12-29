@@ -1,10 +1,10 @@
-import { Input, Modal, Row } from "antd";
-import TextArea from "antd/es/input/TextArea";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import styled from "styled-components";
-import ACH_CARD from "./ACH_CARD";
-import ACH_CARD_PLATINUM from "./ACH_CARD_PLATINUM";
+import { Input, Modal, Row } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import styled from 'styled-components';
+import ACH_CARD from './ACH_CARD';
+import ACH_CARD_PLATINUM from './ACH_CARD_PLATINUM';
 
 export default function EditGameForm({
   showEditModal,
@@ -40,7 +40,7 @@ export default function EditGameForm({
   const updateGameData = () => {
     try {
       axios
-        .put("/api/platinum/update", { ...gameForm, id: gameData?.id })
+        .put('/api/platinum/update', { ...gameForm, id: gameData?.id })
         .then((response) => {
           refreshData();
         });
@@ -99,12 +99,12 @@ export default function EditGameForm({
     <Modal
       width={1000}
       title={`Edit Game - ${gameData?.name}`}
-      closable={{ "aria-label": "Custom Close Button" }}
+      closable={{ 'aria-label': 'Custom Close Button' }}
       open={showEditModal}
       onOk={handleOk}
       onCancel={handleCancel}
     >
-      <Row style={{ marginBottom: "1rem" }}>
+      <Row style={{ marginBottom: '1rem' }}>
         <Input
           placeholder="Enter Game Id..."
           type="number"
@@ -125,7 +125,7 @@ export default function EditGameForm({
           }
         />
       </Row> */}
-      <Row style={{ marginBottom: "1rem" }}>
+      <Row style={{ marginBottom: '1rem' }}>
         <Input
           placeholder="Enter Cover URL..."
           value={gameForm?.cover}
@@ -134,7 +134,7 @@ export default function EditGameForm({
           }
         />
       </Row>
-      <Row style={{ marginBottom: "1rem" }}>
+      <Row style={{ marginBottom: '1rem' }}>
         <TextArea
           rows={3}
           placeholder="Enter Platinum JSON..."
@@ -145,23 +145,25 @@ export default function EditGameForm({
           }
         />
       </Row>
-      <Row>
-        <AllAchs>
-          {JSON.parse(gameForm?.platinum ?? [])?.map((ach) => {
-            return (
-              <ACH_CARD_PLATINUM
-                ach={{
-                  ...ach,
-                  achieved: obtainedMap[ach?.title],
-                }}
-                onDelete={(ach) => {
-                  onAchDelete(ach);
-                }}
-              />
-            );
-          })}
-        </AllAchs>
-      </Row>
+      {false && (
+        <Row>
+          <AllAchs>
+            {JSON.parse(gameForm?.platinum ?? [])?.map((ach) => {
+              return (
+                <ACH_CARD_PLATINUM
+                  ach={{
+                    ...ach,
+                    achieved: obtainedMap[ach?.title],
+                  }}
+                  onDelete={(ach) => {
+                    onAchDelete(ach);
+                  }}
+                />
+              );
+            })}
+          </AllAchs>
+        </Row>
+      )}
       {/* <Row style={{ marginBottom: "1rem" }}>
         <Input
           placeholder="DLC 1 Name..."

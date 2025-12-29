@@ -1,9 +1,9 @@
-import React from "react";
-import styled from "styled-components";
-import ACH_CARD from "./ACH_CARD";
-import { useDrop } from "react-dnd";
-import { moveAchievement } from "../store/store";
-import { useDispatch } from "react-redux";
+import React from 'react';
+import styled from 'styled-components';
+import ACH_CARD from './ACH_CARD';
+import { useDrop } from 'react-dnd';
+import { moveAchievement } from '../store/store';
+import { useDispatch } from 'react-redux';
 
 export default function KANBAN_COLUMN({
   index,
@@ -16,7 +16,7 @@ export default function KANBAN_COLUMN({
   const dispatch = useDispatch();
 
   const [, drop] = useDrop(() => ({
-    accept: "ACH_CARD",
+    accept: 'ACH_CARD',
     drop: (item) => {
       dispatch(moveAchievement(gameId, item.ach.name, item.fromLane, category));
     },
@@ -27,18 +27,18 @@ export default function KANBAN_COLUMN({
       <KanbanTitle
         index={index}
         onClick={() => {
-          if (category == "ALL") {
+          if (category == 'ALL') {
             setShowingAll((old) => !old);
           }
         }}
       >
-        {category == "ALL" ? (showingAll ? "ALL" : "ALL") : category}
+        {category == 'ALL' ? (showingAll ? 'ALL' : 'ALL') : category}
       </KanbanTitle>
       <KanbanData>
         {currentAchievements?.map((ach, index) => {
           let desc1 = ach?.hiddenDesc;
           let desc2 = ach?.description;
-          let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
+          let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
           return (
             <ACH_CARD
               ach={ach}
@@ -93,7 +93,7 @@ const Seperator = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  content: "";
+  content: '';
   height: 40px;
   background: #000000;
   opacity: 0.25;
