@@ -1,21 +1,21 @@
-import React from "react";
-import styled from "styled-components";
-import { calculateRankForCompletion } from "../helpers/trophyHelper";
-import { HEADER_IMAGE } from "../helpers/urlHelper";
-import { formatDate } from "../helpers/dateHelper";
-import PlatinumIcon from "./PlatinumIcon";
+import React from 'react';
+import styled from 'styled-components';
+import { calculateRankForCompletion } from '../helpers/trophyHelper';
+import { HEADER_IMAGE } from '../helpers/urlHelper';
+import { formatDate } from '../helpers/dateHelper';
+import PlatinumIcon from './PlatinumIcon';
 import {
   COLOR_BRONZE,
   COLOR_GOLD,
   COLOR_SILVER2,
-} from "../helpers/colorHelper";
-import GoldIconS from "./GoldIconS";
-import SilverIconS from "./SilverIconS";
-import BronzeIconS from "./BronzeIconS";
-import GameCdImage from "./GameCdImage";
-import GameCdImageSmall from "./GameCdImageSmall";
-import ACH_CARD from "./ACH_CARD";
-import { Popover } from "antd";
+} from '../helpers/colorHelper';
+import GoldIconS from './GoldIconS';
+import SilverIconS from './SilverIconS';
+import BronzeIconS from './BronzeIconS';
+import GameCdImage from './GameCdImage';
+import GameCdImageSmall from './GameCdImageSmall';
+import ACH_CARD from './ACH_CARD';
+import { Popover } from 'antd';
 
 export default function TROPHIES_MAIN({
   sortedGames,
@@ -29,7 +29,7 @@ export default function TROPHIES_MAIN({
 
   sortedGames?.forEach((game) => {
     game?.achievements?.forEach((ach) => {
-      if (ach?.achieved == 1 && ach?.color != "Platinum") {
+      if (ach?.achieved == 1 && ach?.color != 'Platinum') {
         allAchs?.push(ach);
       }
     });
@@ -47,7 +47,7 @@ export default function TROPHIES_MAIN({
         {allAchs?.map((ach, index) => {
           let desc1 = ach?.hiddenDesc;
           let desc2 = ach?.description;
-          let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
+          let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
 
           return (
             <Popover
@@ -66,7 +66,7 @@ export default function TROPHIES_MAIN({
                 <AchIcon
                   icon={ach?.icon}
                   onClick={() => {
-                    if (window !== "undefined") {
+                    if (window !== 'undefined') {
                       const searchQuery = `${
                         ach?.displayName
                       } achievement ${encodeURIComponent(ach?.gameName)} `;
@@ -105,8 +105,8 @@ const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;
@@ -204,7 +204,7 @@ const Seperator = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  content: "";
+  content: '';
   height: 40px;
   background: #000000;
   opacity: 0.25;
