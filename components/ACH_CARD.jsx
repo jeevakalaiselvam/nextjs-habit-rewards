@@ -1,18 +1,18 @@
-import React from "react";
-import { useDrag } from "react-dnd";
-import styled from "styled-components";
-import PlatinumIcon from "./PlatinumIcon";
-import { formatDate1, formatDate2 } from "../helpers/dateHelper";
-import PlatinumIconS from "./PlatinumIconS";
-import GoldIconS from "./GoldIconS";
-import SilverIconS from "./SilverIconS";
-import BronzeIconS from "./BronzeIconS";
-import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from "../helpers/colorHelper";
-import { useDispatch } from "react-redux";
-import { actionAddAchToKanban } from "../store/actions/games.actions";
-import { useSelector } from "react-redux";
-import { Popover } from "antd";
-import ACH_CARD_BIG_ICON from "./ACH_CARD_BIG_ICON";
+import React from 'react';
+import { useDrag } from 'react-dnd';
+import styled from 'styled-components';
+import PlatinumIcon from './PlatinumIcon';
+import { formatDate1, formatDate2 } from '../helpers/dateHelper';
+import PlatinumIconS from './PlatinumIconS';
+import GoldIconS from './GoldIconS';
+import SilverIconS from './SilverIconS';
+import BronzeIconS from './BronzeIconS';
+import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from '../helpers/colorHelper';
+import { useDispatch } from 'react-redux';
+import { actionAddAchToKanban } from '../store/actions/games.actions';
+import { useSelector } from 'react-redux';
+import { Popover } from 'antd';
+import ACH_CARD_BIG_ICON from './ACH_CARD_BIG_ICON';
 
 export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
   const dispatch = useDispatch();
@@ -22,7 +22,7 @@ export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
 
   const [{ isDragging }, drag] = useDrag(
     () => ({
-      type: "ACH_CARD",
+      type: 'ACH_CARD',
       item: { achId, ach, fromLane: lane },
       canDrag: true, // Cannot drag completed achievements
       collect: (monitor) => ({ isDragging: monitor.isDragging() }),
@@ -32,7 +32,7 @@ export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
   return (
     <AchCard
       ref={drag}
-      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+      color={index % 2 == 0 ? '#F9F9F9' : '#F5F5F7'}
       achieved={ach?.achieved}
     >
       <AchIconOuter achieved={ach?.achieved}>
@@ -50,9 +50,9 @@ export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
           title=""
         >
           <AchIcon
-            icon={ach?.achieved == "1" ? ach?.icon : ach?.icon}
+            icon={ach?.achieved == '1' ? ach?.icon : ach?.icon}
             onClick={() => {
-              if (window !== "undefined") {
+              if (window !== 'undefined') {
                 const searchQuery = `${
                   ach?.displayName
                 } achievement ${encodeURIComponent(ach?.gameName)} `;
@@ -65,16 +65,16 @@ export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
         </Popover>
       </AchIconOuter>
 
-      {ach?.colors == "Platinum" && (
+      {ach?.colors == 'Platinum' && (
         <AchIconOuterPlatinum achieved={ach?.achieved}>
           <span
             style={{
-              background: "#D5D6D6",
-              width: "60px",
-              height: "60px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              background: '#D5D6D6',
+              width: '60px',
+              height: '60px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             <PlatinumIcon />
@@ -97,27 +97,27 @@ export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
         </Unlocked>
       )}
 
-      <Seperator padding={".25rem"} />
-      {ach?.color != "Platinum" && (
+      <Seperator padding={'.25rem'} />
+      {ach?.color != 'Platinum' && (
         <AchRarity>
-          <span style={{ fontSize: "1.25rem" }}>{ach?.percentage}%</span>
-          <span style={{ fontSize: ".75rem" }}>
+          <span style={{ fontSize: '1.25rem' }}>{ach?.percentage}%</span>
+          <span style={{ fontSize: '.75rem' }}>
             {ach?.label?.toUpperCase()}
           </span>
         </AchRarity>
       )}
 
-      {ach?.color == "Platinum" && (
+      {ach?.color == 'Platinum' && (
         <AchRarity>
-          <span style={{ fontSize: ".7rem" }}>PLATINUM</span>
+          <span style={{ fontSize: '.7rem' }}>PLATINUM</span>
         </AchRarity>
       )}
 
       <AchTrophy>
-        {ach?.color == "Platinum" && <PlatinumIconS />}
-        {ach?.color == "Gold" && <GoldIconS />}
-        {ach?.color == "Silver" && <SilverIconS />}
-        {ach?.color == "Bronze" && <BronzeIconS />}
+        {ach?.color == 'Platinum' && <PlatinumIconS />}
+        {ach?.color == 'Gold' && <GoldIconS />}
+        {ach?.color == 'Silver' && <SilverIconS />}
+        {ach?.color == 'Bronze' && <BronzeIconS />}
       </AchTrophy>
     </AchCard>
   );
@@ -127,7 +127,7 @@ const Seperator = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  content: "";
+  content: '';
   height: 40px;
   background: #000000;
   opacity: 0.25;
@@ -186,28 +186,28 @@ const AchIconOuter = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 103px;
-  height: 103px;
+  width: 73px;
+  height: 73px;
   background: ${(props) =>
-    props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
+    props.achieved ? COLOR_UNLOCKED_DARK : '#00000000'};
 `;
 
 const AchIconOuterPlatinum = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 70px;
   background: ${(props) =>
-    props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
+    props.achieved ? COLOR_UNLOCKED_DARK : '#00000000'};
 `;
 
 const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 70px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;

@@ -1,20 +1,20 @@
-import React from "react";
-import styled from "styled-components";
-import { calculateRankForCompletion } from "../helpers/trophyHelper";
-import { HEADER_IMAGE } from "../helpers/urlHelper";
-import { formatDate } from "../helpers/dateHelper";
-import PlatinumIcon from "./PlatinumIcon";
+import React from 'react';
+import styled from 'styled-components';
+import { calculateRankForCompletion } from '../helpers/trophyHelper';
+import { HEADER_IMAGE } from '../helpers/urlHelper';
+import { formatDate } from '../helpers/dateHelper';
+import PlatinumIcon from './PlatinumIcon';
 import {
   COLOR_BRONZE,
   COLOR_GOLD,
   COLOR_SILVER2,
-} from "../helpers/colorHelper";
-import GoldIconS from "./GoldIconS";
-import SilverIconS from "./SilverIconS";
-import BronzeIconS from "./BronzeIconS";
-import GameCdImage from "./GameCdImage";
-import GameCdImageSmall from "./GameCdImageSmall";
-import { FaCheck, FaCheckCircle, FaCircle } from "react-icons/fa";
+} from '../helpers/colorHelper';
+import GoldIconS from './GoldIconS';
+import SilverIconS from './SilverIconS';
+import BronzeIconS from './BronzeIconS';
+import GameCdImage from './GameCdImage';
+import GameCdImageSmall from './GameCdImageSmall';
+import { FaCheck, FaCheckCircle, FaCircle } from 'react-icons/fa';
 
 export default function GAMES_MAIN({
   sortedGames,
@@ -54,29 +54,29 @@ export default function GAMES_MAIN({
               total++;
               if (ach?.achieved == 0) {
                 unearned++;
-                if (ach?.color == "Platinum") {
+                if (ach?.color == 'Platinum') {
                   platinumA++;
                 }
-                if (ach?.color == "Gold") {
+                if (ach?.color == 'Gold') {
                   goldA++;
                 }
-                if (ach?.color == "Silver") {
+                if (ach?.color == 'Silver') {
                   silverA++;
                 }
-                if (ach?.color == "Bronze") {
+                if (ach?.color == 'Bronze') {
                   bronzeA++;
                 }
               } else {
-                if (ach?.color == "Platinum") {
+                if (ach?.color == 'Platinum') {
                   platinum++;
                 }
-                if (ach?.color == "Gold") {
+                if (ach?.color == 'Gold') {
                   gold++;
                 }
-                if (ach?.color == "Silver") {
+                if (ach?.color == 'Silver') {
                   silver++;
                 }
-                if (ach?.color == "Bronze") {
+                if (ach?.color == 'Bronze') {
                   bronze++;
                 }
               }
@@ -111,26 +111,26 @@ export default function GAMES_MAIN({
             return (
               <GameContainer
                 onClick={() => {}}
-                color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+                color={index % 2 == 0 ? '#F9F9F9' : '#F5F5F7'}
               >
                 <GameCdImageSmall
                   cover={game.cover}
-                  scale={3}
+                  scale={3.9}
                   onClick={() => {
                     setSelectedGame(game);
-                    setSelectedMode("GAME");
-                    setTabActive("GAME");
+                    setSelectedMode('GAME');
+                    setTabActive('GAME');
                     if (window) {
-                      localStorage.setItem("SELECTED_GAME_ID", game?.id);
+                      localStorage.setItem('SELECTED_GAME_ID', game?.id);
                     }
                   }}
                 />
                 <GameInfo>
                   <Rank>
-                    <span style={{ fontSize: "1.5rem", color: color }}>
+                    <span style={{ fontSize: '1.5rem', color: color }}>
                       {rank}
                     </span>
-                    <span style={{ fontSize: ".9rem", color: color }}>
+                    <span style={{ fontSize: '.9rem', color: color }}>
                       RANK
                     </span>
                   </Rank>
@@ -146,9 +146,9 @@ export default function GAMES_MAIN({
                         <GoldIconS />
                         <span
                           style={{
-                            transform: "translate(-.5rem,-.25rem)",
+                            transform: 'translate(-.5rem,-.25rem)',
                             color: COLOR_GOLD,
-                            fontSize: "1.25rem",
+                            fontSize: '1.25rem',
                           }}
                         >
                           {gold}
@@ -158,9 +158,9 @@ export default function GAMES_MAIN({
                         <SilverIconS />
                         <span
                           style={{
-                            transform: "translate(-.5rem,-.25rem)",
+                            transform: 'translate(-.5rem,-.25rem)',
                             color: COLOR_SILVER2,
-                            fontSize: "1.25rem",
+                            fontSize: '1.25rem',
                           }}
                         >
                           {silver}
@@ -170,9 +170,9 @@ export default function GAMES_MAIN({
                         <BronzeIconS />
                         <span
                           style={{
-                            transform: "translate(-.5rem,-.25rem)",
+                            transform: 'translate(-.5rem,-.25rem)',
                             color: COLOR_BRONZE,
-                            fontSize: "1.25rem",
+                            fontSize: '1.25rem',
                           }}
                         >
                           {bronze}
@@ -190,12 +190,12 @@ export default function GAMES_MAIN({
                   </Trophies>
                   <Seperator></Seperator>
                   <Platinum isPlatinum={completed >= total} color={color}>
-                    <span style={{ fontSize: "1.25rem" }}>
+                    <span style={{ fontSize: '1.25rem' }}>
                       <FaCheckCircle />
                     </span>
                     <span
                       style={{
-                        fontSize: ".9rem",
+                        fontSize: '.9rem',
                         fontWeight: 500,
                       }}
                     >
@@ -203,7 +203,7 @@ export default function GAMES_MAIN({
                         lastUnlocked?.percentage >= 0
                           ? lastUnlocked?.percentage
                           : 0
-                      )}{" "}
+                      )}{' '}
                       %
                     </span>
                   </Platinum>
@@ -306,7 +306,7 @@ const Seperator = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  content: "";
+  content: '';
   height: 40px;
   background: #000000;
   opacity: 0.25;
@@ -399,7 +399,7 @@ const GameInfo = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
+  padding: 1rem 1rem 0.5rem 1rem;
   width: 100%;
 `;
 
@@ -420,10 +420,9 @@ const GameContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 500px;
   background-color: ${(props) => props.color};
   color: #333;
-  padding: 16px 4px;
+  padding: 1rem 2rem;
   border: 1px solid #ddd;
   flex-direction: column;
   cursor: pointer;

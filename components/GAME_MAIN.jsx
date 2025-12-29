@@ -1,11 +1,11 @@
-import React from "react";
-import styled from "styled-components";
-import { formatDate1, formatDate2 } from "../helpers/dateHelper";
-import PlatinumIconS from "./PlatinumIconS";
-import GoldIconS from "./GoldIconS";
-import SilverIconS from "./SilverIconS";
-import BronzeIconS from "./BronzeIconS";
-import PlatinumIcon from "./PlatinumIcon";
+import React from 'react';
+import styled from 'styled-components';
+import { formatDate1, formatDate2 } from '../helpers/dateHelper';
+import PlatinumIconS from './PlatinumIconS';
+import GoldIconS from './GoldIconS';
+import SilverIconS from './SilverIconS';
+import BronzeIconS from './BronzeIconS';
+import PlatinumIcon from './PlatinumIcon';
 import {
   COLOR_ACCENT_DARK,
   COLOR_BLUE,
@@ -14,26 +14,19 @@ import {
   COLOR_GREY,
   COLOR_UNLOCKED,
   COLOR_UNLOCKED_DARK,
-} from "../helpers/colorHelper";
-import { useDrag } from "react-dnd";
-import ACH_CARD from "./ACH_CARD";
-import KANBAN_COLUMN from "./KANBAN_COLUMN";
-import { useSelector } from "react-redux";
-import ACH_CARD_PLATINUM from "./ACH_CARD_PLATINUM";
+} from '../helpers/colorHelper';
+import { useDrag } from 'react-dnd';
+import ACH_CARD from './ACH_CARD';
+import KANBAN_COLUMN from './KANBAN_COLUMN';
+import { useSelector } from 'react-redux';
+import ACH_CARD_PLATINUM from './ACH_CARD_PLATINUM';
 
 export default function GAME_MAIN({ setTabActive, selectedGame }) {
   const { kanbanObj } = useSelector((state) => state.kanban);
   const gameData = kanbanObj?.[selectedGame?.id] || {};
   const [showingAll, setShowingAll] = React.useState(false);
 
-  const allCategories = [
-    "COMPLETED",
-    "ALL",
-    "MISSABLE",
-    "EASY",
-    "HARD",
-    "GRIND",
-  ];
+  const allCategories = ['COMPLETED', 'ALL', 'MISSABLE', 'EASY', 'HARD'];
 
   console.log({ selectedGame });
 
@@ -44,7 +37,7 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
           allCategories.map((category) => {
             let currentAchievements = [];
 
-            if (category === "ALL") {
+            if (category === 'ALL') {
               if (true) {
                 currentAchievements = (
                   selectedGame?.achievements ?? []
@@ -59,7 +52,7 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
                   selectedGame?.achievements ?? []
                 )?.filter((ach) => ach.achieved == 1);
               }
-            } else if (category === "COMPLETED") {
+            } else if (category === 'COMPLETED') {
               currentAchievements = selectedGame?.achievements
                 ?.filter((ach) => ach.achieved)
                 ?.sort((a, b) => b.unlocktime - a.unlocktime);
@@ -145,7 +138,7 @@ const AchIconOuter = styled.div`
   width: 56px;
   height: 56px;
   background: ${(props) =>
-    props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
+    props.achieved ? COLOR_UNLOCKED_DARK : '#00000000'};
 `;
 
 const AchIconOuterPlatinum = styled.div`
@@ -155,7 +148,7 @@ const AchIconOuterPlatinum = styled.div`
   width: 60px;
   height: 60px;
   background: ${(props) =>
-    props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
+    props.achieved ? COLOR_UNLOCKED_DARK : '#00000000'};
 `;
 
 const AchIcon = styled.div`
