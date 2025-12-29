@@ -169,6 +169,7 @@ const AchTitle = styled.div`
   flex: 2;
   font-size: 1rem;
   width: 100%;
+  font-family: 'BBH Bartle', sans-serif;
 `;
 
 const AchDesc = styled.div`

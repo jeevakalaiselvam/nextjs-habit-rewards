@@ -1,17 +1,17 @@
-import React from "react";
-import { useDrag } from "react-dnd";
-import styled from "styled-components";
-import PlatinumIcon from "./PlatinumIcon";
-import { formatDate1, formatDate2 } from "../helpers/dateHelper";
-import PlatinumIconS from "./PlatinumIconS";
-import GoldIconS from "./GoldIconS";
-import SilverIconS from "./SilverIconS";
-import BronzeIconS from "./BronzeIconS";
-import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from "../helpers/colorHelper";
-import { useDispatch } from "react-redux";
-import { actionAddAchToKanban } from "../store/actions/games.actions";
-import { useSelector } from "react-redux";
-import { Popover } from "antd";
+import React from 'react';
+import { useDrag } from 'react-dnd';
+import styled from 'styled-components';
+import PlatinumIcon from './PlatinumIcon';
+import { formatDate1, formatDate2 } from '../helpers/dateHelper';
+import PlatinumIconS from './PlatinumIconS';
+import GoldIconS from './GoldIconS';
+import SilverIconS from './SilverIconS';
+import BronzeIconS from './BronzeIconS';
+import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from '../helpers/colorHelper';
+import { useDispatch } from 'react-redux';
+import { actionAddAchToKanban } from '../store/actions/games.actions';
+import { useSelector } from 'react-redux';
+import { Popover } from 'antd';
 
 export default function ACH_CARD_BIG_ICON({
   index,
@@ -28,7 +28,7 @@ export default function ACH_CARD_BIG_ICON({
 
   const [{ isDragging }, drag] = useDrag(
     () => ({
-      type: "ACH_CARD",
+      type: 'ACH_CARD',
       item: { achId, ach, fromLane: lane },
       canDrag: true, // Cannot drag completed achievements
       collect: (monitor) => ({ isDragging: monitor.isDragging() }),
@@ -38,14 +38,14 @@ export default function ACH_CARD_BIG_ICON({
   return (
     <AchCard
       ref={drag}
-      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+      color={index % 2 == 0 ? '#F9F9F9' : '#F5F5F7'}
       achieved={ach?.achieved}
     >
       <AchIconOuter achieved={ach?.achieved}>
         <AchIcon
-          icon={ach?.achieved == "1" ? ach?.icon : ach?.icon}
+          icon={ach?.achieved == '1' ? ach?.icon : ach?.icon}
           onClick={() => {
-            if (window !== "undefined") {
+            if (window !== 'undefined') {
               const searchQuery = `${
                 ach?.displayName
               } achievement ${encodeURIComponent(ach?.gameName)} `;
@@ -64,7 +64,7 @@ const Seperator = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  content: "";
+  content: '';
   height: 40px;
   background: #000000;
   opacity: 0.25;
@@ -123,10 +123,10 @@ const AchIconOuter = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 100px;
+  width: 300px;
+  height: 300px;
   background: ${(props) =>
-    props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
+    props.achieved ? COLOR_UNLOCKED_DARK : '#00000000'};
 `;
 
 const AchIconOuterPlatinum = styled.div`
@@ -136,15 +136,15 @@ const AchIconOuterPlatinum = styled.div`
   width: 100px;
   height: 100px;
   background: ${(props) =>
-    props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
+    props.achieved ? COLOR_UNLOCKED_DARK : '#00000000'};
 `;
 
 const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 100px;
+  width: 300px;
+  height: 300px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;
