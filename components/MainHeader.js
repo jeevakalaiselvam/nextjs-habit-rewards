@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import { HEADER_IMAGE } from "../helpers/urlHelper";
-import { FaTrophy } from "react-icons/fa";
+import styled from 'styled-components';
+import { HEADER_IMAGE } from '../helpers/urlHelper';
+import { FaTrophy } from 'react-icons/fa';
 import {
   COLOR_BRONZE,
   COLOR_GOLD,
@@ -8,15 +8,15 @@ import {
   COLOR_PLATINUM,
   COLOR_SILVER,
   COLOR_WHITE,
-} from "../helpers/colorHelper";
-import PlatinumIcon from "./PlatinumIcon";
-import GoldIcon from "./GoldIcon";
-import SilverIcon from "./SilverIcon";
-import BronzeIcon from "./BronzeIcon";
-import WhiteTrophy from "./WhiteTrophy";
-import { calculatePSLevelAndProgress } from "../helpers/trophyHelper";
-import LevelIcon from "./LevelIcon";
-import GameCdImage from "./GameCdImage";
+} from '../helpers/colorHelper';
+import PlatinumIcon from './PlatinumIcon';
+import GoldIcon from './GoldIcon';
+import SilverIcon from './SilverIcon';
+import BronzeIcon from './BronzeIcon';
+import WhiteTrophy from './WhiteTrophy';
+import { calculatePSLevelAndProgress } from '../helpers/trophyHelper';
+import LevelIcon from './LevelIcon';
+import GameCdImage from './GameCdImage';
 
 export default function MainHeader({
   games,
@@ -26,7 +26,7 @@ export default function MainHeader({
   tabActive,
 }) {
   let image =
-    "https://4kwallpapers.com/images/wallpapers/hogwarts-legacy-winter-1920x1200-20034.jpeg";
+    'https://4kwallpapers.com/images/wallpapers/hogwarts-legacy-winter-1920x1200-20034.jpeg';
 
   let completed = 0;
   let allCompletion = 0;
@@ -45,32 +45,32 @@ export default function MainHeader({
     game?.achievements?.forEach((ach) => {
       if (ach?.achieved == 0) {
         unearned++;
-        if (ach?.color == "Platinum") {
+        if (ach?.color == 'Platinum') {
           platinumA++;
         }
-        if (ach?.color == "Gold") {
+        if (ach?.color == 'Gold') {
           goldA++;
         }
-        if (ach?.color == "Silver") {
+        if (ach?.color == 'Silver') {
           silverA++;
         }
-        if (ach?.color == "Bronze") {
+        if (ach?.color == 'Bronze') {
           bronzeA++;
         }
       } else {
-        if (ach?.color == "Platinum") {
+        if (ach?.color == 'Platinum') {
           platinum++;
           total++;
         }
-        if (ach?.color == "Gold") {
+        if (ach?.color == 'Gold') {
           gold++;
           total++;
         }
-        if (ach?.color == "Silver") {
+        if (ach?.color == 'Silver') {
           silver++;
           total++;
         }
-        if (ach?.color == "Bronze") {
+        if (ach?.color == 'Bronze') {
           bronze++;
           total++;
         }
@@ -78,7 +78,7 @@ export default function MainHeader({
     });
 
     let exceptPlatinum = game?.achievements?.filter(
-      (item) => item?.color !== "Platinum"
+      (item) => item?.color !== 'Platinum'
     );
 
     let completed = exceptPlatinum?.filter(
@@ -117,21 +117,21 @@ export default function MainHeader({
                   <LevelIcon />
                 </LevelIconWrapper>
                 <LevelData
-                  style={{ transform: "translateY(-.5rem)" }}
+                  style={{ transform: 'translateY(-.5rem)' }}
                   onClick={() => {
                     refreshData();
                   }}
                 >
                   <LevelData1>{level}</LevelData1>
-                  <LevelData2 color={COLOR_GOLD + "55"}>
+                  <LevelData2 color={COLOR_GOLD + '55'}>
                     <LevelInner
                       color={COLOR_GOLD}
                       percent={progressPercent}
                     ></LevelInner>
                     <span
                       style={{
-                        fontSize: ".65rem",
-                        transform: "translateY(.9rem)",
+                        fontSize: '.65rem',
+                        transform: 'translateY(.9rem)',
                       }}
                     >
                       {remainingXP} XP
@@ -144,13 +144,13 @@ export default function MainHeader({
               <Top onClick={() => {}}>
                 <span
                   style={{
-                    transform: "translateY(-2.5px)",
-                    marginRight: ".25rem",
+                    transform: 'translateY(-2.5px)',
+                    marginRight: '.25rem',
                   }}
                 >
                   <WhiteTrophy />
                 </span>
-                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+                <span style={{ fontSize: '1.5rem', fontWeight: ' bolder' }}>
                   {total}
                 </span>
               </Top>
@@ -174,13 +174,13 @@ export default function MainHeader({
               <Top>
                 <span
                   style={{
-                    transform: "translateY(-2.5px)",
-                    marginRight: ".25rem",
+                    transform: 'translateY(-2.5px)',
+                    marginRight: '.25rem',
                   }}
                 >
                   <GoldIcon />
                 </span>
-                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+                <span style={{ fontSize: '1.5rem', fontWeight: ' bolder' }}>
                   {gold}
                 </span>
               </Top>
@@ -189,13 +189,13 @@ export default function MainHeader({
               <Top>
                 <span
                   style={{
-                    transform: "translateY(-2.5px)",
-                    marginRight: ".25rem",
+                    transform: 'translateY(-2.5px)',
+                    marginRight: '.25rem',
                   }}
                 >
                   <SilverIcon />
                 </span>
-                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+                <span style={{ fontSize: '1.5rem', fontWeight: ' bolder' }}>
                   {silver}
                 </span>
               </Top>
@@ -204,13 +204,13 @@ export default function MainHeader({
               <Top>
                 <span
                   style={{
-                    transform: "translateY(-2.5px)",
-                    marginRight: ".25rem",
+                    transform: 'translateY(-2.5px)',
+                    marginRight: '.25rem',
                   }}
                 >
                   <BronzeIcon />
                 </span>
-                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+                <span style={{ fontSize: '1.5rem', fontWeight: ' bolder' }}>
                   {bronze}
                 </span>
               </Top>
@@ -337,7 +337,7 @@ const Country = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: url("https://avatars.fastly.steamstatic.com/2d570b928b0e4b353c1a92ef43e534ee623e92ed_full.jpg");
+  background: url('https://avatars.fastly.steamstatic.com/2d570b928b0e4b353c1a92ef43e534ee623e92ed_full.jpg');
   width: 50px;
   height: 50px;
   background-size: cover;

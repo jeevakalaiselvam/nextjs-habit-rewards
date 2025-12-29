@@ -15,6 +15,7 @@ import BronzeIconS from './BronzeIconS';
 import GameCdImage from './GameCdImage';
 import GameCdImageSmall from './GameCdImageSmall';
 import { FaCheck, FaCheckCircle, FaCircle } from 'react-icons/fa';
+import GAME_INFO from './GAME_INFO';
 
 export default function GAMES_MAIN({
   sortedGames,
@@ -115,7 +116,7 @@ export default function GAMES_MAIN({
               >
                 <GameCdImageSmall
                   cover={game.cover}
-                  scale={3.9}
+                  scale={3}
                   onClick={() => {
                     setSelectedGame(game);
                     setSelectedMode('GAME');
@@ -125,89 +126,11 @@ export default function GAMES_MAIN({
                     }
                   }}
                 />
-                <GameInfo>
-                  <Rank>
-                    <span style={{ fontSize: '1.5rem', color: color }}>
-                      {rank}
-                    </span>
-                    <span style={{ fontSize: '.9rem', color: color }}>
-                      RANK
-                    </span>
-                  </Rank>
-                  <Seperator></Seperator>
-                  <Trophies
-                    onClick={() => {
-                      setShowEditModal(true);
-                      setGameData(() => game);
-                    }}
-                  >
-                    <TTop>
-                      <TSingle>
-                        <GoldIconS />
-                        <span
-                          style={{
-                            transform: 'translate(-.5rem,-.25rem)',
-                            color: COLOR_GOLD,
-                            fontSize: '1.25rem',
-                          }}
-                        >
-                          {gold}
-                        </span>
-                      </TSingle>
-                      <TSingle>
-                        <SilverIconS />
-                        <span
-                          style={{
-                            transform: 'translate(-.5rem,-.25rem)',
-                            color: COLOR_SILVER2,
-                            fontSize: '1.25rem',
-                          }}
-                        >
-                          {silver}
-                        </span>
-                      </TSingle>
-                      <TSingle>
-                        <BronzeIconS />
-                        <span
-                          style={{
-                            transform: 'translate(-.5rem,-.25rem)',
-                            color: COLOR_BRONZE,
-                            fontSize: '1.25rem',
-                          }}
-                        >
-                          {bronze}
-                        </span>
-                      </TSingle>
-                    </TTop>
-                    {true && (
-                      <TBottom>
-                        <Outer>
-                          <Inner percentage={completion}></Inner>
-                          <Text>{completion} %</Text>
-                        </Outer>
-                      </TBottom>
-                    )}
-                  </Trophies>
-                  <Seperator></Seperator>
-                  <Platinum isPlatinum={completed >= total} color={color}>
-                    <span style={{ fontSize: '1.25rem' }}>
-                      <FaCheckCircle />
-                    </span>
-                    <span
-                      style={{
-                        fontSize: '.9rem',
-                        fontWeight: 500,
-                      }}
-                    >
-                      {Number(
-                        lastUnlocked?.percentage >= 0
-                          ? lastUnlocked?.percentage
-                          : 0
-                      )}{' '}
-                      %
-                    </span>
-                  </Platinum>
-                </GameInfo>
+                <GAME_INFO
+                  game={game}
+                  setShowEditModal={setShowEditModal}
+                  selectedGame={selectedGame}
+                />
               </GameContainer>
             );
           })}
@@ -422,7 +345,7 @@ const GameContainer = styled.div`
   justify-content: flex-start;
   background-color: ${(props) => props.color};
   color: #333;
-  padding: 1rem 2rem;
+  padding: 1rem 1rem;
   border: 1px solid #ddd;
   flex-direction: column;
   cursor: pointer;

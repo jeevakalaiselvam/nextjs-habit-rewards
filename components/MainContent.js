@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 import {
   COLOR_ACCENT,
   COLOR_BRONZE,
@@ -10,44 +10,46 @@ import {
   COLOR_UNLOCKED,
   COLOR_UNLOCKED_DARK,
   generateDarkTextColorForLightBg,
-} from "../helpers/colorHelper";
-import { useEffect, useState } from "react";
-import { HEADER_IMAGE } from "../helpers/urlHelper";
+} from '../helpers/colorHelper';
+import { useEffect, useState } from 'react';
+import { HEADER_IMAGE } from '../helpers/urlHelper';
 
 import {
   calculateLevelForAchs,
   calculateRankForCompletion,
   getAchsBasedOnRarity,
-} from "../helpers/trophyHelper";
+} from '../helpers/trophyHelper';
 
-import GoldIconS from "./GoldIconS";
-import SilverIconS from "./SilverIconS";
-import BronzeIconS from "./BronzeIconS";
-import PlatinumIcon from "./PlatinumIcon";
+import GoldIconS from './GoldIconS';
+import SilverIconS from './SilverIconS';
+import BronzeIconS from './BronzeIconS';
+import PlatinumIcon from './PlatinumIcon';
 
-import EditGameForm from "./EditGameForm";
-import PlatinumIconS from "./PlatinumIconS";
-import { LoadingOutlined } from "@ant-design/icons";
-import { Button, Row, Spin } from "antd";
+import EditGameForm from './EditGameForm';
+import PlatinumIconS from './PlatinumIconS';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Button, Row, Spin } from 'antd';
 
 import {
   formatDate,
   formatDate1,
   formatDate2,
   formatDate3,
-} from "../helpers/dateHelper";
+} from '../helpers/dateHelper';
 
-import LevelUpIcon from "./LevelUpIcon";
-import LevelProgressChart from "./LevelProgressChart";
+import LevelUpIcon from './LevelUpIcon';
+import LevelProgressChart from './LevelProgressChart';
 
-import STATS from "./STATS";
-import RECENT_ACHIEVEMENTS from "./RECENT_ACHIEVEMENTS";
-import GAMES_MAIN from "./GAMES_MAIN";
-import GAME_MAIN from "./GAME_MAIN";
-import TROPHIES_MAIN from "./TROPHIES_MAIN";
-import SETTINGS_MAIN from "./SETTINGS_MAIN";
-import TextArea from "antd/es/input/TextArea";
-import axios from "axios";
+import STATS from './STATS';
+import RECENT_ACHIEVEMENTS from './RECENT_ACHIEVEMENTS';
+import GAMES_MAIN from './GAMES_MAIN';
+import GAME_MAIN from './GAME_MAIN';
+import TROPHIES_MAIN from './TROPHIES_MAIN';
+import SETTINGS_MAIN from './SETTINGS_MAIN';
+import TextArea from 'antd/es/input/TextArea';
+import axios from 'axios';
+import GAME_INFO from './GAME_INFO';
+import GAME_INFO_ALT from './GAME_INFO_ALT';
 
 export default function MainContent({
   games,
@@ -61,13 +63,13 @@ export default function MainContent({
   setGamesToInclude,
   refreshIncludedGames,
 }) {
-  const [selectedRarity] = useState("COMMON");
-  const [selectedMode, setSelectedMode] = useState("GAMES");
-  const [selectedGame, setSelectedGame] = useState("");
+  const [selectedRarity] = useState('COMMON');
+  const [selectedMode, setSelectedMode] = useState('GAMES');
+  const [selectedGame, setSelectedGame] = useState('');
   const [showEditModal, setShowEditModal] = useState(false);
 
   const [gameData, setGameData] = useState({});
-  const [gameSearch, setGameSearch] = useState("");
+  const [gameSearch, setGameSearch] = useState('');
   const [activeAch, setActiveAch] = useState(0);
 
   let unearnedBG = 0;
@@ -85,29 +87,29 @@ export default function MainContent({
     totalBG++;
     if (ach?.achieved == 0) {
       unearnedBG++;
-      if (ach?.color == "Platinum") {
+      if (ach?.color == 'Platinum') {
         platinumABG++;
       }
-      if (ach?.color == "Gold") {
+      if (ach?.color == 'Gold') {
         goldABG++;
       }
-      if (ach?.color == "Silver") {
+      if (ach?.color == 'Silver') {
         silverABG++;
       }
-      if (ach?.color == "Bronze") {
+      if (ach?.color == 'Bronze') {
         bronzeABG++;
       }
     } else {
-      if (ach?.color == "Platinum") {
+      if (ach?.color == 'Platinum') {
         platinumBG++;
       }
-      if (ach?.color == "Gold") {
+      if (ach?.color == 'Gold') {
         goldBG++;
       }
-      if (ach?.color == "Silver") {
+      if (ach?.color == 'Silver') {
         silverBG++;
       }
-      if (ach?.color == "Bronze") {
+      if (ach?.color == 'Bronze') {
         bronzeBG++;
       }
     }
@@ -127,31 +129,31 @@ export default function MainContent({
 
   let allDLCKeys = [
     {
-      dlcKey: "DLC1",
+      dlcKey: 'DLC1',
       name: selectedGame?.dlc1Name,
       image: selectedGame?.dlc1Image,
     },
 
     {
-      dlcKey: "DLC2",
+      dlcKey: 'DLC2',
       name: selectedGame?.dlc2Name,
       image: selectedGame?.dlc2Image,
     },
 
     {
-      dlcKey: "DLC3",
+      dlcKey: 'DLC3',
       name: selectedGame?.dlc3Name,
       image: selectedGame?.dlc3Image,
     },
 
     {
-      dlcKey: "DLC4",
+      dlcKey: 'DLC4',
       name: selectedGame?.dlc4Name,
       image: selectedGame?.dlc4Image,
     },
 
     {
-      dlcKey: "DLC5",
+      dlcKey: 'DLC5',
       name: selectedGame?.dlc5Name,
       image: selectedGame?.dlc5Image,
     },
@@ -165,7 +167,7 @@ export default function MainContent({
   });
 
   let sortedGames = games.sort((a, b) => {
-    return a?.name.localeCompare(b?.name, undefined, { sensitivity: "base" });
+    return a?.name.localeCompare(b?.name, undefined, { sensitivity: 'base' });
   });
 
   let platinumGames = [];
@@ -188,29 +190,29 @@ export default function MainContent({
       total++;
       if (ach?.achieved == 0) {
         unearned++;
-        if (ach?.color == "Platinum") {
+        if (ach?.color == 'Platinum') {
           platinumA++;
         }
-        if (ach?.color == "Gold") {
+        if (ach?.color == 'Gold') {
           goldA++;
         }
-        if (ach?.color == "Silver") {
+        if (ach?.color == 'Silver') {
           silverA++;
         }
-        if (ach?.color == "Bronze") {
+        if (ach?.color == 'Bronze') {
           bronzeA++;
         }
       } else {
-        if (ach?.color == "Platinum") {
+        if (ach?.color == 'Platinum') {
           platinum++;
         }
-        if (ach?.color == "Gold") {
+        if (ach?.color == 'Gold') {
           gold++;
         }
-        if (ach?.color == "Silver") {
+        if (ach?.color == 'Silver') {
           silver++;
         }
-        if (ach?.color == "Bronze") {
+        if (ach?.color == 'Bronze') {
           bronze++;
         }
       }
@@ -250,29 +252,29 @@ export default function MainContent({
       total++;
       if (ach?.achieved == 0) {
         unearned++;
-        if (ach?.color == "Platinum") {
+        if (ach?.color == 'Platinum') {
           platinumA++;
         }
-        if (ach?.color == "Gold") {
+        if (ach?.color == 'Gold') {
           goldA++;
         }
-        if (ach?.color == "Silver") {
+        if (ach?.color == 'Silver') {
           silverA++;
         }
-        if (ach?.color == "Bronze") {
+        if (ach?.color == 'Bronze') {
           bronzeA++;
         }
       } else {
-        if (ach?.color == "Platinum") {
+        if (ach?.color == 'Platinum') {
           platinum++;
         }
-        if (ach?.color == "Gold") {
+        if (ach?.color == 'Gold') {
           gold++;
         }
-        if (ach?.color == "Silver") {
+        if (ach?.color == 'Silver') {
           silver++;
         }
-        if (ach?.color == "Bronze") {
+        if (ach?.color == 'Bronze') {
           bronze++;
         }
       }
@@ -300,23 +302,23 @@ export default function MainContent({
 
   let selectedRarityAchs = [];
 
-  if (selectedRarity == "ULTRA RARE") {
+  if (selectedRarity == 'ULTRA RARE') {
     selectedRarityAchs = ultrarare;
   }
 
-  if (selectedRarity == "VERY RARE") {
+  if (selectedRarity == 'VERY RARE') {
     selectedRarityAchs = veryrare;
   }
 
-  if (selectedRarity == "RARE") {
+  if (selectedRarity == 'RARE') {
     selectedRarityAchs = rare;
   }
 
-  if (selectedRarity == "UNCOMMON") {
+  if (selectedRarity == 'UNCOMMON') {
     selectedRarityAchs = uncommon;
   }
 
-  if (selectedRarity == "COMMON") {
+  if (selectedRarity == 'COMMON') {
     selectedRarityAchs = common;
   }
 
@@ -365,34 +367,34 @@ export default function MainContent({
 
   useEffect(() => {
     if (window) {
-      let oldId = "";
-      oldId = localStorage.getItem("SELECTED_GAME_ID");
+      let oldId = '';
+      oldId = localStorage.getItem('SELECTED_GAME_ID');
       let game = games?.find((game) => game?.id == oldId);
       setSelectedGame(game);
     }
   }, [games]);
 
   let shouldShowRight =
-    selectedMode !== "LIBRARY" &&
-    selectedMode !== "LIBRARY_NEW" &&
-    selectedMode !== "TROPHY_LOG" &&
-    selectedMode !== "LEVEL_HISTORY" &&
-    selectedMode !== "TROPHY_ADVISOR" &&
-    selectedMode !== "STATS";
+    selectedMode !== 'LIBRARY' &&
+    selectedMode !== 'LIBRARY_NEW' &&
+    selectedMode !== 'TROPHY_LOG' &&
+    selectedMode !== 'LEVEL_HISTORY' &&
+    selectedMode !== 'TROPHY_ADVISOR' &&
+    selectedMode !== 'STATS';
 
   const { levelAchs } = calculateLevelForAchs(games);
 
   const saveIncludedGame = async () => {
     try {
-      await axios.post("/api/include/include", {
+      await axios.post('/api/include/include', {
         games: gamesToInclude,
       });
       refreshIncludedGames();
-      setSelectedMode("GAMES");
+      setSelectedMode('GAMES');
 
-      console.log("Games updated successfully");
+      console.log('Games updated successfully');
     } catch (error) {
-      console.error("Error saving games", error);
+      console.error('Error saving games', error);
     }
   };
 
@@ -414,62 +416,57 @@ export default function MainContent({
         <FRLeft>
           <TabLink
             onClick={() => {
-              setSelectedMode("ACTIVE");
-              setTabActive("ACTIVE");
+              setSelectedMode('ACTIVE');
+              setTabActive('ACTIVE');
               if (window) {
-                localStorage.setItem("SELECTED_TAB", "ACTIVE");
+                localStorage.setItem('SELECTED_TAB', 'ACTIVE');
               }
             }}
-            active={selectedMode == "ACTIVE"}
+            active={selectedMode == 'ACTIVE'}
           >
             ACTIVE
           </TabLink>
           <TabLink
             onClick={() => {
-              setSelectedMode("BACKLOG");
-              setTabActive("BACKLOG");
+              setSelectedMode('BACKLOG');
+              setTabActive('BACKLOG');
               if (window) {
-                localStorage.setItem("SELECTED_TAB", "BACKLOG");
+                localStorage.setItem('SELECTED_TAB', 'BACKLOG');
               }
             }}
-            active={selectedMode == "BACKLOG"}
+            active={selectedMode == 'BACKLOG'}
           >
             BACKLOG
           </TabLink>
           <TabLink
             onClick={() => {
-              setSelectedMode("TROPHIES");
-              setTabActive("TROPHIES");
+              setSelectedMode('TROPHIES');
+              setTabActive('TROPHIES');
               if (window) {
-                localStorage.setItem("SELECTED_TAB", "TROPHIES");
+                localStorage.setItem('SELECTED_TAB', 'TROPHIES');
               }
             }}
-            active={selectedMode == "TROPHIES"}
+            active={selectedMode == 'TROPHIES'}
           >
             TROPHIES
           </TabLink>
-          {/* <TabLink
-            onClick={() => {
-              setSelectedMode("SETTINGS");
-              setTabActive("SETTINGS");
-              if (window) {
-                localStorage.setItem("SELECTED_TAB", "SETTINGS");
-              }
-            }}
-            active={selectedMode == "SETTINGS"}
-          >
-            SETTINGS
-          </TabLink> */}
         </FRLeft>
-        <FRRight>
-          <GameSearch>
-            <input
-              placeholder="Search Games..."
-              value={gameSearch}
-              onChange={(e) => setGameSearch(e.target.value)}
-            />
-          </GameSearch>
-        </FRRight>
+        {selectedMode == 'GAME' && (
+          <FRRight>
+            <GAME_INFO_ALT game={selectedGame} />
+          </FRRight>
+        )}
+        {selectedMode == 'GAMES' && (
+          <FRRight>
+            <GameSearch>
+              <input
+                placeholder="Search Games..."
+                value={gameSearch}
+                onChange={(e) => setGameSearch(e.target.value)}
+              />
+            </GameSearch>
+          </FRRight>
+        )}
       </FirstRow>
       {/* <RECENT_ACHIEVEMENTS allUnlocked={allUnlocked} activeAch={activeAch} /> */}
       <SecondRow>
@@ -483,7 +480,7 @@ export default function MainContent({
 
         {!gamesLoading && (
           <SRLeft>
-            {tabActive == "ACTIVE" && (
+            {tabActive == 'ACTIVE' && (
               <GAMES_MAIN
                 sortedGames={[...nonPlatinumGames, ...platinumGames]}
                 setSelectedGame={setSelectedGame}
@@ -496,7 +493,7 @@ export default function MainContent({
               />
             )}
 
-            {tabActive == "BACKLOG" && (
+            {tabActive == 'BACKLOG' && (
               <GAMES_MAIN
                 sortedGames={[...nonPlatinumGames, ...platinumGames]}
                 setSelectedGame={setSelectedGame}
@@ -509,7 +506,7 @@ export default function MainContent({
               />
             )}
 
-            {tabActive == "TROPHIES" && (
+            {tabActive == 'TROPHIES' && (
               <TROPHIES_MAIN
                 sortedGames={sortedGames}
                 setSelectedGame={setSelectedGame}
@@ -520,14 +517,14 @@ export default function MainContent({
               />
             )}
 
-            {tabActive == "GAME" && (
+            {tabActive == 'GAME' && (
               <GAME_MAIN
                 setTabActive={setTabActive}
                 selectedGame={selectedGame}
               />
             )}
 
-            {selectedMode == "SETTINGS" && (
+            {selectedMode == 'SETTINGS' && (
               <GamesR>
                 <GameLineHours>
                   <Games1Line>
@@ -535,7 +532,7 @@ export default function MainContent({
                     <GamesRight></GamesRight>
                   </Games1Line>
                   <StatWrapper2>
-                    <Row style={{ marginBottom: "1rem", width: "100%" }}>
+                    <Row style={{ marginBottom: '1rem', width: '100%' }}>
                       <TextArea
                         rows={10}
                         placeholder="Enter Platinum JSON..."
@@ -548,10 +545,10 @@ export default function MainContent({
                     </Row>
                     <Row
                       style={{
-                        marginRight: "1rem",
-                        display: "flex",
-                        width: "100%",
-                        justifyContent: "flex-end",
+                        marginRight: '1rem',
+                        display: 'flex',
+                        width: '100%',
+                        justifyContent: 'flex-end',
                       }}
                     >
                       <Button
@@ -574,12 +571,52 @@ export default function MainContent({
   );
 }
 
-const StatWrapper = styled.div`
+const Trophies = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: center;
+  flex: 1;
+`;
+
+const Seperator = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  content: '';
+  height: 40px;
+  background: #000000;
+  opacity: 0.25;
+  width: 1px;
+  margin: ${(props) => (props.padding ? `0rem ${props.padding}` : `0rem 1rem`)};
+  top: calc(50% - 20px);
+`;
+
+const GameInfo = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1rem 0.5rem 1rem;
   width: 100%;
+`;
+
+const Platinum = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-right: 0.5rem;
+  color: ${(props) => props.color};
+  flex: 1;
+`;
+
+const Rank = styled.div`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 50px;
+  flex: 1;
 `;
 
 const StatWrapper2 = styled.div`
@@ -694,10 +731,10 @@ const TabLink = styled.div`
   justify-content: center;
   cursor: pointer;
   position: relative;
-  font-size: 1rem;
+  font-size: 0.9rem;
   margin-left: 1rem;
   padding: 0.25rem;
-  font-weight: ${(props) => (props.active ? "bold" : "300")};
+  font-weight: ${(props) => (props.active ? 'bold' : '300')};
   border-bottom: ${(props) =>
     props.active ? `2px solid ${COLOR_ACCENT}` : `2px solid #00000000`};
 `;
@@ -707,6 +744,12 @@ const FRLeft = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex: 1;
+`;
+
+const FRRight2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 `;
 
 const FRRight = styled.div`
