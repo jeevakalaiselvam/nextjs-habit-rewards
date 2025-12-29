@@ -105,8 +105,8 @@ const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
+  width: 91.5px;
+  height: 91.5px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;

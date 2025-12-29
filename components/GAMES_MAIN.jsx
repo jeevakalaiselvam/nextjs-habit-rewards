@@ -116,7 +116,7 @@ export default function GAMES_MAIN({
               >
                 <GameCdImageSmall
                   cover={game.cover}
-                  scale={3}
+                  scale={3.362}
                   onClick={() => {
                     setSelectedGame(game);
                     setSelectedMode('GAME');
