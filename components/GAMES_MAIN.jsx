@@ -130,6 +130,8 @@ export default function GAMES_MAIN({
                   game={game}
                   setShowEditModal={setShowEditModal}
                   selectedGame={selectedGame}
+                  setSelectedGame={setSelectedGame}
+                  setGameData={setGameData}
                 />
               </GameContainer>
             );

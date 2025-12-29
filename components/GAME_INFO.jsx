@@ -16,6 +16,8 @@ export default function GAME_INFO({
   setShowEditModal,
   setGameData,
   hidePercentage,
+  setSelectedGame,
+  setGameData,
 }) {
   let allCompletion = 0;
   let total = 0;
