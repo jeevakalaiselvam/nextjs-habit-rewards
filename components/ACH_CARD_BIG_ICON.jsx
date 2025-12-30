@@ -123,8 +123,8 @@ const AchIconOuter = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 300px;
-  height: 300px;
+  width: 200px;
+  height: 200px;
   background: ${(props) =>
     props.achieved ? COLOR_UNLOCKED_DARK : '#00000000'};
 `;

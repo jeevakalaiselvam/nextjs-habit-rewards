@@ -34,41 +34,21 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
     <Game>
       <Game2Line>
         <Left>
-          {selectedGame?.achievements
-            ?.filter((ach) => ach?.achieved == 1)
-            ?.map((ach, index) => {
-              let desc1 = ach?.hiddenDesc;
-              let desc2 = ach?.description;
-              let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
-              return (
-                <ACH_CARD
-                  ach={ach}
-                  index={index}
-                  desc1={desc1}
-                  desc2={desc2}
-                  desc3={desc3}
-                />
-              );
-            })}
+          {selectedGame?.achievements?.map((ach, index) => {
+            let desc1 = ach?.hiddenDesc;
+            let desc2 = ach?.description;
+            let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
+            return (
+              <ACH_CARD
+                ach={ach}
+                index={index}
+                desc1={desc1}
+                desc2={desc2}
+                desc3={desc3}
+              />
+            );
+          })}
         </Left>
-        <Right>
-          {selectedGame?.achievements
-            ?.filter((ach) => ach?.achieved != 1)
-            ?.map((ach, index) => {
-              let desc1 = ach?.hiddenDesc;
-              let desc2 = ach?.description;
-              let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
-              return (
-                <ACH_CARD
-                  ach={ach}
-                  index={index}
-                  desc1={desc1}
-                  desc2={desc2}
-                  desc3={desc3}
-                />
-              );
-            })}
-        </Right>
       </Game2Line>
     </Game>
   );
@@ -78,8 +58,8 @@ const Left = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  flex-direction: column;
   flex: 1;
+  flex-wrap: wrap;
   max-height: 72vh;
   overflow: scroll;
   padding: 1rem;

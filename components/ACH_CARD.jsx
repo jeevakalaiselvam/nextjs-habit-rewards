@@ -167,7 +167,7 @@ const AchTitle = styled.div`
   color: #4486c6;
   justify-content: flex-start;
   flex: 2;
-  font-size: 1rem;
+  font-size: 0.9rem;
   width: 100%;
   font-family: 'BBH Bartle', sans-serif;
 `;
@@ -180,7 +180,7 @@ const AchDesc = styled.div`
   flex: 2;
   width: 100%;
   opacity: 0.75;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 `;
 
 const AchIconOuter = styled.div`
@@ -245,11 +245,12 @@ const AchCard = styled.div`
   align-items: center;
   justify-content: flex-start;
   color: #333;
-  width: 100%;
+  width: 32%;
   background-color: ${(props) =>
     props.achieved ? COLOR_UNLOCKED : props.color};
   border: 1px solid #eee;
   cursor: pointer;
+  margin: 0.25rem;
 
   &:hover {
     border: 1px solid #d3d3d3;
