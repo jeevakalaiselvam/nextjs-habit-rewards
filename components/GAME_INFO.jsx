@@ -17,7 +17,6 @@ export default function GAME_INFO({
   setGameData,
   hidePercentage,
   setSelectedGame,
-  setGameData,
 }) {
   let allCompletion = 0;
   let total = 0;

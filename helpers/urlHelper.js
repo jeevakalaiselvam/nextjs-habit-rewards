@@ -1,8 +1,8 @@
-export const API_KEY = "C8EA26279ED696B33DE86183F1CF4764";
+export const API_KEY = 'C8EA26279ED696B33DE86183F1CF4764';
 
-let DARTHLOGAN = "76561198756057683";
+let PHASESHIFTX11 = '76561198753951008';
 
-export let USER_ID = DARTHLOGAN;
+export let USER_ID = PHASESHIFTX11;
 
 export const FETCH_ALL_GAMES = `http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=${API_KEY}&steamid=${USER_ID}&format=json`;
 
@@ -19,7 +19,7 @@ export const HEADER_IMAGE = (gameId) => {
   return `https://cdn.cloudflare.steamstatic.com/steam/apps/${gameId}/header.jpg`;
 };
 
-export const API_GET_GAMES = "api/refresh";
+export const API_GET_GAMES = 'api/refresh';
 
 export const STEAM_STORE_URL = (gameId) =>
   `https://store.steampowered.com/app/${gameId}`;
