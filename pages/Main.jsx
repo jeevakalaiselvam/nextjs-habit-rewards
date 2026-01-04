@@ -65,6 +65,7 @@ export default function Main() {
     refreshSteamGames();
     refreshIncludedGames();
     refreshLearntAchs();
+    refreshPlatinumData();
   };
 
   useEffect(() => {
@@ -129,6 +130,20 @@ export default function Main() {
             };
           }),
         ],
+      };
+
+      let newCompleted, newCompletion;
+
+      newCompleted = formedGame?.achievements?.reduce((acc, ach) => {
+        return acc + (ach?.achieved == 1 || ach?.achievedByLearning);
+      }, 0);
+
+      newCompletion = (newCompleted / formedGame?.total) * 100;
+
+      formedGame = {
+        ...formedGame,
+        completed: newCompleted,
+        completion: newCompletion,
       };
 
       return formedGame;
