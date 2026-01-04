@@ -24,17 +24,12 @@ export default function MainHeader({
   refreshData,
   setTabActive,
   tabActive,
+  learntAchs,
 }) {
   let image =
     "https://4kwallpapers.com/images/wallpapers/hogwarts-legacy-winter-1920x1200-20034.jpeg";
 
-  let completed = 0;
   let allCompletion = 0;
-  let unearned = 0;
-  let platinumA = 0;
-  let goldA = 0;
-  let silverA = 0;
-  let bronzeA = 0;
   let platinum = 0;
   let gold = 0;
   let silver = 0;
@@ -43,61 +38,27 @@ export default function MainHeader({
 
   games?.forEach((game) => {
     game?.achievements?.forEach((ach) => {
-      if (ach?.achieved == 0) {
-        unearned++;
-        if (ach?.color == "Platinum") {
-          platinumA++;
-        }
-        if (ach?.color == "Gold") {
-          goldA++;
-        }
-        if (ach?.color == "Silver") {
-          silverA++;
-        }
-        if (ach?.color == "Bronze") {
-          bronzeA++;
-        }
-      } else {
-        if (ach?.color == "Platinum") {
-          platinum++;
-          total++;
-        }
-        if (ach?.color == "Gold") {
-          gold++;
-          total++;
-        }
-        if (ach?.color == "Silver") {
-          silver++;
-          total++;
-        }
-        if (ach?.color == "Bronze") {
+      if (ach?.achieved == 1 || ach?.achievedByLearning) {
+        if (ach?.achievedByLearning) {
           bronze++;
+          total++;
+        }
+        if (ach?.achieved == 1) {
+          gold++;
           total++;
         }
       }
     });
-
-    let exceptPlatinum = game?.achievements?.filter(
-      (item) => item?.color !== "Platinum"
-    );
-
-    let completed = exceptPlatinum?.filter(
-      (item) => item?.achieved == 1
-    )?.length;
-    let completion = (completed == 0 ? 0 : (completed / total) * 100)?.toFixed(
-      2
-    );
-    allCompletion = allCompletion + completion;
-    if (total == completed) {
-      completed = completed + 1;
-    }
   });
-
-  let averageCompletion =
-    allCompletion == 0 ? 0 : allCompletion / games?.length;
 
   let { progressPercent, level, xpForNextLevel, remainingXP } =
     calculatePSLevelAndProgress(platinum, gold, silver, bronze);
+
+  let allAchsMap = {};
+  let allLearnAchs = learntAchs?.map((ach) => {
+    allAchsMap[ach?.name] = ach;
+    return ach?.name;
+  });
 
   return (
     <Container background={image}>
@@ -185,21 +146,6 @@ export default function MainHeader({
                 </span>
               </Top>
             </Section>
-            <Section color={COLOR_SILVER}>
-              <Top>
-                <span
-                  style={{
-                    transform: "translateY(-2.5px)",
-                    marginRight: ".25rem",
-                  }}
-                >
-                  <SilverIcon />
-                </span>
-                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
-                  {silver}
-                </span>
-              </Top>
-            </Section>
             <Section color={COLOR_BRONZE}>
               <Top>
                 <span
@@ -264,7 +210,7 @@ const LevelData2 = styled.div`
   align-items: center;
   justify-content: center;
   height: 4px;
-  width: 40px;
+  width: 50px;
   margin-top: 4px;
   border-radius: 2px;
   background-color: ${(props) => props.color};
@@ -276,6 +222,7 @@ const HeaderProfileLevel = styled.div`
   align-items: center;
   justify-content: center;
   margin: 0 2rem;
+  transform: translateX(1rem);
 `;
 
 const HeaderCounts = styled.div`

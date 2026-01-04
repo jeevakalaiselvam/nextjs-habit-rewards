@@ -60,6 +60,8 @@ export default function MainContent({
   gamesToInclude,
   setGamesToInclude,
   refreshIncludedGames,
+  setLearntAchs,
+  learntAchs,
 }) {
   const [selectedRarity] = useState("COMMON");
   const [selectedMode, setSelectedMode] = useState("GAMES");
@@ -320,8 +322,6 @@ export default function MainContent({
     selectedRarityAchs = common;
   }
 
-  console.log({ selectedRarityAchs });
-
   sortedGames = sortedGames?.filter((game) =>
     game?.name?.toLowerCase()?.includes(gameSearch?.toLowerCase())
   );
@@ -330,7 +330,6 @@ export default function MainContent({
   let notUnlocked = [];
 
   games?.forEach((game) => {
-    console.log(game);
     game?.achievements?.forEach((ach) => {
       if (ach?.achieved == 1) {
         allUnlocked.push(ach);
@@ -380,8 +379,6 @@ export default function MainContent({
       });
       refreshIncludedGames();
       setSelectedMode("GAMES");
-
-      console.log("Games updated successfully");
     } catch (error) {
       console.error("Error saving games", error);
     }
@@ -450,7 +447,6 @@ export default function MainContent({
           </GameSearch>
         </FRRight>
       </FirstRow>
-      <RECENT_ACHIEVEMENTS allUnlocked={allUnlocked} activeAch={activeAch} />
       <SecondRow>
         {gamesLoading && (
           <SRLeft>
@@ -488,6 +484,9 @@ export default function MainContent({
               <GAME_MAIN
                 setTabActive={setTabActive}
                 selectedGame={selectedGame}
+                setLearntAchs={setLearntAchs}
+                learntAchs={learntAchs}
+                games={games}
               />
             )}
 
@@ -628,13 +627,14 @@ const SRLeft = styled.div`
   flex: 2;
   width: 100%;
   padding: 0.5rem;
+  background-color: #111923;
 `;
 
 const SecondRow = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  background-color: #f7f7f7;
+  background-color: #111923;
   width: 100%;
   padding: 1rem;
   color: #44484b;
@@ -690,6 +690,7 @@ const GameSearch = styled.div`
     outline: none;
     border: none;
     padding: 0.5rem 1rem;
+    background-color: #1b2838;
   }
 `;
 
@@ -697,7 +698,7 @@ const FirstRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #e7e7e7;
+  background-color: #111923;
   padding: 0.5rem 1rem;
   width: 100%;
   color: #44484b;

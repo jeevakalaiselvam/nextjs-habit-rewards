@@ -93,7 +93,6 @@ export default function EditGameForm({
   current?.achievements?.forEach((ach) => {
     obtainedMap[ach?.displayName] = ach?.achieved;
   });
-  console.log({ obtainedMap });
 
   return (
     <Modal

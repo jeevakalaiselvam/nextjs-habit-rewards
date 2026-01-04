@@ -18,8 +18,6 @@ import {
 } from "../helpers/colorHelper";
 
 export default function MultiProgressChart({ dailyTypeBreakdown, size }) {
-  console.log({ dailyTypeBreakdown });
-
   const data = dailyTypeBreakdown;
 
   return (

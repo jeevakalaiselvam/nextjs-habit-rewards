@@ -19,10 +19,10 @@ const trophyPoints = {
 
 export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
   // Trophy points
-  const platinumPoints = 300;
-  const goldPoints = 30;
-  const silverPoints = 30;
-  const bronzePoints = 15;
+  const platinumPoints = 0;
+  const goldPoints = 100;
+  const silverPoints = 0;
+  const bronzePoints = 50;
 
   // Calculate total XP
   const totalXP =
@@ -32,18 +32,7 @@ export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
     bronze * bronzePoints;
 
   // Level bands and XP per level
-  const bands = [
-    { startLevel: 1, endLevel: 99, xpPerLevel: 60 },
-    { startLevel: 100, endLevel: 199, xpPerLevel: 90 },
-    { startLevel: 200, endLevel: 299, xpPerLevel: 450 },
-    { startLevel: 300, endLevel: 399, xpPerLevel: 900 },
-    { startLevel: 400, endLevel: 499, xpPerLevel: 1350 },
-    { startLevel: 500, endLevel: 599, xpPerLevel: 1800 },
-    { startLevel: 600, endLevel: 699, xpPerLevel: 2250 },
-    { startLevel: 700, endLevel: 799, xpPerLevel: 2700 },
-    { startLevel: 800, endLevel: 899, xpPerLevel: 3150 },
-    { startLevel: 900, endLevel: 999, xpPerLevel: 3600 },
-  ];
+  const bands = [{ startLevel: 1, endLevel: 9999, xpPerLevel: 1000 }];
 
   let accumulatedXP = 0;
   let level = 0;

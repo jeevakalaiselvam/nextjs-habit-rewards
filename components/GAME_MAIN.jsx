@@ -20,12 +20,24 @@ import ACH_CARD from "./ACH_CARD";
 import KANBAN_COLUMN from "./KANBAN_COLUMN";
 import { useSelector } from "react-redux";
 
-export default function GAME_MAIN({ setTabActive, selectedGame }) {
+export default function GAME_MAIN({
+  setTabActive,
+  selectedGame,
+  setLearntAchs,
+  learntAchs,
+  games,
+}) {
   const { kanbanObj } = useSelector((state) => state.kanban);
   const gameData = kanbanObj?.[selectedGame?.id] || {};
   const [showingAll, setShowingAll] = React.useState(false);
 
-  const allCategories = ["ALL", "MISSABLE", "STORY", "GRIND"];
+  const allCategories = ["ALL", "COMPLETED"];
+
+  let selectedGameInner = { id: "", achievements: [] };
+
+  if (selectedGameInner) {
+    selectedGameInner = games.find((game) => game?.id == selectedGame);
+  }
 
   return (
     <Game>
@@ -34,21 +46,21 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
           let currentAchievements = [];
 
           if (category === "ALL") {
-            if (showingAll) {
-              currentAchievements = (selectedGame?.achievements ?? [])?.filter(
-                (ach) =>
-                  !allCategories.some((cat) =>
-                    gameData[cat]?.includes(ach.name)
-                  ) && ach.achieved != 1
-              );
-            } else {
-              currentAchievements = (selectedGame?.achievements ?? [])?.filter(
-                (ach) => ach.achieved == 1
-              );
-            }
+            currentAchievements = (
+              selectedGameInner?.achievements ?? []
+            )?.filter(
+              (ach) =>
+                !allCategories.some((cat) =>
+                  gameData[cat]?.includes(ach.name)
+                ) &&
+                ach.achieved != 1 &&
+                ach.achievedByLearning != 1
+            );
           } else if (category === "COMPLETED") {
-            currentAchievements = selectedGame.achievements
-              .filter((ach) => ach.achieved)
+            currentAchievements = selectedGameInner.achievements
+              ?.filter((ach) => {
+                return ach.achieved == 1 || ach.achievedByLearning;
+              })
               .sort((a, b) => b.unlocktime - a.unlocktime);
           } else {
             currentAchievements = (selectedGame?.achievements ?? [])?.filter(
@@ -64,7 +76,9 @@ export default function GAME_MAIN({ setTabActive, selectedGame }) {
               key={category}
               category={category}
               currentAchievements={currentAchievements}
-              gameId={selectedGame.id}
+              gameId={selectedGameInner?.id}
+              learntAchs={learntAchs}
+              setLearntAchs={setLearntAchs}
             />
           );
         })}
@@ -206,6 +220,7 @@ const Game2Line = styled.div`
   justify-content: flex-start;
   width: 100%;
   padding: 0.25rem 0.25rem;
+  background-color: #111923;
 `;
 
 const Game1Line = styled.div`
@@ -226,5 +241,4 @@ const Game = styled.div`
   width: 100%;
   color: #fefefe;
   font-size: 0.9rem;
-  border: 1px solid #ddd;
 `;

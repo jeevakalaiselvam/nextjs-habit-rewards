@@ -3,6 +3,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "../store/store";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }) {
   return (

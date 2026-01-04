@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDrag } from "react-dnd";
 import styled from "styled-components";
 import PlatinumIcon from "./PlatinumIcon";
@@ -11,8 +11,10 @@ import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from "../helpers/colorHelper";
 import { useDispatch } from "react-redux";
 import { actionAddAchToKanban } from "../store/actions/games.actions";
 import { useSelector } from "react-redux";
+import { FaCheck } from "react-icons/fa";
 
 export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
+  const [isMouseOver, setMouseOver] = useState(false);
   const dispatch = useDispatch();
   const { kanbanObj } = useSelector((s) => s.kanban);
 
@@ -27,82 +29,96 @@ export default function ACH_CARD({ index, desc1, desc2, desc3, ach, lane }) {
     }),
     [lane, achId]
   );
+
+  function formatUnlockDate(date, unlockedAt) {
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    const d = date.getDate();
+    const m = months[date.getMonth()];
+
+    let hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const ampm = hours >= 12 ? "pm" : "am";
+
+    hours = hours % 12;
+    hours = hours ? hours : 12; // convert 0 to 12
+
+    if (unlockedAt?.length > 0) {
+      return `${"Learnt"} ${unlockedAt}`;
+    } else {
+      return `${"Unlocked"} ${d} ${m} @ ${hours}:${minutes}${ampm}`;
+    }
+  }
+
   return (
     <AchCard
       ref={drag}
       color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
       achieved={ach?.achieved}
+      onMouseOver={() => {
+        setMouseOver(true);
+      }}
+      onMouseLeave={() => {
+        setMouseOver(false);
+      }}
     >
-      {ach?.color != "Platinum" && (
-        <AchIconOuter achieved={ach?.achieved}>
-          <AchIcon
-            icon={ach?.icon}
-            onClick={() => {
-              if (window !== "undefined") {
-                const searchQuery = `${
-                  ach?.displayName
-                } achievement ${encodeURIComponent(ach?.gameName)} `;
-                window.open(`https://www.google.com/search?q=${searchQuery}`);
-
-                // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-              }
-            }}
-          ></AchIcon>
-        </AchIconOuter>
-      )}
-
-      {ach?.color == "Platinum" && (
-        <AchIconOuterPlatinum achieved={ach?.achieved}>
-          <span
-            style={{
-              background: "#D5D6D6",
-              width: "60px",
-              height: "60px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <PlatinumIcon />
+      <CompletionBar percentage={ach?.percentage}></CompletionBar>
+      {(ach?.achieved == 1 || ach.achievedByLearning) && (
+        <AchCompleted>
+          <span style={{ padding: ".5rem", color: "#FEFEFE" }}>
+            <FaCheck />
           </span>
-        </AchIconOuterPlatinum>
+        </AchCompleted>
       )}
+      <AchIcon
+        icon={ach?.icon}
+        onClick={() => {
+          if (window !== "undefined") {
+            const searchQuery = `${
+              ach?.displayName
+            } achievement ${encodeURIComponent(ach?.gameName)} `;
+            window.open(`https://www.google.com/search?q=${searchQuery}`);
+
+            // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+          }
+        }}
+      ></AchIcon>
 
       <AchData>
         <AchTitle>{ach?.displayName}</AchTitle>
         <AchDesc>{desc2 ? desc2 : desc3 ? desc3 : desc1}</AchDesc>
+        <AchUnlocked>
+          {ach?.percentage}% of players have this achievement
+        </AchUnlocked>
       </AchData>
-      {false && ach?.achieved == 1 && (
-        <Unlocked>
-          <UnlockedT1>
-            {formatDate1(new Date(ach?.unlocktime * 1000))}
-          </UnlockedT1>
-          <UnlockedT2>
-            {formatDate2(new Date(ach?.unlocktime * 1000))}
-          </UnlockedT2>
-        </Unlocked>
-      )}
-
-      <Seperator padding={".25rem"} />
-      {ach?.color != "Platinum" && (
+      {(ach?.achieved == 1 || ach?.achievedByLearning) && (
         <AchRarity>
-          <span style={{ fontSize: "1rem" }}>{ach?.percentage}%</span>
-          <span style={{ fontSize: ".6rem" }}>{ach?.label?.toUpperCase()}</span>
+          {formatUnlockDate(
+            new Date(ach?.unlocktime * (ach.achievedByLearning ? 1 : 1000)),
+            ach.unlockedAt
+          )}
         </AchRarity>
       )}
-
-      {ach?.color == "Platinum" && (
-        <AchRarity>
-          <span style={{ fontSize: ".7rem" }}>PLATINUM</span>
-        </AchRarity>
+      {isMouseOver && ach?.achieved != 1 && false && (
+        <AchCompleted>
+          <span style={{ padding: ".5rem", color: "#FEFEFE" }}>
+            <FaCheck />
+          </span>
+        </AchCompleted>
       )}
-
-      <AchTrophy>
-        {ach?.color == "Platinum" && <PlatinumIconS />}
-        {ach?.color == "Gold" && <GoldIconS />}
-        {ach?.color == "Silver" && <SilverIconS />}
-        {ach?.color == "Bronze" && <BronzeIconS />}
-      </AchTrophy>
     </AchCard>
   );
 }
@@ -147,33 +163,31 @@ const UnlockedT2 = styled.div`
 const AchTitle = styled.div`
   display: flex;
   align-items: center;
-  padding-left: 0.5rem;
-  color: #4486c6;
   justify-content: flex-start;
-  flex: 2;
-  font-size: 0.8rem;
-  width: 100%;
+  padding-left: 0.5rem;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgb(220, 222, 223);
 `;
 
 const AchDesc = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 0.5rem;
-  flex: 2;
-  width: 100%;
-  opacity: 0.75;
-  font-size: 0.7rem;
+  padding-left: 0.5rem;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgb(184, 188, 191);
 `;
 
-const AchIconOuter = styled.div`
+const AchUnlocked = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 56px;
-  height: 56px;
-  background: ${(props) =>
-    props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
+  align-items: flex-start;
+  justify-content: flex-start;
+  font-size: 12px;
+  font-weight: 400;
+  padding-left: 0.5rem;
+  color: rgb(139, 146, 154);
 `;
 
 const AchIconOuterPlatinum = styled.div`
@@ -186,15 +200,39 @@ const AchIconOuterPlatinum = styled.div`
     props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
 `;
 
+const CompletionBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: ${(props) =>
+    props.percentage ? `calc(${props.percentage}% + 58px)` : "50%"};
+  height: 60px;
+  background-color: #31343e;
+  z-index: 1;
+`;
+
+const AchCompleted = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 58px;
+  z-index: 2;
+  background-color: #31343e;
+`;
+
 const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 55px;
-  height: 55px;
+  width: 58px;
+  height: 58px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;
+  z-index: 2;
 `;
 
 const AchData = styled.div`
@@ -204,14 +242,19 @@ const AchData = styled.div`
   flex-direction: column;
   flex: 1;
   height: 60px;
+  z-index: 2;
 `;
 
 const AchRarity = styled.div`
   display: flex;
   align-items: center;
-  width: 100px;
   justify-content: flex-start;
   flex-direction: column;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgb(139, 146, 154);
+  z-index: 2;
+  padding-right: 0.5rem;
 `;
 
 const AchTrophy = styled.div`
@@ -229,12 +272,8 @@ const AchCard = styled.div`
   justify-content: flex-start;
   color: #333;
   width: 100%;
-  background-color: ${(props) =>
-    props.achieved ? COLOR_UNLOCKED : props.color};
-  border: 1px solid #eee;
+  background-color: #23262e;
+  margin-bottom: 4px;
   cursor: pointer;
-
-  &:hover {
-    border: 1px solid #d3d3d3;
-  }
+  position: relative;
 `;

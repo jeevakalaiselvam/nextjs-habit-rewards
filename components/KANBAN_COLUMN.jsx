@@ -4,6 +4,7 @@ import ACH_CARD from "./ACH_CARD";
 import { useDrop } from "react-dnd";
 import { moveAchievement } from "../store/store";
 import { useDispatch } from "react-redux";
+import axios from "axios";
 
 export default function KANBAN_COLUMN({
   index,
@@ -12,14 +13,32 @@ export default function KANBAN_COLUMN({
   gameId,
   setShowingAll,
   showingAll,
+  setLearntAchs,
+  learntAchs,
 }) {
   const dispatch = useDispatch();
 
   const [, drop] = useDrop(() => ({
     accept: "ACH_CARD",
     drop: (item) => {
-      if (category === "ALL" || category === "COMPLETED") return; // Don't drop here
-      dispatch(moveAchievement(gameId, item.ach.name, item.fromLane, category));
+      if (category === "COMPLETED") {
+        let achToMarkLearnt = item.ach;
+        try {
+          axios
+            .post("/api/learnt", {
+              achName: `${achToMarkLearnt?.gameId}-${achToMarkLearnt?.name}`,
+            })
+            .then((response) => {
+              let data = response.data;
+              console.log("RESPONSE BACK", data);
+              setLearntAchs(data);
+            });
+        } catch (e) {}
+      } else {
+        dispatch(
+          moveAchievement(gameId, item.ach.name, item.fromLane, category)
+        );
+      }
     },
   }));
 
@@ -33,7 +52,7 @@ export default function KANBAN_COLUMN({
           }
         }}
       >
-        {category == "ALL" ? (showingAll ? "ALL" : "COMPLETED") : category}
+        {category}: {currentAchievements?.length}
       </KanbanTitle>
       <KanbanData>
         {currentAchievements?.map((ach, index) => {
@@ -61,11 +80,10 @@ const KanbanTitle = styled.div`
   align-items: center;
   justify-content: flex-start;
   cursor: pointer;
-  flex-direction: column;
-  background-color: #336291;
   padding: 0rem 0.25rem;
   width: 100%;
-  color: #fefefe;
+  color: rgb(131, 134, 138);
+  font-weight: bold;
 `;
 
 const KanbanData = styled.div`
@@ -87,7 +105,6 @@ const KanbanSingle = styled.div`
   flex-direction: column;
   margin: 0.25rem 1rem;
   flex: 1;
-  background-color: #e7e7e7;
 `;
 
 const Seperator = styled.div`

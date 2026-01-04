@@ -33,6 +33,7 @@ export default function Main() {
   const [refeshing, setRefreshing] = useState(false);
   const [tabActive, setTabActive] = useState("GAMES");
   const [gamesToInclude, setGamesToInclude] = useState([]);
+  const [learntAchs, setLearntAchs] = useState([]);
 
   const refreshSteamGames = () => {
     setGamesLoading(true);
@@ -63,6 +64,7 @@ export default function Main() {
   const refreshData = () => {
     refreshSteamGames();
     refreshIncludedGames();
+    refreshLearntAchs();
   };
 
   useEffect(() => {
@@ -77,8 +79,6 @@ export default function Main() {
       platinumGameData?.platinum?.forEach((ach) => {
         platinumMapper[ach?.title] = ach;
       });
-
-      console.log({ platinumMapper });
 
       let gameName = game?.achievements?.[0]?.gameName;
 
@@ -103,12 +103,30 @@ export default function Main() {
       )?.length;
       let isCompleted = total == completed;
 
+      let allAchsMap = {};
+      let allLearnAchs = learntAchs?.map((ach) => {
+        allAchsMap[ach?.name] = ach;
+        return ach?.name;
+      });
       formedGame = {
         ...game,
         ...platinumGameData,
         achievements: [
           ...sortedPlatinumTrophies?.map((ach) => {
-            return { ...ach, color: getColorBasedOnRarity(ach?.percentage) };
+            let key = `${ach?.gameId}-${ach?.name}`;
+            let isLearnt = allLearnAchs?.includes(key);
+            return {
+              ...ach,
+              color: getColorBasedOnRarity(ach?.percentage),
+              achieved: ach?.achieved == 1 || allLearnAchs?.includes() ? 1 : 0,
+              achievedByLearning: isLearnt,
+              unlockedAt: allAchsMap[key]?.unlockedAt ?? "",
+              unlocktime: isLearnt
+                ? Math.ceil(
+                    new Date(allAchsMap[key]?.unlocktime).getTime() / 1000
+                  )
+                : ach?.unlocktime,
+            };
           }),
         ],
       };
@@ -116,7 +134,8 @@ export default function Main() {
       return formedGame;
     });
     setFinalGames(finalGames);
-  }, [games, platinumData]);
+    console.log("FINAL GAMES SET", { finalGames });
+  }, [games, platinumData, learntAchs]);
 
   const refreshIncludedGames = async () => {
     try {
@@ -126,6 +145,19 @@ export default function Main() {
       console.error("Failed to refresh games", error);
     }
   };
+
+  const refreshLearntAchs = async () => {
+    try {
+      const res = await axios.get("/api/learnt");
+      setLearntAchs(res.data || []);
+    } catch (error) {
+      console.error("Failed to refresh games", error);
+    }
+  };
+
+  useEffect(() => {
+    refreshData();
+  }, []);
 
   return (
     <Container>
@@ -137,6 +169,7 @@ export default function Main() {
         refreshData={refreshData}
         gamesToInclude={gamesToInclude}
         setGamesToInclude={setGamesToInclude}
+        learntAchs={learntAchs}
       />
       {(platinumDataLoading || refeshing || gamesLoading) && (
         <SpinnerContainer>
@@ -164,23 +197,10 @@ export default function Main() {
           platinumDataLoading={platinumDataLoading}
           gamesToInclude={gamesToInclude}
           setGamesToInclude={setGamesToInclude}
+          setLearntAchs={setLearntAchs}
+          learntAchs={learntAchs}
           refreshIncludedGames={refreshIncludedGames}
         />
-      )}
-      {true && (
-        <RefreshButton
-          onClick={() => {
-            setRefreshing(true);
-            if (window) {
-              refreshData();
-            }
-          }}
-        >
-          <span style={{ transform: "translateY(2px)", marginRight: ".5rem" }}>
-            <TbRefresh />
-          </span>
-          <span>{refeshing ? "Refreshing..." : "Refresh"}</span>
-        </RefreshButton>
       )}
     </Container>
   );
@@ -219,4 +239,5 @@ const Container = styled.div`
   width: 100%;
   color: #fefefe;
   position: relative;
+  background-color: #111923;
 `;
