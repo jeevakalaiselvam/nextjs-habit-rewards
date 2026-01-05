@@ -39,7 +39,7 @@ export default function MainContent({
   const [gameSearch, setGameSearch] = useState('');
 
   let sortedGames = games.sort((a, b) => {
-    return a?.name.localeCompare(b?.name, undefined, { sensitivity: 'base' });
+    return b.completion - a.completion;
   });
 
   sortedGames = sortedGames?.filter((game) =>

@@ -25,7 +25,7 @@ export default function GAMES_MAIN({
         });
 
         let allUnlocked = game?.achievements
-          ?.filter((ach) => ach?.achieved == 1)
+          ?.filter((ach) => ach?.achieved == 1 || ach?.achievedByLearning)
           ?.sort((ach1, ach2) => +ach2?.unlocktime - +ach1?.unlocktime);
 
         return (
