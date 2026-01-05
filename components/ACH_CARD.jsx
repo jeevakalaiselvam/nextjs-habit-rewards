@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { useDrag } from "react-dnd";
-import styled from "styled-components";
-import { COLOR_UNLOCKED_DARK } from "../helpers/colorHelper";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { FaCheck } from "react-icons/fa";
-import GoldIcon from "./GoldIcon";
-import BronzeIcon from "./BronzeIcon";
+import { useState } from 'react';
+import { useDrag } from 'react-dnd';
+import styled from 'styled-components';
+import { COLOR_UNLOCKED_DARK } from '../helpers/colorHelper';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { FaCheck } from 'react-icons/fa';
+import GoldIcon from './GoldIcon';
+import BronzeIcon from './BronzeIcon';
 
 export default function ACH_CARD({
   index,
@@ -24,7 +24,7 @@ export default function ACH_CARD({
 
   const [{ isDragging }, drag] = useDrag(
     () => ({
-      type: "ACH_CARD",
+      type: 'ACH_CARD',
       item: { achId, ach, fromLane: lane },
       canDrag: true, // Cannot drag completed achievements
       collect: (monitor) => ({ isDragging: monitor.isDragging() }),
@@ -34,34 +34,34 @@ export default function ACH_CARD({
 
   function formatUnlockDate(date, unlockedAt) {
     const months = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
 
     const d = date.getDate();
     const m = months[date.getMonth()];
 
     let hours = date.getHours();
-    const minutes = date.getMinutes().toString().padStart(2, "0");
-    const ampm = hours >= 12 ? "pm" : "am";
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    const ampm = hours >= 12 ? 'pm' : 'am';
 
     hours = hours % 12;
     hours = hours ? hours : 12; // convert 0 to 12
 
     if (unlockedAt?.length > 0) {
-      return `${"Unlocked @"} ${unlockedAt}`;
+      return `${'Unlocked @'} ${unlockedAt}`;
     } else {
-      return `${"Unlocked @"} ${d} ${m} @ ${hours}:${minutes}${ampm}`;
+      return `${'Unlocked @'} ${d} ${m} @ ${hours}:${minutes}${ampm}`;
     }
   }
 
@@ -69,21 +69,25 @@ export default function ACH_CARD({
     <AchCard
       longer={longer}
       ref={drag}
-      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+      color={index % 2 == 0 ? '#F9F9F9' : '#F5F5F7'}
       achieved={ach?.achieved}
     >
       <CompletionBar percentage={ach?.percentage}></CompletionBar>
       {(ach?.achieved == 1 || ach.achievedByLearning) && !hideCompletion && (
         <AchCompleted>
-          <span style={{ padding: ".5rem", color: "#FEFEFE" }}>
+          <span style={{ padding: '.5rem', color: '#FEFEFE' }}>
             <FaCheck />
           </span>
         </AchCompleted>
       )}
       <AchIcon
-        icon={ach?.icon}
+        icon={
+          ach?.achieved == 1 || ach?.achievedByLearning
+            ? ach?.icon
+            : ach?.icongray
+        }
         onClick={() => {
-          if (window !== "undefined") {
+          if (window !== 'undefined') {
             const searchQuery = `${
               ach?.displayName
             } achievement ${encodeURIComponent(ach?.gameName)} `;
@@ -151,7 +155,7 @@ const CompletionBar = styled.div`
   left: 0;
   top: 0;
   width: ${(props) =>
-    props.percentage ? `calc(${props.percentage}% + 58px)` : "50%"};
+    props.percentage ? `calc(${props.percentage}% + 58px)` : '50%'};
   height: 60px;
   background-color: #31343e;
   z-index: 1;
@@ -205,7 +209,7 @@ const AchCard = styled.div`
   align-items: center;
   justify-content: flex-start;
   color: #333;
-  width: ${(props) => (props.longer ? `${props.longer}px` : "100%")};
+  width: ${(props) => (props.longer ? `${props.longer}px` : '100%')};
   background-color: #23262e;
   margin-bottom: 4px;
   cursor: pointer;
