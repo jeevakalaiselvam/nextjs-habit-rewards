@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-import { HEADER_IMAGE } from '../helpers/urlHelper';
-import { Popover, Progress } from 'antd';
-import ACH_CARD from './ACH_CARD';
+import styled from "styled-components";
+import { HEADER_IMAGE } from "../helpers/urlHelper";
+import { Popover, Progress } from "antd";
+import ACH_CARD from "./ACH_CARD";
 
 export default function GAMES_MAIN({
   sortedGames,
@@ -31,11 +31,11 @@ export default function GAMES_MAIN({
 
         return (
           <GameContainer
-            color={index % 2 == 0 ? '#F9F9F9' : '#F5F5F7'}
+            color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
             onClick={() => {
               setSelectedGame(game?.id);
-              setSelectedMode('GAME');
-              setTabActive('GAME');
+              setSelectedMode("GAME");
+              setTabActive("GAME");
             }}
           >
             <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
@@ -56,7 +56,7 @@ export default function GAMES_MAIN({
                   percent={completion}
                   showInfo={false}
                   trailColor="#3C3F49"
-                  strokeColor={'#199FFF'}
+                  strokeColor={"#199FFF"}
                 />
               </Bottom>
               <BBottom>
@@ -64,7 +64,7 @@ export default function GAMES_MAIN({
                   let desc1 = ach?.hiddenDesc;
                   let desc2 = ach?.description;
                   let desc3 = ach?.hiddenDesc?.split(
-                    'Hidden achievement:'
+                    "Hidden achievement:"
                   )?.[1];
 
                   if (index < 9) {
@@ -79,14 +79,14 @@ export default function GAMES_MAIN({
                             desc3={desc3}
                             index={index}
                             hideCompletion
-                            longer={'600'}
+                            longer={"600"}
                           />
                         }
                         title=""
                         styles={{
                           content: {
-                            backgroundColor: 'transparent',
-                            boxShadow: 'none',
+                            backgroundColor: "transparent",
+                            boxShadow: "none",
                           },
                           body: {
                             padding: 0, // Removes default internal spacing
@@ -185,7 +185,7 @@ const BottomInner = styled.div`
   width: 100%;
   flex-direction: column;
   background-color: #16202d;
-  width: 490.5px;
+  width: 450px;
   color: #b8bcbf;
   padding: 2px 4px;
 `;
@@ -194,8 +194,8 @@ const GameImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  width: 490.25px;
-  height: 230px;
+  width: 450px;
+  height: 210px;
   margin: 0px 4px 0px 4px;
   background-image: ${(props) => `url(${props.url})`};
   background-size: contain;

@@ -4,6 +4,8 @@ import { useDrop } from "react-dnd";
 import { moveAchievement } from "../store/store";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import { useState } from "react";
+import { Progress } from "antd";
 
 export default function KANBAN_COLUMN({
   index,
@@ -14,6 +16,9 @@ export default function KANBAN_COLUMN({
   setLearntAchs,
 }) {
   const dispatch = useDispatch();
+  const [markingAll, setMarkingAll] = useState(false);
+  const [completed, setCompleted] = useState(0);
+  const [total, setTotal] = useState(0);
 
   const [, drop] = useDrop(() => ({
     accept: "ACH_CARD",
@@ -39,6 +44,47 @@ export default function KANBAN_COLUMN({
     },
   }));
 
+  const markAllCompleteOneByOne = async (achs) => {
+    if (!achs || achs.length === 0) return;
+
+    setMarkingAll(true);
+    // 1. Initialize progress
+    setCompleted(0);
+    setTotal(achs.length);
+
+    try {
+      // 2. Map your items to an array of Axios promises
+      const requests = achs.map((ach) =>
+        axios
+          .post("/api/learnt", {
+            achName: `${ach?.gameId}-${ach?.name}`,
+          })
+          .then((response) => {
+            // Increment progress as each one finishes
+            setCompleted((prev) => prev + 1);
+            return response.data; // Return the data for Promise.all
+          })
+      );
+
+      // 3. Wait for EVERY request to resolve
+      const results = await Promise.all(requests);
+
+      // 4. Handle the final state once finished
+      // 'results' is an array of all response.data objects.
+      // We take the last one to match your original logic.
+      const finalData = results[results.length - 1];
+
+      setLearntAchs(finalData);
+
+      // Optional: Reset progress after a short delay so the user sees 100%
+      setCompleted(0);
+      setTotal(0);
+      setMarkingAll(false);
+    } catch (error) {
+      console.error("One or more requests failed", error);
+    }
+  };
+
   return (
     <KanbanSingle ref={drop}>
       <KanbanTitle
@@ -50,6 +96,24 @@ export default function KANBAN_COLUMN({
         }}
       >
         {category}: {currentAchievements?.length}
+        {category == "NOT COMPLETED" && !markingAll && (
+          <KanbanMarkCompleteAll
+            onClick={() => {
+              markAllCompleteOneByOne(currentAchievements);
+            }}
+          >
+            Mark All Complete
+          </KanbanMarkCompleteAll>
+        )}
+        {markingAll && (
+          <KanbanMarkCompleteAllProgress>
+            <Progress
+              percent={((completed / total) * 100).toFixed(1)}
+              size={small}
+              status="active"
+            />
+          </KanbanMarkCompleteAllProgress>
+        )}
       </KanbanTitle>
       <KanbanData>
         {currentAchievements?.map((ach, index) => {
@@ -72,6 +136,39 @@ export default function KANBAN_COLUMN({
   );
 }
 
+const KanbanMarkCompleteAllProgress = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  width: 400px;
+  height: 30px;
+  right: 0;
+  top: 0;
+  font-size: 0.75rem;
+  transform: translateY(2px);
+  padding: 2px 8px;
+  color: #fefefe;
+`;
+
+const KanbanMarkCompleteAll = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 0.75rem;
+  transform: translateY(2px);
+  padding: 2px 8px;
+
+  &:hover {
+    color: #fefefe;
+    background-color: #111923;
+    padding: 2px 8px;
+  }
+`;
+
 const KanbanTitle = styled.div`
   display: flex;
   align-items: center;
@@ -81,6 +178,7 @@ const KanbanTitle = styled.div`
   width: 100%;
   color: rgb(131, 134, 138);
   font-weight: bold;
+  position: relative;
 `;
 
 const KanbanData = styled.div`
