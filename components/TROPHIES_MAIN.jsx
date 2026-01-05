@@ -75,12 +75,12 @@ const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 70px;
-  height: 70px;
+  width: 58px;
+  height: 58px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;
-  margin: 0.5rem;
+  margin: 0.25rem 0.125rem 0.25rem 0.5rem;
   cursor: pointer;
 `;
 
@@ -90,7 +90,7 @@ const Games2Line = styled.div`
   justify-content: flex-start;
   flex-wrap: wrap;
   width: 100%;
-  max-height: 91vh;
+  max-height: 80vh;
   overflow: scroll;
 `;
 
@@ -99,7 +99,7 @@ const Games = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  width: 98%;
+  width: 100%;
   color: #fefefe;
   font-size: 0.9rem;
   margin-bottom: 1rem;

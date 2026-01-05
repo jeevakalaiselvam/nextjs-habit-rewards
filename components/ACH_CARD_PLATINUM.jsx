@@ -1,25 +1,20 @@
-import { useDrag } from "react-dnd";
-import styled from "styled-components";
-import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from "../helpers/colorHelper";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
-import { MdDelete } from "react-icons/md";
+import styled from 'styled-components';
+import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from '../helpers/colorHelper';
+import { useDispatch } from 'react-redux';
+import { MdDelete } from 'react-icons/md';
 
 export default function ACH_CARD_PLATINUM({ index, ach, onDelete }) {
-  const dispatch = useDispatch();
-
   return (
     <AchCard
-      ref={drag}
-      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
+      color={index % 2 == 0 ? '#F9F9F9' : '#F5F5F7'}
       achieved={ach?.achieved}
     >
-      {ach?.color != "Platinum" && (
+      {ach?.color != 'Platinum' && (
         <AchIconOuter achieved={ach?.achieved}>
           <AchIcon
             icon={ach?.img}
             onClick={() => {
-              if (window !== "undefined") {
+              if (window !== 'undefined') {
                 const searchQuery = `${
                   ach?.displayName
                 } achievement ${encodeURIComponent(ach?.gameName)} `;
@@ -35,21 +30,21 @@ export default function ACH_CARD_PLATINUM({ index, ach, onDelete }) {
       <AchData>
         <AchTitle>{ach?.title}</AchTitle>
         <AchDesc>
-          {ach?.description?.replace("Hidden achievement: ", "")}
+          {ach?.description?.replace('Hidden achievement: ', '')}
         </AchDesc>
       </AchData>
 
-      <Seperator padding={".25rem"} />
-      {ach?.color != "Platinum" && (
+      <Seperator padding={'.25rem'} />
+      {ach?.color != 'Platinum' && (
         <AchRarity>
-          <span style={{ fontSize: "1rem" }}>{ach?.globalPct}</span>
-          <span style={{ fontSize: ".6rem" }}>{"UNKNOWN"}</span>
+          <span style={{ fontSize: '1rem' }}>{ach?.globalPct}</span>
+          <span style={{ fontSize: '.6rem' }}>{'UNKNOWN'}</span>
         </AchRarity>
       )}
 
-      {ach?.color == "Platinum" && (
+      {ach?.color == 'Platinum' && (
         <AchRarity>
-          <span style={{ fontSize: ".7rem" }}>PLATINUM</span>
+          <span style={{ fontSize: '.7rem' }}>PLATINUM</span>
         </AchRarity>
       )}
 
@@ -68,7 +63,7 @@ const Seperator = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  content: "";
+  content: '';
   height: 40px;
   background: #000000;
   opacity: 0.25;
@@ -106,7 +101,7 @@ const AchIconOuter = styled.div`
   width: 56px;
   height: 56px;
   background: ${(props) =>
-    props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
+    props.achieved ? COLOR_UNLOCKED_DARK : '#00000000'};
 `;
 
 const AchIcon = styled.div`

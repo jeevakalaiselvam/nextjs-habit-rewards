@@ -144,7 +144,7 @@ const TLeft = styled.div`
   flex: 1;
   grid-area: label;
   font-weight: 700;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
   margin-right: 8px;
   color: inherit;
   letter-spacing: 0.03em;
@@ -155,6 +155,7 @@ const TRight = styled.div`
   align-items: center;
   justify-content: flex-end;
   flex: 1;
+  font-size: 0.8rem;
 `;
 
 const Top = styled.div`
@@ -196,8 +197,8 @@ const GameImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  width: 485px;
-  height: 228px;
+  width: 485.5px;
+  height: 226.75px;
   margin: 0px 4px 0px 4px;
   background-image: ${(props) => `url(${props.url})`};
   background-size: contain;
@@ -220,7 +221,6 @@ const Games2Line = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  transform: translateX(0.25rem);
   flex-wrap: wrap;
   width: 100%;
   background-color: #111923;
