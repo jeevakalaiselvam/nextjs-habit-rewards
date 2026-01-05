@@ -1,6 +1,6 @@
-import styled from "styled-components";
-import ACH_CARD from "./ACH_CARD";
-import { Popover } from "antd";
+import styled from 'styled-components';
+import ACH_CARD from './ACH_CARD';
+import { Popover } from 'antd';
 
 export default function TROPHIES_MAIN({ sortedGames }) {
   let allAchs = [];
@@ -21,7 +21,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
         {allAchs?.map((ach, index) => {
           let desc1 = ach?.hiddenDesc;
           let desc2 = ach?.description;
-          let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
+          let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
 
           return (
             <Popover
@@ -34,14 +34,14 @@ export default function TROPHIES_MAIN({ sortedGames }) {
                   desc3={desc3}
                   index={index}
                   hideCompletion
-                  longer={"500"}
+                  longer={'600'}
                 />
               }
               title=""
               styles={{
                 content: {
-                  backgroundColor: "transparent",
-                  boxShadow: "none",
+                  backgroundColor: 'transparent',
+                  boxShadow: 'none',
                 },
                 body: {
                   padding: 0, // Removes default internal spacing
@@ -51,7 +51,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
               <AchIcon
                 icon={ach?.icon}
                 onClick={() => {
-                  if (window !== "undefined") {
+                  if (window !== 'undefined') {
                     const searchQuery = `${
                       ach?.displayName
                     } achievement ${encodeURIComponent(ach?.gameName)} `;
@@ -75,8 +75,8 @@ const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 68px;
-  height: 68px;
+  width: 70px;
+  height: 70px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;

@@ -1,8 +1,8 @@
-import React from "react";
-import styled from "styled-components";
-import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from "../helpers/colorHelper";
-import KANBAN_COLUMN from "./KANBAN_COLUMN";
-import { useSelector } from "react-redux";
+import React from 'react';
+import styled from 'styled-components';
+import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from '../helpers/colorHelper';
+import KANBAN_COLUMN from './KANBAN_COLUMN';
+import { useSelector } from 'react-redux';
 
 export default function GAME_MAIN({
   selectedGame,
@@ -14,9 +14,9 @@ export default function GAME_MAIN({
   const gameData = kanbanObj?.[selectedGame?.id] || {};
   const [showingAll, setShowingAll] = React.useState(false);
 
-  const allCategories = ["NOT COMPLETED", "COMPLETED"];
+  const allCategories = ['NOT COMPLETED', 'COMPLETED'];
 
-  let selectedGameInner = { id: "", achievements: [] };
+  let selectedGameInner = { id: '', achievements: [] };
 
   if (selectedGameInner) {
     selectedGameInner = games.find((game) => game?.id == selectedGame);
@@ -28,7 +28,7 @@ export default function GAME_MAIN({
         {allCategories.map((category) => {
           let currentAchievements = [];
 
-          if (category === "NOT COMPLETED") {
+          if (category === 'NOT COMPLETED') {
             currentAchievements = (
               selectedGameInner?.achievements ?? []
             )?.filter(
@@ -39,12 +39,12 @@ export default function GAME_MAIN({
                 ach.achieved != 1 &&
                 ach.achievedByLearning != 1
             );
-          } else if (category === "COMPLETED") {
+          } else if (category === 'COMPLETED') {
             currentAchievements = selectedGameInner?.achievements
               ?.filter((ach) => {
                 return ach.achieved == 1 || ach.achievedByLearning;
               })
-              .sort((a, b) => b.unlocktime - a.unlocktime);
+              .sort((a, b) => b.percentage - a.percentage);
           } else {
             currentAchievements = (selectedGame?.achievements ?? [])?.filter(
               (ach) =>
