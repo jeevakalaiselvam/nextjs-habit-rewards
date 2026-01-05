@@ -98,8 +98,6 @@ export default function MainContent({
           >
             Achievements ({allUnlocked?.length})
           </TabLink>
-        </FRLeft>
-        <FRRight>
           <GameSearch>
             <input
               placeholder="Search Games..."
@@ -107,7 +105,8 @@ export default function MainContent({
               onChange={(e) => setGameSearch(e.target.value)}
             />
           </GameSearch>
-        </FRRight>
+        </FRLeft>
+        <FRRight></FRRight>
       </FirstRow>
       <SecondRow>
         {gamesLoading && (
@@ -219,7 +218,7 @@ const SRLeft = styled.div`
   flex-direction: column;
   flex: 2;
   width: 100%;
-  padding: 0rem 0.5rem;
+  padding: 0rem 1rem;
   background-color: #111923;
 `;
 
@@ -265,13 +264,13 @@ const GameSearch = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
+  flex: 1;
 
   & input {
     width: 100%;
     outline: none;
     border: none;
-    padding: 0.5rem 1rem;
+    padding: 0.25rem 1rem;
     background-color: #1b2838;
     color: rgb(138, 138, 138);
   }

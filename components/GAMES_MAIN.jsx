@@ -188,7 +188,7 @@ const BottomInner = styled.div`
   width: 100%;
   flex-direction: column;
   background-color: #16202d;
-  width: 485px;
+  width: 490.5px;
   color: #b8bcbf;
   padding: 2px 4px;
 `;
@@ -196,9 +196,9 @@ const BottomInner = styled.div`
 const GameImage = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  width: 485.5px;
-  height: 226.75px;
+  justify-content: space-around;
+  width: 490.25px;
+  height: 230px;
   margin: 0px 4px 0px 4px;
   background-image: ${(props) => `url(${props.url})`};
   background-size: contain;
@@ -231,7 +231,7 @@ const Games = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  width: 98%;
+  width: 100%;
   color: #fefefe;
   font-size: 0.9rem;
   margin-bottom: 1rem;
