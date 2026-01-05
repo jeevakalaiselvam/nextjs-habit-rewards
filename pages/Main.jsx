@@ -1,15 +1,15 @@
-import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import MainHeader from '../components/MainHeader';
-import MainContent from '../components/MainContent';
-import { COLOR_ACCENT } from '../helpers/colorHelper';
+import styled from "styled-components";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import MainHeader from "../components/MainHeader";
+import MainContent from "../components/MainContent";
+import { COLOR_ACCENT } from "../helpers/colorHelper";
 import {
   getColorBasedOnRarity,
   getRarityBasedOnRarity,
-} from '../helpers/achHelper';
-import { LoadingOutlined } from '@ant-design/icons';
-import { Spin } from 'antd';
+} from "../helpers/achHelper";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
 
 export default function Main() {
   const [gamesLoading, setGamesLoading] = useState(false);
@@ -18,15 +18,16 @@ export default function Main() {
   const [platinumData, setPlatinumData] = useState([]);
   const [finalGames, setFinalGames] = useState([]);
   const [refeshing, setRefreshing] = useState(false);
-  const [tabActive, setTabActive] = useState('GAMES');
+  const [tabActive, setTabActive] = useState("GAMES");
   const [gamesToInclude, setGamesToInclude] = useState([]);
   const [learntAchs, setLearntAchs] = useState([]);
+  const [completedGames, setCompletedGames] = useState([]);
 
   const refreshSteamGames = () => {
     setGamesLoading(true);
     try {
       axios
-        .post('/api/steam', { gamesToInclude: gamesToInclude })
+        .post("/api/steam", { gamesToInclude: gamesToInclude })
         .then((response) => {
           setGames(response?.data?.data ?? []);
           setGamesLoading(false);
@@ -39,7 +40,7 @@ export default function Main() {
   const refreshPlatinumData = () => {
     setPlatinumDataLoading(true);
     try {
-      axios.get('/api/platinum').then((response) => {
+      axios.get("/api/platinum").then((response) => {
         setPlatinumData(response?.data);
         setPlatinumDataLoading(false);
       });
@@ -50,7 +51,8 @@ export default function Main() {
 
   const refreshData = () => {
     refreshSteamGames();
-    refreshLearntAchs();
+    refreshCompletedGames();
+    // refreshLearntAchs();
     // refreshPlatinumData();
   };
 
@@ -76,32 +78,35 @@ export default function Main() {
             title: ach?.displayName,
             hiddenDesc:
               platinumMapper[ach?.displayName]?.description ??
-              'Secret Achievement',
+              "Secret Achievement",
           };
         })
         ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
 
-      let allAchsMap = {};
-      let allLearnAchs = learntAchs?.map((ach) => {
-        allAchsMap[ach?.name] = ach;
-        return ach?.name;
+      let completedGameMap = {};
+      let completedGameIds = completedGames?.map((game) => {
+        completedGameMap[game?.gameId] = game;
+        return game?.gameId;
       });
       formedGame = {
         ...game,
         ...platinumGameData,
         achievements: [
           ...sortedPlatinumTrophies?.map((ach) => {
-            let key = `${ach?.gameId}-${ach?.name}`;
-            let isLearnt = allLearnAchs?.includes(key);
+            let key = `${ach?.gameId}`;
+            let isLearnt = completedGameIds?.includes(key);
             return {
               ...ach,
               color: getColorBasedOnRarity(ach?.percentage),
-              achieved: ach?.achieved == 1 || allLearnAchs?.includes() ? 1 : 0,
+              achieved:
+                ach?.achieved == 1 || completedGameIds?.includes(ach?.gameId)
+                  ? 1
+                  : 0,
               achievedByLearning: isLearnt,
-              unlockedAt: allAchsMap[key]?.unlockedAt ?? '',
+              unlockedAt: completedGameMap[key]?.unlockedAt ?? "",
               unlocktime: isLearnt
                 ? Math.ceil(
-                    new Date(allAchsMap[key]?.unlocktime).getTime() / 1000
+                    new Date(completedGameMap[key]?.unlocktime).getTime() / 1000
                   )
                 : ach?.unlocktime,
             };
@@ -126,15 +131,24 @@ export default function Main() {
       return formedGame;
     });
     setFinalGames(finalGames);
-    console.log('FINAL GAMES SET', { finalGames });
-  }, [games, platinumData, learntAchs]);
+    console.log("FINAL GAMES SET", { finalGames });
+  }, [games, platinumData, learntAchs, completedGames]);
+
+  const refreshCompletedGames = async () => {
+    try {
+      const res = await axios.get("/api/completed");
+      setCompletedGames(res.data || []);
+    } catch (error) {
+      console.error("Failed to refresh games", error);
+    }
+  };
 
   const refreshLearntAchs = async () => {
     try {
-      const res = await axios.get('/api/learnt');
+      const res = await axios.get("/api/learnt");
       setLearntAchs(res.data || []);
     } catch (error) {
-      console.error('Failed to refresh games', error);
+      console.error("Failed to refresh games", error);
     }
   };
 
@@ -163,7 +177,7 @@ export default function Main() {
               <LoadingOutlined
                 style={{
                   fontSize: 48,
-                  marginTop: '2rem',
+                  marginTop: "2rem",
                 }}
                 spin
               />
@@ -182,6 +196,8 @@ export default function Main() {
           platinumDataLoading={platinumDataLoading}
           setLearntAchs={setLearntAchs}
           learntAchs={learntAchs}
+          setCompletedGames={setCompletedGames}
+          completedGames={completedGames}
         />
       )}
     </Container>

@@ -1,25 +1,25 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 import {
   COLOR_BRONZE,
   generateDarkTextColorForLightBg,
-} from '../helpers/colorHelper';
-import { useEffect, useState } from 'react';
+} from "../helpers/colorHelper";
+import { useEffect, useState } from "react";
 
 import {
   calculateLevelForAchs,
   calculateRankForCompletion,
   getAchsBasedOnRarity,
-} from '../helpers/trophyHelper';
+} from "../helpers/trophyHelper";
 
-import EditGameForm from './EditGameForm';
-import { LoadingOutlined } from '@ant-design/icons';
-import { Button, Row, Spin } from 'antd';
+import EditGameForm from "./EditGameForm";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Button, Row, Spin } from "antd";
 
-import GAMES_MAIN from './GAMES_MAIN';
-import GAME_MAIN from './GAME_MAIN';
-import TROPHIES_MAIN from './TROPHIES_MAIN';
-import TextArea from 'antd/es/input/TextArea';
-import axios from 'axios';
+import GAMES_MAIN from "./GAMES_MAIN";
+import GAME_MAIN from "./GAME_MAIN";
+import TROPHIES_MAIN from "./TROPHIES_MAIN";
+import TextArea from "antd/es/input/TextArea";
+import axios from "axios";
 
 export default function MainContent({
   games,
@@ -30,16 +30,16 @@ export default function MainContent({
   setTabActive,
   setLearntAchs,
   learntAchs,
+  setCompletedGames,
+  completedGames,
 }) {
-  const [selectedMode, setSelectedMode] = useState('GAMES');
-  const [selectedGame, setSelectedGame] = useState('');
+  const [selectedMode, setSelectedMode] = useState("GAMES");
+  const [selectedGame, setSelectedGame] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
 
   const [gameData, setGameData] = useState({});
-  const [gameSearch, setGameSearch] = useState('');
+  const [gameSearch, setGameSearch] = useState("");
 
-  let completedGames = [],
-    notCompletedGames = [];
   let sortedGames = games.sort((a, b) => {
     return a.completion - b.completion;
   });
@@ -51,11 +51,6 @@ export default function MainContent({
   let allUnlocked = [];
   let notUnlocked = [];
   games?.forEach((game) => {
-    if (game?.completion == 100) {
-      completedGames.push(game);
-    } else {
-      notCompletedGames.push(game);
-    }
     game?.achievements?.forEach((ach) => {
       if (ach?.achieved == 1 || ach?.achievedByLearning) {
         allUnlocked.push(ach);
@@ -83,25 +78,25 @@ export default function MainContent({
         <FRLeft>
           <TabLink
             onClick={() => {
-              setSelectedMode('GAMES');
-              setTabActive('GAMES');
+              setSelectedMode("GAMES");
+              setTabActive("GAMES");
               if (window) {
-                localStorage.setItem('SELECTED_TAB', 'GAMES');
+                localStorage.setItem("SELECTED_TAB", "GAMES");
               }
             }}
-            active={selectedMode == 'GAMES'}
+            active={selectedMode == "GAMES"}
           >
-            Games ({notCompletedGames?.length})
+            Games ({games?.length})
           </TabLink>
           <TabLink
             onClick={() => {
-              setSelectedMode('TROPHIES');
-              setTabActive('TROPHIES');
+              setSelectedMode("TROPHIES");
+              setTabActive("TROPHIES");
               if (window) {
-                localStorage.setItem('SELECTED_TAB', 'TROPHIES');
+                localStorage.setItem("SELECTED_TAB", "TROPHIES");
               }
             }}
-            active={selectedMode == 'TROPHIES'}
+            active={selectedMode == "TROPHIES"}
           >
             Achievements ({allUnlocked?.length})
           </TabLink>
@@ -126,7 +121,7 @@ export default function MainContent({
 
         {!gamesLoading && (
           <SRLeft>
-            {tabActive == 'GAMES' && (
+            {tabActive == "GAMES" && (
               <GAMES_MAIN
                 sortedGames={[...games]}
                 setSelectedGame={setSelectedGame}
@@ -137,17 +132,19 @@ export default function MainContent({
               />
             )}
 
-            {tabActive == 'GAME' && (
+            {tabActive == "GAME" && (
               <GAME_MAIN
                 setTabActive={setTabActive}
                 selectedGame={selectedGame}
                 setLearntAchs={setLearntAchs}
+                setCompletedGames={setCompletedGames}
+                completedGames={completedGames}
                 learntAchs={learntAchs}
                 games={games}
               />
             )}
 
-            {tabActive == 'TROPHIES' && (
+            {tabActive == "TROPHIES" && (
               <TROPHIES_MAIN
                 sortedGames={sortedGames}
                 setSelectedGame={setSelectedGame}
@@ -245,12 +242,12 @@ const TabLink = styled.div`
   cursor: pointer;
   position: relative;
   margin-right: 0.5rem;
-  font-size: ${(props) => (props.active ? '.8rem' : '0.8rem')};
+  font-size: ${(props) => (props.active ? ".8rem" : "0.8rem")};
   padding: 0.25rem 1rem;
-  background: ${(props) => (props.active ? '#56A1CC' : '#232f3eff')};
+  background: ${(props) => (props.active ? "#56A1CC" : "#232f3eff")};
   color: #fefefe;
   border-radius: 2px 2px 0 0;
-  /* transform: ${(props) => (props.active ? 'translateY(-.125rem)' : '')}; */
+  /* transform: ${(props) => (props.active ? "translateY(-.125rem)" : "")}; */
 `;
 
 const FRLeft = styled.div`

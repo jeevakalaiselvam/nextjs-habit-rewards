@@ -14,6 +14,8 @@ export default function KANBAN_COLUMN({
   gameId,
   setShowingAll,
   setLearntAchs,
+  completedGames,
+  setCompletedGames,
 }) {
   const dispatch = useDispatch();
   const [markingAll, setMarkingAll] = useState(false);
@@ -43,6 +45,20 @@ export default function KANBAN_COLUMN({
       }
     },
   }));
+
+  const markGameComplete = (gameId) => {
+    console.log("MARKING COMPLETE", gameId);
+    try {
+      axios
+        .post("/api/completed", {
+          gameId: `${gameId}`,
+        })
+        .then((response) => {
+          let data = response.data;
+          setCompletedGames(data);
+        });
+    } catch (e) {}
+  };
 
   const markAllCompleteOneByOne = async (achs) => {
     if (!achs || achs.length === 0) return;
@@ -99,7 +115,7 @@ export default function KANBAN_COLUMN({
         {category == "NOT COMPLETED" && !markingAll && (
           <KanbanMarkCompleteAll
             onClick={() => {
-              markAllCompleteOneByOne(currentAchievements);
+              markGameComplete(currentAchievements?.[0]?.gameId);
             }}
           >
             Mark All Complete
