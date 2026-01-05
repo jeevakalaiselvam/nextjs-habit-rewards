@@ -1,9 +1,9 @@
-import styled from 'styled-components';
-import ACH_CARD from './ACH_CARD';
-import { useDrop } from 'react-dnd';
-import { moveAchievement } from '../store/store';
-import { useDispatch } from 'react-redux';
-import axios from 'axios';
+import styled from "styled-components";
+import ACH_CARD from "./ACH_CARD";
+import { useDrop } from "react-dnd";
+import { moveAchievement } from "../store/store";
+import { useDispatch } from "react-redux";
+import axios from "axios";
 
 export default function KANBAN_COLUMN({
   index,
@@ -16,18 +16,18 @@ export default function KANBAN_COLUMN({
   const dispatch = useDispatch();
 
   const [, drop] = useDrop(() => ({
-    accept: 'ACH_CARD',
+    accept: "ACH_CARD",
     drop: (item) => {
-      if (category === 'COMPLETED') {
+      if (category === "COMPLETED") {
         let achToMarkLearnt = item.ach;
         try {
           axios
-            .post('/api/learnt', {
+            .post("/api/learnt", {
               achName: `${achToMarkLearnt?.gameId}-${achToMarkLearnt?.name}`,
             })
             .then((response) => {
               let data = response.data;
-              console.log('RESPONSE BACK', data);
+              console.log("RESPONSE BACK", data);
               setLearntAchs(data);
             });
         } catch (e) {}
@@ -44,7 +44,7 @@ export default function KANBAN_COLUMN({
       <KanbanTitle
         index={index}
         onClick={() => {
-          if (category == 'ALL') {
+          if (category == "ALL") {
             setShowingAll((old) => !old);
           }
         }}
@@ -55,7 +55,7 @@ export default function KANBAN_COLUMN({
         {currentAchievements?.map((ach, index) => {
           let desc1 = ach?.hiddenDesc;
           let desc2 = ach?.description;
-          let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
+          let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
           return (
             <ACH_CARD
               ach={ach}
@@ -88,8 +88,8 @@ const KanbanData = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  max-height: 80vh;
-  min-height: 80vh;
+  max-height: 94vh;
+  min-height: 94vh;
   width: 100%;
   overflow: scroll;
   color: #717171;
