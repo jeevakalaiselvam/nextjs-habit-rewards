@@ -38,6 +38,8 @@ export default function MainContent({
   const [gameData, setGameData] = useState({});
   const [gameSearch, setGameSearch] = useState('');
 
+  let completedGames = [],
+    notCompletedGames = [];
   let sortedGames = games.sort((a, b) => {
     return a.completion - b.completion;
   });
@@ -49,6 +51,11 @@ export default function MainContent({
   let allUnlocked = [];
   let notUnlocked = [];
   games?.forEach((game) => {
+    if (game?.completion == 100) {
+      completedGames.push(game);
+    } else {
+      notCompletedGames.push(game);
+    }
     game?.achievements?.forEach((ach) => {
       if (ach?.achieved == 1 || ach?.achievedByLearning) {
         allUnlocked.push(ach);
@@ -84,7 +91,7 @@ export default function MainContent({
             }}
             active={selectedMode == 'GAMES'}
           >
-            Games ({games?.length})
+            Games ({notCompletedGames?.length})
           </TabLink>
           <TabLink
             onClick={() => {
