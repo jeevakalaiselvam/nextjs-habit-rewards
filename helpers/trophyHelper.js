@@ -32,7 +32,7 @@ export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
     bronze * bronzePoints;
 
   // Level bands and XP per level
-  const bands = [{ startLevel: 1, endLevel: 9999, xpPerLevel: 1000 }];
+  const bands = [{ startLevel: 0, endLevel: 9999, xpPerLevel: 1000 }];
 
   let accumulatedXP = 0;
   let level = 0;

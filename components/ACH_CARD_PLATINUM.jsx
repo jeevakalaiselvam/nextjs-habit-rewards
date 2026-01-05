@@ -1,41 +1,13 @@
-import React from "react";
 import { useDrag } from "react-dnd";
 import styled from "styled-components";
-import PlatinumIcon from "./PlatinumIcon";
-import { formatDate1, formatDate2 } from "../helpers/dateHelper";
-import PlatinumIconS from "./PlatinumIconS";
-import GoldIconS from "./GoldIconS";
-import SilverIconS from "./SilverIconS";
-import BronzeIconS from "./BronzeIconS";
 import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from "../helpers/colorHelper";
 import { useDispatch } from "react-redux";
-import { actionAddAchToKanban } from "../store/actions/games.actions";
 import { useSelector } from "react-redux";
 import { MdDelete } from "react-icons/md";
 
-export default function ACH_CARD_PLATINUM({
-  index,
-  desc1,
-  desc2,
-  desc3,
-  ach,
-  lane,
-  onDelete,
-}) {
+export default function ACH_CARD_PLATINUM({ index, ach, onDelete }) {
   const dispatch = useDispatch();
-  const { kanbanObj } = useSelector((s) => s.kanban);
 
-  const achId = `${ach.gameId}-${ach.name}`;
-
-  const [{ isDragging }, drag] = useDrag(
-    () => ({
-      type: "ACH_CARD",
-      item: { achId, ach, fromLane: lane },
-      canDrag: true, // Cannot drag completed achievements
-      collect: (monitor) => ({ isDragging: monitor.isDragging() }),
-    }),
-    [lane, achId]
-  );
   return (
     <AchCard
       ref={drag}
@@ -60,39 +32,12 @@ export default function ACH_CARD_PLATINUM({
         </AchIconOuter>
       )}
 
-      {ach?.color == "Platinum" && (
-        <AchIconOuterPlatinum achieved={ach?.achieved}>
-          <span
-            style={{
-              background: "#D5D6D6",
-              width: "60px",
-              height: "60px",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <PlatinumIcon />
-          </span>
-        </AchIconOuterPlatinum>
-      )}
-
       <AchData>
         <AchTitle>{ach?.title}</AchTitle>
         <AchDesc>
           {ach?.description?.replace("Hidden achievement: ", "")}
         </AchDesc>
       </AchData>
-      {false && ach?.achieved == 1 && (
-        <Unlocked>
-          <UnlockedT1>
-            {formatDate1(new Date(ach?.unlocktime * 1000))}
-          </UnlockedT1>
-          <UnlockedT2>
-            {formatDate2(new Date(ach?.unlocktime * 1000))}
-          </UnlockedT2>
-        </Unlocked>
-      )}
 
       <Seperator padding={".25rem"} />
       {ach?.color != "Platinum" && (
@@ -132,30 +77,6 @@ const Seperator = styled.div`
   top: calc(50% - 20px);
 `;
 
-const Unlocked = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  width: 100px;
-  color: #579428;
-`;
-
-const UnlockedT1 = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.5rem;
-`;
-
-const UnlockedT2 = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.5rem;
-  padding-top: 0.25rem;
-`;
-
 const AchTitle = styled.div`
   display: flex;
   align-items: center;
@@ -184,16 +105,6 @@ const AchIconOuter = styled.div`
   justify-content: center;
   width: 56px;
   height: 56px;
-  background: ${(props) =>
-    props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
-`;
-
-const AchIconOuterPlatinum = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
   background: ${(props) =>
     props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
 `;

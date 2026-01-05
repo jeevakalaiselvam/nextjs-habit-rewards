@@ -1,20 +1,7 @@
-import React from "react";
 import styled from "styled-components";
-import { calculateRankForCompletion } from "../helpers/trophyHelper";
 import { HEADER_IMAGE } from "../helpers/urlHelper";
-import { formatDate } from "../helpers/dateHelper";
-import PlatinumIcon from "./PlatinumIcon";
-import {
-  COLOR_BRONZE,
-  COLOR_GOLD,
-  COLOR_SILVER2,
-} from "../helpers/colorHelper";
-import GoldIconS from "./GoldIconS";
-import SilverIconS from "./SilverIconS";
-import BronzeIconS from "./BronzeIconS";
-import GameCdImage from "./GameCdImage";
-import GameCdImageSmall from "./GameCdImageSmall";
-import { Progress } from "antd";
+import { Popover, Progress } from "antd";
+import ACH_CARD from "./ACH_CARD";
 
 export default function GAMES_MAIN({
   sortedGames,
@@ -28,75 +15,19 @@ export default function GAMES_MAIN({
     <Games>
       <Games2Line>
         {sortedGames?.map((game, index) => {
-          let allCompletion = 0;
           let total = 0;
-          let unearned = 0;
-          let platinumA = 0;
-          let goldA = 0;
-          let silverA = 0;
-          let bronzeA = 0;
-          let platinum = 0;
-          let gold = 0;
-          let silver = 0;
-          let bronze = 0;
+          let completed = 0;
 
           game?.achievements?.forEach((ach) => {
             total++;
-            if (ach?.achieved == 0) {
-              unearned++;
-              if (ach?.color == "Platinum") {
-                platinumA++;
-              }
-              if (ach?.color == "Gold") {
-                goldA++;
-              }
-              if (ach?.color == "Silver") {
-                silverA++;
-              }
-              if (ach?.color == "Bronze") {
-                bronzeA++;
-              }
-            } else {
-              if (ach?.color == "Platinum") {
-                platinum++;
-              }
-              if (ach?.color == "Gold") {
-                gold++;
-              }
-              if (ach?.color == "Silver") {
-                silver++;
-              }
-              if (ach?.color == "Bronze") {
-                bronze++;
-              }
+            if (ach?.achieved == 1 || ach?.achievedByLearning) {
+              completed++;
             }
           });
 
-          let completed = game?.achievements?.filter(
-            (item) => item?.achieved == 1
-          )?.length;
-          let completion = (
-            completed == 0 ? 0 : (completed / total) * 100
-          )?.toFixed(2);
-          allCompletion = allCompletion + completion;
-          if (total == completed) {
-            completed = completed + 1;
-          }
-
-          completed = completed > total ? total : completed;
-
-          let { color, rank } = calculateRankForCompletion(completion);
-          let lastAch = game?.achievements?.sort(
-            (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
-          )?.[game?.achievements?.length - 1];
-
           let allUnlocked = game?.achievements
             ?.filter((ach) => ach?.achieved == 1)
-            ?.sort((ach1, ach2) => +ach2?.percentage - +ach1?.percentage);
-
-          let lastUnlocked = allUnlocked?.[allUnlocked?.length - 1];
-
-          let isPlatinumNotAdded = game?.achievements?.length == 1;
+            ?.sort((ach1, ach2) => +ach2?.unlocktime - +ach1?.unlocktime);
 
           return (
             <GameContainer
@@ -128,6 +59,50 @@ export default function GAMES_MAIN({
                     strokeColor={"#199FFF"}
                   />
                 </Bottom>
+                <BBottom>
+                  {allUnlocked?.slice(0, 11).map((ach, index) => {
+                    let desc1 = ach?.hiddenDesc;
+                    let desc2 = ach?.description;
+                    let desc3 = ach?.hiddenDesc?.split(
+                      "Hidden achievement:"
+                    )?.[1];
+
+                    if (index != 10) {
+                      return (
+                        <Popover
+                          placement="bottom"
+                          content={
+                            <ACH_CARD
+                              ach={ach}
+                              desc1={desc1}
+                              desc2={desc2}
+                              desc3={desc3}
+                              index={index}
+                              hideCompletion
+                              longer={"500"}
+                            />
+                          }
+                          title=""
+                          styles={{
+                            content: {
+                              backgroundColor: "transparent",
+                              boxShadow: "none",
+                            },
+                            body: {
+                              padding: 0, // Removes default internal spacing
+                            },
+                          }}
+                        >
+                          <AchIcon icon={ach?.icon}></AchIcon>
+                        </Popover>
+                      );
+                    } else {
+                      return (
+                        <AchCounter>+{allUnlocked?.length - 10}</AchCounter>
+                      );
+                    }
+                  })}
+                </BBottom>
               </BottomInner>
             </GameContainer>
           );
@@ -136,6 +111,30 @@ export default function GAMES_MAIN({
     </Games>
   );
 }
+const AchCounter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  z-index: 2;
+  margin: 2px;
+  font-size: 0.75rem;
+  background: #2e3238;
+`;
+
+const AchIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: ${(props) => `url(${props?.icon})`};
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 2;
+  margin: 2px;
+`;
 
 const TLeft = styled.div`
   display: flex;
@@ -163,6 +162,14 @@ const Top = styled.div`
   justify-content: center;
   width: 100%;
   padding: 2px 0 0 0;
+`;
+
+const BBottom = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  min-height: 32px;
 `;
 
 const Bottom = styled.div`

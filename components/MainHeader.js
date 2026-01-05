@@ -5,31 +5,15 @@ import {
   COLOR_BRONZE,
   COLOR_GOLD,
   COLOR_GOLD2,
-  COLOR_PLATINUM,
-  COLOR_SILVER,
   COLOR_WHITE,
 } from "../helpers/colorHelper";
-import PlatinumIcon from "./PlatinumIcon";
 import GoldIcon from "./GoldIcon";
-import SilverIcon from "./SilverIcon";
 import BronzeIcon from "./BronzeIcon";
 import WhiteTrophy from "./WhiteTrophy";
 import { calculatePSLevelAndProgress } from "../helpers/trophyHelper";
 import LevelIcon from "./LevelIcon";
-import GameCdImage from "./GameCdImage";
 
-export default function MainHeader({
-  games,
-  gamesLoading,
-  refreshData,
-  setTabActive,
-  tabActive,
-  learntAchs,
-}) {
-  let image =
-    "https://4kwallpapers.com/images/wallpapers/hogwarts-legacy-winter-1920x1200-20034.jpeg";
-
-  let allCompletion = 0;
+export default function MainHeader({ games, gamesLoading, refreshData }) {
   let platinum = 0;
   let gold = 0;
   let silver = 0;
@@ -51,17 +35,15 @@ export default function MainHeader({
     });
   });
 
-  let { progressPercent, level, xpForNextLevel, remainingXP } =
-    calculatePSLevelAndProgress(platinum, gold, silver, bronze);
-
-  let allAchsMap = {};
-  let allLearnAchs = learntAchs?.map((ach) => {
-    allAchsMap[ach?.name] = ach;
-    return ach?.name;
-  });
+  let { progressPercent, level, remainingXP } = calculatePSLevelAndProgress(
+    platinum,
+    gold,
+    silver,
+    bronze
+  );
 
   return (
-    <Container background={image}>
+    <Container background={HEADER_IMAGE(games?.[0]?.id)}>
       <MainWrapper>
         <HeaderInner>
           <HeaderName>
@@ -116,21 +98,6 @@ export default function MainHeader({
                 </span>
               </Top>
             </Section>
-            {/* <Section color={COLOR_PLATINUM}>
-              <Top>
-                <span
-                  style={{
-                    transform: "translateY(-2.5px)",
-                    marginRight: ".25rem",
-                  }}
-                >
-                  <PlatinumIcon />
-                </span>
-                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
-                  {platinum}
-                </span>
-              </Top>
-            </Section> */}
             <Section color={COLOR_GOLD}>
               <Top>
                 <span
@@ -247,25 +214,6 @@ const Top = styled.div`
   justify-content: center;
   font-size: 1.75rem;
   font-weight: 300;
-`;
-
-const Bottom = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  margin-top: 0.25rem;
-  font-weight: bold;
-`;
-
-const BottomStats = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  padding: 1rem 1rem 1rem 1rem;
-  bottom: 0;
-  width: 1400px;
 `;
 
 const MainWrapper = styled.div`
