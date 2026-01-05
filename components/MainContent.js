@@ -128,7 +128,7 @@ export default function MainContent({
           <SRLeft>
             {tabActive == 'GAMES' && (
               <GAMES_MAIN
-                sortedGames={[...games]}
+                sortedGames={sortedGames}
                 setSelectedGame={setSelectedGame}
                 setSelectedMode={setSelectedMode}
                 setGameData={setGameData}
