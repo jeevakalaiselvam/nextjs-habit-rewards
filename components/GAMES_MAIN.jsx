@@ -41,7 +41,11 @@ export default function GAMES_MAIN({
             <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
             <BottomInner>
               <Top>
-                <TLeft>{game?.name}</TLeft>
+                <TLeft>
+                  {game?.name?.length > 50
+                    ? game?.name?.slice(0, 50) + "..."
+                    : game?.name}
+                </TLeft>
                 <TRight
                   onClick={() => {
                     setShowEditModal(true);
@@ -185,7 +189,7 @@ const BottomInner = styled.div`
   width: 100%;
   flex-direction: column;
   background-color: #16202d;
-  width: 450px;
+  width: 412.5px;
   color: #b8bcbf;
   padding: 2px 4px;
 `;
@@ -194,8 +198,8 @@ const GameImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  width: 450px;
-  height: 105px;
+  width: 412.5px;
+  height: 120px;
   margin: 0px 4px 0px 4px;
   background-image: ${(props) => `url(${props.url})`};
   background-size: cover;
