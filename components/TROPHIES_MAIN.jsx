@@ -1,106 +1,98 @@
+import { useMemo } from "react";
 import styled from "styled-components";
-import ACH_CARD from "./ACH_CARD";
 import { Popover } from "antd";
+import { FixedSizeGrid as Grid } from "react-window";
+import ACH_CARD from "./ACH_CARD";
 
 export default function TROPHIES_MAIN({ sortedGames }) {
-  let allAchs = [];
+  const allAchs = useMemo(() => {
+    if (!sortedGames) return [];
+    return sortedGames
+      .flatMap((game) => game?.achievements || [])
+      .filter((ach) => ach?.achieved === 1 || ach?.achievedByLearning)
+      .sort((a, b) => (b?.unlocktime || 0) - (a?.unlocktime || 0));
+  }, [sortedGames]);
 
-  sortedGames?.forEach((game) => {
-    game?.achievements?.forEach((ach) => {
-      if (ach?.achieved == 1 || ach?.achievedByLearning) {
-        allAchs?.push(ach);
-      }
-    });
-  });
+  // Settings for the grid layout
+  const columnCount = 10; // Adjust based on your UI width
+  const rowCount = Math.ceil(allAchs.length / columnCount);
+  const itemSize = 75; // 61px icon + margins
 
-  allAchs = allAchs?.sort((ach1, ach2) => ach2?.unlocktime - ach1?.unlocktime);
+  const Cell = ({ columnIndex, rowIndex, style }) => {
+    const index = rowIndex * columnCount + columnIndex;
+    const ach = allAchs[index];
+
+    if (!ach) return null;
+
+    const desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
+
+    return (
+      <div style={style}>
+        <Popover
+          placement="bottom"
+          mouseEnterDelay={0.1} // Prevents lag while moving mouse fast
+          content={
+            <ACH_CARD
+              ach={ach}
+              desc1={ach?.hiddenDesc}
+              desc2={ach?.description}
+              desc3={desc3}
+              index={index}
+              hideCompletion
+              longer="600"
+            />
+          }
+          styles={{
+            content: { backgroundColor: "transparent", boxShadow: "none" },
+            body: { padding: 0 },
+          }}
+        >
+          <AchIcon
+            $iconUrl={ach?.icon}
+            onClick={() => {
+              const query = encodeURIComponent(
+                `${ach?.displayName} achievement ${ach?.gameName}`
+              );
+              window.open(`https://www.google.com/search?q=${query}`, "_blank");
+            }}
+          />
+        </Popover>
+      </div>
+    );
+  };
 
   return (
-    <Games>
-      <Games2Line>
-        {allAchs?.map((ach, index) => {
-          let desc1 = ach?.hiddenDesc;
-          let desc2 = ach?.description;
-          let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
-
-          return (
-            <Popover
-              placement="bottom"
-              content={
-                <ACH_CARD
-                  ach={ach}
-                  desc1={desc1}
-                  desc2={desc2}
-                  desc3={desc3}
-                  index={index}
-                  hideCompletion
-                  longer={"600"}
-                />
-              }
-              title=""
-              styles={{
-                content: {
-                  backgroundColor: "transparent",
-                  boxShadow: "none",
-                },
-                body: {
-                  padding: 0, // Removes default internal spacing
-                },
-              }}
-            >
-              <AchIcon
-                icon={ach?.icon}
-                onClick={() => {
-                  if (window !== "undefined") {
-                    const searchQuery = `${
-                      ach?.displayName
-                    } achievement ${encodeURIComponent(ach?.gameName)} `;
-                    window.open(
-                      `https://www.google.com/search?q=${searchQuery}`
-                    );
-
-                    // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                  }
-                }}
-              ></AchIcon>
-            </Popover>
-          );
-        })}
-      </Games2Line>
-    </Games>
+    <GamesContainer>
+      {/* Grid only renders what is visible in this 96vh window */}
+      <Grid
+        columnCount={columnCount}
+        columnWidth={itemSize}
+        height={800} // This should be calculated or fixed
+        rowCount={rowCount}
+        rowHeight={itemSize}
+        width={columnCount * itemSize + 20}
+      >
+        {Cell}
+      </Grid>
+    </GamesContainer>
   );
 }
 
-const AchIcon = styled.div`
+const GamesContainer = styled.div`
   display: flex;
-  align-items: center;
   justify-content: center;
-  width: 61px;
-  height: 61px;
-  background: ${(props) => `url(${props?.icon})`};
-  background-size: contain;
-  background-repeat: no-repeat;
-  margin: 0.25rem 0.125rem 0.25rem 0.5rem;
-  cursor: pointer;
-`;
-
-const Games2Line = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-wrap: wrap;
   width: 100%;
   max-height: 96vh;
-  overflow: scroll;
+  margin-bottom: 1rem;
 `;
 
-const Games = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  width: 100%;
-  color: #fefefe;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
+const AchIcon = styled.div`
+  width: 61px;
+  height: 61px;
+  background: ${(props) => `url(${props?.$iconUrl})`} center/contain no-repeat;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+  &:hover {
+    transform: scale(1.1);
+  }
 `;

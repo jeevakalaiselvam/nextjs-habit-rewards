@@ -43,7 +43,8 @@
     "styled-components": "^6.1.14",
     "swr": "^2.3.3",
     "use-long-press": "^3.2.0",
-    "uuid": "^13.0.0"
+    "uuid": "^13.0.0",
+    "virtua": "^0.48.2"
   },
   "engines": {
     "node": ">=18"

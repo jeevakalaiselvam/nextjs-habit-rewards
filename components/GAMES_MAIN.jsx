@@ -42,8 +42,8 @@ export default function GAMES_MAIN({
             <BottomInner>
               <Top>
                 <TLeft>
-                  {game?.name?.length > 50
-                    ? game?.name?.slice(0, 50) + "..."
+                  {game?.name?.length > 40
+                    ? game?.name?.slice(0, 40) + "..."
                     : game?.name}
                 </TLeft>
                 <TRight
