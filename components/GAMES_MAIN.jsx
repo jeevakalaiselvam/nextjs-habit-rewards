@@ -41,7 +41,7 @@ export default function GAMES_MAIN({
             <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
             <BottomInner>
               <Top>
-                <TLeft>ACHIEVEMENTS</TLeft>
+                <TLeft>{game?.name}</TLeft>
                 <TRight
                   onClick={() => {
                     setShowEditModal(true);
@@ -140,7 +140,7 @@ const TLeft = styled.div`
   justify-content: flex-start;
   flex: 1;
   grid-area: label;
-  font-weight: 700;
+  font-weight: 500;
   font-size: 0.8rem;
   margin-right: 8px;
   color: inherit;
@@ -195,10 +195,10 @@ const GameImage = styled.div`
   align-items: center;
   justify-content: space-around;
   width: 450px;
-  height: 210px;
+  height: 105px;
   margin: 0px 4px 0px 4px;
   background-image: ${(props) => `url(${props.url})`};
-  background-size: contain;
+  background-size: cover;
   background-repeat: no-repeat;
   position: relative;
 `;
