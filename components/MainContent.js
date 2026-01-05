@@ -39,7 +39,7 @@ export default function MainContent({
   const [gameSearch, setGameSearch] = useState('');
 
   let sortedGames = games.sort((a, b) => {
-    return b.completion - a.completion;
+    return a.completion - b.completion;
   });
 
   sortedGames = sortedGames?.filter((game) =>
