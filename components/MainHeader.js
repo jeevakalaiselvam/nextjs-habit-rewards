@@ -1,17 +1,17 @@
-import styled from "styled-components";
-import { HEADER_IMAGE } from "../helpers/urlHelper";
-import { FaTrophy } from "react-icons/fa";
+import styled from 'styled-components';
+import { HEADER_IMAGE } from '../helpers/urlHelper';
+import { FaTrophy } from 'react-icons/fa';
 import {
   COLOR_BRONZE,
   COLOR_GOLD,
   COLOR_GOLD2,
   COLOR_WHITE,
-} from "../helpers/colorHelper";
-import GoldIcon from "./GoldIcon";
-import BronzeIcon from "./BronzeIcon";
-import WhiteTrophy from "./WhiteTrophy";
-import { calculatePSLevelAndProgress } from "../helpers/trophyHelper";
-import LevelIcon from "./LevelIcon";
+} from '../helpers/colorHelper';
+import GoldIcon from './GoldIcon';
+import BronzeIcon from './BronzeIcon';
+import WhiteTrophy from './WhiteTrophy';
+import { calculatePSLevelAndProgress } from '../helpers/trophyHelper';
+import LevelIcon from './LevelIcon';
 
 export default function MainHeader({ games, gamesLoading, refreshData }) {
   let platinum = 0;
@@ -60,21 +60,21 @@ export default function MainHeader({ games, gamesLoading, refreshData }) {
                   <LevelIcon />
                 </LevelIconWrapper>
                 <LevelData
-                  style={{ transform: "translateY(-.5rem)" }}
+                  style={{ transform: 'translateY(-.5rem)' }}
                   onClick={() => {
                     refreshData();
                   }}
                 >
                   <LevelData1>{level}</LevelData1>
-                  <LevelData2 color={COLOR_GOLD + "55"}>
+                  <LevelData2 color={COLOR_GOLD + '55'}>
                     <LevelInner
                       color={COLOR_GOLD}
                       percent={progressPercent}
                     ></LevelInner>
                     <span
                       style={{
-                        fontSize: ".65rem",
-                        transform: "translateY(.9rem)",
+                        fontSize: '.65rem',
+                        transform: 'translateY(.9rem)',
                       }}
                     >
                       {remainingXP} XP
@@ -87,13 +87,13 @@ export default function MainHeader({ games, gamesLoading, refreshData }) {
               <Top onClick={() => {}}>
                 <span
                   style={{
-                    transform: "translateY(-2.5px)",
-                    marginRight: ".25rem",
+                    transform: 'translateY(-2.5px)',
+                    marginRight: '.25rem',
                   }}
                 >
                   <WhiteTrophy />
                 </span>
-                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+                <span style={{ fontSize: '1.5rem', fontWeight: ' bolder' }}>
                   {total}
                 </span>
               </Top>
@@ -102,13 +102,13 @@ export default function MainHeader({ games, gamesLoading, refreshData }) {
               <Top>
                 <span
                   style={{
-                    transform: "translateY(-2.5px)",
-                    marginRight: ".25rem",
+                    transform: 'translateY(-2.5px)',
+                    marginRight: '.25rem',
                   }}
                 >
                   <GoldIcon />
                 </span>
-                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+                <span style={{ fontSize: '1.5rem', fontWeight: ' bolder' }}>
                   {gold}
                 </span>
               </Top>
@@ -117,13 +117,13 @@ export default function MainHeader({ games, gamesLoading, refreshData }) {
               <Top>
                 <span
                   style={{
-                    transform: "translateY(-2.5px)",
-                    marginRight: ".25rem",
+                    transform: 'translateY(-2.5px)',
+                    marginRight: '.25rem',
                   }}
                 >
                   <BronzeIcon />
                 </span>
-                <span style={{ fontSize: "1.5rem", fontWeight: " bolder" }}>
+                <span style={{ fontSize: '1.5rem', fontWeight: ' bolder' }}>
                   {bronze}
                 </span>
               </Top>
@@ -232,7 +232,7 @@ const Country = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: url("https://avatars.fastly.steamstatic.com/2d570b928b0e4b353c1a92ef43e534ee623e92ed_full.jpg");
+  background: url('https://avatars.fastly.steamstatic.com/2d570b928b0e4b353c1a92ef43e534ee623e92ed_full.jpg');
   width: 50px;
   height: 50px;
   background-size: cover;

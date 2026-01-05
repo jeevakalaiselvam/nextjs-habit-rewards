@@ -13,101 +13,97 @@ export default function GAMES_MAIN({
 }) {
   return (
     <Games>
-      <Games2Line>
-        {sortedGames?.map((game, index) => {
-          let total = 0;
-          let completed = 0;
+      {sortedGames?.map((game, index) => {
+        let total = 0;
+        let completed = 0;
 
-          game?.achievements?.forEach((ach) => {
-            total++;
-            if (ach?.achieved == 1 || ach?.achievedByLearning) {
-              completed++;
-            }
-          });
+        game?.achievements?.forEach((ach) => {
+          total++;
+          if (ach?.achieved == 1 || ach?.achievedByLearning) {
+            completed++;
+          }
+        });
 
-          let allUnlocked = game?.achievements
-            ?.filter((ach) => ach?.achieved == 1)
-            ?.sort((ach1, ach2) => +ach2?.unlocktime - +ach1?.unlocktime);
+        let allUnlocked = game?.achievements
+          ?.filter((ach) => ach?.achieved == 1)
+          ?.sort((ach1, ach2) => +ach2?.unlocktime - +ach1?.unlocktime);
 
-          return (
-            <GameContainer
-              color={index % 2 == 0 ? '#F9F9F9' : '#F5F5F7'}
-              onClick={() => {
-                setSelectedGame(game?.id);
-                setSelectedMode('GAME');
-                setTabActive('GAME');
-              }}
-            >
-              <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
-              <BottomInner>
-                <Top>
-                  <TLeft>ACHIEVEMENTS</TLeft>
-                  <TRight
-                    onClick={() => {
-                      setShowEditModal(true);
-                      setGameData(() => game);
-                    }}
-                  >
-                    {game?.completed}/{game?.total}
-                  </TRight>
-                </Top>
-                <Bottom>
-                  <Progress
-                    percent={game?.completion}
-                    showInfo={false}
-                    trailColor="#3C3F49"
-                    strokeColor={'#199FFF'}
-                  />
-                </Bottom>
-                <BBottom>
-                  {allUnlocked?.slice(0, 10).map((ach, index) => {
-                    let desc1 = ach?.hiddenDesc;
-                    let desc2 = ach?.description;
-                    let desc3 = ach?.hiddenDesc?.split(
-                      'Hidden achievement:'
-                    )?.[1];
+        return (
+          <GameContainer
+            color={index % 2 == 0 ? '#F9F9F9' : '#F5F5F7'}
+            onClick={() => {
+              setSelectedGame(game?.id);
+              setSelectedMode('GAME');
+              setTabActive('GAME');
+            }}
+          >
+            <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
+            <BottomInner>
+              <Top>
+                <TLeft>ACHIEVEMENTS</TLeft>
+                <TRight
+                  onClick={() => {
+                    setShowEditModal(true);
+                    setGameData(() => game);
+                  }}
+                >
+                  {game?.completed}/{game?.total}
+                </TRight>
+              </Top>
+              <Bottom>
+                <Progress
+                  percent={game?.completion}
+                  showInfo={false}
+                  trailColor="#3C3F49"
+                  strokeColor={'#199FFF'}
+                />
+              </Bottom>
+              <BBottom>
+                {allUnlocked?.slice(0, 10).map((ach, index) => {
+                  let desc1 = ach?.hiddenDesc;
+                  let desc2 = ach?.description;
+                  let desc3 = ach?.hiddenDesc?.split(
+                    'Hidden achievement:'
+                  )?.[1];
 
-                    if (index < 9) {
-                      return (
-                        <Popover
-                          placement="bottom"
-                          content={
-                            <ACH_CARD
-                              ach={ach}
-                              desc1={desc1}
-                              desc2={desc2}
-                              desc3={desc3}
-                              index={index}
-                              hideCompletion
-                              longer={'600'}
-                            />
-                          }
-                          title=""
-                          styles={{
-                            content: {
-                              backgroundColor: 'transparent',
-                              boxShadow: 'none',
-                            },
-                            body: {
-                              padding: 0, // Removes default internal spacing
-                            },
-                          }}
-                        >
-                          <AchIcon icon={ach?.icon}></AchIcon>
-                        </Popover>
-                      );
-                    } else {
-                      return (
-                        <AchCounter>+{allUnlocked?.length - 10}</AchCounter>
-                      );
-                    }
-                  })}
-                </BBottom>
-              </BottomInner>
-            </GameContainer>
-          );
-        })}
-      </Games2Line>
+                  if (index < 9) {
+                    return (
+                      <Popover
+                        placement="bottom"
+                        content={
+                          <ACH_CARD
+                            ach={ach}
+                            desc1={desc1}
+                            desc2={desc2}
+                            desc3={desc3}
+                            index={index}
+                            hideCompletion
+                            longer={'600'}
+                          />
+                        }
+                        title=""
+                        styles={{
+                          content: {
+                            backgroundColor: 'transparent',
+                            boxShadow: 'none',
+                          },
+                          body: {
+                            padding: 0, // Removes default internal spacing
+                          },
+                        }}
+                      >
+                        <AchIcon icon={ach?.icon}></AchIcon>
+                      </Popover>
+                    );
+                  } else {
+                    return <AchCounter>+{allUnlocked?.length - 10}</AchCounter>;
+                  }
+                })}
+              </BBottom>
+            </BottomInner>
+          </GameContainer>
+        );
+      })}
     </Games>
   );
 }
@@ -228,12 +224,13 @@ const Games2Line = styled.div`
 
 const Games = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
   width: 100%;
   color: #fefefe;
   font-size: 0.9rem;
-  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  max-height: 100vh;
+  overflow: scroll;
   background-color: #111923;
 `;

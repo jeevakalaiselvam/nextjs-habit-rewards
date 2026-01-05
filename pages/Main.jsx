@@ -142,16 +142,18 @@ export default function Main() {
 
   return (
     <Container>
-      <MainHeader
-        tabActive={tabActive}
-        setTabActive={setTabActive}
-        games={finalGames}
-        gamesLoading={gamesLoading}
-        refreshData={refreshData}
-        gamesToInclude={gamesToInclude}
-        setGamesToInclude={setGamesToInclude}
-        learntAchs={learntAchs}
-      />
+      {false && (
+        <MainHeader
+          tabActive={tabActive}
+          setTabActive={setTabActive}
+          games={finalGames}
+          gamesLoading={gamesLoading}
+          refreshData={refreshData}
+          gamesToInclude={gamesToInclude}
+          setGamesToInclude={setGamesToInclude}
+          learntAchs={learntAchs}
+        />
+      )}
       {(platinumDataLoading || refeshing || gamesLoading) && (
         <SpinnerContainer>
           <Spin
@@ -189,7 +191,9 @@ const SpinnerContainer = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-height: 80vh;
+  min-height: 100vh;
+  max-height: 100vh;
+  background-color: #111923;
 `;
 
 const Container = styled.div`
