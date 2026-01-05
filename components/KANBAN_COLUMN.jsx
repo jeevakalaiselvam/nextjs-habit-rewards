@@ -108,6 +108,7 @@ export default function KANBAN_COLUMN({
         {markingAll && (
           <KanbanMarkCompleteAllProgress>
             <Progress
+              trailColor="#525252"
               percent={((completed / total) * 100).toFixed(1)}
               size={"small"}
               status="active"

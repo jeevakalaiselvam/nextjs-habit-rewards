@@ -1,10 +1,13 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import styled from "styled-components";
 import { Popover } from "antd";
-import { FixedSizeGrid as Grid } from "react-window";
+import { Grid } from "react-virtualized";
 import ACH_CARD from "./ACH_CARD";
 
 export default function TROPHIES_MAIN({ sortedGames }) {
+  // Use the name 'Grid' here as that is how it's imported
+  console.log("Grid component status:", Grid);
+
   const allAchs = useMemo(() => {
     if (!sortedGames) return [];
     return sortedGames
@@ -13,24 +16,25 @@ export default function TROPHIES_MAIN({ sortedGames }) {
       .sort((a, b) => (b?.unlocktime || 0) - (a?.unlocktime || 0));
   }, [sortedGames]);
 
-  // Settings for the grid layout
-  const columnCount = 10; // Adjust based on your UI width
+  const columnCount = 34;
   const rowCount = Math.ceil(allAchs.length / columnCount);
-  const itemSize = 75; // 61px icon + margins
+  const itemSize = 75;
 
-  const Cell = ({ columnIndex, rowIndex, style }) => {
+  // Define Cell inside so it has closure access to allAchs and columnCount
+  const Cell = ({ columnIndex, rowIndex, key, style }) => {
     const index = rowIndex * columnCount + columnIndex;
     const ach = allAchs[index];
 
     if (!ach) return null;
 
+    // Define desc3 so the Popover doesn't crash
     const desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
 
     return (
-      <div style={style}>
+      <div key={key} style={style}>
         <Popover
           placement="bottom"
-          mouseEnterDelay={0.1} // Prevents lag while moving mouse fast
+          mouseEnterDelay={0.1}
           content={
             <ACH_CARD
               ach={ach}
@@ -63,17 +67,19 @@ export default function TROPHIES_MAIN({ sortedGames }) {
 
   return (
     <GamesContainer>
-      {/* Grid only renders what is visible in this 96vh window */}
-      <Grid
-        columnCount={columnCount}
-        columnWidth={itemSize}
-        height={800} // This should be calculated or fixed
-        rowCount={rowCount}
-        rowHeight={itemSize}
-        width={columnCount * itemSize + 20}
-      >
-        {Cell}
-      </Grid>
+      {allAchs.length > 0 ? (
+        <Grid
+          columnCount={columnCount}
+          columnWidth={itemSize}
+          height={1200}
+          rowCount={rowCount}
+          rowHeight={itemSize}
+          width={columnCount * itemSize + 20}
+          cellRenderer={Cell}
+        />
+      ) : (
+        <div style={{ color: "white" }}>No achievements found.</div>
+      )}
     </GamesContainer>
   );
 }
@@ -84,6 +90,11 @@ const GamesContainer = styled.div`
   width: 100%;
   max-height: 96vh;
   margin-bottom: 1rem;
+
+  /* Remove default focus outline on the grid */
+  .ReactVirtualized__Grid {
+    outline: none;
+  }
 `;
 
 const AchIcon = styled.div`
@@ -92,6 +103,8 @@ const AchIcon = styled.div`
   background: ${(props) => `url(${props?.$iconUrl})`} center/contain no-repeat;
   cursor: pointer;
   transition: transform 0.1s ease;
+  margin: 7px; /* Center icon in the 75px cell */
+
   &:hover {
     transform: scale(1.1);
   }
