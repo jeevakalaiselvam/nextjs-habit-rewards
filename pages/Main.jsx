@@ -88,22 +88,27 @@ export default function Main() {
         ...game,
         ...platinumGameData,
         achievements: [
-          ...sortedPlatinumTrophies?.map((ach) => {
-            let key = `${ach?.gameId}-${ach?.name}`;
-            let isLearnt = allLearnAchs?.includes(key);
-            return {
-              ...ach,
-              color: getColorBasedOnRarity(ach?.percentage),
-              achieved: ach?.achieved == 1 || allLearnAchs?.includes() ? 1 : 0,
-              achievedByLearning: isLearnt,
-              unlockedAt: allAchsMap[key]?.unlockedAt ?? '',
-              unlocktime: isLearnt
-                ? Math.ceil(
-                    new Date(allAchsMap[key]?.unlocktime).getTime() / 1000
-                  )
-                : ach?.unlocktime,
-            };
-          }),
+          ...sortedPlatinumTrophies
+            ?.filter((ach) =>
+              Object.keys(platinumMapper)?.includes(ach.displayName)
+            )
+            ?.map((ach) => {
+              let key = `${ach?.gameId}-${ach?.name}`;
+              let isLearnt = allLearnAchs?.includes(key);
+              return {
+                ...ach,
+                color: getColorBasedOnRarity(ach?.percentage),
+                achieved:
+                  ach?.achieved == 1 || allLearnAchs?.includes() ? 1 : 0,
+                achievedByLearning: isLearnt,
+                unlockedAt: allAchsMap[key]?.unlockedAt ?? '',
+                unlocktime: isLearnt
+                  ? Math.ceil(
+                      new Date(allAchsMap[key]?.unlocktime).getTime() / 1000
+                    )
+                  : ach?.unlocktime,
+              };
+            }),
         ],
       };
 
