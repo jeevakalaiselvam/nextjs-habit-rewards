@@ -117,11 +117,11 @@ const AchCounter = styled.div`
   align-items: center;
   justify-content: center;
   width: 48px;
-  height: 44px;
+  height: 38px;
   z-index: 2;
   margin: 2px;
-  font-size: 1rem;
-  transform: translateY(-2px);
+  font-size: 0.8rem;
+  transform: translateY(-6px);
   background: #2e3238;
 `;
 
