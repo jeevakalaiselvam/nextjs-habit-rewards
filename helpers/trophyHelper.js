@@ -7,8 +7,8 @@ import {
   COLOR_RANK_E,
   COLOR_RANK_F,
   COLOR_RANK_S,
-} from "./colorHelper";
-import { formatDate1, formatDate3 } from "./dateHelper";
+} from './colorHelper';
+import { formatDate1, formatDate3 } from './dateHelper';
 
 const trophyPoints = {
   bronze: 15,
@@ -22,7 +22,7 @@ export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
   const platinumPoints = 0;
   const goldPoints = 100;
   const silverPoints = 0;
-  const bronzePoints = 25;
+  const bronzePoints = 10;
 
   // Calculate total XP
   const totalXP =
@@ -108,10 +108,10 @@ export const calculateLevelForAchs = (games) => {
   const levelAchs = [];
 
   for (const ach of allAchievements) {
-    if (ach.color === "Bronze") bronze++;
-    else if (ach.color === "Silver") silver++;
-    else if (ach.color === "Gold") gold++;
-    else if (ach.color === "Platinum") platinum++;
+    if (ach.color === 'Bronze') bronze++;
+    else if (ach.color === 'Silver') silver++;
+    else if (ach.color === 'Gold') gold++;
+    else if (ach.color === 'Platinum') platinum++;
 
     const { level, totalXP } = calculatePSLevelAndProgress(
       platinum,
@@ -167,8 +167,8 @@ export const calculateLevelForAchs = (games) => {
     const unlockDate = new Date(ach.unlocktime * 1000);
     const dateKey = formatDate3(unlockDate);
     const hour = unlockDate.getHours();
-    const weekday = unlockDate.toLocaleDateString("en-US", {
-      weekday: "short",
+    const weekday = unlockDate.toLocaleDateString('en-US', {
+      weekday: 'short',
     }); // e.g., Mon
 
     // Daily trophy type count
@@ -187,8 +187,8 @@ export const calculateLevelForAchs = (games) => {
     }
 
     // Monthly unlocks
-    const monthKey = `${unlockDate.toLocaleString("en-US", {
-      month: "short",
+    const monthKey = `${unlockDate.toLocaleString('en-US', {
+      month: 'short',
     })}-${String(unlockDate.getFullYear()).slice(-2)}`; // e.g., "Jul-25"
     if (!monthlyMap[monthKey]) monthlyMap[monthKey] = 0;
     monthlyMap[monthKey]++;
@@ -228,27 +228,27 @@ export const calculateLevelForAchs = (games) => {
 
 export const calculateRankForCompletion = (completion) => {
   if (completion == 100) {
-    return { color: COLOR_RANK_S, rank: "S" };
+    return { color: COLOR_RANK_S, rank: 'S' };
   }
   if (completion < 100 && completion >= 90) {
-    return { color: COLOR_RANK_A, rank: "A" };
+    return { color: COLOR_RANK_A, rank: 'A' };
   }
   if (completion < 90 && completion >= 80) {
-    return { color: COLOR_RANK_B, rank: "B" };
+    return { color: COLOR_RANK_B, rank: 'B' };
   }
   if (completion < 80 && completion >= 70) {
-    return { color: COLOR_RANK_C, rank: "C" };
+    return { color: COLOR_RANK_C, rank: 'C' };
   }
   if (completion < 70 && completion >= 50) {
-    return { color: COLOR_RANK_D, rank: "D" };
+    return { color: COLOR_RANK_D, rank: 'D' };
   }
   if (completion < 50 && completion >= 20) {
-    return { color: COLOR_RANK_E, rank: "E" };
+    return { color: COLOR_RANK_E, rank: 'E' };
   }
   if (completion < 20 && completion >= 0) {
-    return { color: COLOR_RANK_F, rank: "F" };
+    return { color: COLOR_RANK_F, rank: 'F' };
   }
-  return { color: COLOR_RANK_F, rank: "F" };
+  return { color: COLOR_RANK_F, rank: 'F' };
 };
 
 export const getAchsBasedOnRarity = (games) => {
@@ -278,7 +278,7 @@ export const getAchsBasedOnRarity = (games) => {
   let averageRarity = 0;
   let totalCompletion = 0;
   let averationCompletion = 0;
-  let averageRank = "";
+  let averageRank = '';
 
   let allAchs = [];
   games?.forEach((game) => {
@@ -292,19 +292,19 @@ export const getAchsBasedOnRarity = (games) => {
         completed++;
         completedAchs.push(ach);
         totalRarity = totalRarity + Number(ach?.percentage);
-        if (ach?.label == "Uncommon") {
+        if (ach?.label == 'Uncommon') {
           uncommon.push(ach);
         }
-        if (ach?.label == "Common") {
+        if (ach?.label == 'Common') {
           common.push(ach);
         }
-        if (ach?.label == "Rare") {
+        if (ach?.label == 'Rare') {
           rare.push(ach);
         }
-        if (ach?.label == "Very Rare") {
+        if (ach?.label == 'Very Rare') {
           veryrare.push(ach);
         }
-        if (ach?.label == "Ultra Rare") {
+        if (ach?.label == 'Ultra Rare') {
           ultrarare.push(ach);
         }
       }
@@ -357,25 +357,25 @@ export const getAchsBasedOnRarity = (games) => {
   averationCompletion = totalCompletion / games?.length;
 
   if (averationCompletion == 100) {
-    averageRank = "S";
+    averageRank = 'S';
   }
   if (averationCompletion < 100 && averationCompletion >= 90) {
-    averageRank = "A";
+    averageRank = 'A';
   }
   if (averationCompletion < 90 && averationCompletion >= 80) {
-    averageRank = "B";
+    averageRank = 'B';
   }
   if (averationCompletion < 80 && averationCompletion >= 70) {
-    averageRank = "C";
+    averageRank = 'C';
   }
   if (averationCompletion < 70 && averationCompletion >= 50) {
-    averageRank = "D";
+    averageRank = 'D';
   }
   if (averationCompletion < 50 && averationCompletion >= 20) {
-    averageRank = "E";
+    averageRank = 'E';
   }
   if (averationCompletion < 20 && averationCompletion >= 0) {
-    averageRank = "F";
+    averageRank = 'F';
   }
 
   return {
