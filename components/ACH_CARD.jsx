@@ -5,6 +5,8 @@ import { COLOR_UNLOCKED_DARK } from "../helpers/colorHelper";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 import { FaCheck } from "react-icons/fa";
+import GoldIcon from "./GoldIcon";
+import BronzeIcon from "./BronzeIcon";
 
 export default function ACH_CARD({
   index,
@@ -57,9 +59,9 @@ export default function ACH_CARD({
     hours = hours ? hours : 12; // convert 0 to 12
 
     if (unlockedAt?.length > 0) {
-      return `${"Learned"} ${unlockedAt}`;
+      return `${"Unlocked @"} ${unlockedAt}`;
     } else {
-      return `${"Unlocked"} ${d} ${m} @ ${hours}:${minutes}${ampm}`;
+      return `${"Unlocked @"} ${d} ${m} @ ${hours}:${minutes}${ampm}`;
     }
   }
 
