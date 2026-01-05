@@ -62,6 +62,7 @@ export default function KANBAN_COLUMN({
           .then((response) => {
             // Increment progress as each one finishes
             setCompleted((prev) => prev + 1);
+            setLearntAchs(response.data);
             return response.data; // Return the data for Promise.all
           })
       );
@@ -73,7 +74,6 @@ export default function KANBAN_COLUMN({
       // 'results' is an array of all response.data objects.
       // We take the last one to match your original logic.
       const finalData = results[results.length - 1];
-
       setLearntAchs(finalData);
 
       // Optional: Reset progress after a short delay so the user sees 100%
@@ -109,7 +109,7 @@ export default function KANBAN_COLUMN({
           <KanbanMarkCompleteAllProgress>
             <Progress
               percent={((completed / total) * 100).toFixed(1)}
-              size={small}
+              size={"small"}
               status="active"
             />
           </KanbanMarkCompleteAllProgress>
