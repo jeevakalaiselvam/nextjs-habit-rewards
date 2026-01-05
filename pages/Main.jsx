@@ -51,7 +51,7 @@ export default function Main() {
   const refreshData = () => {
     refreshSteamGames();
     refreshLearntAchs();
-    refreshPlatinumData();
+    // refreshPlatinumData();
   };
 
   useEffect(() => {
@@ -74,7 +74,9 @@ export default function Main() {
             label: getRarityBasedOnRarity(ach?.percentage),
             color: getColorBasedOnRarity(ach?.percentage),
             title: ach?.displayName,
-            hiddenDesc: platinumMapper[ach?.displayName]?.description,
+            hiddenDesc:
+              platinumMapper[ach?.displayName]?.description ??
+              'Secret Achievement',
           };
         })
         ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
