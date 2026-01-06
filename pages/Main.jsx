@@ -51,7 +51,7 @@ export default function Main() {
 
   const refreshData = () => {
     refreshSteamGames();
-    // refreshLearntAchs();
+    refreshLearntAchs();
     // refreshPlatinumData();
   };
 
