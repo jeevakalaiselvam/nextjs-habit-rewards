@@ -95,6 +95,18 @@ export default function MainContent({
           </TabLink>
           <TabLink
             onClick={() => {
+              setSelectedMode('GAMES_COMPLETED');
+              setTabActive('GAMES_COMPLETED');
+              if (window) {
+                localStorage.setItem('SELECTED_TAB', 'GAMES_COMPLETED');
+              }
+            }}
+            active={selectedMode == 'GAMES_COMPLETED'}
+          >
+            Completed ({completedGames?.length})
+          </TabLink>
+          <TabLink
+            onClick={() => {
               setSelectedMode('TROPHIES');
               setTabActive('TROPHIES');
               if (window) {
@@ -128,7 +140,18 @@ export default function MainContent({
           <SRLeft>
             {tabActive == 'GAMES' && (
               <GAMES_MAIN
-                sortedGames={sortedGames}
+                sortedGames={notCompletedGames}
+                setSelectedGame={setSelectedGame}
+                setSelectedMode={setSelectedMode}
+                setGameData={setGameData}
+                setTabActive={setTabActive}
+                setShowEditModal={setShowEditModal}
+              />
+            )}
+
+            {tabActive == 'GAMES_COMPLETED' && (
+              <GAMES_MAIN
+                sortedGames={completedGames}
                 setSelectedGame={setSelectedGame}
                 setSelectedMode={setSelectedMode}
                 setGameData={setGameData}
