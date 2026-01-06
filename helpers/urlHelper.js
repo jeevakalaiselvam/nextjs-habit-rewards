@@ -1,6 +1,6 @@
-export const API_KEY = "C8EA26279ED696B33DE86183F1CF4764";
+export const API_KEY = 'C8EA26279ED696B33DE86183F1CF4764';
 
-let DARTHLOGAN = "76561199881782703";
+let DARTHLOGAN = '76561198756057683';
 
 export let USER_ID = DARTHLOGAN;
 
@@ -19,7 +19,7 @@ export const HEADER_IMAGE = (gameId) => {
   return `https://cdn.cloudflare.steamstatic.com/steam/apps/${gameId}/header.jpg`;
 };
 
-export const API_GET_GAMES = "api/refresh";
+export const API_GET_GAMES = 'api/refresh';
 
 export const STEAM_STORE_URL = (gameId) =>
   `https://store.steampowered.com/app/${gameId}`;

@@ -1,25 +1,19 @@
-import styled from "styled-components";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import MainHeader from "../components/MainHeader";
-import MainContent from "../components/MainContent";
-import { TbRefresh } from "react-icons/tb";
-import { COLOR_ACCENT } from "../helpers/colorHelper";
+import styled from 'styled-components';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import MainHeader from '../components/MainHeader';
+import MainContent from '../components/MainContent';
+import { TbRefresh } from 'react-icons/tb';
+import { COLOR_ACCENT } from '../helpers/colorHelper';
 import {
   getColorBasedOnRarity,
   getRarityBasedOnRarity,
-} from "../helpers/achHelper";
-import { COMPLETION_FACTOR } from "../helpers/trophyHelper";
-import { LoadingOutlined } from "@ant-design/icons";
-import { Spin } from "antd";
+} from '../helpers/achHelper';
+import { COMPLETION_FACTOR } from '../helpers/trophyHelper';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Spin } from 'antd';
 
-const GAMES_INCLUDED = [
-  "1659040", //Hitman 3
-  "2358720", //Wukong,
-  "1030300", //SilkSong,
-  "750920",
-  "391220",
-];
+const GAMES_INCLUDED = ['570940'];
 
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
@@ -27,14 +21,14 @@ export default function Atom() {
   const [games, setGames] = useState([]);
   const [platinumData, setPlatinumData] = useState([]);
   const [finalGames, setFinalGames] = useState([]);
-  const [selectedMode, setSelectedMode] = useState("GAMES");
+  const [selectedMode, setSelectedMode] = useState('GAMES');
   const [refeshing, setRefreshing] = useState(false);
 
   const refreshSteamGames = () => {
     setGamesLoading(true);
     try {
       axios
-        .post("/api/steam", { gamesToInclude: GAMES_INCLUDED })
+        .post('/api/steam', { gamesToInclude: GAMES_INCLUDED })
         .then((response) => {
           setGames(response?.data?.data ?? []);
           setGamesLoading(false);
@@ -47,7 +41,7 @@ export default function Atom() {
   const refreshPlatinumData = () => {
     setPlatinumDataLoading(true);
     try {
-      axios.get("/api/platinum").then((response) => {
+      axios.get('/api/platinum').then((response) => {
         setPlatinumData(response?.data);
         setPlatinumDataLoading(false);
       });
@@ -108,7 +102,7 @@ export default function Atom() {
 
       let total = sortedPlatinumTrophies?.length;
       let completed = sortedPlatinumTrophies?.filter(
-        (ach) => ach?.achieved == "1"
+        (ach) => ach?.achieved == '1'
       )?.length;
 
       total = Math.ceil(total * COMPLETION_FACTOR);
@@ -123,18 +117,18 @@ export default function Atom() {
             ...sortedPlatinumTrophies?.filter(
               (ach) => ach?.displayName != lastAch?.displayName
             ),
-            { ...lastAch, color: "Gold" },
+            { ...lastAch, color: 'Gold' },
             {
               displayName: `Platinum`,
               description: `Achieved all Trophies in the game`,
               hiddenDesc: `${game?.name}`,
               percentage: lastAch?.percentage,
               label: getRarityBasedOnRarity(lastAch?.percentage),
-              color: "Platinum",
+              color: 'Platinum',
               achieved: isCompleted ? 1 : 0,
               completedFinal: completed,
               unlocktime: lastAch?.unlocktime,
-              icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
+              icon: 'https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg',
               gameName: lastAch?.gameName,
             },
           ],
