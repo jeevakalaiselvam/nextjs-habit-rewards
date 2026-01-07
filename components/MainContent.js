@@ -258,7 +258,7 @@ const TabLink = styled.div`
   margin-right: 0.5rem;
   font-size: ${(props) => (props.active ? '.8rem' : '0.8rem')};
   padding: 0.25rem 1rem;
-  background: ${(props) => (props.active ? '#56A1CC' : '#232f3eff')};
+  background: ${(props) => (props.active ? '#199FFF' : '#232f3eff')};
   color: #fefefe;
   border-radius: 2px 2px 0 0;
   /* transform: ${(props) => (props.active ? 'translateY(-.125rem)' : '')}; */
