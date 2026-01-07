@@ -88,35 +88,37 @@ export default function KANBAN_COLUMN({
 
   return (
     <KanbanSingle ref={drop}>
-      <KanbanTitle
-        index={index}
-        onClick={() => {
-          if (category == 'ALL') {
-            setShowingAll((old) => !old);
-          }
-        }}
-      >
-        {category}: {currentAchievements?.length}
-        {false && category == 'NOT COMPLETED' && !markingAll && (
-          <KanbanMarkCompleteAll
-            onClick={() => {
-              markAllCompleteOneByOne(currentAchievements);
-            }}
-          >
-            Mark All Complete
-          </KanbanMarkCompleteAll>
-        )}
-        {markingAll && (
-          <KanbanMarkCompleteAllProgress>
-            <Progress
-              trailColor="#525252"
-              percent={((completed / total) * 100).toFixed(1)}
-              size={'small'}
-              status="active"
-            />
-          </KanbanMarkCompleteAllProgress>
-        )}
-      </KanbanTitle>
+      {false && (
+        <KanbanTitle
+          index={index}
+          onClick={() => {
+            if (category == 'ALL') {
+              setShowingAll((old) => !old);
+            }
+          }}
+        >
+          {category}: {currentAchievements?.length}
+          {false && category == 'NOT COMPLETED' && !markingAll && (
+            <KanbanMarkCompleteAll
+              onClick={() => {
+                markAllCompleteOneByOne(currentAchievements);
+              }}
+            >
+              Mark All Complete
+            </KanbanMarkCompleteAll>
+          )}
+          {markingAll && (
+            <KanbanMarkCompleteAllProgress>
+              <Progress
+                trailColor="#525252"
+                percent={((completed / total) * 100).toFixed(1)}
+                size={'small'}
+                status="active"
+              />
+            </KanbanMarkCompleteAllProgress>
+          )}
+        </KanbanTitle>
+      )}
       <KanbanData icons={category != 'NOT COMPLETED' || true}>
         {currentAchievements?.map((ach, index) => {
           let desc1 = ach?.hiddenDesc;

@@ -108,7 +108,7 @@ const AchIconOuter = styled.div`
   justify-content: center;
   width: 73px;
   height: 73px;
-  border-radius: 4px;
+  border-radius: 8px;
   position: relative;
   z-index: 2;
   background-color: #2c2c2c;
