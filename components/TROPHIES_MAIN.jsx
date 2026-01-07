@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Popover } from 'antd';
 import { Grid } from 'react-virtualized';
 import ACH_CARD from './ACH_CARD';
+import ACH_CARD_BOTTOM from './ACH_CARD_BOTTOM';
 
 export default function TROPHIES_MAIN({ sortedGames }) {
   // Use the name 'Grid' here as that is how it's imported
@@ -36,7 +37,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
           placement="bottom"
           mouseEnterDelay={0.1}
           content={
-            <ACH_CARD
+            <ACH_CARD_BOTTOM
               ach={ach}
               desc1={ach?.hiddenDesc}
               desc2={ach?.description}

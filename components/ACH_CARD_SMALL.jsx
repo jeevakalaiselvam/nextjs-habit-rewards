@@ -9,6 +9,7 @@ import GoldIcon from './GoldIcon';
 import BronzeIcon from './BronzeIcon';
 import ACH_CARD from './ACH_CARD';
 import { Popover } from 'antd';
+import ACH_CARD_BOTTOM from './ACH_CARD_BOTTOM';
 
 export default function ACH_CARD_SMALL({
   index,
@@ -77,7 +78,7 @@ export default function ACH_CARD_SMALL({
           body: { padding: 0 },
         }}
         content={
-          <ACH_CARD
+          <ACH_CARD_BOTTOM
             ach={ach}
             desc1={ach?.hiddenDesc}
             desc2={ach?.description}
