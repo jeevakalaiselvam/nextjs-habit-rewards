@@ -75,7 +75,7 @@ const Game2Line = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
-  padding: 0rem 0.25rem;
+  padding: 0rem 0rem;
   background-color: #111923;
 `;
 
