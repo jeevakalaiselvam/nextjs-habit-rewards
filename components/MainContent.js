@@ -91,19 +91,7 @@ export default function MainContent({
             }}
             active={selectedMode == 'GAMES'}
           >
-            Games ({notCompletedGames?.length})
-          </TabLink>
-          <TabLink
-            onClick={() => {
-              setSelectedMode('GAMES_COMPLETED');
-              setTabActive('GAMES_COMPLETED');
-              if (window) {
-                localStorage.setItem('SELECTED_TAB', 'GAMES_COMPLETED');
-              }
-            }}
-            active={selectedMode == 'GAMES_COMPLETED'}
-          >
-            Completed ({completedGames?.length})
+            GAMES ({notCompletedGames?.length})
           </TabLink>
           <TabLink
             onClick={() => {
@@ -115,7 +103,7 @@ export default function MainContent({
             }}
             active={selectedMode == 'TROPHIES'}
           >
-            Achievements ({allUnlocked?.length})
+            ACHIEVEMENTS ({allUnlocked?.length})
           </TabLink>
           <GameSearch>
             <input

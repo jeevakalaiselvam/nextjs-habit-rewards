@@ -75,7 +75,14 @@ export default function ACH_CARD({
       <CompletionBar percentage={ach?.percentage}></CompletionBar>
       {(ach?.achieved == 1 || ach.achievedByLearning) && !hideCompletion && (
         <AchCompleted>
-          <span style={{ padding: '.5rem', color: '#FEFEFE' }}>
+          <span
+            style={{
+              padding: '.5rem',
+              color: '#fefefe',
+              fontSize: '2rem',
+              transform: 'translateY(4px)',
+            }}
+          >
             <FaCheck />
           </span>
         </AchCompleted>
@@ -101,9 +108,11 @@ export default function ACH_CARD({
       <AchData>
         <AchTitle>{ach?.displayName}</AchTitle>
         <AchDesc>{desc2 ? desc2 : desc3 ? desc3 : desc1}</AchDesc>
-        <AchUnlocked>
-          {ach?.percentage}% of players have this achievement
-        </AchUnlocked>
+        {false && (
+          <AchUnlocked>
+            {ach?.percentage}% of players have this achievement
+          </AchUnlocked>
+        )}
       </AchData>
       {(ach?.achieved == 1 || ach?.achievedByLearning) && (
         <AchRarity>
@@ -122,9 +131,9 @@ const AchTitle = styled.div`
   align-items: center;
   justify-content: flex-start;
   padding-left: 0.5rem;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 500;
-  color: rgb(220, 222, 223);
+  color: #ffffff;
 `;
 
 const AchDesc = styled.div`
@@ -132,9 +141,10 @@ const AchDesc = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   padding-left: 0.5rem;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
-  color: rgb(184, 188, 191);
+  color: #898989;
+  opacity: 0.75;
 `;
 
 const AchUnlocked = styled.div`
@@ -156,8 +166,8 @@ const CompletionBar = styled.div`
   top: 0;
   width: ${(props) =>
     props.percentage ? `calc(${props.percentage}% + 58px)` : '50%'};
-  height: 60px;
-  background-color: #31343e;
+  height: 68px;
+  background-color: #090b11;
   z-index: 1;
 `;
 
@@ -165,17 +175,17 @@ const AchCompleted = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 58px;
+  height: 68px;
   z-index: 2;
-  background-color: #31343e;
+  background-color: #090b11;
 `;
 
 const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 58px;
-  height: 58px;
+  width: 80px;
+  height: 80px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;
@@ -188,7 +198,7 @@ const AchData = styled.div`
   justify-content: center;
   flex-direction: column;
   flex: 1;
-  height: 60px;
+  height: 68px;
   z-index: 2;
 `;
 
@@ -210,8 +220,8 @@ const AchCard = styled.div`
   justify-content: flex-start;
   color: #333;
   width: ${(props) => (props.longer ? `${props.longer}px` : '100%')};
-  background-color: #23262e;
-  margin-bottom: 4px;
+  background-color: #090b11;
+  margin: 4px;
   cursor: pointer;
   position: relative;
 `;

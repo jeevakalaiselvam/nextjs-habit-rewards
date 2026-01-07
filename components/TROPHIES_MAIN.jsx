@@ -1,12 +1,12 @@
-import React, { useMemo } from "react";
-import styled from "styled-components";
-import { Popover } from "antd";
-import { Grid } from "react-virtualized";
-import ACH_CARD from "./ACH_CARD";
+import React, { useMemo } from 'react';
+import styled from 'styled-components';
+import { Popover } from 'antd';
+import { Grid } from 'react-virtualized';
+import ACH_CARD from './ACH_CARD';
 
 export default function TROPHIES_MAIN({ sortedGames }) {
   // Use the name 'Grid' here as that is how it's imported
-  console.log("Grid component status:", Grid);
+  console.log('Grid component status:', Grid);
 
   const allAchs = useMemo(() => {
     if (!sortedGames) return [];
@@ -16,9 +16,9 @@ export default function TROPHIES_MAIN({ sortedGames }) {
       .sort((a, b) => (b?.unlocktime || 0) - (a?.unlocktime || 0));
   }, [sortedGames]);
 
-  const columnCount = 34;
+  const columnCount = 17;
   const rowCount = Math.ceil(allAchs.length / columnCount);
-  const itemSize = 75;
+  const itemSize = 88;
 
   // Define Cell inside so it has closure access to allAchs and columnCount
   const Cell = ({ columnIndex, rowIndex, key, style }) => {
@@ -28,7 +28,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
     if (!ach) return null;
 
     // Define desc3 so the Popover doesn't crash
-    const desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
+    const desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
 
     return (
       <div key={key} style={style}>
@@ -47,7 +47,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
             />
           }
           styles={{
-            content: { backgroundColor: "transparent", boxShadow: "none" },
+            content: { backgroundColor: 'transparent', boxShadow: 'none' },
             body: { padding: 0 },
           }}
         >
@@ -57,7 +57,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
               const query = encodeURIComponent(
                 `${ach?.displayName} achievement ${ach?.gameName}`
               );
-              window.open(`https://www.google.com/search?q=${query}`, "_blank");
+              window.open(`https://www.google.com/search?q=${query}`, '_blank');
             }}
           />
         </Popover>
@@ -78,7 +78,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
           cellRenderer={Cell}
         />
       ) : (
-        <div style={{ color: "white" }}>No achievements found.</div>
+        <div style={{ color: 'white' }}>No achievements found.</div>
       )}
     </GamesContainer>
   );
@@ -98,12 +98,12 @@ const GamesContainer = styled.div`
 `;
 
 const AchIcon = styled.div`
-  width: 61px;
-  height: 61px;
+  width: 80px;
+  height: 80px;
   background: ${(props) => `url(${props?.$iconUrl})`} center/contain no-repeat;
   cursor: pointer;
   transition: transform 0.1s ease;
-  margin: 7px; /* Center icon in the 75px cell */
+  margin: 2px; /* Center icon in the 75px cell */
 
   &:hover {
     transform: scale(1.1);
