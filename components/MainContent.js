@@ -281,13 +281,14 @@ const FRRight = styled.div`
 const GameSearch = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   flex: 1;
 
   & input {
-    width: 100%;
+    width: 20%;
     outline: none;
     border: none;
+    border-radius: 4px;
     padding: 0.25rem 1rem;
     background-color: #1b2838;
     color: rgb(138, 138, 138);
