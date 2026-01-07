@@ -87,23 +87,26 @@ export default function ACH_CARD({
           </span>
         </AchCompleted>
       )}
-      <AchIcon
-        icon={
-          ach?.achieved == 1 || ach?.achievedByLearning
-            ? ach?.icon
-            : ach?.icongray
-        }
-        onClick={() => {
-          if (window !== 'undefined') {
-            const searchQuery = `${
-              ach?.displayName
-            } achievement ${encodeURIComponent(ach?.gameName)} `;
-            window.open(`https://www.google.com/search?q=${searchQuery}`);
 
-            // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+      <AchIconOuter>
+        <AchIcon
+          icon={
+            ach?.achieved == 1 || ach?.achievedByLearning
+              ? ach?.icon
+              : ach?.icon
           }
-        }}
-      ></AchIcon>
+          onClick={() => {
+            if (window !== 'undefined') {
+              const searchQuery = `${
+                ach?.displayName
+              } achievement ${encodeURIComponent(ach?.gameName)} `;
+              window.open(`https://www.google.com/search?q=${searchQuery}`);
+
+              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+            }
+          }}
+        ></AchIcon>
+      </AchIconOuter>
 
       <AchData>
         <AchTitle>{ach?.displayName}</AchTitle>
@@ -114,7 +117,7 @@ export default function ACH_CARD({
           </AchUnlocked>
         )}
       </AchData>
-      {(ach?.achieved == 1 || ach?.achievedByLearning) && (
+      {false && (ach?.achieved == 1 || ach?.achievedByLearning) && (
         <AchRarity>
           {formatUnlockDate(
             new Date(ach?.unlocktime * (ach.achievedByLearning ? 1 : 1000)),
@@ -126,6 +129,19 @@ export default function ACH_CARD({
   );
 }
 
+const AchIconOuter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 73px;
+  height: 73px;
+  border-radius: 4px;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+  margin: 4px;
+`;
+
 const AchTitle = styled.div`
   display: flex;
   align-items: center;
@@ -134,6 +150,7 @@ const AchTitle = styled.div`
   font-size: 17px;
   font-weight: 500;
   color: #ffffff;
+  font-weight: bold;
 `;
 
 const AchDesc = styled.div`
@@ -184,12 +201,17 @@ const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
+  width: 73px;
+  height: 73px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;
   z-index: 2;
+  position: absolute;
+  top: calc(50%);
+  left: calc(50%);
+  transform: translate(-50%, -50%);
+  object-fit: cover;
 `;
 
 const AchData = styled.div`
@@ -219,9 +241,10 @@ const AchCard = styled.div`
   align-items: center;
   justify-content: flex-start;
   color: #333;
+  width: 100%;
   width: ${(props) => (props.longer ? `${props.longer}px` : '100%')};
   background-color: #090b11;
-  margin: 4px;
   cursor: pointer;
   position: relative;
+  margin-bottom: 4px;
 `;

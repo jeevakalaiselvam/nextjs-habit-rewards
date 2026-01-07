@@ -51,15 +51,20 @@ export default function TROPHIES_MAIN({ sortedGames }) {
             body: { padding: 0 },
           }}
         >
-          <AchIcon
-            $iconUrl={ach?.icon}
-            onClick={() => {
-              const query = encodeURIComponent(
-                `${ach?.displayName} achievement ${ach?.gameName}`
-              );
-              window.open(`https://www.google.com/search?q=${query}`, '_blank');
-            }}
-          />
+          <AchIconOuter>
+            <AchIcon
+              $iconUrl={ach?.icon}
+              onClick={() => {
+                const query = encodeURIComponent(
+                  `${ach?.displayName} achievement ${ach?.gameName}`
+                );
+                window.open(
+                  `https://www.google.com/search?q=${query}`,
+                  '_blank'
+                );
+              }}
+            />
+          </AchIconOuter>
         </Popover>
       </div>
     );
@@ -97,15 +102,33 @@ const GamesContainer = styled.div`
   }
 `;
 
-const AchIcon = styled.div`
-  width: 80px;
-  height: 80px;
-  background: ${(props) => `url(${props?.$iconUrl})`} center/contain no-repeat;
-  cursor: pointer;
-  transition: transform 0.1s ease;
-  margin: 2px; /* Center icon in the 75px cell */
+const AchIconOuter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 73px;
+  height: 73px;
+  border-radius: 4px;
+  position: relative;
+  z-index: 2;
+  background-color: #2c2c2c;
+  overflow: hidden;
+`;
 
-  &:hover {
-    transform: scale(1.1);
-  }
+const AchIcon = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 73px;
+  cursor: pointer;
+  height: 73px;
+  background: ${(props) => `url(${props?.$iconUrl})`} center/contain no-repeat;
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 2;
+  position: absolute;
+  top: calc(50%);
+  left: calc(50%);
+  transform: translate(-50%, -50%);
+  object-fit: cover;
 `;

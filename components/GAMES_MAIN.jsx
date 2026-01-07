@@ -98,7 +98,9 @@ export default function GAMES_MAIN({
                           },
                         }}
                       >
-                        <AchIcon icon={ach?.icon}></AchIcon>
+                        <AchIconOuter>
+                          <AchIcon icon={ach?.icon}></AchIcon>
+                        </AchIconOuter>
                       </Popover>
                     );
                   } else {
@@ -113,16 +115,30 @@ export default function GAMES_MAIN({
     </Games>
   );
 }
+
+const AchIconOuter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 4px;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+`;
+
 const AchCounter = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   width: 48px;
-  height: 44px;
+  height: 46px;
   z-index: 2;
   margin: 2px;
-  font-size: 0.8rem;
-  transform: translateY(-2px);
+  font-size: 1rem;
+  border-radius: 2px;
+  transform: translateY(1px);
   background: #2e3238;
 `;
 
@@ -137,6 +153,11 @@ const AchIcon = styled.div`
   background-repeat: no-repeat;
   z-index: 2;
   margin: 2px;
+  position: absolute;
+  top: calc(50%);
+  left: calc(50%);
+  transform: translate(-50%, -50%);
+  object-fit: cover;
 `;
 
 const TLeft = styled.div`
@@ -164,7 +185,7 @@ const Top = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 2px 0 0 0;
+  padding: 6px 0 0 4px;
 `;
 
 const BBottom = styled.div`
@@ -180,6 +201,7 @@ const Bottom = styled.div`
   align-items: center;
   justify-content: flex-start;
   width: 100%;
+  padding-left: 2px;
 `;
 
 const BottomInner = styled.div`

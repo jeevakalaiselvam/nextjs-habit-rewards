@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import axios from 'axios';
 import { useState } from 'react';
 import { Progress } from 'antd';
+import ACH_CARD_SMALL from './ACH_CARD_SMALL';
 
 export default function KANBAN_COLUMN({
   index,
@@ -96,7 +97,7 @@ export default function KANBAN_COLUMN({
         }}
       >
         {category}: {currentAchievements?.length}
-        {category == 'NOT COMPLETED' && !markingAll && (
+        {false && category == 'NOT COMPLETED' && !markingAll && (
           <KanbanMarkCompleteAll
             onClick={() => {
               markAllCompleteOneByOne(currentAchievements);
@@ -116,26 +117,53 @@ export default function KANBAN_COLUMN({
           </KanbanMarkCompleteAllProgress>
         )}
       </KanbanTitle>
-      <KanbanData>
+      <KanbanData icons={category != 'NOT COMPLETED'}>
         {currentAchievements?.map((ach, index) => {
           let desc1 = ach?.hiddenDesc;
           let desc2 = ach?.description;
           let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
-          return (
-            <ACH_CARD
-              ach={ach}
-              index={index}
-              desc1={desc1}
-              desc2={desc2}
-              desc3={desc3}
-              lane={category}
-            />
-          );
+
+          if (category == 'NOT COMPLETED') {
+            return (
+              <ACH_CARD
+                ach={ach}
+                index={index}
+                desc1={desc1}
+                desc2={desc2}
+                desc3={desc3}
+                lane={category}
+              />
+            );
+          } else {
+            return (
+              <ACH_CARD_SMALL
+                ach={ach}
+                index={index}
+                desc1={desc1}
+                desc2={desc2}
+                desc3={desc3}
+                lane={category}
+              />
+            );
+          }
         })}
       </KanbanData>
     </KanbanSingle>
   );
 }
+
+const AchIcon = styled.div`
+  width: 80px;
+  height: 80px;
+  background: ${(props) => `url(${props?.$iconUrl})`} center/contain no-repeat;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+  margin: 2px; /* Center icon in the 75px cell */
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
 
 const KanbanMarkCompleteAllProgress = styled.div`
   display: flex;
@@ -186,9 +214,9 @@ const KanbanData = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  flex-direction: column;
+  flex-direction: ${(props) => (props.icons ? 'row' : 'column')};
+  flex-wrap: ${(props) => (props.icons ? 'wrap' : '')};
   max-height: 94vh;
-  min-height: 94vh;
   width: 100%;
   overflow: scroll;
   color: #717171;
