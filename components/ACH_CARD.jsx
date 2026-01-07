@@ -109,7 +109,7 @@ export default function ACH_CARD({
       </AchIconOuter>
 
       <AchData>
-        <AchTitle>{ach?.displayName}</AchTitle>
+        <AchTitle className="steamtracker_title">{ach?.displayName}</AchTitle>
         <AchDesc>{desc2 ? desc2 : desc3 ? desc3 : desc1}</AchDesc>
         {false && (
           <AchUnlocked>
@@ -150,7 +150,6 @@ const AchTitle = styled.div`
   font-size: 17px;
   font-weight: 500;
   color: #ffffff;
-  font-weight: bold;
 `;
 
 const AchDesc = styled.div`
@@ -184,7 +183,7 @@ const CompletionBar = styled.div`
   width: ${(props) =>
     props.percentage ? `calc(${props.percentage}% + 58px)` : '50%'};
   height: 68px;
-  background-color: #090b11;
+  background-color: #16202d;
   z-index: 1;
 `;
 
@@ -194,7 +193,7 @@ const AchCompleted = styled.div`
   justify-content: center;
   height: 68px;
   z-index: 2;
-  background-color: #090b11;
+  background-color: #16202d;
 `;
 
 const AchIcon = styled.div`
@@ -243,8 +242,9 @@ const AchCard = styled.div`
   color: #333;
   width: 100%;
   width: ${(props) => (props.longer ? `${props.longer}px` : '100%')};
-  background-color: #090b11;
+  background-color: #16202d;
   cursor: pointer;
   position: relative;
   margin-bottom: 4px;
+  border-radius: 4px;
 `;

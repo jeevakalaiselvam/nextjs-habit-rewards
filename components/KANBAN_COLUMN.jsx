@@ -117,13 +117,13 @@ export default function KANBAN_COLUMN({
           </KanbanMarkCompleteAllProgress>
         )}
       </KanbanTitle>
-      <KanbanData icons={category != 'NOT COMPLETED'}>
+      <KanbanData icons={category != 'NOT COMPLETED' || true}>
         {currentAchievements?.map((ach, index) => {
           let desc1 = ach?.hiddenDesc;
           let desc2 = ach?.description;
           let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
 
-          if (category == 'NOT COMPLETED') {
+          if (false) {
             return (
               <ACH_CARD
                 ach={ach}
