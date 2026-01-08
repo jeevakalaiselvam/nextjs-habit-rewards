@@ -3,12 +3,12 @@ import {
   FETCH_ALL_ACHIEVEMENTS_SCHEMA,
   FETCH_ALL_GAMES,
   STEAM_ALL_ACHIEVEMENTS_PLAYER,
-} from "../../../helpers/urlHelper";
+} from '../../../helpers/urlHelper';
 
-const axios = require("axios");
+const axios = require('axios');
 
 const handler = async (req, res) => {
-  if (req.method === "POST") {
+  if (req.method === 'POST') {
     const { gamesToInclude } = req.body;
     try {
       let finalGamesResponse = {};
@@ -25,8 +25,17 @@ const handler = async (req, res) => {
         return newGame;
       });
 
+      finalGamesResponse = [
+        ...finalGamesResponse,
+        {
+          id: 1659040,
+          playtime: 0,
+          lastPlayed: 0,
+        },
+      ];
+
       finalGamesResponse = finalGamesResponse?.filter((game) => {
-        return ["570940", "1693980"]?.includes(String(game?.id));
+        return ['570940', '1693980', '1659040']?.includes(String(game?.id));
       });
 
       //Get All Achievements Schema for All Games
@@ -111,7 +120,7 @@ const handler = async (req, res) => {
             (newAchievements &&
               newAchievements.length > 0 &&
               newAchievements.filter(
-                (achievement) => achievement?.achieved != "1"
+                (achievement) => achievement?.achieved != '1'
               ).length) ||
             0;
           const completionPercentage =
@@ -133,11 +142,11 @@ const handler = async (req, res) => {
         })
       );
       //Get all Games and Refresh data in File
-      res.status(200).json({ status: "success", data: finalGamesResponse });
+      res.status(200).json({ status: 'success', data: finalGamesResponse });
     } catch (error) {
       console.error(error);
       //Get all Games and Refresh data in File
-      res.status(500).json({ status: "error", error: error });
+      res.status(500).json({ status: 'error', error: error });
     }
   }
 };
