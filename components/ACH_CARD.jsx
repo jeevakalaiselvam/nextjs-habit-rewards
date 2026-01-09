@@ -82,9 +82,7 @@ export default function ACH_CARD({
       )}
       <AchIcon
         icon={
-          ach?.achieved == 1 || ach?.achievedByLearning
-            ? ach?.icon
-            : ach?.icongray
+          ach?.achieved == 1 || ach?.achievedByLearning ? ach?.icon : ach?.icon
         }
         onClick={() => {
           if (window !== 'undefined') {
