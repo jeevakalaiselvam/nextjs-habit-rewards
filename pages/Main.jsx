@@ -97,7 +97,7 @@ export default function Main() {
             return {
               ...ach,
               color: getColorBasedOnRarity(ach?.percentage),
-              achieved: ach?.achieved == 1 || allLearnAchs?.includes() ? 1 : 0,
+              achieved: allLearnAchs?.includes() ? 1 : 0,
               achievedByLearning: isLearnt,
               unlockedAt: allAchsMap[key]?.unlockedAt ?? '',
               unlocktime: isLearnt

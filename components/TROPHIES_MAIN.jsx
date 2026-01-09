@@ -1,18 +1,19 @@
-import React, { useMemo } from "react";
-import styled from "styled-components";
-import { Popover } from "antd";
-import { Grid } from "react-virtualized";
-import ACH_CARD from "./ACH_CARD";
+import React, { useMemo } from 'react';
+import styled from 'styled-components';
+import { Popover } from 'antd';
+import { Grid } from 'react-virtualized';
+import ACH_CARD from './ACH_CARD';
+import ACH_CARD_BOTTOM from './ACH_CARD_BOTTOM';
 
 export default function TROPHIES_MAIN({ sortedGames }) {
   // Use the name 'Grid' here as that is how it's imported
-  console.log("Grid component status:", Grid);
+  console.log('Grid component status:', Grid);
 
   const allAchs = useMemo(() => {
     if (!sortedGames) return [];
     return sortedGames
       .flatMap((game) => game?.achievements || [])
-      .filter((ach) => ach?.achieved === 1 || ach?.achievedByLearning)
+      .filter((ach) => ach?.achievedByLearning)
       .sort((a, b) => (b?.unlocktime || 0) - (a?.unlocktime || 0));
   }, [sortedGames]);
 
@@ -28,7 +29,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
     if (!ach) return null;
 
     // Define desc3 so the Popover doesn't crash
-    const desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
+    const desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
 
     return (
       <div key={key} style={style}>
@@ -36,7 +37,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
           placement="bottom"
           mouseEnterDelay={0.1}
           content={
-            <ACH_CARD
+            <ACH_CARD_BOTTOM
               ach={ach}
               desc1={ach?.hiddenDesc}
               desc2={ach?.description}
@@ -47,7 +48,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
             />
           }
           styles={{
-            content: { backgroundColor: "transparent", boxShadow: "none" },
+            content: { backgroundColor: 'transparent', boxShadow: 'none' },
             body: { padding: 0 },
           }}
         >
@@ -57,7 +58,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
               const query = encodeURIComponent(
                 `${ach?.displayName} achievement ${ach?.gameName}`
               );
-              window.open(`https://www.google.com/search?q=${query}`, "_blank");
+              window.open(`https://www.google.com/search?q=${query}`, '_blank');
             }}
           />
         </Popover>
@@ -78,7 +79,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
           cellRenderer={Cell}
         />
       ) : (
-        <div style={{ color: "white" }}>No achievements found.</div>
+        <div style={{ color: 'white' }}>No achievements found.</div>
       )}
     </GamesContainer>
   );

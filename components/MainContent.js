@@ -39,6 +39,7 @@ export default function MainContent({
   const [gameSearch, setGameSearch] = useState('');
 
   let completedGames = [],
+    startedGames = [],
     notCompletedGames = [];
   let sortedGames = games.sort((a, b) => {
     return a.completion - b.completion;
@@ -51,6 +52,9 @@ export default function MainContent({
   let allUnlocked = [];
   let notUnlocked = [];
   games?.forEach((game) => {
+    if (game?.completion > 0) {
+      startedGames.push(game);
+    }
     if (game?.completion == 100) {
       completedGames.push(game);
     } else {
@@ -91,7 +95,31 @@ export default function MainContent({
             }}
             active={selectedMode == 'GAMES'}
           >
-            Games ({notCompletedGames?.length})
+            INPROG ({startedGames?.length})
+          </TabLink>{' '}
+          <TabLink
+            onClick={() => {
+              setSelectedMode('GAMES_COMPLETED');
+              setTabActive('GAMES_COMPLETED');
+              if (window) {
+                localStorage.setItem('SELECTED_TAB', 'GAMES_COMPLETED');
+              }
+            }}
+            active={selectedMode == 'GAMES_COMPLETED'}
+          >
+            COMPLETE ({completedGames?.length})
+          </TabLink>
+          <TabLink
+            onClick={() => {
+              setSelectedMode('GAMES_BACKLOG');
+              setTabActive('GAMES_BACKLOG');
+              if (window) {
+                localStorage.setItem('SELECTED_TAB', 'GAMES_BACKLOG');
+              }
+            }}
+            active={selectedMode == 'GAMES_BACKLOG'}
+          >
+            BACKLOG ({notCompletedGames?.length})
           </TabLink>
           <TabLink
             onClick={() => {
@@ -103,7 +131,7 @@ export default function MainContent({
             }}
             active={selectedMode == 'TROPHIES'}
           >
-            Achievements ({allUnlocked?.length})
+            ALL UNLOCKS ({allUnlocked?.length})
           </TabLink>
           <GameSearch>
             <input
@@ -127,6 +155,28 @@ export default function MainContent({
         {!gamesLoading && (
           <SRLeft>
             {tabActive == 'GAMES' && (
+              <GAMES_MAIN
+                sortedGames={startedGames}
+                setSelectedGame={setSelectedGame}
+                setSelectedMode={setSelectedMode}
+                setGameData={setGameData}
+                setTabActive={setTabActive}
+                setShowEditModal={setShowEditModal}
+              />
+            )}
+
+            {tabActive == 'GAMES_COMPLETED' && (
+              <GAMES_MAIN
+                sortedGames={completedGames}
+                setSelectedGame={setSelectedGame}
+                setSelectedMode={setSelectedMode}
+                setGameData={setGameData}
+                setTabActive={setTabActive}
+                setShowEditModal={setShowEditModal}
+              />
+            )}
+
+            {tabActive == 'GAMES_BACKLOG' && (
               <GAMES_MAIN
                 sortedGames={notCompletedGames}
                 setSelectedGame={setSelectedGame}
@@ -270,11 +320,11 @@ const FRRight = styled.div`
 const GameSearch = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   flex: 1;
 
   & input {
-    width: 100%;
+    width: 500px;
     outline: none;
     border: none;
     padding: 0.25rem 1rem;
