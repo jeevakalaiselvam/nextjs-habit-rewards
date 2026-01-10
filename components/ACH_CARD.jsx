@@ -105,23 +105,25 @@ export default function ACH_CARD({
           </span>
         </AchCompleted>
       )}
-      <AchIcon
-        icon={
-          ach?.achieved == 1 || ach?.achievedByLearning
-            ? ach?.icon
-            : ach?.icongray
-        }
-        onClick={() => {
-          if (window !== 'undefined') {
-            const searchQuery = `${
-              ach?.displayName
-            } achievement ${encodeURIComponent(ach?.gameName)} `;
-            window.open(`https://www.google.com/search?q=${searchQuery}`);
-
-            // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+      <AchIconOuter>
+        <AchIcon
+          icon={
+            ach?.achieved == 1 || ach?.achievedByLearning
+              ? ach?.icon
+              : ach?.icongray
           }
-        }}
-      ></AchIcon>
+          onClick={() => {
+            if (window !== 'undefined') {
+              const searchQuery = `${
+                ach?.displayName
+              } achievement ${encodeURIComponent(ach?.gameName)} `;
+              window.open(`https://www.google.com/search?q=${searchQuery}`);
+
+              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+            }
+          }}
+        ></AchIcon>
+      </AchIconOuter>
 
       <AchData>
         <AchTitle>{ach?.displayName}</AchTitle>
@@ -228,16 +230,26 @@ const AchCompleted = styled.div`
   background-color: #31343e;
 `;
 
+const AchIconOuter = styled.div`
+  width: 76px;
+  height: 76px;
+  cursor: pointer;
+  position: relative;
+  border-radius: 4px 4px 4px 4px;
+  overflow: hidden;
+  margin-left: 1px;
+`;
+
 const AchIcon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 78px;
-  height: 78px;
-  background: ${(props) => `url(${props?.icon})`};
-  background-size: contain;
-  background-repeat: no-repeat;
-  z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 76px;
+  height: 76px;
+  background: ${(props) => `url(${props?.icon})`} center/contain no-repeat;
+  cursor: pointer;
+  z-index: 10;
 `;
 
 const AchData = styled.div`
