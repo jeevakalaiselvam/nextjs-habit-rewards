@@ -139,3 +139,13 @@ body {
 span.ant-progress-text {
   color: #d7d7d7 !important; /* Change this to your desired color */
 }
+
+/* Change the arrow color for all popovers */
+.ant-popover .ant-popover-arrow::before {
+  background: #23262e !important; /* Replace with your desired color */
+}
+
+/* Ensure the content background matches the arrow */
+.ant-popover-inner {
+  background-color: #23262e !important;
+}

@@ -169,6 +169,5 @@ const AchCard = styled.div`
   justify-content: flex-start;
   color: #333;
   margin: 0px 4px 8px 4px;
-  cursor: pointer;
   position: relative;
 `;

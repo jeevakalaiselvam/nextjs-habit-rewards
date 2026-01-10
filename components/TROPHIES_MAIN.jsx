@@ -18,7 +18,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
 
   const columnCount = 20;
   const rowCount = Math.ceil(allAchs.length / columnCount);
-  const itemSize = 88;
+  const itemSize = 78;
 
   // Define Cell inside so it has closure access to allAchs and columnCount
   const Cell = ({ columnIndex, rowIndex, key, style }) => {
@@ -44,6 +44,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
               index={index}
               hideCompletion
               longer="600"
+              rowIndex={rowIndex}
             />
           }
           styles={{
@@ -52,18 +53,20 @@ export default function TROPHIES_MAIN({ sortedGames }) {
           }}
         >
           <AchIconOuter>
-            <AchIcon
-              $iconUrl={ach?.icon}
-              onClick={() => {
-                const query = encodeURIComponent(
-                  `${ach?.displayName} achievement ${ach?.gameName}`
-                );
-                window.open(
-                  `https://www.google.com/search?q=${query}`,
-                  "_blank"
-                );
-              }}
-            />
+            <AchInner>
+              <AchIcon
+                icon={ach?.icon}
+                onClick={() => {
+                  const query = encodeURIComponent(
+                    `${ach?.displayName} achievement ${ach?.gameName}`
+                  );
+                  window.open(
+                    `https://www.google.com/search?q=${query}`,
+                    "_blank"
+                  );
+                }}
+              />
+            </AchInner>
           </AchIconOuter>
         </Popover>
       </div>
@@ -104,24 +107,53 @@ const GamesContainer = styled.div`
   }
 `;
 
-const AchIconOuter = styled.div`
-  width: 68px;
-  height: 68px;
-  background: ${(props) => `url(${props?.$iconUrl})`} center/contain no-repeat;
-  cursor: pointer;
-  transition: transform 0.1s ease;
-  position: relative;
+const AchInner = styled.div`
+  padding: 3px;
+  border-radius: 3px;
   overflow: hidden;
+  line-height: 1em;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    180deg,
+    hsla(0, 0%, 100%, 0.14) 0,
+    hsla(0, 0%, 100%, 0)
+  );
+`;
+
+const AchIconOuter = styled.div`
+  margin: 0 3px 7px;
+  height: 74px;
+  -webkit-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
+  box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
+  position: relative;
+  background: none;
+  border-left: 1px solid transparent;
+  border-top: 1px solid transparent;
+  border-color: hsla(0, 0%, 96.1%, 0.3) transparent transparent
+    hsla(0, 0%, 96.1%, 0.3);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px;
+
+  &:hover {
+    border-top: 1px solid transparent;
+    border-color: #fefefe77;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 4px;
+  }
 `;
 
 const AchIcon = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 68px;
-  height: 68px;
-  background: ${(props) => `url(${props?.$iconUrl})`} center/contain no-repeat;
-  cursor: pointer;
-  border-radius: 4px 4px 4px 4px;
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 64px;
+  height: 64px;
+  -webkit-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
+  box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
+  background: ${(props) => `url(${props?.icon})`} center/contain no-repeat;
 `;

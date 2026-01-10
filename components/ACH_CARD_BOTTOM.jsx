@@ -17,6 +17,7 @@ export default function ACH_CARD_BOTTOM({
   lane,
   hideCompletion,
   longer,
+  rowIndex,
 }) {
   const dispatch = useDispatch();
 
