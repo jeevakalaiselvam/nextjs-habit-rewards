@@ -206,7 +206,7 @@ const Mark = styled.div`
   justify-content: center;
   font-size: 0.75rem;
   width: 30px;
-  height: 78px;
+  height: 68px;
   transform: rotate(-90deg);
 `;
 
@@ -264,7 +264,7 @@ const CompletionBar = styled.div`
   top: 0;
   width: ${(props) =>
     props.percentage ? `calc(${props.percentage}% + 58px)` : "50%"};
-  height: 78px;
+  height: 70px;
   background-color: #31343e;
   z-index: 1;
 `;
@@ -279,8 +279,8 @@ const AchCompleted = styled.div`
 `;
 
 const AchIconOuter = styled.div`
-  width: 76px;
-  height: 76px;
+  width: 68px;
+  height: 68px;
   cursor: pointer;
   position: relative;
   border-radius: 4px 4px 4px 4px;
@@ -293,8 +293,8 @@ const AchIcon = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 76px;
-  height: 76px;
+  width: 68px;
+  height: 68px;
   background: ${(props) => `url(${props?.icon})`} center/contain no-repeat;
   cursor: pointer;
   z-index: 10;
@@ -306,7 +306,7 @@ const AchData = styled.div`
   justify-content: center;
   flex-direction: column;
   flex: 1;
-  height: 78px;
+  height: 70px;
   z-index: 2;
 `;
 
