@@ -111,9 +111,23 @@ export default function ACH_CARD({
           )}
         </AchRarity>
       )}
+      {false && (
+        <CompleteMark>
+          <FaCheck />
+        </CompleteMark>
+      )}
     </AchCard>
   );
 }
+
+const CompleteMark = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: #1d1f24;
+  height: 60px;
+  padding: 0 1rem;
+`;
 
 const AchTitle = styled.div`
   display: flex;

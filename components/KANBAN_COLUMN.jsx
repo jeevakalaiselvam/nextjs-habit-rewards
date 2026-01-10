@@ -224,7 +224,6 @@ const KanbanData2 = styled.div`
   justify-content: flex-start;
   flex-wrap: wrap;
   max-height: 94vh;
-  min-height: 94vh;
   width: 100%;
   overflow: scroll;
   color: #717171;
