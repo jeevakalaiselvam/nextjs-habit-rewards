@@ -1,18 +1,18 @@
-import { useState } from 'react';
-import { useDrag } from 'react-dnd';
-import styled from 'styled-components';
-import { COLOR_UNLOCKED_DARK } from '../helpers/colorHelper';
-import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
-import { FaCheck } from 'react-icons/fa';
-import GoldIcon from './GoldIcon';
-import BronzeIcon from './BronzeIcon';
-import { MdOutlineArrowRight } from 'react-icons/md';
-import { MdDoubleArrow } from 'react-icons/md';
-import axios from 'axios';
-import { TbArrowBadgeRightFilled } from 'react-icons/tb';
-import { Spin } from 'antd';
-import { LoadingOutlined } from '@ant-design/icons';
+import { useState } from "react";
+import { useDrag } from "react-dnd";
+import styled from "styled-components";
+import { COLOR_UNLOCKED_DARK } from "../helpers/colorHelper";
+import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { FaCheck } from "react-icons/fa";
+import GoldIcon from "./GoldIcon";
+import BronzeIcon from "./BronzeIcon";
+import { MdOutlineArrowRight } from "react-icons/md";
+import { MdDoubleArrow } from "react-icons/md";
+import axios from "axios";
+import { TbArrowBadgeRightFilled } from "react-icons/tb";
+import { Spin } from "antd";
+import { LoadingOutlined } from "@ant-design/icons";
 
 export default function ACH_CARD({
   index,
@@ -33,7 +33,7 @@ export default function ACH_CARD({
 
   const [{ isDragging }, drag] = useDrag(
     () => ({
-      type: 'ACH_CARD',
+      type: "ACH_CARD",
       item: { achId, ach, fromLane: lane },
       canDrag: true, // Cannot drag completed achievements
       collect: (monitor) => ({ isDragging: monitor.isDragging() }),
@@ -43,34 +43,34 @@ export default function ACH_CARD({
 
   function formatUnlockDate(date, unlockedAt) {
     const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
     ];
 
     const d = date.getDate();
     const m = months[date.getMonth()];
 
     let hours = date.getHours();
-    const minutes = date.getMinutes().toString().padStart(2, '0');
-    const ampm = hours >= 12 ? 'pm' : 'am';
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const ampm = hours >= 12 ? "pm" : "am";
 
     hours = hours % 12;
     hours = hours ? hours : 12; // convert 0 to 12
 
     if (unlockedAt?.length > 0) {
-      return `${'Unlocked @'} ${unlockedAt}`;
+      return `${"Unlocked @"} ${unlockedAt}`;
     } else {
-      return `${'Unlocked @'} ${d} ${m} @ ${hours}:${minutes}${ampm}`;
+      return `${"Unlocked @"} ${d} ${m} @ ${hours}:${minutes}${ampm}`;
     }
   }
 
@@ -79,7 +79,7 @@ export default function ACH_CARD({
     let achToMarkLearnt = ach;
     try {
       axios
-        .post('/api/learnt', {
+        .post("/api/learnt", {
           achName: `${achToMarkLearnt?.gameId}-${achToMarkLearnt?.name}`,
         })
         .then((response) => {
@@ -96,7 +96,7 @@ export default function ACH_CARD({
       mouseEnter={mouseEnter}
       longer={longer}
       ref={drag}
-      color={index % 2 == 0 ? '#F9F9F9' : '#F5F5F7'}
+      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
       achieved={ach?.achieved}
       onMouseEnter={() => setMouseEnter(true)}
       onMouseLeave={() => {
@@ -106,7 +106,7 @@ export default function ACH_CARD({
       <CompletionBar percentage={ach?.percentage}></CompletionBar>
       {(ach?.achieved == 1 || ach.achievedByLearning) && !hideCompletion && (
         <AchCompleted>
-          <span style={{ padding: '.5rem', color: '#FEFEFE' }}>
+          <span style={{ padding: ".5rem", color: "#FEFEFE" }}>
             <FaCheck />
           </span>
         </AchCompleted>
@@ -119,7 +119,7 @@ export default function ACH_CARD({
               : ach?.icongray
           }
           onClick={() => {
-            if (window !== 'undefined') {
+            if (window !== "undefined") {
               const searchQuery = `${
                 ach?.displayName
               } achievement ${encodeURIComponent(ach?.gameName)} `;
@@ -161,25 +161,25 @@ export default function ACH_CARD({
             {!mouseClick && (
               <span
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <span style={{ fontSize: '14px' }}>MARK</span>
+                <span style={{ fontSize: "14px" }}>MARK</span>
               </span>
             )}
             {mouseClick && (
               <span
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <span style={{ fontSize: '14px' }}>MARK</span>
+                <span style={{ fontSize: "14px" }}>MARK</span>
                 <span
-                  style={{ transform: 'translateY(-2px)', marginLeft: '.5rem' }}
+                  style={{ transform: "translateY(-1px)", marginLeft: ".5rem" }}
                 >
                   <Spin indicator={<LoadingOutlined spin />} size="small" />
                 </span>
@@ -254,7 +254,7 @@ const CompletionBar = styled.div`
   left: 0;
   top: 0;
   width: ${(props) =>
-    props.percentage ? `calc(${props.percentage}% + 58px)` : '50%'};
+    props.percentage ? `calc(${props.percentage}% + 58px)` : "50%"};
   height: 78px;
   background-color: #31343e;
   z-index: 1;
@@ -318,7 +318,7 @@ const AchCard = styled.div`
   align-items: center;
   justify-content: flex-start;
   color: #333;
-  width: ${(props) => (props.longer ? `${props.longer}px` : '100%')};
+  width: ${(props) => (props.longer ? `${props.longer}px` : "100%")};
   background-color: #23262e;
   margin-bottom: 4px;
   cursor: pointer;
