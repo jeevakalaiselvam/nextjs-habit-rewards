@@ -56,6 +56,7 @@ export default function GAMES_MAIN({
               </Top>
               <Bottom>
                 <Progress
+                  style={{ margin: '-4px' }}
                   percent={completion}
                   showInfo={false}
                   trailColor="#3C3F49"
@@ -210,7 +211,7 @@ const Top = styled.div`
   align-items: center;
   justify-content: center;
   width: 100%;
-  padding: 2px 0 0 0;
+  padding: 2px 2px 0 2px;
 `;
 
 const BBottom = styled.div`
@@ -219,12 +220,13 @@ const BBottom = styled.div`
   justify-content: flex-start;
   width: 100%;
   min-height: 32px;
+  margin-top: 4px;
 `;
 
 const Bottom = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   width: 100%;
 `;
 
@@ -237,7 +239,7 @@ const BottomInner = styled.div`
   background-color: #16202d;
   width: 490px;
   color: #b8bcbf;
-  padding: 2px 4px;
+  padding: 2px 4px 0px 2px;
 `;
 
 const GameImage = styled.div`
