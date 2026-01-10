@@ -138,7 +138,7 @@ export default function ACH_CARD({
       <AchData>
         <AchTitle>{ach?.displayName}</AchTitle>
         <AchDesc>
-          {hiddenMapper[ach?.displayName?.toLowerCase()] ??
+          {hiddenMapper?.[ach?.displayName?.toLowerCase()] ??
             ach?.description ??
             "Secret Achievement"}
         </AchDesc>
