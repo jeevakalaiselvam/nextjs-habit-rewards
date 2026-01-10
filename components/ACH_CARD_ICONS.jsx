@@ -120,7 +120,7 @@ const AchCard = styled.div`
   align-items: center;
   justify-content: flex-start;
   color: #333;
-  margin: 6px;
+  margin: 0px 6px 6px 6px;
   cursor: pointer;
   position: relative;
 `;
