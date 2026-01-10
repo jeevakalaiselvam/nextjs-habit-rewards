@@ -76,7 +76,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
         <Grid
           columnCount={columnCount}
           columnWidth={itemSize}
-          height={1200}
+          height={800}
           rowCount={rowCount}
           rowHeight={itemSize}
           width={columnCount * itemSize + 20}
@@ -94,6 +94,7 @@ const GamesContainer = styled.div`
   justify-content: center;
   width: 100%;
   max-height: 90vh;
+  overflow: scroll;
   margin-bottom: 1rem;
 
   /* Remove default focus outline on the grid */
