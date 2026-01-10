@@ -1,23 +1,23 @@
-import { LoadingOutlined } from '@ant-design/icons';
-import { Popconfirm, Spin } from 'antd';
-import axios from 'axios';
-import { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import { HEADER_IMAGE } from '../helpers/urlHelper';
+import { LoadingOutlined } from "@ant-design/icons";
+import { Popconfirm, Spin } from "antd";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import styled from "styled-components";
+import { HEADER_IMAGE } from "../helpers/urlHelper";
 
 export default function GAME_SETTINGS({
   gamesToInclude,
   refreshIncludedGames,
   deleteGame,
 }) {
-  const [gameId, setGameId] = useState('');
+  const [gameId, setGameId] = useState("");
 
   const addGameToIncluded = async () => {
     try {
-      const res = await axios.post('/api/include', { gameId: gameId });
+      const res = await axios.post("/api/include", { gameId: gameId });
       refreshIncludedGames();
     } catch (error) {
-      console.error('Failed to refresh games', error);
+      console.error("Failed to refresh games", error);
     }
   };
 
@@ -71,7 +71,7 @@ const GameImage = styled.div`
   justify-content: space-around;
   width: 490px;
   height: 180px;
-  margin: 0px 4px 0px 4px;
+  margin: 4px 4px 8px 4px;
   background-image: ${(props) => `url(${props.url})`};
   background-size: cover;
   background-repeat: no-repeat;
