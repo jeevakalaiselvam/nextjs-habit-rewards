@@ -87,6 +87,14 @@ export default function KANBAN_COLUMN({
     }
   };
 
+  const populateHiddenDescriptions = () => {
+    try {
+      axios.get(`/api/hidden/${ach?.gameId}`).then((response) => {
+        console.log(response);
+      });
+    } catch (e) {}
+  };
+
   return (
     <KanbanSingle ref={drop}>
       <KanbanTitle
@@ -98,14 +106,23 @@ export default function KANBAN_COLUMN({
         }}
       >
         {category}: {currentAchievements?.length}
-        {category == 'NOT COMPLETED' && !markingAll && (
+        {false && category == 'NOT COMPLETED' && !markingAll && (
           <KanbanMarkCompleteAll
             onClick={() => {
-              markAllCompleteOneByOne(currentAchievements);
+              // markAllCompleteOneByOne(currentAchievements);
             }}
           >
             Mark All Complete
           </KanbanMarkCompleteAll>
+        )}
+        {category == 'NOT COMPLETED' && !markingAll && (
+          <KanbanFindHidden
+            onClick={() => {
+              populateHiddenDescriptions();
+            }}
+          >
+            Populate Hidden
+          </KanbanFindHidden>
         )}
         {markingAll && (
           <KanbanMarkCompleteAllProgress>
@@ -134,6 +151,7 @@ export default function KANBAN_COLUMN({
                   desc2={desc2}
                   desc3={desc3}
                   lane={category}
+                  setLearntAchs={setLearntAchs}
                 />
               );
             })}
@@ -181,6 +199,24 @@ const KanbanMarkCompleteAllProgress = styled.div`
   transform: translateY(2px);
   padding: 2px 8px;
   color: #fefefe;
+`;
+
+const KanbanFindHidden = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 0;
+  top: 0;
+  font-size: 0.75rem;
+  transform: translateY(2px);
+  padding: 2px 8px;
+
+  &:hover {
+    color: #fefefe;
+    background-color: #111923;
+    padding: 2px 8px;
+  }
 `;
 
 const KanbanMarkCompleteAll = styled.div`

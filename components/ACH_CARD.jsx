@@ -8,6 +8,8 @@ import { FaCheck } from 'react-icons/fa';
 import GoldIcon from './GoldIcon';
 import BronzeIcon from './BronzeIcon';
 import { MdOutlineArrowRight } from 'react-icons/md';
+import { MdDoubleArrow } from 'react-icons/md';
+import axios from 'axios';
 
 export default function ACH_CARD({
   index,
@@ -18,8 +20,10 @@ export default function ACH_CARD({
   lane,
   hideCompletion,
   longer,
+  setLearntAchs,
 }) {
   const dispatch = useDispatch();
+  const [mouseEnter, setMouseEnter] = useState(false);
 
   const achId = `${ach.gameId}-${ach.name}`;
 
@@ -66,12 +70,31 @@ export default function ACH_CARD({
     }
   }
 
+  const moveToCompletion = (ach) => {
+    let achToMarkLearnt = ach;
+    try {
+      axios
+        .post('/api/learnt', {
+          achName: `${achToMarkLearnt?.gameId}-${achToMarkLearnt?.name}`,
+        })
+        .then((response) => {
+          let data = response.data;
+          setLearntAchs(data);
+        });
+    } catch (e) {}
+  };
+
   return (
     <AchCard
+      mouseEnter={mouseEnter}
       longer={longer}
       ref={drag}
       color={index % 2 == 0 ? '#F9F9F9' : '#F5F5F7'}
       achieved={ach?.achieved}
+      onMouseEnter={() => setMouseEnter(true)}
+      onMouseLeave={() => {
+        setMouseEnter(false);
+      }}
     >
       <CompletionBar percentage={ach?.percentage}></CompletionBar>
       {(ach?.achieved == 1 || ach.achievedByLearning) && !hideCompletion && (
@@ -112,9 +135,13 @@ export default function ACH_CARD({
           )}
         </AchRarity>
       )}
-      {false && (
-        <CompleteMark>
-          <MdOutlineArrowRight />
+      {mouseEnter && (
+        <CompleteMark
+          onClick={() => {
+            moveToCompletion(ach);
+          }}
+        >
+          <MdDoubleArrow />
         </CompleteMark>
       )}
     </AchCard>
@@ -125,10 +152,11 @@ const CompleteMark = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  background-color: #1d1f24;
+  background-color: #343744;
+  color: #fefefe;
   height: 60px;
   padding: 0 2px;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 `;
 
 const AchTitle = styled.div`
