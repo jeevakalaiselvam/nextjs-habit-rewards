@@ -137,7 +137,11 @@ export default function ACH_CARD({
 
       <AchData>
         <AchTitle>{ach?.displayName}</AchTitle>
-        <AchDesc>{hiddenMapper[ach?.displayName?.toLowerCase()]}</AchDesc>
+        <AchDesc>
+          {hiddenMapper[ach?.displayName?.toLowerCase()] ??
+            ach?.description ??
+            "Secret Achievement"}
+        </AchDesc>
         <AchUnlocked>
           {ach?.percentage}% of players have this achievement
         </AchUnlocked>
@@ -237,6 +241,7 @@ const AchDesc = styled.div`
   font-weight: 400;
   flex: 1;
   color: rgb(184, 188, 191);
+  opacity: 0.7;
 `;
 
 const AchUnlocked = styled.div`
