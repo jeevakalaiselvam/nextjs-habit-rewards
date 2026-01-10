@@ -142,12 +142,22 @@ export default function ACH_CARD({
             moveToCompletion(ach);
           }}
         >
-          <TbArrowBadgeRightFilled />
+          <Mark>MARK</Mark>
         </CompleteMark>
       )}
     </AchCard>
   );
 }
+
+const Mark = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  width: 15px;
+  height: 60px;
+  transform: rotate(-90deg);
+`;
 
 const CompleteMark = styled.div`
   display: flex;
@@ -155,7 +165,6 @@ const CompleteMark = styled.div`
   justify-content: flex-start;
   background-color: #343744;
   color: #fefefe;
-  height: 60px;
   z-index: 11;
   padding: 0 2px;
   font-size: 1.25rem;

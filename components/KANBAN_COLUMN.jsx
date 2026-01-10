@@ -107,7 +107,7 @@ export default function KANBAN_COLUMN({
         }}
       >
         {category}: {currentAchievements?.length}
-        {false && category == 'NOT COMPLETED' && !markingAll && (
+        {category == 'NOT COMPLETED' && !markingAll && (
           <KanbanMarkCompleteAll
             onClick={() => {
               // markAllCompleteOneByOne(currentAchievements);
@@ -116,7 +116,7 @@ export default function KANBAN_COLUMN({
             Mark All Complete
           </KanbanMarkCompleteAll>
         )}
-        {category == 'NOT COMPLETED' && !markingAll && (
+        {false && category == 'NOT COMPLETED' && !markingAll && (
           <KanbanFindHidden
             onClick={() => {
               populateHiddenDescriptions(currentAchievements?.[0]);
