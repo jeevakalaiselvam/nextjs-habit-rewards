@@ -126,7 +126,7 @@ const Top = styled.div`
     width: 200px;
     outline: none;
     border: none;
-    padding: 0.25rem 0.25rem;
+    padding: 0.125rem 0.25rem;
     background-color: #1b2838;
     color: rgb(138, 138, 138);
     height: 26px;
@@ -139,6 +139,7 @@ const Bottom = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-wrap: wrap;
+  margin-top: 1rem;
 `;
 
 const Container = styled.div`

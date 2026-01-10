@@ -17,9 +17,9 @@ export default function TROPHIES_MAIN({ sortedGames }) {
       .sort((a, b) => (b?.unlocktime || 0) - (a?.unlocktime || 0));
   }, [sortedGames]);
 
-  const columnCount = 16;
+  const columnCount = 19;
   const rowCount = Math.ceil(allAchs.length / columnCount);
-  const itemSize = 90;
+  const itemSize = 79;
 
   // Define Cell inside so it has closure access to allAchs and columnCount
   const Cell = ({ columnIndex, rowIndex, key, style }) => {
@@ -94,7 +94,7 @@ const GamesContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  max-height: 96vh;
+  max-height: 90vh;
   margin-bottom: 1rem;
 
   /* Remove default focus outline on the grid */
@@ -104,8 +104,8 @@ const GamesContainer = styled.div`
 `;
 
 const AchIconOuter = styled.div`
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   background: ${(props) => `url(${props?.$iconUrl})`} center/contain no-repeat;
   cursor: pointer;
   transition: transform 0.1s ease;
@@ -118,8 +118,8 @@ const AchIcon = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 78px;
-  height: 78px;
+  width: 60px;
+  height: 60px;
   background: ${(props) => `url(${props?.$iconUrl})`} center/contain no-repeat;
   cursor: pointer;
   border-radius: 4px 4px 4px 4px;

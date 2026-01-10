@@ -92,30 +92,6 @@ export default function MainContent({
         <FRLeft>
           <TabLink
             onClick={() => {
-              setSelectedMode('GAMES');
-              setTabActive('GAMES');
-              if (window) {
-                localStorage.setItem('SELECTED_TAB', 'GAMES');
-              }
-            }}
-            active={selectedMode == 'GAMES'}
-          >
-            INPROG ({startedGames?.length})
-          </TabLink>{' '}
-          <TabLink
-            onClick={() => {
-              setSelectedMode('GAMES_COMPLETED');
-              setTabActive('GAMES_COMPLETED');
-              if (window) {
-                localStorage.setItem('SELECTED_TAB', 'GAMES_COMPLETED');
-              }
-            }}
-            active={selectedMode == 'GAMES_COMPLETED'}
-          >
-            COMPLETE ({completedGames?.length})
-          </TabLink>
-          <TabLink
-            onClick={() => {
               setSelectedMode('GAMES_BACKLOG');
               setTabActive('GAMES_BACKLOG');
               if (window) {
@@ -124,7 +100,7 @@ export default function MainContent({
             }}
             active={selectedMode == 'GAMES_BACKLOG'}
           >
-            BACKLOG ({notCompletedGames?.length})
+            GAMES ({notCompletedGames?.length})
           </TabLink>
           <TabLink
             onClick={() => {

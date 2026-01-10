@@ -96,8 +96,8 @@ export default function ACH_CARD_ICONS({
 }
 
 const AchIconOuter = styled.div`
-  width: 76px;
-  height: 76px;
+  width: 68px;
+  height: 68px;
   cursor: pointer;
   position: relative;
   border-radius: 4px 4px 4px 4px;
@@ -109,8 +109,8 @@ const AchIcon = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 76px;
-  height: 76px;
+  width: 68px;
+  height: 68px;
   background: ${(props) => `url(${props?.icon})`} center/contain no-repeat;
   cursor: pointer;
 `;
@@ -120,7 +120,7 @@ const AchCard = styled.div`
   align-items: center;
   justify-content: flex-start;
   color: #333;
-  margin: 0px 6px 6px 6px;
+  margin: 0px 4px 8px 4px;
   cursor: pointer;
   position: relative;
 `;
