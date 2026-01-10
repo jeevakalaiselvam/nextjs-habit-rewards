@@ -87,7 +87,8 @@ export default function KANBAN_COLUMN({
     }
   };
 
-  const populateHiddenDescriptions = () => {
+  const populateHiddenDescriptions = (ach) => {
+    console.log(ach);
     try {
       axios.get(`/api/hidden/${ach?.gameId}`).then((response) => {
         console.log(response);
@@ -118,7 +119,7 @@ export default function KANBAN_COLUMN({
         {category == 'NOT COMPLETED' && !markingAll && (
           <KanbanFindHidden
             onClick={() => {
-              populateHiddenDescriptions();
+              populateHiddenDescriptions(currentAchievements?.[0]);
             }}
           >
             Populate Hidden

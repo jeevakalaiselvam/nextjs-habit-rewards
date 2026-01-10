@@ -10,6 +10,7 @@ import BronzeIcon from './BronzeIcon';
 import { MdOutlineArrowRight } from 'react-icons/md';
 import { MdDoubleArrow } from 'react-icons/md';
 import axios from 'axios';
+import { TbArrowBadgeRightFilled } from 'react-icons/tb';
 
 export default function ACH_CARD({
   index,
@@ -141,7 +142,7 @@ export default function ACH_CARD({
             moveToCompletion(ach);
           }}
         >
-          <MdDoubleArrow />
+          <TbArrowBadgeRightFilled />
         </CompleteMark>
       )}
     </AchCard>
@@ -155,6 +156,7 @@ const CompleteMark = styled.div`
   background-color: #343744;
   color: #fefefe;
   height: 60px;
+  z-index: 11;
   padding: 0 2px;
   font-size: 1.25rem;
 `;
