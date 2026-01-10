@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { COLOR_UNLOCKED_DARK } from "../helpers/colorHelper";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import { FaCheck } from "react-icons/fa";
+import { FaCheck, FaTrophy } from "react-icons/fa";
 import GoldIcon from "./GoldIcon";
 import BronzeIcon from "./BronzeIcon";
 
@@ -74,7 +74,19 @@ export default function ACH_CARD_BOTTOM({
       achieved={ach?.achieved}
     >
       <AchData>
-        <AchTitle>{ach?.displayName}</AchTitle>
+        <AchTitle>
+          <span
+            style={{
+              fontSize: ".9rem",
+              transform: "translate(-2px,2px)",
+              marginLeft: ".5rem",
+              marginRight: ".25rem",
+            }}
+          >
+            <FaTrophy />
+          </span>
+          {index ? index : ""} - {ach?.displayName}
+        </AchTitle>
         <AchDesc>{desc2 ? desc2 : desc3 ? desc3 : desc1}</AchDesc>
       </AchData>
     </AchCard>

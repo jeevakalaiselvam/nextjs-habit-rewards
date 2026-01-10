@@ -41,7 +41,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
               desc1={ach?.hiddenDesc}
               desc2={ach?.description}
               desc3={desc3}
-              index={index}
+              index={allAchs?.length - index}
               hideCompletion
               longer="600"
               rowIndex={rowIndex}
