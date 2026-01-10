@@ -102,6 +102,9 @@ export default function ACH_CARD({
       onMouseLeave={() => {
         setMouseEnter(false);
       }}
+      onMouseOver={() => {
+        setMouseEnter(true);
+      }}
     >
       <CompletionBar percentage={ach?.percentage}></CompletionBar>
       {(ach?.achieved == 1 || ach.achievedByLearning) && !hideCompletion && (
