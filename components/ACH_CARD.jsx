@@ -11,6 +11,8 @@ import { MdOutlineArrowRight } from 'react-icons/md';
 import { MdDoubleArrow } from 'react-icons/md';
 import axios from 'axios';
 import { TbArrowBadgeRightFilled } from 'react-icons/tb';
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 
 export default function ACH_CARD({
   index,
@@ -25,6 +27,7 @@ export default function ACH_CARD({
 }) {
   const dispatch = useDispatch();
   const [mouseEnter, setMouseEnter] = useState(false);
+  const [mouseClick, setMouseClick] = useState(false);
 
   const achId = `${ach.gameId}-${ach.name}`;
 
@@ -72,6 +75,7 @@ export default function ACH_CARD({
   }
 
   const moveToCompletion = (ach) => {
+    setMouseClick(true);
     let achToMarkLearnt = ach;
     try {
       axios
@@ -81,6 +85,8 @@ export default function ACH_CARD({
         .then((response) => {
           let data = response.data;
           setLearntAchs(data);
+          setMouseClick(false);
+          setMouseEnter(false);
         });
     } catch (e) {}
   };
@@ -140,13 +146,46 @@ export default function ACH_CARD({
           )}
         </AchRarity>
       )}
-      {mouseEnter && (
+      {(mouseEnter || mouseClick) && (
         <CompleteMark
           onClick={() => {
             moveToCompletion(ach);
           }}
         >
-          <Mark>MARK</Mark>
+          <Mark
+            onClick={() => {
+              setMouseClick(true);
+              setMouseEnter(true);
+            }}
+          >
+            {!mouseClick && (
+              <span
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <span style={{ fontSize: '14px' }}>MARK</span>
+              </span>
+            )}
+            {mouseClick && (
+              <span
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <span style={{ fontSize: '14px' }}>MARK</span>
+                <span
+                  style={{ transform: 'translateY(-2px)', marginLeft: '.5rem' }}
+                >
+                  <Spin indicator={<LoadingOutlined spin />} size="small" />
+                </span>
+              </span>
+            )}
+          </Mark>
         </CompleteMark>
       )}
     </AchCard>

@@ -2,7 +2,6 @@ import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import { Popover } from 'antd';
 import { Grid } from 'react-virtualized';
-import ACH_CARD from './ACH_CARD';
 import ACH_CARD_BOTTOM from './ACH_CARD_BOTTOM';
 
 export default function TROPHIES_MAIN({ sortedGames }) {
@@ -19,7 +18,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
 
   const columnCount = 19;
   const rowCount = Math.ceil(allAchs.length / columnCount);
-  const itemSize = 79;
+  const itemSize = 89;
 
   // Define Cell inside so it has closure access to allAchs and columnCount
   const Cell = ({ columnIndex, rowIndex, key, style }) => {
@@ -104,8 +103,8 @@ const GamesContainer = styled.div`
 `;
 
 const AchIconOuter = styled.div`
-  width: 60px;
-  height: 60px;
+  width: 68px;
+  height: 68px;
   background: ${(props) => `url(${props?.$iconUrl})`} center/contain no-repeat;
   cursor: pointer;
   transition: transform 0.1s ease;
@@ -118,8 +117,8 @@ const AchIcon = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 60px;
-  height: 60px;
+  width: 68px;
+  height: 68px;
   background: ${(props) => `url(${props?.$iconUrl})`} center/contain no-repeat;
   cursor: pointer;
   border-radius: 4px 4px 4px 4px;

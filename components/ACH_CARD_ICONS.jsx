@@ -7,6 +7,8 @@ import { useSelector } from 'react-redux';
 import { FaCheck } from 'react-icons/fa';
 import GoldIcon from './GoldIcon';
 import BronzeIcon from './BronzeIcon';
+import { Popover } from 'antd';
+import ACH_CARD_BOTTOM from './ACH_CARD_BOTTOM';
 
 export default function ACH_CARD_ICONS({
   index,
@@ -72,25 +74,35 @@ export default function ACH_CARD_ICONS({
       color={index % 2 == 0 ? '#F9F9F9' : '#F5F5F7'}
       achieved={ach?.achieved}
     >
-      <AchIconOuter>
-        <AchIcon
-          icon={
-            ach?.achieved == 1 || ach?.achievedByLearning
-              ? ach?.icon
-              : ach?.icon
-          }
-          onClick={() => {
-            if (window !== 'undefined') {
-              const searchQuery = `${
-                ach?.displayName
-              } achievement ${encodeURIComponent(ach?.gameName)} `;
-              window.open(`https://www.google.com/search?q=${searchQuery}`);
-
-              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-            }
-          }}
-        ></AchIcon>
-      </AchIconOuter>
+      <Popover
+        placement="bottom"
+        mouseEnterDelay={0.1}
+        content={
+          <ACH_CARD_BOTTOM
+            ach={ach}
+            desc1={ach?.hiddenDesc}
+            desc2={ach?.description}
+            desc3={desc3}
+            index={index}
+          />
+        }
+        styles={{
+          content: { backgroundColor: 'transparent', boxShadow: 'none' },
+          body: { padding: 0 },
+        }}
+      >
+        <AchIconOuter>
+          <AchIcon
+            icon={ach?.icon}
+            onClick={() => {
+              const query = encodeURIComponent(
+                `${ach?.displayName} achievement ${ach?.gameName}`
+              );
+              window.open(`https://www.google.com/search?q=${query}`, '_blank');
+            }}
+          />
+        </AchIconOuter>
+      </Popover>
     </AchCard>
   );
 }
