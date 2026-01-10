@@ -51,7 +51,7 @@ export default function GAMES_MAIN({
                     setGameData(() => game);
                   }}
                 >
-                  {game?.completion}%
+                  {completion.toFixed(2)}%
                 </TRight>
               </Top>
               <Bottom>
