@@ -107,10 +107,10 @@ export default function KANBAN_COLUMN({
         }}
       >
         {category}: {currentAchievements?.length}
-        {category == 'NOT COMPLETED' && !markingAll && (
+        {false && category == 'NOT COMPLETED' && !markingAll && (
           <KanbanMarkCompleteAll
             onClick={() => {
-              // markAllCompleteOneByOne(currentAchievements);
+              markAllCompleteOneByOne(currentAchievements);
             }}
           >
             Mark All Complete
