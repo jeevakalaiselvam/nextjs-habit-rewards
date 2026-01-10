@@ -72,7 +72,6 @@ export default function ACH_CARD_BOTTOM({
       color={index % 2 == 0 ? '#F9F9F9' : '#F5F5F7'}
       achieved={ach?.achieved}
     >
-      <GameTitle>{ach?.gameName}</GameTitle>
       <AchData>
         <AchIcon
           icon={
@@ -111,7 +110,7 @@ const AchTitle = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding-left: 0.5rem;
+  padding: 0.5rem;
   font-size: 16px;
   font-weight: 500;
   color: rgb(220, 222, 223);

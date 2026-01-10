@@ -3,6 +3,7 @@ import { Popconfirm, Spin } from 'antd';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { HEADER_IMAGE } from '../helpers/urlHelper';
 
 export default function GAME_SETTINGS({
   gamesToInclude,
@@ -51,11 +52,11 @@ export default function GAME_SETTINGS({
               okText="Yes"
               cancelText="No"
             >
-              <GameCard>
-                <Name>{game}</Name>
+              <GameImage url={HEADER_IMAGE(game)}>
+                <Name></Name>
                 <Id></Id>
                 <Delete></Delete>
-              </GameCard>
+              </GameImage>
             </Popconfirm>
           );
         })}
@@ -63,6 +64,25 @@ export default function GAME_SETTINGS({
     </Container>
   );
 }
+
+const GameImage = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 490px;
+  height: 180px;
+  margin: 0px 4px 0px 4px;
+  background-image: ${(props) => `url(${props.url})`};
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+  cursor: pointer;
+  border: 1px solid #199fff00;
+
+  &:hover {
+    border: 1px solid #199fff22;
+  }
+`;
 
 const AddButton = styled.div`
   display: flex;
@@ -94,16 +114,6 @@ const Delete = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-`;
-
-const GameCard = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  background-color: #23262e;
-  padding: 0.5rem;
-  margin: 2px;
-  cursor: pointer;
 `;
 
 const Top = styled.div`

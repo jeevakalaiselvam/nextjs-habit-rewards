@@ -157,7 +157,7 @@ const Mark = styled.div`
   justify-content: center;
   font-size: 0.75rem;
   width: 15px;
-  height: 60px;
+  height: 78px;
   transform: rotate(-90deg);
 `;
 
@@ -179,27 +179,30 @@ const AchTitle = styled.div`
   padding-left: 0.5rem;
   font-size: 16px;
   font-weight: 500;
+  flex: 1;
   color: rgb(220, 222, 223);
 `;
 
 const AchDesc = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-start;
   padding-left: 0.5rem;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 400;
+  flex: 1;
   color: rgb(184, 188, 191);
 `;
 
 const AchUnlocked = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-start;
   font-size: 12px;
   font-weight: 400;
   padding-left: 0.5rem;
   color: rgb(139, 146, 154);
+  flex: 1;
 `;
 
 const CompletionBar = styled.div`
@@ -211,7 +214,7 @@ const CompletionBar = styled.div`
   top: 0;
   width: ${(props) =>
     props.percentage ? `calc(${props.percentage}% + 58px)` : '50%'};
-  height: 60px;
+  height: 78px;
   background-color: #31343e;
   z-index: 1;
 `;
@@ -229,8 +232,8 @@ const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 58px;
-  height: 58px;
+  width: 78px;
+  height: 78px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;
@@ -243,7 +246,7 @@ const AchData = styled.div`
   justify-content: center;
   flex-direction: column;
   flex: 1;
-  height: 60px;
+  height: 78px;
   z-index: 2;
 `;
 

@@ -72,110 +72,47 @@ export default function ACH_CARD_ICONS({
       color={index % 2 == 0 ? '#F9F9F9' : '#F5F5F7'}
       achieved={ach?.achieved}
     >
-      <AchIcon
-        icon={
-          ach?.achieved == 1 || ach?.achievedByLearning ? ach?.icon : ach?.icon
-        }
-        onClick={() => {
-          if (window !== 'undefined') {
-            const searchQuery = `${
-              ach?.displayName
-            } achievement ${encodeURIComponent(ach?.gameName)} `;
-            window.open(`https://www.google.com/search?q=${searchQuery}`);
-
-            // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+      <AchIconOuter>
+        <AchIcon
+          icon={
+            ach?.achieved == 1 || ach?.achievedByLearning
+              ? ach?.icon
+              : ach?.icon
           }
-        }}
-      ></AchIcon>
+          onClick={() => {
+            if (window !== 'undefined') {
+              const searchQuery = `${
+                ach?.displayName
+              } achievement ${encodeURIComponent(ach?.gameName)} `;
+              window.open(`https://www.google.com/search?q=${searchQuery}`);
+
+              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+            }
+          }}
+        ></AchIcon>
+      </AchIconOuter>
     </AchCard>
   );
 }
 
-const AchTitle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding-left: 0.5rem;
-  font-size: 16px;
-  font-weight: 500;
-  color: rgb(220, 222, 223);
-`;
-
-const AchDesc = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding-left: 0.5rem;
-  font-size: 12px;
-  font-weight: 400;
-  color: rgb(184, 188, 191);
-`;
-
-const AchUnlocked = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  font-size: 12px;
-  font-weight: 400;
-  padding-left: 0.5rem;
-  color: rgb(139, 146, 154);
-`;
-
-const CompletionBar = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: ${(props) =>
-    props.percentage ? `calc(${props.percentage}% + 58px)` : '50%'};
-  height: 60px;
-  background-color: #31343e;
-  z-index: 1;
-`;
-
-const AchCompleted = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 58px;
-  z-index: 2;
-  background-color: #31343e;
+const AchIconOuter = styled.div`
+  width: 76px;
+  height: 76px;
+  cursor: pointer;
+  position: relative;
+  border-radius: 4px 4px 4px 4px;
+  overflow: hidden;
 `;
 
 const AchIcon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 58px;
-  height: 58px;
-  background: ${(props) => `url(${props?.icon})`};
-  background-size: contain;
-  background-repeat: no-repeat;
-  z-index: 2;
-`;
-
-const AchData = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  flex-direction: column;
-  flex: 1;
-  height: 60px;
-  z-index: 2;
-`;
-
-const AchRarity = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  font-size: 12px;
-  font-weight: 400;
-  color: rgb(139, 146, 154);
-  z-index: 2;
-  padding-right: 0.5rem;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 76px;
+  height: 76px;
+  background: ${(props) => `url(${props?.icon})`} center/contain no-repeat;
+  cursor: pointer;
 `;
 
 const AchCard = styled.div`

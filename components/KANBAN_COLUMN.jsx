@@ -255,8 +255,8 @@ const KanbanData = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  max-height: 94vh;
-  min-height: 94vh;
+  max-height: 90vh;
+  min-height: 90vh;
   width: 100%;
   overflow: scroll;
   color: #717171;
@@ -267,7 +267,7 @@ const KanbanData22 = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   flex-wrap: wrap;
-  max-height: 94vh;
+  max-height: 90vh;
   width: 100%;
   overflow: scroll;
   color: #717171;
@@ -277,8 +277,8 @@ const KanbanData2 = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  max-height: 94vh;
-  min-height: 94vh;
+  max-height: 90vh;
+  min-height: 90vh;
   width: 100%;
   color: #717171;
 `;

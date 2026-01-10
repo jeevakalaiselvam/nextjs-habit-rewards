@@ -25,7 +25,7 @@ export default function Main() {
   const [learntAchs, setLearntAchs] = useState([]);
 
   const refreshSteamGames = () => {
-    if (refreshIncludedGames?.length == 0) {
+    if (gamesToInclude?.length == 0) {
     } else {
       setGamesLoading(true);
       console.log('JEEVA CALLING', gamesToInclude);

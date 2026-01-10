@@ -31,7 +31,7 @@ const handler = async (req, res) => {
       // });
 
       finalGamesResponse = [
-        ...[gamesToInclude]?.map((item) => ({
+        ...[...gamesToInclude]?.map((item) => ({
           id: item,
           playtime: '',
           lastPlayed: '',

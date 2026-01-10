@@ -17,9 +17,9 @@ export default function TROPHIES_MAIN({ sortedGames }) {
       .sort((a, b) => (b?.unlocktime || 0) - (a?.unlocktime || 0));
   }, [sortedGames]);
 
-  const columnCount = 34;
+  const columnCount = 16;
   const rowCount = Math.ceil(allAchs.length / columnCount);
-  const itemSize = 75;
+  const itemSize = 90;
 
   // Define Cell inside so it has closure access to allAchs and columnCount
   const Cell = ({ columnIndex, rowIndex, key, style }) => {
@@ -52,15 +52,20 @@ export default function TROPHIES_MAIN({ sortedGames }) {
             body: { padding: 0 },
           }}
         >
-          <AchIcon
-            $iconUrl={ach?.icon}
-            onClick={() => {
-              const query = encodeURIComponent(
-                `${ach?.displayName} achievement ${ach?.gameName}`
-              );
-              window.open(`https://www.google.com/search?q=${query}`, '_blank');
-            }}
-          />
+          <AchIconOuter>
+            <AchIcon
+              $iconUrl={ach?.icon}
+              onClick={() => {
+                const query = encodeURIComponent(
+                  `${ach?.displayName} achievement ${ach?.gameName}`
+                );
+                window.open(
+                  `https://www.google.com/search?q=${query}`,
+                  '_blank'
+                );
+              }}
+            />
+          </AchIconOuter>
         </Popover>
       </div>
     );
@@ -98,15 +103,24 @@ const GamesContainer = styled.div`
   }
 `;
 
-const AchIcon = styled.div`
-  width: 61px;
-  height: 61px;
+const AchIconOuter = styled.div`
+  width: 80px;
+  height: 80px;
   background: ${(props) => `url(${props?.$iconUrl})`} center/contain no-repeat;
   cursor: pointer;
   transition: transform 0.1s ease;
-  margin: 7px; /* Center icon in the 75px cell */
+  position: relative;
+  overflow: hidden;
+`;
 
-  &:hover {
-    transform: scale(1.1);
-  }
+const AchIcon = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 78px;
+  height: 78px;
+  background: ${(props) => `url(${props?.$iconUrl})`} center/contain no-repeat;
+  cursor: pointer;
+  border-radius: 4px 4px 4px 4px;
 `;
