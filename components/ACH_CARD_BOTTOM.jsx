@@ -73,37 +73,52 @@ export default function ACH_CARD_BOTTOM({
       achieved={ach?.achieved}
     >
       <AchData>
-        <AchIcon
-          icon={
-            ach?.achieved == 1 || ach?.achievedByLearning
-              ? ach?.icon
-              : ach?.icon
-          }
-          onClick={() => {
-            if (window !== 'undefined') {
-              const searchQuery = `${
-                ach?.displayName
-              } achievement ${encodeURIComponent(ach?.gameName)} `;
-              window.open(`https://www.google.com/search?q=${searchQuery}`);
-
-              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+        <AchIconOuter>
+          <AchIcon
+            icon={
+              ach?.achieved == 1 || ach?.achievedByLearning
+                ? ach?.icon
+                : ach?.icon
             }
-          }}
-        ></AchIcon>
+            onClick={() => {
+              if (window !== 'undefined') {
+                const searchQuery = `${
+                  ach?.displayName
+                } achievement ${encodeURIComponent(ach?.gameName)} `;
+                window.open(`https://www.google.com/search?q=${searchQuery}`);
+
+                // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+              }
+            }}
+          ></AchIcon>
+        </AchIconOuter>
         <AchTitle>{ach?.displayName}</AchTitle>
         <AchDesc>{desc2 ? desc2 : desc3 ? desc3 : desc1}</AchDesc>
       </AchData>
     </AchCard>
   );
 }
-const GameTitle = styled.div`
+
+const AchIconOuter = styled.div`
+  width: 76px;
+  height: 76px;
+  cursor: pointer;
+  position: relative;
+  border-radius: 4px 4px 4px 4px;
+  overflow: hidden;
+  margin-left: 1px;
+`;
+
+const AchIcon = styled.div`
+  width: 76px;
+  height: 76px;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  padding-left: 0.5rem;
-  font-size: 16px;
-  font-weight: 500;
-  color: rgb(220, 222, 223);
+  justify-content: center;
+  background: ${(props) => `url(${props?.icon})`};
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: 2;
 `;
 
 const AchTitle = styled.div`
@@ -126,18 +141,6 @@ const AchDesc = styled.div`
   color: rgb(184, 188, 191);
 `;
 
-const AchIcon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100px;
-  height: 100px;
-  background: ${(props) => `url(${props?.icon})`};
-  background-size: contain;
-  background-repeat: no-repeat;
-  z-index: 2;
-`;
-
 const AchData = styled.div`
   display: flex;
   align-items: center;
@@ -146,18 +149,6 @@ const AchData = styled.div`
   padding: 0.5rem;
   flex: 1;
   z-index: 2;
-`;
-
-const AchRarity = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  font-size: 12px;
-  font-weight: 400;
-  color: rgb(139, 146, 154);
-  z-index: 2;
-  padding-right: 0.5rem;
 `;
 
 const AchCard = styled.div`
