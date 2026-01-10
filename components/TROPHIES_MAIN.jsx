@@ -16,9 +16,9 @@ export default function TROPHIES_MAIN({ sortedGames }) {
       .sort((a, b) => (b?.unlocktime || 0) - (a?.unlocktime || 0));
   }, [sortedGames]);
 
-  const columnCount = 40;
+  const columnCount = 29;
   const rowCount = Math.ceil(allAchs.length / columnCount);
-  const itemSize = 89;
+  const itemSize = 88;
 
   // Define Cell inside so it has closure access to allAchs and columnCount
   const Cell = ({ columnIndex, rowIndex, key, style }) => {
@@ -93,7 +93,8 @@ const GamesContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  max-height: 90vh;
+  max-height: 94vh;
+  padding: 0.5rem 0rem;
   overflow: scroll;
   margin-bottom: 1rem;
 

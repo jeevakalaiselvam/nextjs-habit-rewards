@@ -1,15 +1,15 @@
-import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import MainHeader from '../components/MainHeader';
-import MainContent from '../components/MainContent';
-import { COLOR_ACCENT } from '../helpers/colorHelper';
+import styled from "styled-components";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import MainHeader from "../components/MainHeader";
+import MainContent from "../components/MainContent";
+import { COLOR_ACCENT } from "../helpers/colorHelper";
 import {
   getColorBasedOnRarity,
   getRarityBasedOnRarity,
-} from '../helpers/achHelper';
-import { LoadingOutlined } from '@ant-design/icons';
-import { Spin } from 'antd';
+} from "../helpers/achHelper";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
 
 export default function Main() {
   const [gamesLoading, setGamesLoading] = useState(false);
@@ -20,7 +20,7 @@ export default function Main() {
   const [platinumData, setPlatinumData] = useState([]);
   const [finalGames, setFinalGames] = useState([]);
   const [refeshing, setRefreshing] = useState(false);
-  const [tabActive, setTabActive] = useState('GAMES');
+  const [tabActive, setTabActive] = useState("GAMES");
   const [gamesToInclude, setGamesToInclude] = useState([]);
   const [learntAchs, setLearntAchs] = useState([]);
 
@@ -28,10 +28,10 @@ export default function Main() {
     if (gamesToInclude?.length == 0) {
     } else {
       setGamesLoading(true);
-      console.log('JEEVA CALLING', gamesToInclude);
+      console.log("JEEVA CALLING", gamesToInclude);
       try {
         axios
-          .post('/api/steam', { gamesToInclude: gamesToInclude })
+          .post("/api/steam", { gamesToInclude: gamesToInclude })
           .then((response) => {
             setGames(response?.data?.data ?? []);
             setGamesLoading(false);
@@ -45,7 +45,7 @@ export default function Main() {
   const refreshPlatinumData = () => {
     setPlatinumDataLoading(true);
     try {
-      axios.get('/api/platinum').then((response) => {
+      axios.get("/api/platinum").then((response) => {
         setPlatinumData(response?.data);
         setPlatinumDataLoading(false);
       });
@@ -57,7 +57,7 @@ export default function Main() {
   const refreshIncludedGames = () => {
     setIncludedLoading(true);
     try {
-      axios.get('/api/include').then((response) => {
+      axios.get("/api/include").then((response) => {
         setGamesToInclude(response?.data?.map((game) => game?.gameId));
         setIncludedLoading(false);
       });
@@ -93,7 +93,7 @@ export default function Main() {
             title: ach?.displayName,
             hiddenDesc:
               platinumMapper[ach?.displayName]?.description ??
-              'Secret Achievement',
+              "Secret Achievement",
           };
         })
         ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
@@ -115,7 +115,7 @@ export default function Main() {
               color: getColorBasedOnRarity(ach?.percentage),
               achieved: allLearnAchs?.includes() ? 1 : 0,
               achievedByLearning: isLearnt,
-              unlockedAt: allAchsMap[key]?.unlockedAt ?? '',
+              unlockedAt: allAchsMap[key]?.unlockedAt ?? "",
               unlocktime: isLearnt
                 ? Math.ceil(
                     new Date(allAchsMap[key]?.unlocktime).getTime() / 1000
@@ -143,17 +143,17 @@ export default function Main() {
       return formedGame;
     });
     setFinalGames(finalGames);
-    console.log('FINAL GAMES SET', { finalGames });
+    console.log("FINAL GAMES SET", { finalGames });
   }, [games, learntAchs]);
 
   const refreshLearntAchs = async () => {
     setLearntAchsLoading(true);
     try {
-      const res = await axios.get('/api/learnt');
+      const res = await axios.get("/api/learnt");
       setLearntAchs(res.data || []);
       setLearntAchsLoading(false);
     } catch (error) {
-      console.error('Failed to refresh games', error);
+      console.error("Failed to refresh games", error);
     }
   };
 
@@ -167,13 +167,13 @@ export default function Main() {
 
   const deleteGame = async (gameId) => {
     try {
-      const res = await axios.delete('/api/include', {
+      const res = await axios.delete("/api/include", {
         data: { gameId: gameId },
       });
       refreshIncludedGames();
-      console.log('Game removed successfully');
+      console.log("Game removed successfully");
     } catch (error) {
-      console.error('Failed to delete game', error);
+      console.error("Failed to delete game", error);
     }
   };
 
@@ -201,7 +201,7 @@ export default function Main() {
               <LoadingOutlined
                 style={{
                   fontSize: 48,
-                  marginTop: '2rem',
+                  marginTop: "2rem",
                 }}
                 spin
               />
@@ -249,6 +249,8 @@ const Container = styled.div`
   flex-direction: column;
   width: 100%;
   color: #fefefe;
+  min-height: 100vh;
+  max-height: 100vh;
   position: relative;
   background-color: #111923;
 `;

@@ -1,13 +1,13 @@
-import styled from 'styled-components';
-import ACH_CARD from './ACH_CARD';
-import { useDrop } from 'react-dnd';
-import { moveAchievement } from '../store/store';
-import { useDispatch } from 'react-redux';
-import axios from 'axios';
-import { useState } from 'react';
-import { Progress } from 'antd';
-import ACH_CARD_BOTTOM from './ACH_CARD_BOTTOM';
-import ACH_CARD_ICONS from './ACH_CARD_ICONS';
+import styled from "styled-components";
+import ACH_CARD from "./ACH_CARD";
+import { useDrop } from "react-dnd";
+import { moveAchievement } from "../store/store";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { useState } from "react";
+import { Progress } from "antd";
+import ACH_CARD_BOTTOM from "./ACH_CARD_BOTTOM";
+import ACH_CARD_ICONS from "./ACH_CARD_ICONS";
 
 export default function KANBAN_COLUMN({
   index,
@@ -23,18 +23,18 @@ export default function KANBAN_COLUMN({
   const [total, setTotal] = useState(0);
 
   const [, drop] = useDrop(() => ({
-    accept: 'ACH_CARD',
+    accept: "ACH_CARD",
     drop: (item) => {
-      if (category === 'COMPLETED') {
+      if (category === "COMPLETED") {
         let achToMarkLearnt = item.ach;
         try {
           axios
-            .post('/api/learnt', {
+            .post("/api/learnt", {
               achName: `${achToMarkLearnt?.gameId}-${achToMarkLearnt?.name}`,
             })
             .then((response) => {
               let data = response.data;
-              console.log('RESPONSE BACK', data);
+              console.log("RESPONSE BACK", data);
               setLearntAchs(data);
             });
         } catch (e) {}
@@ -58,7 +58,7 @@ export default function KANBAN_COLUMN({
       // 2. Map your items to an array of Axios promises
       const requests = achs.map((ach) =>
         axios
-          .post('/api/learnt', {
+          .post("/api/learnt", {
             achName: `${ach?.gameId}-${ach?.name}`,
           })
           .then((response) => {
@@ -83,7 +83,7 @@ export default function KANBAN_COLUMN({
       setTotal(0);
       setMarkingAll(false);
     } catch (error) {
-      console.error('One or more requests failed', error);
+      console.error("One or more requests failed", error);
     }
   };
 
@@ -101,13 +101,13 @@ export default function KANBAN_COLUMN({
       <KanbanTitle
         index={index}
         onClick={() => {
-          if (category == 'ALL') {
+          if (category == "ALL") {
             setShowingAll((old) => !old);
           }
         }}
       >
         {category}: {currentAchievements?.length}
-        {false && category == 'NOT COMPLETED' && !markingAll && (
+        {false && category == "NOT COMPLETED" && !markingAll && (
           <KanbanMarkCompleteAll
             onClick={() => {
               markAllCompleteOneByOne(currentAchievements);
@@ -116,7 +116,7 @@ export default function KANBAN_COLUMN({
             Mark All Complete
           </KanbanMarkCompleteAll>
         )}
-        {false && category == 'NOT COMPLETED' && !markingAll && (
+        {false && category == "NOT COMPLETED" && !markingAll && (
           <KanbanFindHidden
             onClick={() => {
               populateHiddenDescriptions(currentAchievements?.[0]);
@@ -130,20 +130,20 @@ export default function KANBAN_COLUMN({
             <Progress
               trailColor="#525252"
               percent={((completed / total) * 100).toFixed(1)}
-              size={'small'}
+              size={"small"}
               status="active"
             />
           </KanbanMarkCompleteAllProgress>
         )}
       </KanbanTitle>
 
-      {category == 'NOT COMPLETED' && (
+      {category == "NOT COMPLETED" && (
         <KanbanData>
           <KanbanData22>
             {currentAchievements?.map((ach, index) => {
               let desc1 = ach?.hiddenDesc;
               let desc2 = ach?.description;
-              let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
+              let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
               return (
                 <ACH_CARD
                   ach={ach}
@@ -159,7 +159,7 @@ export default function KANBAN_COLUMN({
           </KanbanData22>
         </KanbanData>
       )}
-      {category != 'NOT COMPLETED' && (
+      {category != "NOT COMPLETED" && (
         <KanbanData2
           nothing={currentAchievements?.length == 0}
           unlockedLength={currentAchievements?.length}
@@ -172,7 +172,7 @@ export default function KANBAN_COLUMN({
               ?.map((ach, index) => {
                 let desc1 = ach?.hiddenDesc;
                 let desc2 = ach?.description;
-                let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
+                let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
                 return (
                   <ACH_CARD_ICONS
                     ach={ach}
@@ -259,8 +259,8 @@ const KanbanData = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  max-height: 90vh;
-  min-height: 90vh;
+  max-height: 94vh;
+  min-height: 94vh;
   width: 100%;
   overflow: scroll;
   color: #717171;
@@ -271,7 +271,7 @@ const KanbanData22 = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   flex-wrap: wrap;
-  max-height: 90vh;
+  max-height: 94vh;
   width: 100%;
   overflow: scroll;
   color: #717171;
@@ -281,8 +281,8 @@ const KanbanData2 = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  max-height: 90vh;
-  min-height: 90vh;
+  max-height: 94vh;
+  min-height: 94vh;
   width: 100%;
   color: #717171;
 `;

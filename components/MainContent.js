@@ -216,58 +216,6 @@ export default function MainContent({
   );
 }
 
-const StatWrapper2 = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 100%;
-  padding: 1rem 0rem;
-`;
-
-const GamesLeft = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex: 1;
-`;
-
-const GamesRight = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex: 1;
-`;
-
-const Games1Line = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #336291;
-  padding: 0.75rem 0.5rem;
-  justify-content: center;
-`;
-
-const GamesR = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 98%;
-  color: #fefefe;
-  font-size: 0.9rem;
-`;
-
-const GameLineHours = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  color: #fefefe;
-  font-size: 0.9rem;
-  width: 100%;
-  border: 1px solid #ddd;
-  margin-bottom: 1rem;
-`;
-
 // Styles
 
 const SRLeft = styled.div`
@@ -278,7 +226,6 @@ const SRLeft = styled.div`
   flex: 2;
   width: 100%;
   padding: 0rem 1rem;
-  background-color: #111923;
 `;
 
 const SecondRow = styled.div`
@@ -367,6 +314,5 @@ const Container = styled.div`
   justify-content: flex-start;
   width: 100%;
   border-radius: 4px;
-  min-height: 91vh;
   background-color: #111923;
 `;
