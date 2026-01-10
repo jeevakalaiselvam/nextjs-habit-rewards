@@ -24,6 +24,7 @@ export default function ACH_CARD({
   hideCompletion,
   longer,
   setLearntAchs,
+  hiddenMapper,
 }) {
   const dispatch = useDispatch();
   const [mouseEnter, setMouseEnter] = useState(false);
@@ -136,7 +137,7 @@ export default function ACH_CARD({
 
       <AchData>
         <AchTitle>{ach?.displayName}</AchTitle>
-        <AchDesc>{desc2 ? desc2 : desc3 ? desc3 : desc1}</AchDesc>
+        <AchDesc>{hiddenMapper[ach?.displayName?.toLowerCase()]}</AchDesc>
         <AchUnlocked>
           {ach?.percentage}% of players have this achievement
         </AchUnlocked>

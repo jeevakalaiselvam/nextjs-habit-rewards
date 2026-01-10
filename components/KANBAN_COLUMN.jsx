@@ -21,6 +21,7 @@ export default function KANBAN_COLUMN({
   const [markingAll, setMarkingAll] = useState(false);
   const [completed, setCompleted] = useState(0);
   const [total, setTotal] = useState(0);
+  const [hiddenMapper, setHiddenMapper] = useState({});
 
   const [, drop] = useDrop(() => ({
     accept: "ACH_CARD",
@@ -91,7 +92,8 @@ export default function KANBAN_COLUMN({
     console.log(ach);
     try {
       axios.get(`/api/hidden/${ach?.gameId}`).then((response) => {
-        console.log(response);
+        let hiddenMapper = response?.data?.hiddenMapper;
+        setHiddenMapper(hiddenMapper);
       });
     } catch (e) {}
   };
@@ -116,7 +118,7 @@ export default function KANBAN_COLUMN({
             Mark All Complete
           </KanbanMarkCompleteAll>
         )}
-        {false && category == "NOT COMPLETED" && !markingAll && (
+        {true && category == "NOT COMPLETED" && !markingAll && (
           <KanbanFindHidden
             onClick={() => {
               populateHiddenDescriptions(currentAchievements?.[0]);
@@ -146,6 +148,7 @@ export default function KANBAN_COLUMN({
               let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
               return (
                 <ACH_CARD
+                  hiddenMapper={hiddenMapper}
                   ach={ach}
                   index={index}
                   desc1={desc1}
