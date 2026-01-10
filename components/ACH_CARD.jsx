@@ -163,7 +163,7 @@ const CompleteMark = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  background-color: #343744;
+  background-color: #1c1f25;
   color: #fefefe;
   z-index: 11;
   padding: 0 2px;
