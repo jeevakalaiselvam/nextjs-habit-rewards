@@ -109,7 +109,7 @@ export default function KANBAN_COLUMN({
         }}
       >
         {category}: {currentAchievements?.length}
-        {false && category == "NOT COMPLETED" && !markingAll && (
+        {true && category == "NOT COMPLETED" && !markingAll && (
           <KanbanMarkCompleteAll
             onClick={() => {
               markAllCompleteOneByOne(currentAchievements);
@@ -214,7 +214,7 @@ const KanbanFindHidden = styled.div`
   align-items: center;
   justify-content: center;
   position: absolute;
-  right: 0;
+  right: 120px;
   top: 0;
   font-size: 0.75rem;
   transform: translateY(2px);
