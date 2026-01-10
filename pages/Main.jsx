@@ -14,6 +14,7 @@ import { Spin } from 'antd';
 export default function Main() {
   const [gamesLoading, setGamesLoading] = useState(false);
   const [learntAchsLoading, setLearntAchsLoading] = useState(false);
+  const [includedLoading, setIncludedLoading] = useState(false);
   const [platinumDataLoading, setPlatinumDataLoading] = useState(false);
   const [games, setGames] = useState([]);
   const [platinumData, setPlatinumData] = useState([]);
@@ -24,16 +25,20 @@ export default function Main() {
   const [learntAchs, setLearntAchs] = useState([]);
 
   const refreshSteamGames = () => {
-    setGamesLoading(true);
-    try {
-      axios
-        .post('/api/steam', { gamesToInclude: gamesToInclude })
-        .then((response) => {
-          setGames(response?.data?.data ?? []);
-          setGamesLoading(false);
-        });
-    } catch (e) {
-      setGamesLoading(false);
+    if (refreshIncludedGames?.length == 0) {
+    } else {
+      setGamesLoading(true);
+      console.log('JEEVA CALLING', gamesToInclude);
+      try {
+        axios
+          .post('/api/steam', { gamesToInclude: gamesToInclude })
+          .then((response) => {
+            setGames(response?.data?.data ?? []);
+            setGamesLoading(false);
+          });
+      } catch (e) {
+        setGamesLoading(false);
+      }
     }
   };
 
@@ -49,10 +54,21 @@ export default function Main() {
     }
   };
 
+  const refreshIncludedGames = () => {
+    setIncludedLoading(true);
+    try {
+      axios.get('/api/include').then((response) => {
+        setGamesToInclude(response?.data?.map((game) => game?.gameId));
+        setIncludedLoading(false);
+      });
+    } catch (e) {
+      setIncludedLoading(false);
+    }
+  };
+
   const refreshData = () => {
     refreshSteamGames();
     refreshLearntAchs();
-    // refreshPlatinumData();
   };
 
   useEffect(() => {
@@ -142,8 +158,24 @@ export default function Main() {
   };
 
   useEffect(() => {
-    refreshData();
+    refreshIncludedGames();
   }, []);
+
+  useEffect(() => {
+    refreshData();
+  }, [gamesToInclude]);
+
+  const deleteGame = async (gameId) => {
+    try {
+      const res = await axios.delete('/api/include', {
+        data: { gameId: gameId },
+      });
+      refreshIncludedGames();
+      console.log('Game removed successfully');
+    } catch (error) {
+      console.error('Failed to delete game', error);
+    }
+  };
 
   return (
     <Container>
@@ -182,6 +214,8 @@ export default function Main() {
         !gamesLoading &&
         !learntAchsLoading && (
           <MainContent
+            deleteGame={deleteGame}
+            gamesToInclude={gamesToInclude}
             tabActive={tabActive}
             setTabActive={setTabActive}
             games={finalGames}
@@ -191,6 +225,7 @@ export default function Main() {
             platinumDataLoading={platinumDataLoading}
             setLearntAchs={setLearntAchs}
             learntAchs={learntAchs}
+            refreshIncludedGames={refreshIncludedGames}
           />
         )}
     </Container>

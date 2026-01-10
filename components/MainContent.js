@@ -20,6 +20,8 @@ import GAME_MAIN from './GAME_MAIN';
 import TROPHIES_MAIN from './TROPHIES_MAIN';
 import TextArea from 'antd/es/input/TextArea';
 import axios from 'axios';
+import { GAMES_INCLUDES } from '../helpers/constantHelper';
+import GAME_SETTINGS from './GAME_SETTINGS';
 
 export default function MainContent({
   games,
@@ -30,6 +32,9 @@ export default function MainContent({
   setTabActive,
   setLearntAchs,
   learntAchs,
+  gamesToInclude,
+  refreshIncludedGames,
+  deleteGame,
 }) {
   const [selectedMode, setSelectedMode] = useState('GAMES');
   const [selectedGame, setSelectedGame] = useState('');
@@ -133,6 +138,18 @@ export default function MainContent({
           >
             UNLOCKS ({allUnlocked?.length})
           </TabLink>
+          <TabLink
+            onClick={() => {
+              setSelectedMode('SETTINGS');
+              setTabActive('SETTINGS');
+              if (window) {
+                localStorage.setItem('SELECTED_TAB', 'SETTINGS');
+              }
+            }}
+            active={selectedMode == 'SETTINGS'}
+          >
+            SETTINGS
+          </TabLink>
           <GameSearch>
             <input
               placeholder="Search Games..."
@@ -154,6 +171,15 @@ export default function MainContent({
 
         {!gamesLoading && (
           <SRLeft>
+            {tabActive == 'SETTINGS' && (
+              <GAME_SETTINGS
+                games={games}
+                deleteGame={deleteGame}
+                gamesToInclude={gamesToInclude}
+                refreshIncludedGames={refreshIncludedGames}
+              />
+            )}
+
             {tabActive == 'GAMES' && (
               <GAMES_MAIN
                 sortedGames={startedGames}
