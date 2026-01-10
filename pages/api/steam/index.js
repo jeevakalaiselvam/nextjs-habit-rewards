@@ -89,6 +89,7 @@ const handler = async (req, res) => {
             const newAchievement = {
               ...achievement,
               gameId: game?.id,
+              gameName: game?.name,
               percentage: achievementFound?.percent || 0,
             };
             return newAchievement;
