@@ -109,7 +109,7 @@ export default function KANBAN_COLUMN({
         }}
       >
         {category}: {currentAchievements?.length}
-        {true && category == "NOT COMPLETED" && !markingAll && (
+        {false && category == "NOT COMPLETED" && !markingAll && (
           <KanbanMarkCompleteAll
             onClick={() => {
               markAllCompleteOneByOne(currentAchievements);
@@ -179,7 +179,7 @@ export default function KANBAN_COLUMN({
                 return (
                   <ACH_CARD_ICONS
                     ach={ach}
-                    index={index}
+                    index={index + 1}
                     desc1={desc1}
                     desc2={desc2}
                     desc3={desc3}
@@ -214,7 +214,7 @@ const KanbanFindHidden = styled.div`
   align-items: center;
   justify-content: center;
   position: absolute;
-  right: 120px;
+  right: 0;
   top: 0;
   font-size: 0.75rem;
   transform: translateY(2px);
