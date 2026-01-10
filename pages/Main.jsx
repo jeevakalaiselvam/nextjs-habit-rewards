@@ -121,14 +121,14 @@ export default function Main() {
       formedGame = {
         ...formedGame,
         completed: newCompleted,
-        completion: newCompletion,
+        completion: newCompleted == 0 ? 0 : newCompletion,
       };
 
       return formedGame;
     });
     setFinalGames(finalGames);
     console.log('FINAL GAMES SET', { finalGames });
-  }, [games, platinumData, learntAchs]);
+  }, [games, learntAchs]);
 
   const refreshLearntAchs = async () => {
     setLearntAchsLoading(true);

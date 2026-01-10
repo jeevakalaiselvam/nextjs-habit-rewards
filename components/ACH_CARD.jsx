@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { FaCheck } from 'react-icons/fa';
 import GoldIcon from './GoldIcon';
 import BronzeIcon from './BronzeIcon';
+import { MdOutlineArrowRight } from 'react-icons/md';
 
 export default function ACH_CARD({
   index,
@@ -113,7 +114,7 @@ export default function ACH_CARD({
       )}
       {false && (
         <CompleteMark>
-          <FaCheck />
+          <MdOutlineArrowRight />
         </CompleteMark>
       )}
     </AchCard>
@@ -126,7 +127,8 @@ const CompleteMark = styled.div`
   justify-content: flex-start;
   background-color: #1d1f24;
   height: 60px;
-  padding: 0 1rem;
+  padding: 0 2px;
+  font-size: 1.5rem;
 `;
 
 const AchTitle = styled.div`

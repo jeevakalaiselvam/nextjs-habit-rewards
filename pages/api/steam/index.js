@@ -1,37 +1,56 @@
 import {
+  EXTRA_INCLUDES,
+  GAMES_INCLUDES,
+} from '../../../helpers/constantHelper';
+import {
   FETCH_ALL_ACHIEVEMENTS_GLOBAL,
   FETCH_ALL_ACHIEVEMENTS_SCHEMA,
   FETCH_ALL_GAMES,
   STEAM_ALL_ACHIEVEMENTS_PLAYER,
-} from "../../../helpers/urlHelper";
+} from '../../../helpers/urlHelper';
+const util = require('util');
 
-const axios = require("axios");
+const axios = require('axios');
 
 const handler = async (req, res) => {
-  if (req.method === "POST") {
+  if (req.method === 'POST') {
     const { gamesToInclude } = req.body;
     try {
-      let finalGamesResponse = {};
+      let finalGamesResponse = [];
 
       //Get All Games for the current User
-      const gamesResponse = await axios.get(FETCH_ALL_GAMES);
-      const gamesData = gamesResponse.data;
-      finalGamesResponse = gamesData?.response?.games?.map((game) => {
-        const newGame = {
-          id: game?.appid,
-          playtime: game?.playtime_forever,
-          lastPlayed: game?.rtime_last_played,
-        };
-        return newGame;
-      });
-
-      // finalGamesResponse = finalGamesResponse?.filter((game) => {
-      //   return gamesToInclude?.includes(String(game?.id));
+      // const gamesResponse = await axios.get(FETCH_ALL_GAMES);
+      // const gamesData = gamesResponse.data;
+      // finalGamesResponse = gamesData?.response?.games?.map((game) => {
+      //   const newGame = {
+      //     id: game?.appid,
+      //     playtime: game?.playtime_forever,
+      //     lastPlayed: game?.rtime_last_played,
+      //   };
+      //   return newGame;
       // });
+
+      finalGamesResponse = [
+        ...finalGamesResponse,
+        ...[...GAMES_INCLUDES, ...EXTRA_INCLUDES]?.map((item) => ({
+          id: item,
+          playtime: '',
+          lastPlayed: '',
+        })),
+      ];
+
+      console.log(
+        util.inspect(finalGamesResponse, {
+          showHidden: false,
+          depth: null,
+          colors: true,
+        })
+      );
 
       //Get All Achievements Schema for All Games
       finalGamesResponse = await Promise.all(
         (finalGamesResponse ?? [])?.map(async (game) => {
+          console.log(FETCH_ALL_ACHIEVEMENTS_SCHEMA(game?.id));
           const schemeAchievement = await axios.get(
             FETCH_ALL_ACHIEVEMENTS_SCHEMA(game?.id)
           );
@@ -82,62 +101,64 @@ const handler = async (req, res) => {
       );
 
       //Add Player Achievement Progress
-      finalGamesResponse = await Promise.all(
-        finalGamesResponse?.map(async (game) => {
-          const playerAchievementsResponse = await axios.get(
-            STEAM_ALL_ACHIEVEMENTS_PLAYER(game?.id)
-          );
-          const playerAchievementData = playerAchievementsResponse.data;
-          const playerAchievements =
-            playerAchievementData.playerstats.achievements;
-          const gameName = playerAchievementData.playerstats.gameName;
-
-          let newAchievements = game?.achievements?.map((achievement) => {
-            const achievementFound = playerAchievements.find(
-              (achievementInner) => {
-                return achievementInner.apiname === achievement?.name;
-              }
+      if (false) {
+        finalGamesResponse = await Promise.all(
+          finalGamesResponse?.map(async (game) => {
+            const playerAchievementsResponse = await axios.get(
+              STEAM_ALL_ACHIEVEMENTS_PLAYER(game?.id)
             );
-            const newAchievement = {
-              ...achievement,
-              achieved: achievementFound.achieved,
-              unlocktime: achievementFound.unlocktime,
-              gameName: gameName,
-              gameId: game?.id,
+            const playerAchievementData = playerAchievementsResponse.data;
+            const playerAchievements =
+              playerAchievementData.playerstats.achievements;
+            const gameName = playerAchievementData.playerstats.gameName;
+
+            let newAchievements = game?.achievements?.map((achievement) => {
+              const achievementFound = playerAchievements.find(
+                (achievementInner) => {
+                  return achievementInner.apiname === achievement?.name;
+                }
+              );
+              const newAchievement = {
+                ...achievement,
+                achieved: achievementFound.achieved,
+                unlocktime: achievementFound.unlocktime,
+                gameName: gameName,
+                gameId: game?.id,
+              };
+              return newAchievement;
+            });
+            const toGet =
+              (newAchievements &&
+                newAchievements.length > 0 &&
+                newAchievements.filter(
+                  (achievement) => achievement?.achieved != '1'
+                ).length) ||
+              0;
+            const completionPercentage =
+              (newAchievements &&
+                newAchievements.length > 0 &&
+                100 - Math.floor((toGet / newAchievements.length) * 100)) ||
+              0;
+            const newGame = {
+              ...game,
+              name: gameName,
+              achievements: newAchievements,
+              completion: completionPercentage,
+              toGet: toGet,
+              total: newAchievements.length,
+              completed: newAchievements.length - toGet,
+              recentRefresh: new Date(),
             };
-            return newAchievement;
-          });
-          const toGet =
-            (newAchievements &&
-              newAchievements.length > 0 &&
-              newAchievements.filter(
-                (achievement) => achievement?.achieved != "1"
-              ).length) ||
-            0;
-          const completionPercentage =
-            (newAchievements &&
-              newAchievements.length > 0 &&
-              100 - Math.floor((toGet / newAchievements.length) * 100)) ||
-            0;
-          const newGame = {
-            ...game,
-            name: gameName,
-            achievements: newAchievements,
-            completion: completionPercentage,
-            toGet: toGet,
-            total: newAchievements.length,
-            completed: newAchievements.length - toGet,
-            recentRefresh: new Date(),
-          };
-          return newGame;
-        })
-      );
+            return newGame;
+          })
+        );
+      }
       //Get all Games and Refresh data in File
-      res.status(200).json({ status: "success", data: finalGamesResponse });
+      res.status(200).json({ status: 'success', data: finalGamesResponse });
     } catch (error) {
       console.error(error);
       //Get all Games and Refresh data in File
-      res.status(500).json({ status: "error", error: error });
+      res.status(500).json({ status: 'error', error: error });
     }
   }
 };

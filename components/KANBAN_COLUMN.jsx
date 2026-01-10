@@ -121,40 +121,47 @@ export default function KANBAN_COLUMN({
 
       {category == 'NOT COMPLETED' && (
         <KanbanData>
-          {currentAchievements?.map((ach, index) => {
-            let desc1 = ach?.hiddenDesc;
-            let desc2 = ach?.description;
-            let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
-            return (
-              <ACH_CARD
-                ach={ach}
-                index={index}
-                desc1={desc1}
-                desc2={desc2}
-                desc3={desc3}
-                lane={category}
-              />
-            );
-          })}
+          <KanbanData22>
+            {currentAchievements?.map((ach, index) => {
+              let desc1 = ach?.hiddenDesc;
+              let desc2 = ach?.description;
+              let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
+              return (
+                <ACH_CARD
+                  ach={ach}
+                  index={index}
+                  desc1={desc1}
+                  desc2={desc2}
+                  desc3={desc3}
+                  lane={category}
+                />
+              );
+            })}
+          </KanbanData22>
         </KanbanData>
       )}
       {category != 'NOT COMPLETED' && (
-        <KanbanData2>
-          {currentAchievements?.map((ach, index) => {
-            let desc1 = ach?.hiddenDesc;
-            let desc2 = ach?.description;
-            let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
-            return (
-              <ACH_CARD_ICONS
-                ach={ach}
-                index={index}
-                desc1={desc1}
-                desc2={desc2}
-                desc3={desc3}
-                lane={category}
-              />
-            );
-          })}
+        <KanbanData2
+          nothing={currentAchievements?.length == 0}
+          unlockedLength={currentAchievements?.length}
+        >
+          <KanbanData22>
+            {currentAchievements?.map((ach, index) => {
+              let desc1 = ach?.hiddenDesc;
+              let desc2 = ach?.description;
+              let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
+              return (
+                <ACH_CARD_ICONS
+                  ach={ach}
+                  index={index}
+                  desc1={desc1}
+                  desc2={desc2}
+                  desc3={desc3}
+                  lane={category}
+                />
+              );
+            })}
+          </KanbanData22>
         </KanbanData2>
       )}
     </KanbanSingle>
@@ -218,7 +225,7 @@ const KanbanData = styled.div`
   color: #717171;
 `;
 
-const KanbanData2 = styled.div`
+const KanbanData22 = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -226,6 +233,16 @@ const KanbanData2 = styled.div`
   max-height: 94vh;
   width: 100%;
   overflow: scroll;
+  color: #717171;
+`;
+
+const KanbanData2 = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  max-height: 94vh;
+  min-height: 94vh;
+  width: 100%;
   color: #717171;
 `;
 

@@ -20,14 +20,14 @@ export default function GAMES_MAIN({
 
         game?.achievements?.forEach((ach) => {
           total++;
-          if (ach?.achieved == 1 || ach?.achievedByLearning) {
+          if (ach?.achievedByLearning) {
             completed++;
           }
         });
 
         let completion = (completed / total) * 100;
         let allUnlocked = game?.achievements
-          ?.filter((ach) => ach?.achieved == 1 || ach?.achievedByLearning)
+          ?.filter((ach) => ach?.achievedByLearning)
           ?.sort((ach1, ach2) => +ach2?.unlocktime - +ach1?.unlocktime);
 
         return (
@@ -43,9 +43,7 @@ export default function GAMES_MAIN({
             <BottomInner>
               <Top>
                 <TLeft>
-                  {game?.name?.length > 40
-                    ? game?.name?.slice(0, 40) + '...'
-                    : game?.name}
+                  {completed}/{total}
                 </TLeft>
                 <TRight
                   onClick={() => {
@@ -53,7 +51,7 @@ export default function GAMES_MAIN({
                     setGameData(() => game);
                   }}
                 >
-                  {completed}/{total}
+                  {game?.completion}%
                 </TRight>
               </Top>
               <Bottom>
@@ -65,46 +63,94 @@ export default function GAMES_MAIN({
                 />
               </Bottom>
               <BBottom>
-                {allUnlocked?.slice(0, 10).map((ach, index) => {
-                  let desc1 = ach?.hiddenDesc;
-                  let desc2 = ach?.description;
-                  let desc3 = ach?.hiddenDesc?.split(
-                    'Hidden achievement:'
-                  )?.[1];
+                {allUnlocked?.length >= 9 &&
+                  allUnlocked?.slice(0, 10).map((ach, index) => {
+                    let desc1 = ach?.hiddenDesc;
+                    let desc2 = ach?.description;
+                    let desc3 = ach?.hiddenDesc?.split(
+                      'Hidden achievement:'
+                    )?.[1];
 
-                  if (index < 9) {
-                    return (
-                      <Popover
-                        placement="bottom"
-                        content={
-                          <ACH_CARD
-                            ach={ach}
-                            desc1={desc1}
-                            desc2={desc2}
-                            desc3={desc3}
-                            index={index}
-                            hideCompletion
-                            longer={'600'}
-                          />
-                        }
-                        title=""
-                        styles={{
-                          content: {
-                            backgroundColor: 'transparent',
-                            boxShadow: 'none',
-                          },
-                          body: {
-                            padding: 0, // Removes default internal spacing
-                          },
-                        }}
-                      >
-                        <AchIcon icon={ach?.icon}></AchIcon>
-                      </Popover>
-                    );
-                  } else {
-                    return <AchCounter>+{allUnlocked?.length - 10}</AchCounter>;
-                  }
-                })}
+                    if (index < 9) {
+                      return (
+                        <Popover
+                          placement="bottom"
+                          content={
+                            <ACH_CARD
+                              ach={ach}
+                              desc1={desc1}
+                              desc2={desc2}
+                              desc3={desc3}
+                              index={index}
+                              hideCompletion
+                              longer={'600'}
+                            />
+                          }
+                          title=""
+                          styles={{
+                            content: {
+                              backgroundColor: 'transparent',
+                              boxShadow: 'none',
+                            },
+                            body: {
+                              padding: 0, // Removes default internal spacing
+                            },
+                          }}
+                        >
+                          <AchIcon icon={ach?.icon}></AchIcon>
+                        </Popover>
+                      );
+                    } else {
+                      return (
+                        <AchCounter>+{allUnlocked?.length - 10}</AchCounter>
+                      );
+                    }
+                  })}
+                {allUnlocked?.length < 9 &&
+                  [
+                    ...allUnlocked,
+                    ...new Array(9 - allUnlocked?.length).fill(1),
+                  ].map((ach, index) => {
+                    let desc1 = ach?.hiddenDesc;
+                    let desc2 = ach?.description;
+                    let desc3 = ach?.hiddenDesc?.split(
+                      'Hidden achievement:'
+                    )?.[1];
+
+                    console.log({ allUnlocked });
+                    if (index < allUnlocked?.length - 1) {
+                      return (
+                        <Popover
+                          placement="bottom"
+                          content={
+                            <ACH_CARD
+                              ach={ach}
+                              desc1={desc1}
+                              desc2={desc2}
+                              desc3={desc3}
+                              index={index}
+                              hideCompletion
+                              longer={'600'}
+                            />
+                          }
+                          title=""
+                          styles={{
+                            content: {
+                              backgroundColor: 'transparent',
+                              boxShadow: 'none',
+                            },
+                            body: {
+                              padding: 0, // Removes default internal spacing
+                            },
+                          }}
+                        >
+                          <AchCounter icon={ach?.icon}></AchCounter>
+                        </Popover>
+                      );
+                    } else {
+                      return <AchCounter>{index == 8 && '+0'}</AchCounter>;
+                    }
+                  })}
               </BBottom>
             </BottomInner>
           </GameContainer>
@@ -120,7 +166,7 @@ const AchCounter = styled.div`
   width: 48px;
   height: 44px;
   z-index: 2;
-  margin: 2px;
+  margin: 2px 4px;
   font-size: 0.8rem;
   transform: translateY(-2px);
   background: #2e3238;
