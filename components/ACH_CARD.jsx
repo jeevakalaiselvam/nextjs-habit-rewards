@@ -197,7 +197,7 @@ const Mark = styled.div`
   align-items: center;
   justify-content: center;
   font-size: 0.75rem;
-  width: 20px;
+  width: 30px;
   height: 78px;
   transform: rotate(-90deg);
 `;
