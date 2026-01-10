@@ -1,27 +1,27 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 import {
   COLOR_BRONZE,
   generateDarkTextColorForLightBg,
-} from '../helpers/colorHelper';
-import { useEffect, useState } from 'react';
+} from "../helpers/colorHelper";
+import { useEffect, useState } from "react";
 
 import {
   calculateLevelForAchs,
   calculateRankForCompletion,
   getAchsBasedOnRarity,
-} from '../helpers/trophyHelper';
+} from "../helpers/trophyHelper";
 
-import EditGameForm from './EditGameForm';
-import { LoadingOutlined } from '@ant-design/icons';
-import { Button, Row, Spin } from 'antd';
+import EditGameForm from "./EditGameForm";
+import { LoadingOutlined } from "@ant-design/icons";
+import { Button, Row, Spin } from "antd";
 
-import GAMES_MAIN from './GAMES_MAIN';
-import GAME_MAIN from './GAME_MAIN';
-import TROPHIES_MAIN from './TROPHIES_MAIN';
-import TextArea from 'antd/es/input/TextArea';
-import axios from 'axios';
-import { GAMES_INCLUDES } from '../helpers/constantHelper';
-import GAME_SETTINGS from './GAME_SETTINGS';
+import GAMES_MAIN from "./GAMES_MAIN";
+import GAME_MAIN from "./GAME_MAIN";
+import TROPHIES_MAIN from "./TROPHIES_MAIN";
+import TextArea from "antd/es/input/TextArea";
+import axios from "axios";
+import { GAMES_INCLUDES } from "../helpers/constantHelper";
+import GAME_SETTINGS from "./GAME_SETTINGS";
 
 export default function MainContent({
   games,
@@ -36,12 +36,12 @@ export default function MainContent({
   refreshIncludedGames,
   deleteGame,
 }) {
-  const [selectedMode, setSelectedMode] = useState('GAMES');
-  const [selectedGame, setSelectedGame] = useState('');
+  const [selectedMode, setSelectedMode] = useState("GAMES");
+  const [selectedGame, setSelectedGame] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
 
   const [gameData, setGameData] = useState({});
-  const [gameSearch, setGameSearch] = useState('');
+  const [gameSearch, setGameSearch] = useState("");
 
   let completedGames = [],
     startedGames = [],
@@ -92,39 +92,27 @@ export default function MainContent({
         <FRLeft>
           <TabLink
             onClick={() => {
-              setSelectedMode('GAMES_BACKLOG');
-              setTabActive('GAMES_BACKLOG');
+              setSelectedMode("GAMES_BACKLOG");
+              setTabActive("GAMES_BACKLOG");
               if (window) {
-                localStorage.setItem('SELECTED_TAB', 'GAMES_BACKLOG');
+                localStorage.setItem("SELECTED_TAB", "GAMES_BACKLOG");
               }
             }}
-            active={selectedMode == 'GAMES_BACKLOG'}
+            active={selectedMode == "GAMES_BACKLOG"}
           >
             GAMES ({notCompletedGames?.length})
           </TabLink>
           <TabLink
             onClick={() => {
-              setSelectedMode('TROPHIES');
-              setTabActive('TROPHIES');
+              setSelectedMode("TROPHIES");
+              setTabActive("TROPHIES");
               if (window) {
-                localStorage.setItem('SELECTED_TAB', 'TROPHIES');
+                localStorage.setItem("SELECTED_TAB", "TROPHIES");
               }
             }}
-            active={selectedMode == 'TROPHIES'}
+            active={selectedMode == "TROPHIES"}
           >
             UNLOCKS ({allUnlocked?.length})
-          </TabLink>
-          <TabLink
-            onClick={() => {
-              setSelectedMode('SETTINGS');
-              setTabActive('SETTINGS');
-              if (window) {
-                localStorage.setItem('SELECTED_TAB', 'SETTINGS');
-              }
-            }}
-            active={selectedMode == 'SETTINGS'}
-          >
-            SETTINGS
           </TabLink>
           <GameSearch>
             <input
@@ -133,6 +121,18 @@ export default function MainContent({
               onChange={(e) => setGameSearch(e.target.value)}
             />
           </GameSearch>
+          <TabLink2
+            onClick={() => {
+              setSelectedMode("SETTINGS");
+              setTabActive("SETTINGS");
+              if (window) {
+                localStorage.setItem("SELECTED_TAB", "SETTINGS");
+              }
+            }}
+            active={selectedMode == "SETTINGS"}
+          >
+            SETTINGS
+          </TabLink2>
         </FRLeft>
         <FRRight></FRRight>
       </FirstRow>
@@ -147,7 +147,7 @@ export default function MainContent({
 
         {!gamesLoading && (
           <SRLeft>
-            {tabActive == 'SETTINGS' && (
+            {tabActive == "SETTINGS" && (
               <GAME_SETTINGS
                 games={games}
                 deleteGame={deleteGame}
@@ -156,7 +156,7 @@ export default function MainContent({
               />
             )}
 
-            {tabActive == 'GAMES' && (
+            {tabActive == "GAMES" && (
               <GAMES_MAIN
                 sortedGames={startedGames}
                 setSelectedGame={setSelectedGame}
@@ -167,7 +167,7 @@ export default function MainContent({
               />
             )}
 
-            {tabActive == 'GAMES_COMPLETED' && (
+            {tabActive == "GAMES_COMPLETED" && (
               <GAMES_MAIN
                 sortedGames={completedGames}
                 setSelectedGame={setSelectedGame}
@@ -178,7 +178,7 @@ export default function MainContent({
               />
             )}
 
-            {tabActive == 'GAMES_BACKLOG' && (
+            {tabActive == "GAMES_BACKLOG" && (
               <GAMES_MAIN
                 sortedGames={notCompletedGames}
                 setSelectedGame={setSelectedGame}
@@ -189,7 +189,7 @@ export default function MainContent({
               />
             )}
 
-            {tabActive == 'GAME' && (
+            {tabActive == "GAME" && (
               <GAME_MAIN
                 setTabActive={setTabActive}
                 selectedGame={selectedGame}
@@ -199,7 +199,7 @@ export default function MainContent({
               />
             )}
 
-            {tabActive == 'TROPHIES' && (
+            {tabActive == "TROPHIES" && (
               <TROPHIES_MAIN
                 sortedGames={sortedGames}
                 setSelectedGame={setSelectedGame}
@@ -297,12 +297,27 @@ const TabLink = styled.div`
   cursor: pointer;
   position: relative;
   margin-right: 0.5rem;
-  font-size: ${(props) => (props.active ? '.8rem' : '0.8rem')};
+  font-size: ${(props) => (props.active ? ".8rem" : "0.8rem")};
   padding: 0.25rem 1rem;
-  background: ${(props) => (props.active ? '#199FFF' : '#232f3eff')};
+  background: ${(props) => (props.active ? "#199FFF" : "#232f3eff")};
   color: #fefefe;
   border-radius: 2px 2px 0 0;
-  /* transform: ${(props) => (props.active ? 'translateY(-.125rem)' : '')}; */
+  /* transform: ${(props) => (props.active ? "translateY(-.125rem)" : "")}; */
+`;
+
+const TabLink2 = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  margin-left: 0.5rem;
+  font-size: ${(props) => (props.active ? ".8rem" : "0.8rem")};
+  padding: 0.25rem 1rem;
+  background: ${(props) => (props.active ? "#199FFF" : "#232f3eff")};
+  color: #fefefe;
+  border-radius: 2px 2px 0 0;
+  /* transform: ${(props) => (props.active ? "translateY(-.125rem)" : "")}; */
 `;
 
 const FRLeft = styled.div`
