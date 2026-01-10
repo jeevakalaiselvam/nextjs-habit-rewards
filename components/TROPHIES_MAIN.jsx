@@ -16,7 +16,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
       .sort((a, b) => (b?.unlocktime || 0) - (a?.unlocktime || 0));
   }, [sortedGames]);
 
-  const columnCount = 29;
+  const columnCount = 20;
   const rowCount = Math.ceil(allAchs.length / columnCount);
   const itemSize = 88;
 
@@ -76,7 +76,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
         <Grid
           columnCount={columnCount}
           columnWidth={itemSize}
-          height={800}
+          height={1200}
           rowCount={rowCount}
           rowHeight={itemSize}
           width={columnCount * itemSize + 20}
@@ -93,7 +93,7 @@ const GamesContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  max-height: 94vh;
+  max-height: 96vh;
   padding: 0.5rem 0rem;
   overflow: scroll;
   margin-bottom: 1rem;
