@@ -20,14 +20,14 @@ export default function GAMES_MAIN({
 
         game?.achievements?.forEach((ach) => {
           total++;
-          if (ach?.achievedByLearning) {
+          if (ach?.achievedByLearning || ach?.achieved == 1) {
             completed++;
           }
         });
 
         let completion = (completed / total) * 100;
         let allUnlocked = game?.achievements
-          ?.filter((ach) => ach?.achievedByLearning)
+          ?.filter((ach) => ach?.achievedByLearning || ach?.achieved == 1)
           ?.sort((ach1, ach2) => +ach2?.unlocktime - +ach1?.unlocktime);
 
         return (
@@ -118,7 +118,6 @@ export default function GAMES_MAIN({
                       'Hidden achievement:'
                     )?.[1];
 
-                    console.log({ allUnlocked });
                     if (index < allUnlocked?.length - 1) {
                       return (
                         <Popover
@@ -145,7 +144,9 @@ export default function GAMES_MAIN({
                             },
                           }}
                         >
-                          <AchCounter icon={ach?.icon}></AchCounter>
+                          <AchCounter icon={ach?.icon}>
+                            <AchIcon icon={ach?.icon}></AchIcon>
+                          </AchCounter>
                         </Popover>
                       );
                     } else {
