@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import MainHeader from "../components/MainHeader";
 import MainContent from "../components/MainContent";
@@ -23,12 +23,12 @@ export default function Main() {
   const [tabActive, setTabActive] = useState("GAMES");
   const [gamesToInclude, setGamesToInclude] = useState([]);
   const [learntAchs, setLearntAchs] = useState([]);
+  const gameIdRef = useRef();
 
   const refreshSteamGames = () => {
     if (gamesToInclude?.length == 0) {
     } else {
       setGamesLoading(true);
-      console.log("JEEVA CALLING", gamesToInclude);
       try {
         axios
           .post("/api/steam", { gamesToInclude: gamesToInclude })
@@ -180,18 +180,6 @@ export default function Main() {
 
   return (
     <Container>
-      {false && (
-        <MainHeader
-          tabActive={tabActive}
-          setTabActive={setTabActive}
-          games={finalGames}
-          gamesLoading={gamesLoading}
-          refreshData={refreshData}
-          gamesToInclude={gamesToInclude}
-          setGamesToInclude={setGamesToInclude}
-          learntAchs={learntAchs}
-        />
-      )}
       {(platinumDataLoading ||
         refeshing ||
         gamesLoading ||
@@ -227,6 +215,7 @@ export default function Main() {
             setLearntAchs={setLearntAchs}
             learntAchs={learntAchs}
             refreshIncludedGames={refreshIncludedGames}
+            gameIdRef={gameIdRef}
           />
         )}
     </Container>

@@ -16,6 +16,11 @@ export default function KANBAN_COLUMN({
   gameId,
   setShowingAll,
   setLearntAchs,
+  refreshData,
+  setTabActive,
+  selectedGame,
+  setSelectedGame,
+  gameIdRef,
 }) {
   const dispatch = useDispatch();
   const [markingAll, setMarkingAll] = useState(false);
@@ -98,6 +103,12 @@ export default function KANBAN_COLUMN({
     } catch (e) {}
   };
 
+  const refreshGameStats = () => {
+    gameIdRef.current = selectedGame;
+    console.log("SETTING REF", { gameIdRef, selectedGame });
+    refreshData();
+  };
+
   return (
     <KanbanSingle ref={drop}>
       <KanbanTitle
@@ -118,6 +129,15 @@ export default function KANBAN_COLUMN({
             Mark All Complete
           </KanbanMarkCompleteAll>
         )}
+        {
+          <RefreshStats
+            onClick={() => {
+              refreshGameStats();
+            }}
+          >
+            Refresh Stats
+          </RefreshStats>
+        }
         {true && category == "NOT COMPLETED" && !markingAll && (
           <KanbanFindHidden
             onClick={() => {
@@ -214,6 +234,24 @@ const KanbanFindHidden = styled.div`
   align-items: center;
   justify-content: center;
   position: absolute;
+  right: 90px;
+  top: 0;
+  font-size: 0.75rem;
+  transform: translateY(2px);
+  padding: 2px 8px;
+
+  &:hover {
+    color: #fefefe;
+    background-color: #111923;
+    padding: 2px 8px;
+  }
+`;
+
+const RefreshStats = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
   right: 0;
   top: 0;
   font-size: 0.75rem;
@@ -232,7 +270,7 @@ const KanbanMarkCompleteAll = styled.div`
   align-items: center;
   justify-content: center;
   position: absolute;
-  right: 0;
+  right: 140px;
   top: 0;
   font-size: 0.75rem;
   transform: translateY(2px);

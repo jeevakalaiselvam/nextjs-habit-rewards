@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import styled from "styled-components";
 import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from "../helpers/colorHelper";
 import KANBAN_COLUMN from "./KANBAN_COLUMN";
@@ -9,18 +9,30 @@ export default function GAME_MAIN({
   setLearntAchs,
   learntAchs,
   games,
+  refreshData,
+  setTabActive,
+  setSelectedGame,
+  gameIdRef,
 }) {
   const { kanbanObj } = useSelector((state) => state.kanban);
   const gameData = kanbanObj?.[selectedGame?.id] || {};
-  const [showingAll, setShowingAll] = React.useState(false);
+  const [showingAll, setShowingAll] = React.useState(true);
 
   const allCategories = ["NOT COMPLETED", "COMPLETED"];
 
   let selectedGameInner = { id: "", achievements: [] };
 
   if (selectedGameInner) {
-    selectedGameInner = games.find((game) => game?.id == selectedGame);
+    selectedGameInner = games.find((game) => {
+      if (gameIdRef.current) {
+        return game?.id == gameIdRef.current;
+      } else {
+        return game?.id == selectedGame;
+      }
+    });
   }
+
+  console.log({ gameIdRef });
 
   return (
     <Game>
@@ -62,6 +74,11 @@ export default function GAME_MAIN({
               gameId={selectedGameInner?.id}
               learntAchs={learntAchs}
               setLearntAchs={setLearntAchs}
+              refreshData={refreshData}
+              setTabActive={setTabActive}
+              selectedGame={selectedGame}
+              setSelectedGame={setSelectedGame}
+              gameIdRef={gameIdRef}
             />
           );
         })}

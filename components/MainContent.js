@@ -3,7 +3,7 @@ import {
   COLOR_BRONZE,
   generateDarkTextColorForLightBg,
 } from "../helpers/colorHelper";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   calculateLevelForAchs,
@@ -35,9 +35,10 @@ export default function MainContent({
   gamesToInclude,
   refreshIncludedGames,
   deleteGame,
+  gameIdRef,
 }) {
   const [selectedMode, setSelectedMode] = useState("GAMES");
-  const [selectedGame, setSelectedGame] = useState("");
+  const [selectedGame, setSelectedGame] = useState(gameIdRef?.current ?? "");
   const [showEditModal, setShowEditModal] = useState(false);
 
   const [gameData, setGameData] = useState({});
@@ -196,6 +197,9 @@ export default function MainContent({
                 setLearntAchs={setLearntAchs}
                 learntAchs={learntAchs}
                 games={games}
+                refreshData={refreshData}
+                setSelectedGame={setSelectedGame}
+                gameIdRef={gameIdRef}
               />
             )}
 
