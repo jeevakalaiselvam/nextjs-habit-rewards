@@ -4,7 +4,7 @@ import { useDrop } from 'react-dnd';
 import { moveAchievement } from '../store/store';
 import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Progress } from 'antd';
 import ACH_CARD_BOTTOM from './ACH_CARD_BOTTOM';
 import ACH_CARD_ICONS from './ACH_CARD_ICONS';
@@ -110,6 +110,10 @@ export default function KANBAN_COLUMN({
   };
 
   let forceIconsOnly = true;
+
+  useEffect(() => {
+    populateHiddenDescriptions(currentAchievements?.[0]);
+  }, [currentAchievements]);
 
   return (
     <KanbanSingle ref={drop}>
