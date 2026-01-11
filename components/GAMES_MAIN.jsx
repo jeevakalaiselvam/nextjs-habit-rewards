@@ -30,6 +30,8 @@ export default function GAMES_MAIN({
           ?.filter((ach) => ach?.achievedByLearning || ach?.achieved == 1)
           ?.sort((ach1, ach2) => +ach2?.unlocktime - +ach1?.unlocktime);
 
+        let amountToShow = 7;
+
         return (
           <GameContainer
             color={index % 2 == 0 ? '#F9F9F9' : '#F5F5F7'}
@@ -68,15 +70,15 @@ export default function GAMES_MAIN({
                 </Bottom>
               )}
               <BBottom>
-                {allUnlocked?.length >= 9 &&
-                  allUnlocked?.slice(0, 10).map((ach, index) => {
+                {allUnlocked?.length >= amountToShow &&
+                  allUnlocked?.slice(0, amountToShow + 1).map((ach, index) => {
                     let desc1 = ach?.hiddenDesc;
                     let desc2 = ach?.description;
                     let desc3 = ach?.hiddenDesc?.split(
                       'Hidden achievement:'
                     )?.[1];
 
-                    if (index < 9) {
+                    if (index < amountToShow) {
                       return (
                         <Popover
                           placement="bottom"
@@ -111,10 +113,10 @@ export default function GAMES_MAIN({
                       );
                     }
                   })}
-                {allUnlocked?.length < 9 &&
+                {allUnlocked?.length < amountToShow &&
                   [
                     ...allUnlocked,
-                    ...new Array(9 - allUnlocked?.length).fill(1),
+                    ...new Array(amountToShow - allUnlocked?.length).fill(1),
                   ].map((ach, index) => {
                     let desc1 = ach?.hiddenDesc;
                     let desc2 = ach?.description;
@@ -168,11 +170,10 @@ export default function GAMES_MAIN({
 const AchCounter = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 44px;
+  justify-content: space-between;
+  width: 64px;
+  height: 64px;
   z-index: 2;
-  margin: 2px 4px;
   font-size: 0.8rem;
   transform: translateY(-2px);
   background: #2e3238;
@@ -182,13 +183,12 @@ const AchIcon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 64px;
   background: ${(props) => `url(${props?.icon})`};
   background-size: contain;
   background-repeat: no-repeat;
   z-index: 2;
-  margin: 2px;
 `;
 
 const TLeft = styled.div`
@@ -222,7 +222,7 @@ const Top = styled.div`
 const BBottom = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-around;
   width: 100%;
   min-height: 32px;
   margin-top: 4px;
