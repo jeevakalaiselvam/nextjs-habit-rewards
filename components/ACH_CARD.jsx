@@ -154,7 +154,7 @@ export default function ACH_CARD({
           )}
         </AchRarity>
       )}
-      {(mouseEnter || mouseClick) && (
+      {false && (mouseEnter || mouseClick) && (
         <CompleteMark
           onClick={() => {
             moveToCompletion(ach);
