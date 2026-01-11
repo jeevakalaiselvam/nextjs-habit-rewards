@@ -149,3 +149,7 @@ span.ant-progress-text {
 .ant-popover-inner {
   background-color: #23262e !important;
 }
+
+.ant-popconfirm-message {
+  color: #fefefe !important;
+}

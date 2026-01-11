@@ -68,7 +68,7 @@ export default function Main() {
 
   const refreshData = () => {
     refreshSteamGames();
-    refreshLearntAchs();
+    // refreshLearntAchs();
   };
 
   useEffect(() => {
@@ -113,7 +113,8 @@ export default function Main() {
             return {
               ...ach,
               color: getColorBasedOnRarity(ach?.percentage),
-              achieved: allLearnAchs?.includes() ? 1 : 0,
+              achieved:
+                ach?.achieved == 1 ? 1 : allLearnAchs?.includes() ? 1 : 0,
               achievedByLearning: isLearnt,
               unlockedAt: allAchsMap[key]?.unlockedAt ?? "",
               unlocktime: isLearnt
