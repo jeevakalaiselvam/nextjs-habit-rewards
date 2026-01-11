@@ -78,7 +78,7 @@ export default function GAMES_MAIN({
                       'Hidden achievement:'
                     )?.[1];
 
-                    if (index < amountToShow - 1) {
+                    if (index < amountToShow) {
                       return (
                         <Popover
                           placement="bottom"
@@ -122,16 +122,6 @@ export default function GAMES_MAIN({
                             </AchInner>
                           </AchIconOuter>
                         </Popover>
-                      );
-                    } else {
-                      return (
-                        <AchIconOuter>
-                          <AchInner>
-                            <AchCounter>
-                              +{allUnlocked?.length - amountToShow}
-                            </AchCounter>
-                          </AchInner>
-                        </AchIconOuter>
                       );
                     }
                   })}
