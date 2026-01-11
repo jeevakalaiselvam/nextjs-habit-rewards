@@ -258,7 +258,6 @@ const AchIcon = styled.div`
   -webkit-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
   box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
   background: ${(props) => `url(${props?.icon})`} center/contain no-repeat;
-  filter: ${(props) => (props.achieved ? 'grayscale(0)' : 'grayscale(1)')};
 `;
 const TLeft = styled.div`
   display: flex;
