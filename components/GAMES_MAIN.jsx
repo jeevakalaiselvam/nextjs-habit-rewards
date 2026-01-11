@@ -150,13 +150,33 @@ export default function GAMES_MAIN({
                             },
                           }}
                         >
-                          <AchCounter icon={ach?.icon}>
-                            <AchIcon icon={ach?.icon}></AchIcon>
-                          </AchCounter>
+                          <AchIconOuter>
+                            <AchInner>
+                              <AchIcon
+                                achieved={ach?.achieved}
+                                icon={ach?.icon}
+                                onClick={() => {
+                                  const query = encodeURIComponent(
+                                    `${ach?.displayName} achievement ${ach?.gameName}`
+                                  );
+                                  window.open(
+                                    `https://www.google.com/search?q=${query}`,
+                                    '_blank'
+                                  );
+                                }}
+                              />
+                            </AchInner>
+                          </AchIconOuter>
                         </Popover>
                       );
                     } else {
-                      return <AchCounter>{index == 8 && '+0'}</AchCounter>;
+                      return (
+                        <AchIconOuter>
+                          <AchInner>
+                            <AchCounter>{index == 8 && '+0'}</AchCounter>
+                          </AchInner>
+                        </AchIconOuter>
+                      );
                     }
                   })}
               </BBottom>
@@ -167,30 +187,79 @@ export default function GAMES_MAIN({
     </Games>
   );
 }
+
+const BBottom = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
+  min-height: 32px;
+  margin-top: 4px;
+  margin-bottom: 2px;
+`;
+
 const AchCounter = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 64px;
-  height: 64px;
+  width: 60px;
+  height: 60px;
   z-index: 2;
   font-size: 0.8rem;
   transform: translateY(-2px);
-  background: #2e3238;
+`;
+
+const AchInner = styled.div`
+  padding: 3px;
+  border-radius: 3px;
+  overflow: hidden;
+  line-height: 1em;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    180deg,
+    hsla(0, 0%, 100%, 0.14) 0,
+    hsla(0, 0%, 100%, 0)
+  );
+`;
+
+const AchIconOuter = styled.div`
+  margin: 0 3px 7px;
+  height: 68px;
+  -webkit-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
+  box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
+  position: relative;
+  background: none;
+  border-left: 1px solid transparent;
+  border-top: 1px solid transparent;
+  border-color: hsla(0, 0%, 96.1%, 0.3) transparent transparent
+    hsla(0, 0%, 96.1%, 0.3);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px;
+
+  &:hover {
+    border-top: 1px solid transparent;
+    border-color: #fefefe77;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 4px;
+  }
 `;
 
 const AchIcon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 64px;
-  height: 64px;
-  background: ${(props) => `url(${props?.icon})`};
-  background-size: contain;
-  background-repeat: no-repeat;
-  z-index: 2;
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 60px;
+  -webkit-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
+  box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
+  background: ${(props) => `url(${props?.icon})`} center/contain no-repeat;
+  filter: ${(props) => (props.achieved ? 'grayscale(0)' : 'grayscale(1)')};
 `;
-
 const TLeft = styled.div`
   display: flex;
   align-items: center;
@@ -219,15 +288,6 @@ const Top = styled.div`
   padding: 2px 2px 0 2px;
 `;
 
-const BBottom = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  width: 100%;
-  min-height: 32px;
-  margin-top: 4px;
-`;
-
 const Bottom = styled.div`
   display: flex;
   align-items: center;
@@ -242,7 +302,7 @@ const BottomInner = styled.div`
   width: 100%;
   flex-direction: column;
   background-color: #16202d;
-  width: 490px;
+  width: 520px;
   color: #b8bcbf;
   padding: 2px 4px 0px 2px;
 `;
@@ -251,7 +311,7 @@ const GameImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  width: 490px;
+  width: 520px;
   height: 180px;
   margin: 0px 4px 0px 4px;
   background-image: ${(props) => `url(${props.url})`};
