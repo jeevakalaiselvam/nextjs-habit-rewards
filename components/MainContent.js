@@ -113,7 +113,7 @@ export default function MainContent({
             }}
             active={selectedMode == 'TROPHIES'}
           >
-            ICONS ({allUnlocked?.length})
+            COLLECTIONS ({allUnlocked?.length})
           </TabLink>
           <GameSearch>
             <input
