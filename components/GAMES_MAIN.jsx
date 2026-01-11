@@ -41,28 +41,32 @@ export default function GAMES_MAIN({
           >
             <GameImage url={HEADER_IMAGE(game?.id)}></GameImage>
             <BottomInner>
-              <Top>
-                <TLeft>
-                  {completed}/{total}
-                </TLeft>
-                <TRight
-                  onClick={() => {
-                    setShowEditModal(true);
-                    setGameData(() => game);
-                  }}
-                >
-                  {completion.toFixed(2)}%
-                </TRight>
-              </Top>
-              <Bottom>
-                <Progress
-                  style={{ margin: '-4px' }}
-                  percent={completion}
-                  showInfo={false}
-                  trailColor="#3C3F49"
-                  strokeColor={'#199FFF'}
-                />
-              </Bottom>
+              {false && (
+                <Top>
+                  <TLeft>
+                    {completed}/{total}
+                  </TLeft>
+                  <TRight
+                    onClick={() => {
+                      setShowEditModal(true);
+                      setGameData(() => game);
+                    }}
+                  >
+                    {completion.toFixed(2)}%
+                  </TRight>
+                </Top>
+              )}
+              {false && (
+                <Bottom>
+                  <Progress
+                    style={{ margin: '-4px' }}
+                    percent={completion}
+                    showInfo={false}
+                    trailColor="#3C3F49"
+                    strokeColor={'#199FFF'}
+                  />
+                </Bottom>
+              )}
               <BBottom>
                 {allUnlocked?.length >= 9 &&
                   allUnlocked?.slice(0, 10).map((ach, index) => {

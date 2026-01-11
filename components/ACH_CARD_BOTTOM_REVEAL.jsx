@@ -8,7 +8,7 @@ import { FaCheck, FaTrophy } from 'react-icons/fa';
 import GoldIcon from './GoldIcon';
 import BronzeIcon from './BronzeIcon';
 
-export default function ACH_CARD_BOTTOM({
+export default function ACH_CARD_BOTTOM_REVEAL({
   index,
   desc1,
   desc2,
@@ -89,7 +89,29 @@ export default function ACH_CARD_BOTTOM({
           </span>
           {index ? index : ''} - {ach?.displayName}
         </AchTitle>
-
+        <AchIconOuter>
+          <AchInner>
+            <AchIcon
+              achieved={ach?.achieved}
+              icon={
+                onlyUnlocked
+                  ? ach?.achieved == 1
+                    ? ach?.icon
+                    : ach?.icon
+                  : ach?.icon
+              }
+              onClick={() => {
+                const query = encodeURIComponent(
+                  `${ach?.displayName} achievement ${ach?.gameName}`
+                );
+                window.open(
+                  `https://www.google.com/search?q=${query}`,
+                  '_blank'
+                );
+              }}
+            />
+          </AchInner>
+        </AchIconOuter>
         <AchDesc>
           {hiddenMapper?.[ach?.displayName?.toLowerCase()] ??
             ach?.description ??
@@ -99,6 +121,58 @@ export default function ACH_CARD_BOTTOM({
     </AchCard>
   );
 }
+
+const AchIconOuter = styled.div`
+  margin: 0 3px 7px;
+  height: 74px;
+  -webkit-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
+  box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
+  position: relative;
+  background: none;
+  border-left: 1px solid transparent;
+  border-top: 1px solid transparent;
+  border-color: hsla(0, 0%, 96.1%, 0.3) transparent transparent
+    hsla(0, 0%, 96.1%, 0.3);
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px;
+
+  &:hover {
+    border-top: 1px solid transparent;
+    border-color: #fefefe77;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 4px;
+  }
+`;
+
+const AchInner = styled.div`
+  padding: 3px;
+  border-radius: 3px;
+  overflow: hidden;
+  line-height: 1em;
+  position: relative;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    180deg,
+    hsla(0, 0%, 100%, 0.14) 0,
+    hsla(0, 0%, 100%, 0)
+  );
+`;
+
+const AchIcon = styled.div`
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 64px;
+  height: 64px;
+  -webkit-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
+  box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
+  background: ${(props) => `url(${props?.icon})`} center/contain no-repeat;
+  filter: ${(props) => (props.achieved ? 'grayscale(0)' : 'grayscale(1)')};
+`;
 
 const AchTitle = styled.div`
   display: flex;
