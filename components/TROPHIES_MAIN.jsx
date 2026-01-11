@@ -1,24 +1,24 @@
-import React, { useMemo } from "react";
-import styled from "styled-components";
-import { Popover } from "antd";
-import { Grid } from "react-virtualized";
-import ACH_CARD_BOTTOM from "./ACH_CARD_BOTTOM";
+import React, { useMemo } from 'react';
+import styled from 'styled-components';
+import { Popover } from 'antd';
+import { Grid } from 'react-virtualized';
+import ACH_CARD_BOTTOM from './ACH_CARD_BOTTOM';
 
 export default function TROPHIES_MAIN({ sortedGames }) {
   // Use the name 'Grid' here as that is how it's imported
-  console.log("Grid component status:", Grid);
+  console.log('Grid component status:', Grid);
 
   const allAchs = useMemo(() => {
     if (!sortedGames) return [];
     return sortedGames
       .flatMap((game) => game?.achievements || [])
-      .filter((ach) => ach?.achievedByLearning)
+      .filter((ach) => ach?.achievedByLearning || ach?.achieved == 1)
       .sort((a, b) => (b?.unlocktime || 0) - (a?.unlocktime || 0));
   }, [sortedGames]);
 
-  const columnCount = 20;
+  const columnCount = 19;
   const rowCount = Math.ceil(allAchs.length / columnCount);
-  const itemSize = 78;
+  const itemSize = 80;
 
   // Define Cell inside so it has closure access to allAchs and columnCount
   const Cell = ({ columnIndex, rowIndex, key, style }) => {
@@ -28,7 +28,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
     if (!ach) return null;
 
     // Define desc3 so the Popover doesn't crash
-    const desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
+    const desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
 
     return (
       <div key={key} style={style}>
@@ -41,14 +41,13 @@ export default function TROPHIES_MAIN({ sortedGames }) {
               desc1={ach?.hiddenDesc}
               desc2={ach?.description}
               desc3={desc3}
-              index={allAchs?.length - index}
+              index={index}
               hideCompletion
               longer="600"
-              rowIndex={rowIndex}
             />
           }
           styles={{
-            content: { backgroundColor: "transparent", boxShadow: "none" },
+            content: { backgroundColor: 'transparent', boxShadow: 'none' },
             body: { padding: 0 },
           }}
         >
@@ -62,7 +61,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
                   );
                   window.open(
                     `https://www.google.com/search?q=${query}`,
-                    "_blank"
+                    '_blank'
                   );
                 }}
               />
@@ -79,14 +78,14 @@ export default function TROPHIES_MAIN({ sortedGames }) {
         <Grid
           columnCount={columnCount}
           columnWidth={itemSize}
-          height={1200}
+          height={800}
           rowCount={rowCount}
           rowHeight={itemSize}
           width={columnCount * itemSize + 20}
           cellRenderer={Cell}
         />
       ) : (
-        <div style={{ color: "white" }}>No achievements found.</div>
+        <div style={{ color: 'white' }}>No achievements found.</div>
       )}
     </GamesContainer>
   );
@@ -96,8 +95,7 @@ const GamesContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  max-height: 96vh;
-  padding: 0.5rem 0rem;
+  max-height: 90vh;
   overflow: scroll;
   margin-bottom: 1rem;
 

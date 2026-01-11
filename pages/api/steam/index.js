@@ -102,7 +102,7 @@ const handler = async (req, res) => {
       );
 
       //Add Player Achievement Progress
-      if (false) {
+      if (true) {
         finalGamesResponse = await Promise.all(
           finalGamesResponse?.map(async (game) => {
             const playerAchievementsResponse = await axios.get(
