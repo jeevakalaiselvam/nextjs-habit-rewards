@@ -112,7 +112,9 @@ export default function KANBAN_COLUMN({
   let forceIconsOnly = true;
 
   useEffect(() => {
-    populateHiddenDescriptions(currentAchievements?.[0]);
+    if (currentAchievements?.[0]) {
+      populateHiddenDescriptions(currentAchievements?.[0]);
+    }
   }, [currentAchievements]);
 
   return (

@@ -71,14 +71,14 @@ export default function GAMES_MAIN({
               )}
               <BBottom>
                 {allUnlocked?.length >= amountToShow &&
-                  allUnlocked?.slice(0, amountToShow + 1).map((ach, index) => {
+                  allUnlocked?.slice(0, amountToShow).map((ach, index) => {
                     let desc1 = ach?.hiddenDesc;
                     let desc2 = ach?.description;
                     let desc3 = ach?.hiddenDesc?.split(
                       'Hidden achievement:'
                     )?.[1];
 
-                    if (index < amountToShow) {
+                    if (index < amountToShow - 1) {
                       return (
                         <Popover
                           placement="bottom"
@@ -104,12 +104,34 @@ export default function GAMES_MAIN({
                             },
                           }}
                         >
-                          <AchIcon icon={ach?.icon}></AchIcon>
+                          <AchIconOuter>
+                            <AchInner>
+                              <AchIcon
+                                achieved={ach?.achieved}
+                                icon={ach?.icon}
+                                onClick={() => {
+                                  const query = encodeURIComponent(
+                                    `${ach?.displayName} achievement ${ach?.gameName}`
+                                  );
+                                  window.open(
+                                    `https://www.google.com/search?q=${query}`,
+                                    '_blank'
+                                  );
+                                }}
+                              />
+                            </AchInner>
+                          </AchIconOuter>
                         </Popover>
                       );
                     } else {
                       return (
-                        <AchCounter>+{allUnlocked?.length - 10}</AchCounter>
+                        <AchIconOuter>
+                          <AchInner>
+                            <AchCounter>
+                              +{allUnlocked?.length - amountToShow}
+                            </AchCounter>
+                          </AchInner>
+                        </AchIconOuter>
                       );
                     }
                   })}
@@ -201,11 +223,11 @@ const BBottom = styled.div`
 const AchCounter = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   width: 60px;
   height: 60px;
   z-index: 2;
-  font-size: 0.8rem;
+  font-size: 1.25rem;
   transform: translateY(-2px);
 `;
 
@@ -327,7 +349,6 @@ const GameContainer = styled.div`
   color: #333;
   padding: 4px 0px;
   flex-direction: column;
-  cursor: pointer;
 `;
 
 const Games2Line = styled.div`
