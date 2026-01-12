@@ -93,7 +93,8 @@ export default function TROPHIES_MAIN({ sortedGames }) {
 
 const GamesContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: center;
   width: 100%;
   max-height: 90vh;
   overflow: scroll;
