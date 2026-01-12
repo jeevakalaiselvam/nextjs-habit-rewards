@@ -1,12 +1,12 @@
-import React, { useMemo } from 'react';
-import styled from 'styled-components';
-import { Popover } from 'antd';
-import { Grid } from 'react-virtualized';
-import ACH_CARD_BOTTOM from './ACH_CARD_BOTTOM';
+import React, { useMemo } from "react";
+import styled from "styled-components";
+import { Popover } from "antd";
+import { Grid } from "react-virtualized";
+import ACH_CARD_BOTTOM from "./ACH_CARD_BOTTOM";
 
 export default function TROPHIES_MAIN({ sortedGames }) {
   // Use the name 'Grid' here as that is how it's imported
-  console.log('Grid component status:', Grid);
+  console.log("Grid component status:", Grid);
 
   const allAchs = useMemo(() => {
     if (!sortedGames) return [];
@@ -28,7 +28,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
     if (!ach) return null;
 
     // Define desc3 so the Popover doesn't crash
-    const desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
+    const desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
 
     return (
       <div key={key} style={style}>
@@ -41,13 +41,13 @@ export default function TROPHIES_MAIN({ sortedGames }) {
               desc1={ach?.hiddenDesc}
               desc2={ach?.description}
               desc3={desc3}
-              index={index}
+              index={allAchs?.length - index}
               hideCompletion
               longer="600"
             />
           }
           styles={{
-            content: { backgroundColor: 'transparent', boxShadow: 'none' },
+            content: { backgroundColor: "transparent", boxShadow: "none" },
             body: { padding: 0 },
           }}
         >
@@ -61,7 +61,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
                   );
                   window.open(
                     `https://www.google.com/search?q=${query}`,
-                    '_blank'
+                    "_blank"
                   );
                 }}
               />
@@ -85,7 +85,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
           cellRenderer={Cell}
         />
       ) : (
-        <div style={{ color: 'white' }}>No achievements found.</div>
+        <div style={{ color: "white" }}>No achievements found.</div>
       )}
     </GamesContainer>
   );
