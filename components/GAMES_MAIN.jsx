@@ -214,8 +214,8 @@ const AchCounter = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
   z-index: 2;
   font-size: 1.25rem;
   transform: translateY(-2px);
@@ -238,7 +238,7 @@ const AchInner = styled.div`
 
 const AchIconOuter = styled.div`
   margin: 0 3px 7px;
-  height: 68px;
+  height: 64px;
   -webkit-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
   box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
@@ -265,8 +265,8 @@ const AchIcon = styled.div`
   position: relative;
   top: 0;
   left: 0;
-  width: 60px;
-  height: 60px;
+  width: 56px;
+  height: 56px;
   -webkit-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
   box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
   background: ${(props) => `url(${props?.icon})`} center/contain no-repeat;
@@ -313,7 +313,7 @@ const BottomInner = styled.div`
   width: 100%;
   flex-direction: column;
   background-color: #16202d;
-  width: 520px;
+  width: 490px;
   color: #b8bcbf;
   padding: 2px 4px 0px 2px;
 `;
@@ -322,7 +322,7 @@ const GameImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  width: 520px;
+  width: 490px;
   height: 180px;
   margin: 0px 4px 0px 4px;
   background-image: ${(props) => `url(${props.url})`};
