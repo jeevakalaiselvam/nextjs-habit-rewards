@@ -339,6 +339,7 @@ const GameContainer = styled.div`
   color: #333;
   padding: 4px 0px;
   flex-direction: column;
+  cursor: pointer;
 `;
 
 const Games2Line = styled.div`
