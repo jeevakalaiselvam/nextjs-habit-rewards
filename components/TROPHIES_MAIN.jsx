@@ -15,9 +15,9 @@ export default function TROPHIES_MAIN({ sortedGames }) {
       .filter((ach) => ach?.achievedByLearning || ach?.achieved == 1)
       .sort((a, b) => (b?.unlocktime || 0) - (a?.unlocktime || 0));
   }, [sortedGames]);
-  const columnCount = 18;
+  const columnCount = 20;
   const rowCount = Math.ceil(allAchs.length / columnCount);
-  const itemSize = 80;
+  const itemSize = 82;
 
   // Define Cell inside so it has closure access to allAchs and columnCount
   const Cell = ({ columnIndex, rowIndex, key, style }) => {
@@ -124,7 +124,7 @@ const AchInner = styled.div`
 
 const AchIconOuter = styled.div`
   margin: 0 3px 7px;
-  height: 74px;
+  height: 76px;
   -webkit-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
   box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
@@ -151,8 +151,8 @@ const AchIcon = styled.div`
   position: relative;
   top: 0;
   left: 0;
-  width: 64px;
-  height: 64px;
+  width: 68px;
+  height: 68px;
   -webkit-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
   box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
   background: ${(props) => `url(${props?.icon})`} center/contain no-repeat;
