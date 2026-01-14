@@ -4,7 +4,7 @@ import { Popover } from 'antd';
 import { Grid } from 'react-virtualized';
 import ACH_CARD_BOTTOM from './ACH_CARD_BOTTOM';
 
-export default function TROPHIES_MAIN({ sortedGames }) {
+export default function TROPHIES_MAIN_MOBILE({ sortedGames }) {
   // Use the name 'Grid' here as that is how it's imported
   console.log('Grid component status:', Grid);
 
@@ -16,9 +16,9 @@ export default function TROPHIES_MAIN({ sortedGames }) {
       .sort((a, b) => (b?.unlocktime || 0) - (a?.unlocktime || 0));
   }, [sortedGames]);
 
-  const columnCount = 19;
+  const columnCount = 5;
   const rowCount = Math.ceil(allAchs.length / columnCount);
-  const itemSize = 80;
+  const itemSize = 72;
 
   // Define Cell inside so it has closure access to allAchs and columnCount
   const Cell = ({ columnIndex, rowIndex, key, style }) => {
@@ -80,7 +80,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
         <Grid
           columnCount={columnCount}
           columnWidth={itemSize}
-          height={800}
+          height={600}
           rowCount={rowCount}
           rowHeight={itemSize}
           width={columnCount * itemSize + 20}
@@ -95,9 +95,10 @@ export default function TROPHIES_MAIN({ sortedGames }) {
 
 const GamesContainer = styled.div`
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
+  justify-content: center;
+  align-items: flex-start;
   width: 100%;
+  min-height: 80vh;
   max-height: 100vh;
   overflow: scroll;
   margin-bottom: 1rem;
@@ -125,7 +126,7 @@ const AchInner = styled.div`
 
 const AchIconOuter = styled.div`
   margin: 0 3px 7px;
-  height: 74px;
+  height: 66px;
   -webkit-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
   -moz-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
   box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
@@ -152,8 +153,8 @@ const AchIcon = styled.div`
   position: relative;
   top: 0;
   left: 0;
-  width: 64px;
-  height: 64px;
+  width: 58px;
+  height: 58px;
   -webkit-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
   box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
   background: ${(props) => `url(${props?.icon})`} center/contain no-repeat;

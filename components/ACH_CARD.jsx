@@ -127,12 +127,12 @@ export default function ACH_CARD({
           }
           onClick={() => {
             if (window !== 'undefined') {
-              const searchQuery = `${
-                ach?.displayName
-              } achievement ${encodeURIComponent(ach?.gameName)} `;
-              window.open(`https://www.google.com/search?q=${searchQuery}`);
-
-              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
+              if (ach?.achieved == 0) {
+                const searchQuery = `${
+                  ach?.displayName
+                } achievement ${encodeURIComponent(ach?.gameName)} `;
+                window.open(`https://www.google.com/search?q=${searchQuery}`);
+              }
             }
           }}
         ></AchIcon>

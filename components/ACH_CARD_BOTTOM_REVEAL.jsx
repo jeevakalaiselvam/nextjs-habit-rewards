@@ -95,13 +95,15 @@ export default function ACH_CARD_BOTTOM_REVEAL({
               achieved={ach?.achieved}
               icon={ach?.icon}
               onClick={() => {
-                const query = encodeURIComponent(
-                  `${ach?.displayName} achievement ${ach?.gameName}`
-                );
-                window.open(
-                  `https://www.google.com/search?q=${query}`,
-                  '_blank'
-                );
+                if (ach?.achieved == 0) {
+                  const query = encodeURIComponent(
+                    `${ach?.displayName} achievement ${ach?.gameName}`
+                  );
+                  window.open(
+                    `https://www.google.com/search?q=${query}`,
+                    '_blank'
+                  );
+                }
               }}
             />
           </AchInner>
