@@ -11,8 +11,11 @@ import { MdOutlineArrowRight } from 'react-icons/md';
 import { MdDoubleArrow } from 'react-icons/md';
 import axios from 'axios';
 import { TbArrowBadgeRightFilled } from 'react-icons/tb';
-import { Spin } from 'antd';
+import { Popover, Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
+import ACH_CARD_BOTTOM from './ACH_CARD_BOTTOM';
+import ACH_CARD_BOTTOM_REVEAL from './ACH_CARD_BOTTOM_REVEAL';
+import ACH_CARD_ICON_REVEAL from './ACH_CARD_ICON_REVEAL';
 
 export default function ACH_CARD({
   index,
@@ -94,6 +97,7 @@ export default function ACH_CARD({
 
   let hiddenDescription = hiddenMapper?.[ach?.displayName?.toLowerCase()];
   let MAX_LENGTH = 50;
+  let revealIcon = true;
 
   return (
     <AchCard
@@ -118,25 +122,56 @@ export default function ACH_CARD({
           </span>
         </AchCompleted>
       )}
-      <AchIconOuter>
-        <AchIcon
-          icon={
-            ach?.achieved == 1 || ach?.achievedByLearning
-              ? ach?.icon
-              : ach?.icongray
-          }
-          onClick={() => {
-            if (window !== 'undefined') {
-              if (ach?.achieved == 0) {
-                const searchQuery = `${
-                  ach?.displayName
-                } achievement ${encodeURIComponent(ach?.gameName)} `;
-                window.open(`https://www.google.com/search?q=${searchQuery}`);
-              }
+
+      <Popover
+        placement="right"
+        mouseEnterDelay={0.1}
+        content={
+          revealIcon ? (
+            <ACH_CARD_ICON_REVEAL
+              ach={ach}
+              desc1={ach?.hiddenDesc}
+              desc2={ach?.description}
+              desc3={desc3}
+              index={index}
+              hiddenMapper={hiddenMapper}
+            />
+          ) : (
+            <ACH_CARD_BOTTOM
+              ach={ach}
+              desc1={ach?.hiddenDesc}
+              desc2={ach?.description}
+              desc3={desc3}
+              index={index}
+              hiddenMapper={hiddenMapper}
+            />
+          )
+        }
+        styles={{
+          content: { backgroundColor: 'transparent', boxShadow: 'none' },
+          body: { padding: 0 },
+        }}
+      >
+        <AchIconOuter>
+          <AchIcon
+            icon={
+              ach?.achieved == 1 || ach?.achievedByLearning
+                ? ach?.icon
+                : ach?.icongray
             }
-          }}
-        ></AchIcon>
-      </AchIconOuter>
+            onClick={() => {
+              if (window !== 'undefined') {
+                if (ach?.achieved == 0) {
+                  const searchQuery = `${
+                    ach?.displayName
+                  } achievement ${encodeURIComponent(ach?.gameName)} `;
+                  window.open(`https://www.google.com/search?q=${searchQuery}`);
+                }
+              }
+            }}
+          ></AchIcon>
+        </AchIconOuter>
+      </Popover>
 
       <AchData>
         <AchTitle>{ach?.displayName}</AchTitle>
