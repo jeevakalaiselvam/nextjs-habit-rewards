@@ -15,8 +15,7 @@ export default function TROPHIES_MAIN({ sortedGames }) {
       .filter((ach) => ach?.achievedByLearning || ach?.achieved == 1)
       .sort((a, b) => (b?.unlocktime || 0) - (a?.unlocktime || 0));
   }, [sortedGames]);
-
-  const columnCount = 19;
+  const columnCount = 18;
   const rowCount = Math.ceil(allAchs.length / columnCount);
   const itemSize = 80;
 

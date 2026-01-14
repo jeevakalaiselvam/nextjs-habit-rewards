@@ -322,7 +322,7 @@ const GameImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  width: 490px;
+  width: 480px;
   height: 180px;
   margin: 0px 4px 0px 4px;
   background-image: ${(props) => `url(${props.url})`};
