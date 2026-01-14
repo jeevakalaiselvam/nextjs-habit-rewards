@@ -109,7 +109,7 @@ export default function KANBAN_COLUMN({
     refreshData();
   };
 
-  let forceIconsOnly = true;
+  let forceIconsOnly = false;
 
   useEffect(() => {
     if (currentAchievements?.[0]) {
