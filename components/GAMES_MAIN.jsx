@@ -58,11 +58,11 @@ export default function GAMES_MAIN({
                   </TRight>
                 </Top>
               )}
-              {true && (
+              {false && (
                 <Bottom>
                   <Progress
                     style={{ margin: '-4px' }}
-                    percent={completion}
+                    percent={(completion / 50) * 100}
                     showInfo={false}
                     trailColor="#3C3F49"
                     strokeColor={'#199FFF'}

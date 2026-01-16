@@ -345,6 +345,6 @@ const KanbanSingle = styled.div`
   align-items: center;
   justify-content: flex-start;
   flex-direction: column;
-  margin: 0rem 1rem;
+  margin: 0rem 0rem;
   flex: 1;
 `;

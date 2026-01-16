@@ -1,8 +1,8 @@
-import React, { useRef } from "react";
-import styled from "styled-components";
-import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from "../helpers/colorHelper";
-import KANBAN_COLUMN from "./KANBAN_COLUMN";
-import { useSelector } from "react-redux";
+import React, { useRef } from 'react';
+import styled from 'styled-components';
+import { COLOR_UNLOCKED, COLOR_UNLOCKED_DARK } from '../helpers/colorHelper';
+import KANBAN_COLUMN from './KANBAN_COLUMN';
+import { useSelector } from 'react-redux';
 
 export default function GAME_MAIN({
   selectedGame,
@@ -18,9 +18,9 @@ export default function GAME_MAIN({
   const gameData = kanbanObj?.[selectedGame?.id] || {};
   const [showingAll, setShowingAll] = React.useState(true);
 
-  const allCategories = ["NOT COMPLETED", "COMPLETED"];
+  const allCategories = ['COMPLETED'];
 
-  let selectedGameInner = { id: "", achievements: [] };
+  let selectedGameInner = { id: '', achievements: [] };
 
   if (selectedGameInner) {
     selectedGameInner = games.find((game) => {
@@ -40,7 +40,7 @@ export default function GAME_MAIN({
         {allCategories.map((category) => {
           let currentAchievements = [];
 
-          if (category === "NOT COMPLETED") {
+          if (category === 'NOT COMPLETED') {
             currentAchievements = (
               selectedGameInner?.achievements ?? []
             )?.filter(
@@ -51,7 +51,7 @@ export default function GAME_MAIN({
                 ach.achieved != 1 &&
                 ach.achievedByLearning != 1
             );
-          } else if (category === "COMPLETED") {
+          } else if (category === 'COMPLETED') {
             currentAchievements = selectedGameInner?.achievements
               ?.filter((ach) => {
                 return ach.achieved == 1 || ach.achievedByLearning;
@@ -92,7 +92,7 @@ const Game2Line = styled.div`
   align-items: flex-start;
   justify-content: flex-start;
   width: 100%;
-  padding: 0rem 0.25rem;
+  padding: 0rem 0rem;
   background-color: #111923;
 `;
 
