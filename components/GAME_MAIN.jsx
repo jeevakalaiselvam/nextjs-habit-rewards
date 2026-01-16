@@ -18,7 +18,7 @@ export default function GAME_MAIN({
   const gameData = kanbanObj?.[selectedGame?.id] || {};
   const [showingAll, setShowingAll] = React.useState(true);
 
-  const allCategories = ['NOT COMPLETED', 'COMPLETED'];
+  const allCategories = ['NOT COMPLETED'];
 
   let selectedGameInner = { id: '', achievements: [] };
 
@@ -41,16 +41,7 @@ export default function GAME_MAIN({
           let currentAchievements = [];
 
           if (category === 'NOT COMPLETED') {
-            currentAchievements = (
-              selectedGameInner?.achievements ?? []
-            )?.filter(
-              (ach) =>
-                !allCategories.some((cat) =>
-                  gameData[cat]?.includes(ach.name)
-                ) &&
-                ach.achieved != 1 &&
-                ach.achievedByLearning != 1
-            );
+            currentAchievements = selectedGameInner?.achievements ?? [];
           } else if (category === 'COMPLETED') {
             currentAchievements = selectedGameInner?.achievements
               ?.filter((ach) => {
