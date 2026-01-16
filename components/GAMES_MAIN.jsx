@@ -58,7 +58,7 @@ export default function GAMES_MAIN({
                   </TRight>
                 </Top>
               )}
-              {false && (
+              {true && (
                 <Bottom>
                   <Progress
                     style={{ margin: '-4px' }}

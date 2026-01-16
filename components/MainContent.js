@@ -117,25 +117,29 @@ export default function MainContent({
           >
             ACHIEVEMENTS ({allUnlocked?.length})
           </TabLink>
-          <GameSearch>
-            <input
-              placeholder="Search Games..."
-              value={gameSearch}
-              onChange={(e) => setGameSearch(e.target.value)}
-            />
-          </GameSearch>
-          <TabLink2
-            onClick={() => {
-              setSelectedMode('SETTINGS');
-              setTabActive('SETTINGS');
-              if (window) {
-                localStorage.setItem('SELECTED_TAB', 'SETTINGS');
-              }
-            }}
-            active={selectedMode == 'SETTINGS'}
-          >
-            SETTINGS
-          </TabLink2>
+          {false && (
+            <GameSearch>
+              <input
+                placeholder="Search Games..."
+                value={gameSearch}
+                onChange={(e) => setGameSearch(e.target.value)}
+              />
+            </GameSearch>
+          )}
+          {false && (
+            <TabLink2
+              onClick={() => {
+                setSelectedMode('SETTINGS');
+                setTabActive('SETTINGS');
+                if (window) {
+                  localStorage.setItem('SELECTED_TAB', 'SETTINGS');
+                }
+              }}
+              active={selectedMode == 'SETTINGS'}
+            >
+              SETTINGS
+            </TabLink2>
+          )}
         </FRLeft>
         <FRRight></FRRight>
       </FirstRow>
