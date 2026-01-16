@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import { HEADER_IMAGE } from '../helpers/urlHelper';
 import { Popover, Progress } from 'antd';
 import ACH_CARD from './ACH_CARD';
+import ACH_CARD_BOTTOM_REVEAL from './ACH_CARD_BOTTOM_REVEAL';
 
 export default function GAMES_MAIN({
   sortedGames,
@@ -83,7 +84,7 @@ export default function GAMES_MAIN({
                         <Popover
                           placement="bottom"
                           content={
-                            <ACH_CARD
+                            <ACH_CARD_BOTTOM_REVEAL
                               ach={ach}
                               desc1={desc1}
                               desc2={desc2}
@@ -141,7 +142,7 @@ export default function GAMES_MAIN({
                         <Popover
                           placement="bottom"
                           content={
-                            <ACH_CARD
+                            <ACH_CARD_BOTTOM_REVEAL
                               ach={ach}
                               desc1={desc1}
                               desc2={desc2}

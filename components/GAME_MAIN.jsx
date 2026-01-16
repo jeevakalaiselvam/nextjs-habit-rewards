@@ -41,7 +41,10 @@ export default function GAME_MAIN({
           let currentAchievements = [];
 
           if (category === 'NOT COMPLETED') {
-            currentAchievements = selectedGameInner?.achievements ?? [];
+            currentAchievements =
+              selectedGameInner?.achievements?.filter(
+                (ach) => ach?.achieved == 1
+              ) ?? [];
           } else if (category === 'COMPLETED') {
             currentAchievements = selectedGameInner?.achievements
               ?.filter((ach) => {
