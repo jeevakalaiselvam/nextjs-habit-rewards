@@ -18,7 +18,7 @@ export default function GAME_MAIN({
   const gameData = kanbanObj?.[selectedGame?.id] || {};
   const [showingAll, setShowingAll] = React.useState(true);
 
-  const allCategories = ['COMPLETED'];
+  const allCategories = ['NOT COMPLETED', 'COMPLETED'];
 
   let selectedGameInner = { id: '', achievements: [] };
 

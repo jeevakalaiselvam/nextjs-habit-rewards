@@ -91,7 +91,7 @@ export default function MainContent({
 
       <FirstRow>
         <FRLeft>
-          {false && (
+          {true && (
             <TabLink
               onClick={() => {
                 setSelectedMode('GAMES_BACKLOG');
