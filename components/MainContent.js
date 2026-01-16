@@ -37,7 +37,7 @@ export default function MainContent({
   deleteGame,
   gameIdRef,
 }) {
-  const [selectedMode, setSelectedMode] = useState('TROPHIES');
+  const [selectedMode, setSelectedMode] = useState('GAMES');
   const [selectedGame, setSelectedGame] = useState(gameIdRef?.current ?? '');
   const [showEditModal, setShowEditModal] = useState(false);
 
