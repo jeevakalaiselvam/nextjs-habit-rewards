@@ -175,7 +175,7 @@ export default function KANBAN_COLUMN({
               let desc2 = ach?.description;
               let desc3 = ach?.hiddenDesc?.split('Hidden achievement:')?.[1];
               return (
-                <ACH_CARD
+                <ACH_CARD_ICONS
                   hiddenMapper={hiddenMapper}
                   ach={ach}
                   index={index}
@@ -183,6 +183,7 @@ export default function KANBAN_COLUMN({
                   desc2={desc2}
                   desc3={desc3}
                   lane={category}
+                  revealIcon
                   setLearntAchs={setLearntAchs}
                 />
               );

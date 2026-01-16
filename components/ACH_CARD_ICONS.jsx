@@ -111,7 +111,7 @@ export default function ACH_CARD_ICONS({
           <AchInner>
             <AchIcon
               achieved={ach?.achieved}
-              icon={ach?.icon}
+              icon={ach?.achieved ? ach?.icon : ach?.icongray}
               onClick={() => {
                 const query = encodeURIComponent(
                   `${ach?.displayName} achievement ${ach?.gameName}`
@@ -178,8 +178,6 @@ const AchIcon = styled.div`
   -webkit-box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
   box-shadow: 5px 5px 22px -2px rgba(0, 0, 0, 0.5);
   background: ${(props) => `url(${props?.icon})`} center/contain no-repeat;
-  filter: ${(props) =>
-    props.achieved ? 'grayscale(0)' : 'grayscale(1) brightness(25%)'};
 `;
 
 const AchCard = styled.div`
