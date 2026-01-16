@@ -117,7 +117,7 @@ export default function MainContent({
           >
             ACHIEVEMENTS ({allUnlocked?.length})
           </TabLink>
-          {false && (
+          {true && (
             <GameSearch>
               <input
                 placeholder="Search Games..."
@@ -126,7 +126,7 @@ export default function MainContent({
               />
             </GameSearch>
           )}
-          {false && (
+          {true && (
             <TabLink2
               onClick={() => {
                 setSelectedMode('SETTINGS');
