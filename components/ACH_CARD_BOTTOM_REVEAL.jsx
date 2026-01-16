@@ -113,6 +113,9 @@ export default function ACH_CARD_BOTTOM_REVEAL({
             ach?.description ??
             'Secret Achievement'}
         </AchDesc>
+        <Unlocked>
+          {formatUnlockDate(new Date(ach?.unlocktime * 1000))}
+        </Unlocked>
       </AchData>
     </AchCard>
   );
@@ -177,6 +180,17 @@ const AchTitle = styled.div`
   font-size: 16px;
   font-weight: 500;
   color: rgb(220, 222, 223);
+`;
+
+const Unlocked = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-left: 0.5rem;
+  font-size: 12px;
+  font-weight: 400;
+  color: rgb(184, 188, 191);
+  opacity: 0.25;
 `;
 
 const AchDesc = styled.div`

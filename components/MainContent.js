@@ -37,7 +37,7 @@ export default function MainContent({
   deleteGame,
   gameIdRef,
 }) {
-  const [selectedMode, setSelectedMode] = useState('GAMES');
+  const [selectedMode, setSelectedMode] = useState('TROPHIES');
   const [selectedGame, setSelectedGame] = useState(gameIdRef?.current ?? '');
   const [showEditModal, setShowEditModal] = useState(false);
 
@@ -91,7 +91,7 @@ export default function MainContent({
 
       <FirstRow>
         <FRLeft>
-          {true && (
+          {false && (
             <TabLink
               onClick={() => {
                 setSelectedMode('GAMES_BACKLOG');

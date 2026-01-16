@@ -20,7 +20,7 @@ export default function Main() {
   const [platinumData, setPlatinumData] = useState([]);
   const [finalGames, setFinalGames] = useState([]);
   const [refeshing, setRefreshing] = useState(false);
-  const [tabActive, setTabActive] = useState('GAMES');
+  const [tabActive, setTabActive] = useState('TROPHIES');
   const [gamesToInclude, setGamesToInclude] = useState([]);
   const [learntAchs, setLearntAchs] = useState([]);
   const gameIdRef = useRef();
