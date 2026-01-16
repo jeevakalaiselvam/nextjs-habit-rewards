@@ -113,9 +113,11 @@ export default function ACH_CARD_BOTTOM_REVEAL({
             ach?.description ??
             'Secret Achievement'}
         </AchDesc>
-        <Unlocked>
-          {formatUnlockDate(new Date(ach?.unlocktime * 1000))}
-        </Unlocked>
+        {ach?.achieved == 1 && (
+          <Unlocked>
+            {formatUnlockDate(new Date(ach?.unlocktime * 1000))}
+          </Unlocked>
+        )}
       </AchData>
     </AchCard>
   );
