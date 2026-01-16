@@ -18,7 +18,7 @@ export default function GAME_MAIN({
   const gameData = kanbanObj?.[selectedGame?.id] || {};
   const [showingAll, setShowingAll] = React.useState(true);
 
-  const allCategories = ['NOT COMPLETED'];
+  const allCategories = ['UNLOCKED'];
 
   let selectedGameInner = { id: '', achievements: [] };
 
@@ -40,7 +40,7 @@ export default function GAME_MAIN({
         {allCategories.map((category) => {
           let currentAchievements = [];
 
-          if (category === 'NOT COMPLETED') {
+          if (category === 'UNLOCKED') {
             currentAchievements =
               selectedGameInner?.achievements?.filter(
                 (ach) => ach?.achieved == 1
