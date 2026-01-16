@@ -322,7 +322,7 @@ const GameImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  width: 480px;
+  width: 492px;
   height: 180px;
   margin: 0px 4px 0px 4px;
   background-image: ${(props) => `url(${props.url})`};
@@ -340,6 +340,7 @@ const GameContainer = styled.div`
   padding: 4px 0px;
   flex-direction: column;
   cursor: pointer;
+  margin: 4px;
 `;
 
 const Games2Line = styled.div`
