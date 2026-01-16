@@ -136,7 +136,7 @@ export default function GAMES_MAIN({
                       'Hidden achievement:'
                     )?.[1];
 
-                    if (index < allUnlocked?.length - 1) {
+                    if (index < allUnlocked?.length) {
                       return (
                         <Popover
                           placement="bottom"
