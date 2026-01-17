@@ -19,32 +19,32 @@ const handler = async (req, res) => {
       let finalGamesResponse = [];
 
       //Get All Games for the current User
-      // const gamesResponse = await axios.get(FETCH_ALL_GAMES);
-      // const gamesData = gamesResponse.data;
-      // finalGamesResponse = gamesData?.response?.games?.map((game) => {
-      //   const newGame = {
-      //     id: game?.appid,
-      //     playtime: game?.playtime_forever,
-      //     lastPlayed: game?.rtime_last_played,
-      //   };
-      //   return newGame;
-      // });
+      const gamesResponse = await axios.get(FETCH_ALL_GAMES);
+      const gamesData = gamesResponse.data;
+      finalGamesResponse = gamesData?.response?.games?.map((game) => {
+        const newGame = {
+          id: game?.appid,
+          playtime: game?.playtime_forever,
+          lastPlayed: game?.rtime_last_played,
+        };
+        return newGame;
+      });
 
-      finalGamesResponse = [
-        ...[...gamesToInclude]?.map((item) => ({
-          id: item,
-          playtime: '',
-          lastPlayed: '',
-        })),
-      ];
+      // finalGamesResponse = [
+      //   ...[...gamesToInclude]?.map((item) => ({
+      //     id: item,
+      //     playtime: '',
+      //     lastPlayed: '',
+      //   })),
+      // ];
 
-      console.log(
-        util.inspect(finalGamesResponse, {
-          showHidden: false,
-          depth: null,
-          colors: true,
-        })
-      );
+      // console.log(
+      //   util.inspect(finalGamesResponse, {
+      //     showHidden: false,
+      //     depth: null,
+      //     colors: true,
+      //   })
+      // );
 
       //Get All Achievements Schema for All Games
       finalGamesResponse = await Promise.all(
