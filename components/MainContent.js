@@ -2051,6 +2051,7 @@ const TrophyTypeCell = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  transform: translateY(0.25rem);
 `;
 
 /* right sidebar (game detail — light) */
