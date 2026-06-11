@@ -1175,7 +1175,6 @@ const ProfileLabel = styled.div`
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
   padding-right: 1rem;
   border-right: 1px solid rgba(255, 255, 255, 0.2);
   margin-right: 0.5rem;
@@ -1198,7 +1197,6 @@ const TabLink = styled.div`
   padding: 0.75rem 0.9rem;
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
   cursor: pointer;
   color: ${(p) => (p.active ? "#ffffff" : "rgba(255,255,255,0.6)")};
   border-bottom: 3px solid ${(p) => (p.active ? "#ffffff" : "transparent")};
@@ -1548,7 +1546,6 @@ const DSectionHeader = styled.div`
   padding: 0.6rem 1rem;
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
   color: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 `;
@@ -1572,7 +1569,6 @@ const DSidePanelHeader = styled.div`
   padding: 0.55rem 0.75rem;
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
   color: #fff;
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
   display: flex;
@@ -1739,7 +1735,6 @@ const BSNum = styled.div`
 const BSLabel = styled.div`
   font-size: 0.6rem;
   color: #aab;
-  letter-spacing: 0.08em;
   margin-top: 1px;
 `;
 const BannerStatDiv = styled.div`
@@ -1792,7 +1787,6 @@ const BreadTab = styled.div`
   padding: 0 0.85rem;
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
   cursor: pointer;
   color: ${(p) => (p.active ? "#fff" : "#aaa")};
   border-bottom: 3px solid ${(p) => (p.active ? D_LINK : "transparent")};
@@ -1940,7 +1934,6 @@ const TrophyListHeader = styled.div`
   padding: 0.65rem 1rem;
   font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
 `;
 const TrophyFilterBar = styled.div`
   display: flex;
@@ -2033,7 +2026,6 @@ const RarPct = styled.div`
 `;
 const RarLabel = styled.div`
   font-size: 0.62rem;
-  letter-spacing: 0.05em;
   color: ${(p) =>
     p.rarLabel === "Ultra Rare"
       ? "#c0392b"
