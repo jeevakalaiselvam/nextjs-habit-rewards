@@ -507,19 +507,27 @@ export default function MainContent({
                     <GCLabel>Trophies</GCLabel>
                     <GCTrophyRow>
                       <GCT color={COLOR_PLATINUM}>
-                        <GCTBadge c={COLOR_PLATINUM}>P</GCTBadge>
+                        <GCIconWrap>
+                          <PlatinumIconS />
+                        </GCIconWrap>
                         {gdCounts.platinum}
                       </GCT>
                       <GCT color={COLOR_GOLD}>
-                        <GCTBadge c={COLOR_GOLD}>G</GCTBadge>
+                        <GCIconWrap>
+                          <GoldIconS />
+                        </GCIconWrap>
                         {gdCounts.gold}
                       </GCT>
                       <GCT color={COLOR_SILVER2}>
-                        <GCTBadge c={COLOR_SILVER2}>S</GCTBadge>
+                        <GCIconWrap>
+                          <SilverIconS />
+                        </GCIconWrap>
                         {gdCounts.silver}
                       </GCT>
                       <GCT color={COLOR_BRONZE}>
-                        <GCTBadge c={COLOR_BRONZE}>B</GCTBadge>
+                        <GCIconWrap>
+                          <BronzeIconS />
+                        </GCIconWrap>
                         {gdCounts.bronze}
                       </GCT>
                     </GCTrophyRow>
@@ -1026,6 +1034,7 @@ export default function MainContent({
                   {rarestEarned.map((ach, i) => (
                     <DRarestRow key={i}>
                       <DRarestIcon>{trophyIcon(ach.color)}</DRarestIcon>
+                      <DRarestAchImg icon={ach.icon} />
                       <DRarestInfo>
                         <DRarestName>{ach.displayName}</DRarestName>
                         <DRarestGame>{ach.gameName}</DRarestGame>
@@ -1136,9 +1145,6 @@ export default function MainContent({
   );
 }
 
-/* ════════════════════════════════════
-   SHARED
-   ════════════════════════════════════ */
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -1588,6 +1594,14 @@ const DRarestIcon = styled.div`
   transform: scale(1.3);
   margin: 0 0.2rem;
 `;
+const DRarestAchImg = styled.div`
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 2px;
+  background: ${(p) =>
+    p.icon ? `url(${p.icon}) center/contain no-repeat` : D_BORDER};
+`;
 const DRarestInfo = styled.div`
   flex: 1;
   min-width: 0;
@@ -1886,6 +1900,7 @@ const PCIconWrap = styled.div`
   height: 23px;
   flex-shrink: 0;
   line-height: 0;
+  transform: translate(0.5rem, 0.25rem);
 `;
 const PCTNum = styled.span`
   font-size: 0.95rem;
@@ -1937,7 +1952,6 @@ const TFilterBtn = styled.div`
   padding: 0.5rem 1rem;
   font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
   cursor: pointer;
   color: ${(p) => (p.active ? "#fff" : "rgba(255,255,255,0.65)")};
   border-bottom: 3px solid ${(p) => (p.active ? "#fff" : "transparent")};
@@ -2080,6 +2094,16 @@ const GCTrophyRow = styled.div`
   display: flex;
   gap: 0.4rem;
   align-items: center;
+`;
+const GCIconWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  line-height: 0;
+  transform: translate(0.25rem, 0.25rem);
 `;
 const GCT = styled.div`
   display: flex;

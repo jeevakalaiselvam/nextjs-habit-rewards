@@ -123,10 +123,10 @@ export default function AchCard({
           {(platinumFlag
             ? ach?.description
             : desc2
-            ? desc2
-            : desc3
-            ? desc3
-            : desc1
+              ? desc2
+              : desc3
+                ? desc3
+                : desc1
           )?.replaceAll("Hidden achievement:", "")}
         </AchDesc>
       </AchData>
@@ -360,7 +360,7 @@ const AchTrophy = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   min-width: 50px;
-  transform: scale(2) translate(0.25rem, 0.25rem);
+  transform: scale(2) translate(0.5rem, 0.25rem);
 `;
 
 const AchTrophy2 = styled.div`
@@ -520,8 +520,11 @@ const Text = styled.div`
   transform: translate(-50%, -50%);
   position: absolute;
   font-size: 0.7rem;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3), -1px -1px 1px rgba(0, 0, 0, 0.3),
-    1px -1px 1px rgba(0, 0, 0, 0.3), -1px 1px 1px rgba(0, 0, 0, 0.3);
+  text-shadow:
+    1px 1px 1px rgba(0, 0, 0, 0.3),
+    -1px -1px 1px rgba(0, 0, 0, 0.3),
+    1px -1px 1px rgba(0, 0, 0, 0.3),
+    -1px 1px 1px rgba(0, 0, 0, 0.3);
   color: #f9f9f9;
   text-align: center;
   font-weight: 600;
