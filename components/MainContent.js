@@ -451,7 +451,13 @@ export default function MainContent({
                     return (
                       <TrophyRow key={i} earned={earned} alt={i % 2 !== 0}>
                         <TrophyRowIcon earned={earned}>
-                          <TrophyAchIcon icon={ach.icon} />
+                          <TrophyAchIcon
+                            icon={ach.icon}
+                            onClick={() => {
+                              const q = encodeURIComponent(`${ach.displayName} achievement ${selectedGame.name}`);
+                              window.open(`https://www.google.com/search?q=${q}`);
+                            }}
+                          />
                         </TrophyRowIcon>
                         <TrophyRowInfo>
                           <TrophyRowName>{ach.displayName}</TrophyRowName>
@@ -1987,6 +1993,7 @@ const TrophyAchIcon = styled.div`
   height: 56px;
   background: ${(p) =>
     p.icon ? `url(${p.icon}) center/contain no-repeat` : "none"};
+  cursor: pointer;
 `;
 const TrophyRowInfo = styled.div`
   flex: 1;
