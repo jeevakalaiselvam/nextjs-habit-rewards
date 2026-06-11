@@ -1,40 +1,30 @@
 import styled from "styled-components";
 import {
-  COLOR_ACCENT,
-  COLOR_BLUE,
   COLOR_BRONZE,
   COLOR_GOLD,
-  COLOR_GREEN,
+  COLOR_GOLD2,
   COLOR_GREEN2,
-  COLOR_GREY,
-  COLOR_SILVER,
+  COLOR_PLATINUM,
   COLOR_SILVER2,
-  COLOR_UNLOCKED,
   COLOR_UNLOCKED_DARK,
-  generateDarkTextColorForLightBg,
 } from "../helpers/colorHelper";
 import { useEffect, useState } from "react";
-import { HEADER_IMAGE } from "../helpers/urlHelper";
-import { MdOutlineModeEditOutline } from "react-icons/md";
-import { TbEdit, TbPlayCard } from "react-icons/tb";
-import { HiPlay } from "react-icons/hi2";
+import { HEADER_IMAGE, STEAM_STORE_URL } from "../helpers/urlHelper";
 import {
   calculateLevelForAchs,
-  calculatePSLevelAndProgress,
   calculateRankForCompletion,
   getAchsBasedOnRarity,
 } from "../helpers/trophyHelper";
-import GoldIcon from "./GoldIcon";
 import GoldIconS from "./GoldIconS";
 import SilverIconS from "./SilverIconS";
 import BronzeIconS from "./BronzeIconS";
-import PlatinumIcon from "./PlatinumIcon";
-import { FaEdge, FaPlay } from "react-icons/fa";
-import EditGameForm from "./EditGameForm";
 import PlatinumIconS from "./PlatinumIconS";
+import GoldIcon from "./GoldIcon";
+import SilverIcon from "./SilverIcon";
+import BronzeIcon from "./BronzeIcon";
+import PlatinumIcon from "./PlatinumIcon";
 import { LoadingOutlined } from "@ant-design/icons";
-import { Button, Col, Popover, Row, Spin } from "antd";
-import GameCdImage from "./GameCdImage";
+import { Button, Popover, Row, Spin } from "antd";
 import {
   formatDate,
   formatDate1,
@@ -43,15 +33,40 @@ import {
   timeAgoInGame,
 } from "../helpers/dateHelper";
 import StatInformation from "./StatInformation";
-import LevelIcon from "./LevelIcon";
-import LevelUpIcon from "./LevelUpIcon";
 import LevelProgressChart from "./LevelProgressChart";
 import MultiProgressChart from "./MultiProgressChart";
 import BarProgressChart from "./BarProgressChart";
 import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
-import AchCard from "./AchCard";
-import GameCdImageSmall from "./GameCdImageSmall";
+import EditGameForm from "./EditGameForm";
+
+/* ── colour tokens ── */
+/* profile-page (light — matches game detail page) */
+const D_BG = "#ebebeb";
+const D_PANEL = "#ffffff";
+const D_HDR = "#336291";
+const D_ROW_ALT = "#f5f5f7";
+const D_BORDER = "#dde0e5";
+const D_TEXT = "#333333";
+const D_MUTED = "#666666";
+const D_LINK = "#4486c6";
+const D_TRACK = "#d0d4da";
+const D_FILL = "#4487c5";
+
+/* game-detail page (light) */
+const L_BG = "#ebebeb";
+const L_PANEL = "#ffffff";
+const L_ROW_ALT = "#f5f5f7";
+const L_BORDER = "#dde0e5";
+const L_TEXT = "#333333";
+const L_MUTED = "#666666";
+const L_LINK = "#4486c6";
+const L_HDR_BG = "#336291";
+const L_HDR_TEXT = "#ffffff";
+const L_FILTER = "#4487c5";
+const L_EARNED = "#f0fff4";
+const L_TRACK = "#d0d4da";
+const L_FILL = "#4487c5";
 
 export default function MainContent({
   games,
@@ -64,320 +79,54 @@ export default function MainContent({
   setGamesToInclude,
   gamesToInclude,
 }) {
-  const [gameHovered, setGameHovered] = useState("");
   const [selectedRarity, setSelectedRarity] = useState("COMMON");
   const [selectedMode, setSelectedMode] = useState(tabActive ?? "GAMES");
-  const [selectedGame, setSelectedGame] = useState("");
+  const [selectedGame, setSelectedGame] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [selected, setSelected] = useState("GAMES");
-  const [active, setActive] = useState("GAMES");
   const [gameData, setGameData] = useState({});
   const [gameSearch, setGameSearch] = useState("");
   const [activeAch, setActiveAch] = useState(0);
   const [gameDelayed, setGameDelayed] = useState(true);
+  const [achFilter, setAchFilter] = useState("ALL"); // ALL | EARNED | UNEARNED
 
-  let unearnedBG = 0;
-  let platinumABG = 0;
-  let goldABG = 0;
-  let silverABG = 0;
-  let bronzeABG = 0;
-  let platinumBG = 0;
-  let goldBG = 0;
-  let silverBG = 0;
-  let bronzeBG = 0;
-  let totalBG = 0;
-
-  selectedGame?.achievements?.forEach((ach) => {
-    totalBG++;
-    if (ach?.achieved == 0) {
-      unearnedBG++;
-      if (ach?.color == "Platinum") {
-        platinumABG++;
-      }
-      if (ach?.color == "Gold") {
-        goldABG++;
-      }
-      if (ach?.color == "Silver") {
-        silverABG++;
-      }
-      if (ach?.color == "Bronze") {
-        bronzeABG++;
-      }
-    } else {
-      if (ach?.color == "Platinum") {
-        platinumBG++;
-      }
-      if (ach?.color == "Gold") {
-        goldBG++;
-      }
-      if (ach?.color == "Silver") {
-        silverBG++;
-      }
-      if (ach?.color == "Bronze") {
-        bronzeBG++;
-      }
-    }
-  });
-
-  let targetToGet = 0;
-  let targetObtained = 0;
-
-  targetToGet = 1;
-
-  targetObtained = selectedGame?.completed;
-
-  totalBG = selectedGame?.achievements?.length;
-  let completedBG = selectedGame?.achievements?.filter(
-    (item) => item?.achieved == 1
-  )?.length;
-
-  let completionBG = completedBG == 0 ? 0 : (completedBG / totalBG) * 100;
-
-  let { color, rank } = calculateRankForCompletion(completionBG ?? 0);
-  let lastAch = selectedGame?.achievements?.sort(
-    (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
-  )?.[selectedGame?.achievements?.length - 1];
-
-  let allDLCKeys = [
-    {
-      dlcKey: "DLC1",
-      name: selectedGame?.dlc1Name,
-      image: selectedGame?.dlc1Image,
-    },
-    {
-      dlcKey: "DLC2",
-      name: selectedGame?.dlc2Name,
-      image: selectedGame?.dlc2Image,
-    },
-    {
-      dlcKey: "DLC3",
-      name: selectedGame?.dlc3Name,
-      image: selectedGame?.dlc3Image,
-    },
-    {
-      dlcKey: "DLC4",
-      name: selectedGame?.dlc4Name,
-      image: selectedGame?.dlc4Image,
-    },
-    {
-      dlcKey: "DLC5",
-      name: selectedGame?.dlc5Name,
-      image: selectedGame?.dlc5Image,
-    },
-  ];
-
-  allDLCKeys = allDLCKeys?.filter((dlc) => {
-    let allDlcKeys = selectedGame?.dlcAchievements?.map((item) => item?.dlc);
-    if (allDlcKeys?.includes(dlc?.dlcKey)) {
-      return true;
-    }
-  });
-
-  let sortedGames = games.sort((a, b) =>
-    a?.name.localeCompare(b?.name, undefined, { sensitivity: "base" })
+  /* ── sorted games ── */
+  let sortedGames = [...(games ?? [])].sort((a, b) =>
+    a?.name?.localeCompare(b?.name, undefined, { sensitivity: "base" }),
+  );
+  sortedGames = sortedGames.filter((g) =>
+    g?.name?.toLowerCase()?.includes(gameSearch?.toLowerCase()),
   );
 
-  let platinumGames = [];
-  let nonPlatinumGames = [];
-
-  platinumGames = sortedGames?.filter((game) => {
-    let allCompletion = 0;
-    let total = 0;
-    let unearned = 0;
-    let platinumA = 0;
-    let goldA = 0;
-    let silverA = 0;
-    let bronzeA = 0;
-    let platinum = 0;
-    let gold = 0;
-    let silver = 0;
-    let bronze = 0;
-
-    game?.achievements?.forEach((ach) => {
-      total++;
-      if (ach?.achieved == 0) {
-        unearned++;
-        if (ach?.color == "Platinum") {
-          platinumA++;
-        }
-        if (ach?.color == "Gold") {
-          goldA++;
-        }
-        if (ach?.color == "Silver") {
-          silverA++;
-        }
-        if (ach?.color == "Bronze") {
-          bronzeA++;
-        }
-      } else {
-        if (ach?.color == "Platinum") {
-          platinum++;
-        }
-        if (ach?.color == "Gold") {
-          gold++;
-        }
-        if (ach?.color == "Silver") {
-          silver++;
-        }
-        if (ach?.color == "Bronze") {
-          bronze++;
-        }
-      }
-    });
-
-    let completed = game?.achievements?.filter(
-      (item) => item?.achieved == 1
-    )?.length;
-    let completion = (completed == 0 ? 0 : (completed / total) * 100)?.toFixed(
-      2
-    );
-    allCompletion = allCompletion + completion;
-    if (total == completed) {
-      completed = completed + 1;
-    }
-
-    completed = completed > total ? total : completed;
-
-    return completion == 100;
-  });
-
-  nonPlatinumGames = sortedGames?.filter((game) => {
-    let allCompletion = 0;
-    let total = 0;
-    let unearned = 0;
-    let platinumA = 0;
-    let goldA = 0;
-    let silverA = 0;
-    let bronzeA = 0;
-    let platinum = 0;
-    let gold = 0;
-    let silver = 0;
-    let bronze = 0;
-
-    game?.achievements?.forEach((ach) => {
-      total++;
-      if (ach?.achieved == 0) {
-        unearned++;
-        if (ach?.color == "Platinum") {
-          platinumA++;
-        }
-        if (ach?.color == "Gold") {
-          goldA++;
-        }
-        if (ach?.color == "Silver") {
-          silverA++;
-        }
-        if (ach?.color == "Bronze") {
-          bronzeA++;
-        }
-      } else {
-        if (ach?.color == "Platinum") {
-          platinum++;
-        }
-        if (ach?.color == "Gold") {
-          gold++;
-        }
-        if (ach?.color == "Silver") {
-          silver++;
-        }
-        if (ach?.color == "Bronze") {
-          bronze++;
-        }
-      }
-    });
-
-    let completed = game?.achievements?.filter(
-      (item) => item?.achieved == 1
-    )?.length;
-    let completion = (completed == 0 ? 0 : (completed / total) * 100)?.toFixed(
-      2
-    );
-    allCompletion = allCompletion + completion;
-    if (total == completed) {
-      completed = completed + 1;
-    }
-
-    completed = completed > total ? total : completed;
-
-    return completion != 100;
-  });
-
-  const { ultrarare, veryrare, rare, uncommon, common } =
-    getAchsBasedOnRarity(games);
-
-  let selectedRarityAchs = [];
-
-  if (selectedRarity == "ULTRA RARE") {
-    selectedRarityAchs = ultrarare;
-  }
-
-  if (selectedRarity == "VERY RARE") {
-    selectedRarityAchs = veryrare;
-  }
-
-  if (selectedRarity == "RARE") {
-    selectedRarityAchs = rare;
-  }
-
-  if (selectedRarity == "UNCOMMON") {
-    selectedRarityAchs = uncommon;
-  }
-
-  if (selectedRarity == "COMMON") {
-    selectedRarityAchs = common;
-  }
-
-  console.log({ selectedRarityAchs });
-
-  sortedGames = sortedGames?.filter((game) =>
-    game?.name?.toLowerCase()?.includes(gameSearch?.toLowerCase())
-  );
-
+  /* ── all trophies across all games ── */
   let allUnlocked = [];
   let notUnlocked = [];
-
   games?.forEach((game) => {
-    console.log(game);
     game?.achievements?.forEach((ach) => {
-      if (ach?.achieved == 1) {
-        allUnlocked.push(ach);
-      } else {
-        notUnlocked.push(ach);
-      }
+      const enriched = { ...ach, gameId: game.id, gameName: game.name };
+      if (ach?.achieved == 1) allUnlocked.push(enriched);
+      else notUnlocked.push(enriched);
     });
   });
+  allUnlocked = allUnlocked.sort((a, b) => b?.unlocktime - a?.unlocktime);
+  notUnlocked = notUnlocked.sort((a, b) => b?.percentage - a?.percentage);
 
-  allUnlocked = allUnlocked?.sort(
-    (ach1, ach2) => ach2?.unlocktime - ach1?.unlocktime
+  /* ── rarity buckets ── */
+  const { ultrarare, veryrare, rare, uncommon, common } = getAchsBasedOnRarity(
+    games ?? [],
   );
 
-  notUnlocked = notUnlocked?.sort(
-    (ach1, ach2) => ach2?.percentage - ach1?.percentage
-  );
+  /* ── sidebar: rarest earned ── */
+  const rarestEarned = allUnlocked
+    .filter((a) => a.color !== "Platinum")
+    .sort((a, b) => +a.percentage - +b.percentage)
+    .slice(0, 5);
 
-  useEffect(() => {
-    let timer = setInterval(() => {
-      setActiveAch((old) => {
-        if (old < allUnlocked?.length - 1) {
-          return old + 1;
-        } else {
-          return 0;
-        }
-      });
-    }, [3000]);
-    return () => {
-      clearInterval(timer);
-    };
-  }, [games]);
+  /* ── sidebar: platinum milestones ── */
+  const platinumsEarned = allUnlocked
+    .filter((a) => a.color === "Platinum")
+    .sort((a, b) => +a.unlocktime - +b.unlocktime);
 
-  let shouldShowRight =
-    selectedMode !== "LIBRARY" &&
-    selectedMode !== "LIBRARY_NEW" &&
-    selectedMode !== "TROPHY_LOG" &&
-    selectedMode !== "LEVEL_HISTORY" &&
-    selectedMode !== "TROPHY_ADVISOR" &&
-    selectedMode !== "STATS";
-
+  /* ── level history ── */
   const {
     levelAchs,
     dailyUnlocks,
@@ -385,32 +134,113 @@ export default function MainContent({
     dailyTypeBreakdown,
     hourlyUnlocks,
     weeklyUnlocks,
-  } = calculateLevelForAchs(games);
+  } = calculateLevelForAchs(games ?? []);
 
-  const saveIncludedGame = async () => {
-    try {
-      await axios.post("/api/include/include", {
-        games: gamesToInclude,
-      });
-      refreshIncludedGames();
-      setSelectedMode("GAMES");
-
-      console.log("Games updated successfully");
-    } catch (error) {
-      console.error("Error saving games", error);
-    }
-  };
+  /* ── timers ── */
+  useEffect(() => {
+    const t = setInterval(
+      () => setActiveAch((o) => (o < allUnlocked.length - 1 ? o + 1 : 0)),
+      3000,
+    );
+    return () => clearInterval(t);
+  }, [games]);
 
   useEffect(() => {
     setGameDelayed(true);
-    let timer = setTimeout(() => {
-      setGameDelayed(false);
-    }, 1000);
-    return () => {
-      clearTimeout(timer);
-    };
+    const t = setTimeout(() => setGameDelayed(false), 600);
+    return () => clearTimeout(t);
   }, [selectedGame?.id]);
 
+  /* ── save included games ── */
+  const saveIncludedGame = async () => {
+    try {
+      await axios.post("/api/include/include", { games: gamesToInclude });
+      setSelectedMode("GAMES");
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  /* ── per-game counts helper ── */
+  const getGameCounts = (game) => {
+    let platinum = 0,
+      gold = 0,
+      silver = 0,
+      bronze = 0,
+      total = 0,
+      completed = 0;
+    game?.achievements?.forEach((ach) => {
+      total++;
+      if (ach?.achieved == 1) {
+        completed++;
+        if (ach.color === "Platinum") platinum++;
+        else if (ach.color === "Gold") gold++;
+        else if (ach.color === "Silver") silver++;
+        else if (ach.color === "Bronze") bronze++;
+      }
+    });
+    const completion =
+      total === 0 ? 0 : +((completed / total) * 100).toFixed(2);
+    const { color, rank } = calculateRankForCompletion(completion);
+    const sortedByPct = [...(game?.achievements ?? [])].sort(
+      (a, b) => +b.percentage - +a.percentage,
+    );
+    const lastAch = sortedByPct[sortedByPct.length - 1];
+    return {
+      platinum,
+      gold,
+      silver,
+      bronze,
+      total,
+      completed,
+      completion,
+      color,
+      rank,
+      lastAch,
+    };
+  };
+
+  const descFor = (ach) => {
+    const d3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
+    return ach?.description || d3 || ach?.hiddenDesc || "";
+  };
+
+  const trophyIcon = (color, size = "S") => {
+    if (size === "S") {
+      if (color === "Platinum") return <PlatinumIconS />;
+      if (color === "Gold") return <GoldIconS />;
+      if (color === "Silver") return <SilverIconS />;
+      return <BronzeIconS />;
+    }
+    if (color === "Platinum") return <PlatinumIcon />;
+    if (color === "Gold") return <GoldIcon />;
+    if (color === "Silver") return <SilverIcon />;
+    return <BronzeIcon />;
+  };
+
+  const isGameDetail = selectedMode === "GAME" && selectedGame;
+
+  /* ── game-detail computed values ── */
+  let gdCounts = isGameDetail ? getGameCounts(selectedGame) : null;
+  let gdAchs = isGameDetail
+    ? [...(selectedGame.achievements ?? [])].sort(
+        (a, b) => +b.percentage - +a.percentage,
+      )
+    : [];
+  if (isGameDetail && achFilter === "EARNED")
+    gdAchs = gdAchs.filter((a) => a.achieved == 1);
+  if (isGameDetail && achFilter === "UNEARNED")
+    gdAchs = gdAchs.filter((a) => a.achieved != 1);
+
+  const gdUnlocked = isGameDetail
+    ? [...(selectedGame.achievements ?? [])]
+        .filter((a) => a.achieved == 1)
+        .sort((a, b) => a.unlocktime - b.unlocktime)
+    : [];
+  const firstTrophy = gdUnlocked[0];
+  const latestTrophy = gdUnlocked[gdUnlocked.length - 1];
+
+  /* ═══════════════════════════ JSX ═══════════════════════════ */
   return (
     <Container>
       {showEditModal && (
@@ -423,1295 +253,1093 @@ export default function MainContent({
           setGamesLoading={setGamesLoading}
         />
       )}
-      <FirstRow>
-        <GameSearch>
-          <input
-            placeholder="Search Games..."
-            value={gameSearch}
-            onChange={(e) => setGameSearch(e.target.value)}
-          />
-        </GameSearch>
-      </FirstRow>
-      <FirstRow>
-        <FRItem>P</FRItem>
-        <FRLeft>OBSIDIANLOGAN'S PROFILE</FRLeft>
-        <FRRight>
-          <TabLink
-            onClick={() => {
-              setSelected("GAMES");
-              setSelectedMode("GAMES");
-              setTabActive("GAMES");
-              if (window) {
-                localStorage.setItem("SELECTED_TAB", "GAMES");
-              }
-            }}
-            active={selectedMode == "GAMES"}
-            onMouseEnter={() => setActive("GAMES")}
-            onMouseLeave={() => setActive("")}
-          >
-            GAMES
-          </TabLink>
-        </FRRight>
-        <FRRight>
-          <TabLink
-            onClick={() => setSelectedMode("TROPHY_LOG")}
-            active={selectedMode == "TROPHY_LOG"}
-            onMouseEnter={() => setActive("TROPHY_LOG")}
-            onMouseLeave={() => setActive("")}
-          >
-            TROPHY LOG
-          </TabLink>
-        </FRRight>
-        <FRRight>
-          <TabLink
-            onClick={() => setSelectedMode("TROPHY_ADVISOR")}
-            active={selectedMode == "TROPHY_ADVISOR"}
-            onMouseEnter={() => setActive("TROPHY_ADVISOR")}
-            onMouseLeave={() => setActive("")}
-          >
-            TROPHY ADVISOR
-          </TabLink>
-        </FRRight>
-        <FRRight>
-          <TabLink
-            onClick={() => setSelectedMode("STATS")}
-            active={selectedMode == "STATS"}
-            onMouseEnter={() => setActive("STATS")}
-            onMouseLeave={() => setActive("")}
-          >
-            STATS
-          </TabLink>
-        </FRRight>
-        <FRRight>
-          <TabLink
-            onClick={() => setSelectedMode("LEVEL_HISTORY")}
-            active={selectedMode == "LEVEL_HISTORY"}
-            onMouseEnter={() => setActive("LEVEL_HISTORY")}
-            onMouseLeave={() => setActive("")}
-          >
-            LEVEL HISTORY
-          </TabLink>
-        </FRRight>
-        <FRRight>
-          <TabLink
-            onClick={() => setSelectedMode("SETTINGS")}
-            active={selectedMode == "SETTINGS"}
-            onMouseEnter={() => setActive("SETTINGS")}
-            onMouseLeave={() => setActive("")}
-          >
-            SETTINGS
-          </TabLink>
-        </FRRight>
-      </FirstRow>
-      <RecentAchs>
-        {allUnlocked
-          ?.slice(0, 31)
-          ?.filter((ach) => ach?.color != "Platinum")
-          ?.map((ach, index) => {
-            let desc1 = ach?.hiddenDesc;
-            let desc2 = ach?.description;
-            let desc3 = ach?.hiddenDesc?.split("Hidden achievement:")?.[1];
-            return (
-              <Popover
-                placement="top"
-                title={""}
-                content={
-                  <RecentAch
-                    color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                    achieved={ach?.achieved}
-                  >
-                    <AchIconOuter achieved={ach?.achieved}>
-                      <AchIcon icon={ach?.icon}></AchIcon>
-                    </AchIconOuter>{" "}
-                    <DataContainer active={true}>
-                      <AchData active={index === activeAch}>
-                        <AchTitle>{ach?.displayName}</AchTitle>
-                        <AchDesc>
-                          {" "}
-                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
-                        </AchDesc>
-                        {ach?.achieved == 1 && (
-                          <AchUnlocked>
-                            <UnlockedT1>
-                              <span style={{ color: COLOR_GREEN2 }}>
-                                {timeAgoInGame(
-                                  new Date(ach?.unlocktime * 1000)
-                                )}
-                              </span>
-                              <span style={{ margin: "0rem .25rem" }}>in</span>
-                              <span style={{ color: COLOR_BLUE }}>
-                                {ach?.gameName}
-                              </span>
-                            </UnlockedT1>
-                          </AchUnlocked>
-                        )}
-                      </AchData>
-                      <Seperator padding={".25rem"} />{" "}
-                      <AchRarity active={index === activeAch}>
-                        <span style={{ fontSize: "1.2rem" }}>
-                          {ach?.percentage}%
-                        </span>
-                        <span style={{ fontSize: ".7rem" }}>
-                          {ach?.label?.toUpperCase()}
-                        </span>
-                      </AchRarity>
-                      <Seperator padding={".25rem"} />
-                      <AchTrophy active={index === activeAch}>
-                        {ach?.color == "Platinum" && <PlatinumIconS />}
-                        {ach?.color == "Gold" && <GoldIconS />}
-                        {ach?.color == "Silver" && <SilverIconS />}
-                        {ach?.color == "Bronze" && <BronzeIconS />}
-                      </AchTrophy>
-                    </DataContainer>
-                  </RecentAch>
+
+      {/* ── Tab navigation bar (always shown) ── */}
+      <TabBar>
+        <TabBarInner>
+          <ProfileLabel>
+            <ProfileBadge>P</ProfileBadge>
+            N7SHADOWX'S PROFILE
+          </ProfileLabel>
+          <TabLinks>
+            {[
+              { key: "GAMES", label: "PROFILE" },
+              { key: "TROPHY_LOG", label: "TROPHY LOG" },
+              { key: "TROPHY_ADVISOR", label: "TROPHY ADVISOR" },
+              { key: "STATS", label: "STATS" },
+              { key: "LEVEL_HISTORY", label: "LEVEL HISTORY" },
+              { key: "SETTINGS", label: "SETTINGS" },
+            ].map(({ key, label }) => (
+              <TabLink
+                key={key}
+                active={
+                  selectedMode === key ||
+                  (key === "GAMES" && selectedMode === "GAME")
                 }
+                onClick={() => {
+                  setSelectedMode(key);
+                  setTabActive(key);
+                  if (key !== "GAME") setSelectedGame(null);
+                }}
               >
-                <RecentAch
-                  color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                  achieved={ach?.achieved}
+                {label}
+              </TabLink>
+            ))}
+          </TabLinks>
+        </TabBarInner>
+      </TabBar>
+
+      {/* ══════════════════════════════════════════
+          GAME DETAIL PAGE
+      ══════════════════════════════════════════ */}
+      {isGameDetail && (
+        <GameDetailPage>
+          {/* Banner */}
+          <GameBanner bg={HEADER_IMAGE(selectedGame.id)}>
+            <BannerDim />
+            <BannerStatsBar>
+              <BannerStat>
+                <BSNum>{gdCounts.completed}</BSNum>
+                <BSLabel>TROPHIES EARNED</BSLabel>
+              </BannerStat>
+              <BannerStatDiv />
+              <BannerStat>
+                <BSNum>{gdCounts.total}</BSNum>
+                <BSLabel>TOTAL TROPHIES</BSLabel>
+              </BannerStat>
+              <BannerStatDiv />
+              <BannerStat>
+                <BSNum>{gdCounts.completion}%</BSNum>
+                <BSLabel>COMPLETION</BSLabel>
+              </BannerStat>
+              <BannerStatDiv />
+              <BannerStat>
+                <BSNum style={{ color: gdCounts.color }}>{gdCounts.rank}</BSNum>
+                <BSLabel>RANK</BSLabel>
+              </BannerStat>
+            </BannerStatsBar>
+          </GameBanner>
+
+          {/* Breadcrumb + sub-tabs */}
+          <GameBreadcrumbBar>
+            <GameBreadcrumbInner>
+              <Breadcrumb>
+                <BreadLink
+                  onClick={() => {
+                    setSelectedGame(null);
+                    setSelectedMode("GAMES");
+                    setTabActive("GAMES");
+                  }}
                 >
-                  <AchIconOuter achieved={ach?.achieved}>
-                    <AchIcon icon={ach?.icon}></AchIcon>
-                  </AchIconOuter>{" "}
-                </RecentAch>
-              </Popover>
-            );
-          })}
-      </RecentAchs>
-      <SecondRow>
-        {gamesLoading && (
-          <SRLeft>
-            <Spin
-              indicator={<LoadingOutlined style={{ fontSize: 48 }} spin />}
-            />
-          </SRLeft>
-        )}
-        {!gamesLoading && (
-          <SRLeft>
-            {selectedMode == "LEVEL_HISTORY" && (
-              <LevelProgressChart
-                dailyUnlocks={levelAchs?.map((ach) => ({
-                  date: formatDate3(new Date(ach?.unlocktime * 1000)),
-                  Level: ach?.levelReached,
-                }))}
-                size={1370}
-              />
-            )}
+                  N7SHADOWX
+                </BreadLink>
+                <BreadSep>›</BreadSep>
+                <BreadCurrent>{selectedGame.name.toUpperCase()}</BreadCurrent>
+              </Breadcrumb>
+              <BreadTabs>
+                <BreadTab active>TROPHIES</BreadTab>
+              </BreadTabs>
+            </GameBreadcrumbInner>
+          </GameBreadcrumbBar>
 
-            {(selectedMode == "GAMES" || selectedMode == "GAME") && (
-              <Games>
-                <Games2Line>
-                  {games
-                    ?.filter((game) => {
-                      return JSON.parse(gamesToInclude ?? "[]")?.includes(
-                        game?.id
-                      );
-                    })
-                    ?.sort((game1, game2) => {
-                      let total1 = 0;
+          {/* Main layout: left content + right sidebar */}
+          <GamePageLayout>
+            <GamePageLeft>
+              {/* Player card */}
+              <PlayerCard>
+                <PCLeft>
+                  <PCAvatar />
+                  <PCInfo>
+                    <PCName>N7ShadowX</PCName>
+                    <PCDate>
+                      {latestTrophy
+                        ? formatDate(new Date(latestTrophy.unlocktime * 1000))
+                        : "Not started"}
+                    </PCDate>
+                  </PCInfo>
+                </PCLeft>
+                <PCDivider />
+                <PCRank color={gdCounts.color}>{gdCounts.rank}</PCRank>
+                <PCDivider />
+                <PCRight>
+                  <PCTrophies>
+                    <PCT>
+                      <PCIconWrap>
+                        <PlatinumIconS />
+                      </PCIconWrap>
+                      <PCTNum style={{ color: COLOR_PLATINUM }}>
+                        {gdCounts.platinum}
+                      </PCTNum>
+                    </PCT>
+                    <PCT>
+                      <PCIconWrap>
+                        <GoldIconS />
+                      </PCIconWrap>
+                      <PCTNum style={{ color: COLOR_GOLD }}>
+                        {gdCounts.gold}
+                      </PCTNum>
+                    </PCT>
+                    <PCT>
+                      <PCIconWrap>
+                        <SilverIconS />
+                      </PCIconWrap>
+                      <PCTNum style={{ color: COLOR_SILVER2 }}>
+                        {gdCounts.silver}
+                      </PCTNum>
+                    </PCT>
+                    <PCT>
+                      <PCIconWrap>
+                        <BronzeIconS />
+                      </PCIconWrap>
+                      <PCTNum style={{ color: COLOR_BRONZE }}>
+                        {gdCounts.bronze}
+                      </PCTNum>
+                    </PCT>
+                  </PCTrophies>
+                  <PCBarRow>
+                    <PCBarTrack>
+                      <PCBarFill pct={gdCounts.completion} />
+                    </PCBarTrack>
+                    <PCBarLabel>{gdCounts.completion}%</PCBarLabel>
+                  </PCBarRow>
+                </PCRight>
+              </PlayerCard>
 
-                      game1?.achievements?.forEach((ach) => {
-                        total1++;
-                      });
+              {/* Trophy list header */}
+              <TrophyListHeader>
+                {selectedGame.name.toUpperCase()} TROPHIES
+              </TrophyListHeader>
 
-                      let completed1 = game1?.achievements?.filter(
-                        (item) => item?.achieved == 1
-                      )?.length;
-                      let completion1 = (
-                        completed1 == 0 ? 0 : (completed1 / total1) * 100
-                      )?.toFixed(2);
+              {/* Filter bar */}
+              <TrophyFilterBar>
+                <TFilterBtn
+                  active={achFilter === "ALL"}
+                  onClick={() => setAchFilter("ALL")}
+                >
+                  TROPHIES (ALL)
+                </TFilterBtn>
+                <TFilterBtn
+                  active={achFilter === "EARNED"}
+                  onClick={() => setAchFilter("EARNED")}
+                >
+                  EARNED
+                </TFilterBtn>
+                <TFilterBtn
+                  active={achFilter === "UNEARNED"}
+                  onClick={() => setAchFilter("UNEARNED")}
+                >
+                  UNEARNED
+                </TFilterBtn>
+              </TrophyFilterBar>
 
-                      let total2 = 0;
-
-                      game2?.achievements?.forEach((ach) => {
-                        total2++;
-                      });
-
-                      let completed2 = game2?.achievements?.filter(
-                        (item) => item?.achieved == 1
-                      )?.length;
-                      let completion2 = (
-                        completed2 == 0 ? 0 : (completed2 / total2) * 100
-                      )?.toFixed(2);
-
-                      return completion1 - completion2;
-                    })
-                    ?.map((game, index) => {
-                      let allCompletion = 0;
-                      let total = 0;
-                      let unearned = 0;
-                      let platinumA = 0;
-                      let goldA = 0;
-                      let silverA = 0;
-                      let bronzeA = 0;
-                      let platinum = 0;
-                      let gold = 0;
-                      let silver = 0;
-                      let bronze = 0;
-
-                      game?.achievements?.forEach((ach) => {
-                        total++;
-                        if (ach?.achieved == 0) {
-                          unearned++;
-                          if (ach?.color == "Platinum") {
-                            platinumA++;
-                          }
-                          if (ach?.color == "Gold") {
-                            goldA++;
-                          }
-                          if (ach?.color == "Silver") {
-                            silverA++;
-                          }
-                          if (ach?.color == "Bronze") {
-                            bronzeA++;
-                          }
-                        } else {
-                          if (ach?.color == "Platinum") {
-                            platinum++;
-                          }
-                          if (ach?.color == "Gold") {
-                            gold++;
-                          }
-                          if (ach?.color == "Silver") {
-                            silver++;
-                          }
-                          if (ach?.color == "Bronze") {
-                            bronze++;
-                          }
-                        }
-                      });
-
-                      let completed = game?.achievements?.filter(
-                        (item) => item?.achieved == 1
-                      )?.length;
-                      let completion = (
-                        completed == 0 ? 0 : (completed / total) * 100
-                      )?.toFixed(2);
-                      allCompletion = allCompletion + completion;
-                      if (total == completed) {
-                        completed = completed + 1;
-                      }
-
-                      completed = completed > total ? total : completed;
-
-                      let { color, rank } =
-                        calculateRankForCompletion(completion);
-                      let lastAch = game?.achievements?.sort(
-                        (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
-                      )?.[game?.achievements?.length - 1];
-
-                      let allUnlocked = game?.achievements
-                        ?.filter((ach) => ach?.achieved == 1)
-                        ?.sort(
-                          (ach1, ach2) => +ach2?.percentage - +ach1?.percentage
-                        );
-
-                      let lastUnlocked = allUnlocked?.[allUnlocked?.length - 1];
-
-                      let isPlatinumNotAdded = game?.achievements?.length == 1;
-
-                      return (
-                        <GameContainer
-                          onClick={() => {
-                            setSelectedGame(game);
-                            setSelectedMode("GAME");
-                            setTabActive("GAME");
-                          }}
-                          color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                          isSelected={game?.id == selectedGame?.id}
-                        >
-                          <GameCdImageSmall cover={game?.cover} scale={3} />
-                          <GameData>
-                            <GameDataInner1>
-                              <GameTitle
-                                onClick={() => {
-                                  setShowEditModal(true);
-                                  setGameData((old) => game);
-                                }}
+              {/* Trophy rows */}
+              {gameDelayed ? (
+                <LightLoadingCenter>
+                  <Spin
+                    indicator={
+                      <LoadingOutlined
+                        style={{ fontSize: 32, color: L_FILL }}
+                        spin
+                      />
+                    }
+                  />
+                </LightLoadingCenter>
+              ) : (
+                <TrophyList>
+                  {gdAchs.map((ach, i) => {
+                    const earned = ach.achieved == 1;
+                    return (
+                      <TrophyRow key={i} earned={earned} alt={i % 2 !== 0}>
+                        <TrophyRowIcon earned={earned}>
+                          <TrophyAchIcon icon={ach.icon} />
+                        </TrophyRowIcon>
+                        <TrophyRowInfo>
+                          <TrophyRowName>{ach.displayName}</TrophyRowName>
+                          <TrophyRowDesc>{descFor(ach)}</TrophyRowDesc>
+                        </TrophyRowInfo>
+                        <TrophyRowRight>
+                          {earned && ach.unlocktime && (
+                            <EarnedDate>
+                              <span>
+                                {formatDate1(new Date(ach.unlocktime * 1000))}
+                              </span>
+                              <span
+                                style={{ opacity: 0.7, fontSize: "0.68rem" }}
                               >
-                                {game?.name}
-                              </GameTitle>
-                              <GameCompletion>
-                                {completed} of {total} Trophies
-                              </GameCompletion>
-                            </GameDataInner1>
-                            <GameDataInner2>
-                              <GameInfo>
-                                <Trophies>
-                                  <TTop>
-                                    <TSingle>
-                                      <GoldIconS />
-                                      <span
-                                        style={{
-                                          transform:
-                                            "translate(-.5rem,-.25rem)",
-                                          color: COLOR_GOLD,
-                                          fontSize: "1rem",
-                                        }}
-                                      >
-                                        {gold}
-                                      </span>
-                                    </TSingle>
-                                    <TSingle>
-                                      <SilverIconS />
-                                      <span
-                                        style={{
-                                          transform:
-                                            "translate(-.5rem,-.25rem)",
-                                          color: COLOR_SILVER2,
-                                          fontSize: "1rem",
-                                        }}
-                                      >
-                                        {silver}
-                                      </span>
-                                    </TSingle>
-                                    <TSingle>
-                                      <BronzeIconS />
-                                      <span
-                                        style={{
-                                          transform:
-                                            "translate(-.5rem,-.25rem)",
-                                          color: COLOR_BRONZE,
-                                          fontSize: "1rem",
-                                        }}
-                                      >
-                                        {bronze}
-                                      </span>
-                                    </TSingle>
-                                  </TTop>
-                                  {true && (
-                                    <TBottom>
-                                      <Outer>
-                                        <Inner percentage={completion}></Inner>
-                                        <Text>{completion} %</Text>
-                                      </Outer>
-                                    </TBottom>
-                                  )}
-                                </Trophies>
-                                <Seperator></Seperator>
-                                <Platinum isPlatinum={completed >= total}>
-                                  <span
-                                    style={{
-                                      opacity: completed >= total ? 1 : 0.25,
-                                    }}
-                                  >
-                                    <PlatinumIcon />
-                                  </span>
-                                  <span
-                                    style={{
-                                      fontSize: ".7rem",
-                                      marginTop: "4px",
-                                      fontWeight: "bold",
-                                      opacity: completed >= total ? 1 : 0.25,
-                                    }}
-                                  >
-                                    {Number(lastAch?.percentage)} %
-                                  </span>
-                                </Platinum>
-                              </GameInfo>
-                            </GameDataInner2>
-                            {/* <GameLastPlayed>
-                              {lastUnlocked &&
-                                formatDate(
-                                  new Date(lastUnlocked?.unlocktime * 1000)
-                                )}
-                              {!lastUnlocked && "Yet to Start"}
-                            </GameLastPlayed>
-                            <GameHours>
-                              {game?.playtime == 0
-                                ? "Yet to Start"
-                                : (game?.playtime / 60)?.toFixed(1)}
-                              {" Hours"}
-                            </GameHours> */}
-                            {isPlatinumNotAdded &&
-                              !(gamesLoading || platinumDataLoading) && (
-                                <Warning> PLATINUM DATA MISSING !</Warning>
-                              )}
-                            <Started></Started>
-                          </GameData>
-                        </GameContainer>
-                      );
-                    })}
-                </Games2Line>
-                <Games3Line>
-                  <Games3Line1>
-                    <Game1Line>
-                      <GameLeft>
-                        {selectedGame?.name?.toUpperCase()} TROPHIES
-                      </GameLeft>
-                    </Game1Line>
-                  </Games3Line1>
-                  {gameDelayed && (
-                    <Games3Line2>
-                      <Spin
-                        indicator={
-                          <LoadingOutlined
+                                {formatDate2(new Date(ach.unlocktime * 1000))}
+                              </span>
+                            </EarnedDate>
+                          )}
+                          <RarPct>{ach.percentage}%</RarPct>
+                          <RarLabel rarLabel={ach.label}>
+                            {ach.label?.toUpperCase()}
+                          </RarLabel>
+                        </TrophyRowRight>
+                        <TrophyTypeCell>
+                          <span
                             style={{
-                              fontSize: 48,
-                              marginTop: "2rem",
+                              transform: "scale(1.6)",
+                              display: "block",
                             }}
-                            spin
-                          />
-                        }
-                      />
-                    </Games3Line2>
-                  )}
-                  {!gameDelayed && (
-                    <Games3Line2>
-                      {selectedGame?.achievements?.map((ach, index) => {
-                        return <AchCard ach={ach} index={index} />;
-                      })}
-                    </Games3Line2>
-                  )}
-                </Games3Line>
-              </Games>
-            )}
+                          >
+                            {trophyIcon(ach.color)}
+                          </span>
+                        </TrophyTypeCell>
+                      </TrophyRow>
+                    );
+                  })}
+                </TrophyList>
+              )}
+            </GamePageLeft>
 
-            {selectedMode == "TROPHY_LOG" && (
-              <Game2Line>
-                {allUnlocked?.map((ach, index) => {
-                  let desc1 = ach?.hiddenDesc;
-                  let desc2 = ach?.description;
-                  let desc3 = ach?.hiddenDesc?.split(
-                    "Hidden achievement:"
-                  )?.[1];
-                  return (
-                    <AchCard
-                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                      achieved={ach?.achieved}
+            {/* Right sidebar */}
+            <GamePageRight>
+              {/* Cover art */}
+              <GameCoverCard>
+                <GameCoverImg bg={HEADER_IMAGE(selectedGame.id)} />
+                <GameCoverBody>
+                  <GCRow>
+                    <GCLabel>Platform</GCLabel>
+                    <GCVal>PC (Steam)</GCVal>
+                  </GCRow>
+                  <GCDivider />
+                  <GCRow>
+                    <GCLabel>Trophies</GCLabel>
+                    <GCTrophyRow>
+                      <GCT color={COLOR_PLATINUM}>
+                        <GCTBadge c={COLOR_PLATINUM}>P</GCTBadge>
+                        {gdCounts.platinum}
+                      </GCT>
+                      <GCT color={COLOR_GOLD}>
+                        <GCTBadge c={COLOR_GOLD}>G</GCTBadge>
+                        {gdCounts.gold}
+                      </GCT>
+                      <GCT color={COLOR_SILVER2}>
+                        <GCTBadge c={COLOR_SILVER2}>S</GCTBadge>
+                        {gdCounts.silver}
+                      </GCT>
+                      <GCT color={COLOR_BRONZE}>
+                        <GCTBadge c={COLOR_BRONZE}>B</GCTBadge>
+                        {gdCounts.bronze}
+                      </GCT>
+                    </GCTrophyRow>
+                  </GCRow>
+                  <GCDivider />
+                  {firstTrophy && (
+                    <GCRow>
+                      <GCLabel>First Trophy</GCLabel>
+                      <GCDateVal>
+                        <span>
+                          {formatDate1(new Date(firstTrophy.unlocktime * 1000))}
+                        </span>
+                        <span style={{ color: L_LINK, fontSize: "0.72rem" }}>
+                          {timeAgoInGame(
+                            new Date(firstTrophy.unlocktime * 1000),
+                          )}
+                        </span>
+                      </GCDateVal>
+                    </GCRow>
+                  )}
+                  {latestTrophy && (
+                    <GCRow>
+                      <GCLabel>Latest Trophy</GCLabel>
+                      <GCDateVal>
+                        <span>
+                          {formatDate1(
+                            new Date(latestTrophy.unlocktime * 1000),
+                          )}
+                        </span>
+                        <span style={{ color: L_LINK, fontSize: "0.72rem" }}>
+                          {timeAgoInGame(
+                            new Date(latestTrophy.unlocktime * 1000),
+                          )}
+                        </span>
+                      </GCDateVal>
+                    </GCRow>
+                  )}
+                  {firstTrophy &&
+                    latestTrophy &&
+                    firstTrophy.unlocktime !== latestTrophy.unlocktime && (
+                      <>
+                        <GCDivider />
+                        <GCRow>
+                          <GCLabel>Gap</GCLabel>
+                          <GCVal style={{ color: L_MUTED }}>
+                            {timeAgoInGame(
+                              new Date(firstTrophy.unlocktime * 1000),
+                            )}{" "}
+                            →{" "}
+                            {timeAgoInGame(
+                              new Date(latestTrophy.unlocktime * 1000),
+                            )}
+                          </GCVal>
+                        </GCRow>
+                      </>
+                    )}
+                  <GCDivider />
+                  <GCRow>
+                    <a
+                      href={STEAM_STORE_URL(selectedGame.id)}
+                      target="_blank"
+                      rel="noreferrer"
+                      style={{ color: L_LINK, fontSize: "0.78rem" }}
                     >
-                      <GameSubLeftImageSmall
-                        image={HEADER_IMAGE(ach?.gameId)}
-                      />
-                      <span style={{ marginLeft: "1rem" }}></span>
-                      <AchIconOuter achieved={ach?.achieved}>
-                        <AchIcon
-                          icon={ach?.icon}
-                          onClick={() => {
-                            if (window !== "undefined") {
-                              const searchQuery = `${
-                                ach?.displayName
-                              } achievement ${encodeURIComponent(
-                                ach?.gameName
-                              )} `;
-                              window.open(
-                                `https://www.google.com/search?q=${searchQuery}`
-                              );
-                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                            }
-                          }}
-                        ></AchIcon>
-                      </AchIconOuter>
-                      <AchData>
-                        <AchTitle>{ach?.displayName}</AchTitle>
-                        <AchDesc>
-                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
-                        </AchDesc>
-                      </AchData>
-                      <span style={{ padding: "0rem 1rem", opacity: 0.75 }}>
-                        #{allUnlocked?.length - index}
-                      </span>
-                      <Seperator padding={".25rem"} />
-                      {ach?.achieved == 1 && (
-                        <Unlocked>
-                          <UnlockedT1>
-                            {formatDate1(new Date(ach?.unlocktime * 1000))}
-                          </UnlockedT1>
-                          <UnlockedT2>
-                            {formatDate2(new Date(ach?.unlocktime * 1000))}
-                          </UnlockedT2>
-                        </Unlocked>
-                      )}
-                      <Seperator padding={".25rem"} />
-                      <AchRarity>
-                        <span style={{ fontSize: "1.2rem" }}>
-                          {ach?.percentage}%
-                        </span>
-                        <span style={{ fontSize: ".7rem" }}>
-                          {ach?.label?.toUpperCase()}
-                        </span>
-                      </AchRarity>
-                      <Seperator padding={".25rem"} />
-                      <AchTrophy>
-                        {ach?.color == "Platinum" && <PlatinumIconS />}
-                        {ach?.color == "Gold" && <GoldIconS />}
-                        {ach?.color == "Silver" && <SilverIconS />}
-                        {ach?.color == "Bronze" && <BronzeIconS />}
-                      </AchTrophy>
-                    </AchCard>
-                  );
-                })}
-              </Game2Line>
-            )}
-            {selectedMode == "TROPHY_ADVISOR" && (
-              <Game2Line>
-                {notUnlocked?.map((ach, index) => {
-                  let desc1 = ach?.hiddenDesc;
-                  let desc2 = ach?.description;
-                  let desc3 = ach?.hiddenDesc?.split(
-                    "Hidden achievement:"
-                  )?.[1];
-                  return (
-                    <AchCard
-                      color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}
-                      achieved={ach?.achieved}
-                    >
-                      <GameSubLeftImageSmall
-                        image={HEADER_IMAGE(ach?.gameId)}
-                      />
-                      <span style={{ marginLeft: "1rem" }}></span>
-                      <AchIconOuter achieved={ach?.achieved}>
-                        <AchIcon
-                          icon={ach?.icon}
-                          onClick={() => {
-                            if (window !== "undefined") {
-                              const searchQuery = `${
-                                ach?.displayName
-                              } achievement ${encodeURIComponent(
-                                ach?.gameName
-                              )} `;
-                              window.open(
-                                `https://www.google.com/search?q=${searchQuery}`
-                              );
-                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                            }
-                          }}
-                        ></AchIcon>
-                      </AchIconOuter>
-                      <AchData>
-                        <AchTitle>{ach?.displayName}</AchTitle>
-                        <AchDesc>
-                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
-                        </AchDesc>
-                      </AchData>
-                      <span style={{ padding: "0rem 1rem", opacity: 0.75 }}>
-                        #{index + 1}
-                      </span>
-                      <Seperator padding={".25rem"} />
-                      <AchRarity>
-                        <span style={{ fontSize: "1.2rem" }}>
-                          {ach?.percentage}%
-                        </span>
-                        <span style={{ fontSize: ".7rem" }}>
-                          {ach?.label?.toUpperCase()}
-                        </span>
-                      </AchRarity>
-                      <Seperator padding={".25rem"} />
-                      <AchTrophy>
-                        {ach?.color == "Platinum" && <PlatinumIconS />}
-                        {ach?.color == "Gold" && <GoldIconS />}
-                        {ach?.color == "Silver" && <SilverIconS />}
-                        {ach?.color == "Bronze" && <BronzeIconS />}
-                      </AchTrophy>
-                    </AchCard>
-                  );
-                })}
-              </Game2Line>
-            )}
-            {selectedMode == "STATS" && (
-              <GamesR>
-                <GameLineHours>
-                  <Games1Line>
-                    <GamesLeft>MAIN STATISTICS</GamesLeft>
-                    <GamesRight></GamesRight>
-                  </Games1Line>
-                  <StatWrapper>
-                    <StatInformation games={games} />
-                  </StatWrapper>
-                </GameLineHours>
-              </GamesR>
-            )}
-            {selectedMode == "STATS" && (
-              <GamesR>
-                <GameLineHours>
-                  <Games1Line>
-                    <GamesLeft>MONTHLY ACTIVITY</GamesLeft>
-                    <GamesRight></GamesRight>
-                  </Games1Line>
-                  <StatWrapper2>
-                    <LevelProgressChart
-                      dailyUnlocks={monthlyUnlocks}
-                      size={1370}
-                    />
-                  </StatWrapper2>
-                </GameLineHours>
-              </GamesR>
-            )}
-            {selectedMode == "STATS" && (
-              <GamesR>
-                <GameLineHours>
-                  <Games1Line>
-                    <GamesLeft>TROPHY PROGRESSION</GamesLeft>
-                    <GamesRight></GamesRight>
-                  </Games1Line>
-                  <StatWrapper2>
-                    <MultiProgressChart
-                      size={1370}
-                      dailyTypeBreakdown={dailyTypeBreakdown}
-                    />
-                  </StatWrapper2>
-                </GameLineHours>
-              </GamesR>
-            )}
-            {selectedMode == "STATS" && (
-              <GamesR>
-                <GameLineHours>
-                  <Games1Line>
-                    <GamesLeft>TROPHIES BY TIME</GamesLeft>
-                    <GamesRight></GamesRight>
-                  </Games1Line>
-                  <StatWrapper2>
-                    <BarProgressChart
-                      dailyUnlocks={hourlyUnlocks}
-                      size={1370}
-                    />
-                  </StatWrapper2>
-                </GameLineHours>
-              </GamesR>
-            )}
-            {selectedMode == "STATS" && (
-              <GamesR>
-                <GameLineHours>
-                  <Games1Line>
-                    <GamesLeft>TROPHIES BY DAY</GamesLeft>
-                    <GamesRight></GamesRight>
-                  </Games1Line>
-                  <StatWrapper2>
-                    <BarProgressChart
-                      dailyUnlocks={weeklyUnlocks}
-                      size={1370}
-                    />
-                  </StatWrapper2>
-                </GameLineHours>
-              </GamesR>
-            )}
+                      View on Steam Store ↗
+                    </a>
+                  </GCRow>
+                </GameCoverBody>
+              </GameCoverCard>
+            </GamePageRight>
+          </GamePageLayout>
+        </GameDetailPage>
+      )}
 
-            {selectedMode == "LEVEL_HISTORY" && (
-              <Game2LineLH>
-                {levelAchs?.reverse().map((ach, index) => {
-                  let desc1 = ach?.hiddenDesc;
-                  let desc2 = ach?.description;
-                  let desc3 = ach?.hiddenDesc?.split(
-                    "Hidden achievement:"
-                  )?.[1];
-                  return (
-                    <AchCard color={index % 2 == 0 ? "#F9F9F9" : "#F5F5F7"}>
-                      <GameSubLeftImageSmall
-                        image={HEADER_IMAGE(ach?.gameId)}
-                      />
-                      <span style={{ marginLeft: "1rem" }}></span>
-                      <AchIconOuter achieved={ach?.achieved}>
-                        <AchIcon
-                          icon={ach?.icon}
-                          onClick={() => {
-                            if (window !== "undefined") {
-                              const searchQuery = `${
-                                ach?.displayName
-                              } achievement ${encodeURIComponent(
-                                ach?.gameName
-                              )} `;
-                              window.open(
-                                `https://www.google.com/search?q=${searchQuery}`
-                              );
-                              // window.open(`https://www.youtube.com/results?search_query=${searchQuery}`);
-                            }
-                          }}
-                        ></AchIcon>
-                      </AchIconOuter>
-                      <AchData>
-                        <AchTitle>{ach?.displayName}</AchTitle>
-                        <AchDesc>
-                          {desc2 ? desc2 : desc3 ? desc3 : desc1}
-                        </AchDesc>
-                      </AchData>
-                      <AchTrophy2>
-                        <LevelUpIcon />
-                      </AchTrophy2>
-                      <span
+      {/* ══════════════════════════════════════════
+          PROFILE PAGE (games list + other tabs)
+      ══════════════════════════════════════════ */}
+      {!isGameDetail && (
+        <>
+          {/* Recent achievements strip */}
+          <RecentAchs>
+            {allUnlocked
+              .slice(0, 31)
+              .filter((a) => a?.color !== "Platinum")
+              .map((ach, i) => (
+                <Popover
+                  key={i}
+                  placement="top"
+                  title=""
+                  content={
+                    <RecentAchPopover>
+                      <DAchIconOuter achieved={ach?.achieved}>
+                        <DAchIcon icon={ach?.icon} />
+                      </DAchIconOuter>
+                      <div
                         style={{
-                          fontSize: "1.25rem",
-                          padding: "1rem 0.5rem",
-                          opacity: 0.75,
-                          transform: "translate(-.66rem,.4rem)",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 2,
+                          padding: "0 0.5rem",
                         }}
                       >
-                        {ach?.levelReached}
+                        <div style={{ color: D_LINK, fontSize: "0.85rem" }}>
+                          {ach?.displayName}
+                        </div>
+                        <div style={{ color: D_MUTED, fontSize: "0.72rem" }}>
+                          {descFor(ach)}
+                        </div>
+                        {ach?.achieved == 1 && (
+                          <div
+                            style={{ fontSize: "0.7rem", color: COLOR_GREEN2 }}
+                          >
+                            {timeAgoInGame(new Date(ach?.unlocktime * 1000))} in{" "}
+                            <span style={{ color: D_LINK }}>
+                              {ach?.gameName}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </RecentAchPopover>
+                  }
+                >
+                  <RecentAchIcon achieved={ach?.achieved}>
+                    <DAchIcon icon={ach?.icon} />
+                  </RecentAchIcon>
+                </Popover>
+              ))}
+          </RecentAchs>
+
+          <MainColumns>
+            <ContentArea>
+              {gamesLoading && (
+                <DLoadingCenter>
+                  <Spin
+                    indicator={
+                      <LoadingOutlined
+                        style={{ fontSize: 48, color: D_LINK }}
+                        spin
+                      />
+                    }
+                  />
+                </DLoadingCenter>
+              )}
+
+              {/* ── GAMES list ── */}
+              {!gamesLoading && selectedMode === "GAMES" && (
+                <>
+                  <FilterBar>
+                    <SearchInput
+                      placeholder="Search your games..."
+                      value={gameSearch}
+                      onChange={(e) => setGameSearch(e.target.value)}
+                    />
+                  </FilterBar>
+                  <GameList>
+                    {sortedGames
+                      .filter((game) => {
+                        const list = gamesToInclude ?? [];
+                        return list.length === 0 || list.includes(game?.id);
+                      })
+                      .sort((a, b) => {
+                        const { completion: c1 } = getGameCounts(a);
+                        const { completion: c2 } = getGameCounts(b);
+                        return c1 - c2;
+                      })
+                      .map((game, index) => {
+                        const {
+                          gold,
+                          silver,
+                          bronze,
+                          total,
+                          completed,
+                          completion,
+                          color,
+                          rank,
+                          lastAch,
+                        } = getGameCounts(game);
+                        const lastUnlocked = [...(game?.achievements ?? [])]
+                          .filter((a) => a?.achieved == 1)
+                          .sort((a, b) => b.unlocktime - a.unlocktime)[0];
+                        const isPlatinumMissing =
+                          game?.achievements?.length === 1;
+
+                        return (
+                          <GameRow
+                            key={game.id}
+                            alt={index % 2 !== 0}
+                            onClick={() => {
+                              setSelectedGame(game);
+                              setSelectedMode("GAME");
+                              setTabActive("GAME");
+                            }}
+                          >
+                            <GameCover bg={game?.cover} />
+                            <GameMeta>
+                              <GameName>{game?.name}</GameName>
+                              <GameDate>
+                                {lastUnlocked
+                                  ? formatDate(
+                                      new Date(lastUnlocked.unlocktime * 1000),
+                                    )
+                                  : "Yet to start"}
+                                <GameDateSep> · </GameDateSep>
+                                {completed} of {total} Trophies
+                              </GameDate>
+                              {isPlatinumMissing &&
+                                !(gamesLoading || platinumDataLoading) && (
+                                  <WarningText>
+                                    PLATINUM DATA MISSING
+                                  </WarningText>
+                                )}
+                            </GameMeta>
+                            <GameRowRight>
+                              <PlatformBadge>PC</PlatformBadge>
+                              <RankBadge rankColor={color}>{rank}</RankBadge>
+                              <TrophyCounts>
+                                <TCItem>
+                                  <TCIconWrap>
+                                    <GoldIconS />
+                                  </TCIconWrap>
+                                  <TCNum style={{ color: COLOR_GOLD }}>
+                                    {gold}
+                                  </TCNum>
+                                </TCItem>
+                                <TCItem>
+                                  <TCIconWrap>
+                                    <SilverIconS />
+                                  </TCIconWrap>
+                                  <TCNum style={{ color: COLOR_SILVER2 }}>
+                                    {silver}
+                                  </TCNum>
+                                </TCItem>
+                                <TCItem>
+                                  <TCIconWrap>
+                                    <BronzeIconS />
+                                  </TCIconWrap>
+                                  <TCNum style={{ color: COLOR_BRONZE }}>
+                                    {bronze}
+                                  </TCNum>
+                                </TCItem>
+                              </TrophyCounts>
+                              <CompletionCol>
+                                <DBarTrack>
+                                  <DBarFill pct={completion} />
+                                </DBarTrack>
+                                <DCompPct>{completion}%</DCompPct>
+                              </CompletionCol>
+                            </GameRowRight>
+                          </GameRow>
+                        );
+                      })}
+                  </GameList>
+                </>
+              )}
+
+              {/* ── Trophy Log ── */}
+              {!gamesLoading && selectedMode === "TROPHY_LOG" && (
+                <DFullList>
+                  {allUnlocked.map((ach, i) => (
+                    <DRow
+                      key={i}
+                      color={i % 2 === 0 ? D_PANEL : D_ROW_ALT}
+                      achieved={ach?.achieved}
+                    >
+                      <DGameThumb image={HEADER_IMAGE(ach?.gameId)} />
+                      <DAchIconOuter achieved={ach?.achieved}>
+                        <DAchIcon
+                          icon={ach?.icon}
+                          onClick={() => {
+                            const q = `${ach?.displayName} achievement ${encodeURIComponent(ach?.gameName ?? "")}`;
+                            window.open(`https://www.google.com/search?q=${q}`);
+                          }}
+                        />
+                      </DAchIconOuter>
+                      <DAchInfo>
+                        <DAchName>{ach?.displayName}</DAchName>
+                        <DAchDesc>{descFor(ach)}</DAchDesc>
+                      </DAchInfo>
+                      <span
+                        style={{
+                          padding: "0 1rem",
+                          color: D_MUTED,
+                          fontSize: "0.8rem",
+                        }}
+                      >
+                        #{allUnlocked.length - i}
                       </span>
-                      <Seperator padding={".25rem"} />
+                      <DVSep />
                       {ach?.achieved == 1 && (
-                        <Unlocked>
-                          <UnlockedT1>
-                            {formatDate1(new Date(ach?.unlocktime * 1000))}
-                          </UnlockedT1>
-                          <UnlockedT2>
-                            {formatDate2(new Date(ach?.unlocktime * 1000))}
-                          </UnlockedT2>
-                        </Unlocked>
+                        <DUnlockDate>
+                          <div>
+                            {formatDate1(new Date(ach.unlocktime * 1000))}
+                          </div>
+                          <div style={{ opacity: 0.7 }}>
+                            {formatDate2(new Date(ach.unlocktime * 1000))}
+                          </div>
+                        </DUnlockDate>
                       )}
-                      <Seperator padding={".25rem"} />
-                      <AchRarity>
-                        <span style={{ fontSize: "1.2rem" }}>
+                      <DVSep />
+                      <DRarityBadge>
+                        <span style={{ fontSize: "1rem" }}>
                           {ach?.percentage}%
                         </span>
-                        <span style={{ fontSize: ".7rem" }}>
+                        <span style={{ fontSize: "0.65rem", color: D_MUTED }}>
                           {ach?.label?.toUpperCase()}
                         </span>
-                      </AchRarity>
-                      <Seperator padding={".25rem"} />
-                      <AchTrophy>
-                        {ach?.color == "Platinum" && <PlatinumIconS />}
-                        {ach?.color == "Gold" && <GoldIconS />}
-                        {ach?.color == "Silver" && <SilverIconS />}
-                        {ach?.color == "Bronze" && <BronzeIconS />}
-                      </AchTrophy>
-                    </AchCard>
-                  );
-                })}
-              </Game2LineLH>
-            )}
-            {selectedMode == "SETTINGS" && (
-              <GamesR>
-                <GameLineHours>
-                  <Games1Line>
-                    <GamesLeft>SETTINGS</GamesLeft>
-                    <GamesRight></GamesRight>
-                  </Games1Line>
-                  <StatWrapper2>
+                      </DRarityBadge>
+                      <DVSep />
+                      <DTrophyTypeIcon>
+                        {trophyIcon(ach?.color)}
+                      </DTrophyTypeIcon>
+                    </DRow>
+                  ))}
+                </DFullList>
+              )}
+
+              {/* ── Trophy Advisor ── */}
+              {!gamesLoading && selectedMode === "TROPHY_ADVISOR" && (
+                <DFullList>
+                  {notUnlocked.map((ach, i) => (
+                    <DRow
+                      key={i}
+                      color={i % 2 === 0 ? D_PANEL : D_ROW_ALT}
+                      achieved={ach?.achieved}
+                    >
+                      <DGameThumb image={HEADER_IMAGE(ach?.gameId)} />
+                      <DAchIconOuter achieved={ach?.achieved}>
+                        <DAchIcon
+                          icon={ach?.icon}
+                          onClick={() => {
+                            const q = `${ach?.displayName} achievement ${encodeURIComponent(ach?.gameName ?? "")}`;
+                            window.open(`https://www.google.com/search?q=${q}`);
+                          }}
+                        />
+                      </DAchIconOuter>
+                      <DAchInfo>
+                        <DAchName>{ach?.displayName}</DAchName>
+                        <DAchDesc>{descFor(ach)}</DAchDesc>
+                      </DAchInfo>
+                      <span
+                        style={{
+                          padding: "0 1rem",
+                          color: D_MUTED,
+                          fontSize: "0.8rem",
+                        }}
+                      >
+                        #{i + 1}
+                      </span>
+                      <DVSep />
+                      <DRarityBadge>
+                        <span style={{ fontSize: "1rem" }}>
+                          {ach?.percentage}%
+                        </span>
+                        <span style={{ fontSize: "0.65rem", color: D_MUTED }}>
+                          {ach?.label?.toUpperCase()}
+                        </span>
+                      </DRarityBadge>
+                      <DVSep />
+                      <DTrophyTypeIcon>
+                        {trophyIcon(ach?.color)}
+                      </DTrophyTypeIcon>
+                    </DRow>
+                  ))}
+                </DFullList>
+              )}
+
+              {/* ── Level History ── */}
+              {!gamesLoading && selectedMode === "LEVEL_HISTORY" && (
+                <>
+                  <LevelProgressChart
+                    dailyUnlocks={levelAchs?.map((a) => ({
+                      date: formatDate3(new Date(a?.unlocktime * 1000)),
+                      Level: a?.levelReached,
+                    }))}
+                    size={900}
+                  />
+                  <DFullList>
+                    {[...levelAchs].reverse().map((ach, i) => (
+                      <DRow key={i} color={i % 2 === 0 ? D_PANEL : D_ROW_ALT}>
+                        <DGameThumb image={HEADER_IMAGE(ach?.gameId)} />
+                        <DAchIconOuter achieved={ach?.achieved}>
+                          <DAchIcon icon={ach?.icon} />
+                        </DAchIconOuter>
+                        <DAchInfo>
+                          <DAchName>{ach?.displayName}</DAchName>
+                          <DAchDesc>{descFor(ach)}</DAchDesc>
+                        </DAchInfo>
+                        <DLevelReached>Level {ach?.levelReached}</DLevelReached>
+                        <DVSep />
+                        {ach?.achieved == 1 && (
+                          <DUnlockDate>
+                            <div>
+                              {formatDate1(new Date(ach.unlocktime * 1000))}
+                            </div>
+                            <div style={{ opacity: 0.7 }}>
+                              {formatDate2(new Date(ach.unlocktime * 1000))}
+                            </div>
+                          </DUnlockDate>
+                        )}
+                      </DRow>
+                    ))}
+                  </DFullList>
+                </>
+              )}
+
+              {/* ── Stats ── */}
+              {!gamesLoading && selectedMode === "STATS" && (
+                <DStatsArea>
+                  {[
+                    {
+                      title: "MAIN STATISTICS",
+                      content: <StatInformation games={games} />,
+                    },
+                    {
+                      title: "MONTHLY ACTIVITY",
+                      content: (
+                        <LevelProgressChart
+                          dailyUnlocks={monthlyUnlocks}
+                          size={900}
+                        />
+                      ),
+                    },
+                    {
+                      title: "TROPHY PROGRESSION",
+                      content: (
+                        <MultiProgressChart
+                          size={900}
+                          dailyTypeBreakdown={dailyTypeBreakdown}
+                        />
+                      ),
+                    },
+                    {
+                      title: "TROPHIES BY HOUR",
+                      content: (
+                        <BarProgressChart
+                          dailyUnlocks={hourlyUnlocks}
+                          size={900}
+                        />
+                      ),
+                    },
+                    {
+                      title: "TROPHIES BY DAY",
+                      content: (
+                        <BarProgressChart
+                          dailyUnlocks={weeklyUnlocks}
+                          size={900}
+                        />
+                      ),
+                    },
+                  ].map(({ title, content }) => (
+                    <DSectionPanel key={title}>
+                      <DSectionHeader>{title}</DSectionHeader>
+                      {content}
+                    </DSectionPanel>
+                  ))}
+                </DStatsArea>
+              )}
+
+              {/* ── Settings ── */}
+              {!gamesLoading && selectedMode === "SETTINGS" && (
+                <DSectionPanel>
+                  <DSectionHeader>SETTINGS</DSectionHeader>
+                  <div style={{ padding: "1rem" }}>
                     <Row style={{ marginBottom: "1rem", width: "100%" }}>
                       <TextArea
                         rows={10}
-                        placeholder="Enter Platinum JSON..."
-                        type="text"
-                        value={gamesToInclude}
-                        onChange={(e) => {
-                          setGamesToInclude(e.target.value);
-                        }}
+                        placeholder="Enter game IDs to include (comma-separated)..."
+                        value={
+                          Array.isArray(gamesToInclude)
+                            ? gamesToInclude.join(", ")
+                            : gamesToInclude
+                        }
+                        onChange={(e) => setGamesToInclude(e.target.value)}
                       />
                     </Row>
                     <Row
-                      style={{
-                        marginRight: "1rem",
-                        display: "flex",
-                        width: "100%",
-                        justifyContent: "flex-end",
-                      }}
+                      style={{ display: "flex", justifyContent: "flex-end" }}
                     >
-                      <Button
-                        type="primary"
-                        onClick={() => {
-                          saveIncludedGame();
-                        }}
-                      >
+                      <Button type="primary" onClick={saveIncludedGame}>
                         Save
                       </Button>
                     </Row>
-                  </StatWrapper2>
-                </GameLineHours>
-              </GamesR>
+                  </div>
+                </DSectionPanel>
+              )}
+            </ContentArea>
+
+            {/* ── Dark sidebar (GAMES mode only) ── */}
+            {selectedMode === "GAMES" && (
+              <DSidebar>
+                <DSidePanel>
+                  <DSidePanelHeader>
+                    <span>RAREST TROPHIES</span>
+                    <span
+                      style={{
+                        color: "rgba(255,255,255,0.7)",
+                        fontSize: "0.72rem",
+                        cursor: "pointer",
+                      }}
+                    >
+                      MORE
+                    </span>
+                  </DSidePanelHeader>
+                  {rarestEarned.map((ach, i) => (
+                    <DRarestRow key={i}>
+                      <DRarestIcon>{trophyIcon(ach.color)}</DRarestIcon>
+                      <DRarestInfo>
+                        <DRarestName>{ach.displayName}</DRarestName>
+                        <DRarestGame>{ach.gameName}</DRarestGame>
+                      </DRarestInfo>
+                      <DRarestPct>
+                        <span>{ach.percentage}%</span>
+                        <DRarLabel rl={ach.label}>
+                          {ach.label?.toUpperCase()}
+                        </DRarLabel>
+                      </DRarestPct>
+                    </DRarestRow>
+                  ))}
+                  {rarestEarned.length === 0 && (
+                    <DEmptyState>No trophies earned yet</DEmptyState>
+                  )}
+                  <DRarityStrip>
+                    {[
+                      {
+                        label: "ULTRA RARE",
+                        count: ultrarare.length,
+                        color: "#c0392b",
+                      },
+                      {
+                        label: "VERY RARE",
+                        count: veryrare.length,
+                        color: "#e67e22",
+                      },
+                      { label: "RARE", count: rare.length, color: "#f39c12" },
+                      {
+                        label: "UNCOMMON",
+                        count: uncommon.length,
+                        color: "#27ae60",
+                      },
+                      { label: "COMMON", count: common.length, color: D_MUTED },
+                    ].map(({ label, count, color }) => (
+                      <DRarityStripItem key={label}>
+                        <span
+                          style={{
+                            color,
+                            fontWeight: 700,
+                            fontSize: "0.9rem",
+                            textAlign: "center",
+                            width: "100%",
+                          }}
+                        >
+                          {count}
+                        </span>
+                        <span
+                          style={{
+                            color: D_MUTED,
+                            fontSize: "0.58rem",
+                            textAlign: "center",
+                            width: "100%",
+                          }}
+                        >
+                          {label}
+                        </span>
+                      </DRarityStripItem>
+                    ))}
+                  </DRarityStrip>
+                </DSidePanel>
+
+                <DSidePanel>
+                  <DSidePanelHeader>
+                    <span>TROPHY MILESTONES</span>
+                  </DSidePanelHeader>
+                  {platinumsEarned.slice(0, 5).map((ach, i) => (
+                    <DMilestoneRow key={i}>
+                      <DMilestoneThumb bg={HEADER_IMAGE(ach.gameId)} />
+                      <DMilestoneInfo>
+                        <div
+                          style={{
+                            color: D_TEXT,
+                            fontSize: "0.8rem",
+                            fontWeight: 600,
+                          }}
+                        >
+                          {ach.gameName}
+                        </div>
+                        <div style={{ color: D_LINK, fontSize: "0.72rem" }}>
+                          {i === 0
+                            ? "1st"
+                            : i === 1
+                              ? "2nd"
+                              : i === 2
+                                ? "3rd"
+                                : `${i + 1}th`}{" "}
+                          Platinum
+                        </div>
+                        <div style={{ color: D_MUTED, fontSize: "0.68rem" }}>
+                          {ach.unlocktime
+                            ? timeAgoInGame(new Date(ach.unlocktime * 1000))
+                            : ""}
+                        </div>
+                      </DMilestoneInfo>
+                    </DMilestoneRow>
+                  ))}
+                  {platinumsEarned.length === 0 && (
+                    <DEmptyState>No platinums yet</DEmptyState>
+                  )}
+                </DSidePanel>
+              </DSidebar>
             )}
-          </SRLeft>
-        )}
-      </SecondRow>
+          </MainColumns>
+        </>
+      )}
     </Container>
   );
 }
 
-// Styles
-const CoverData = styled.div`
+/* ════════════════════════════════════
+   SHARED
+   ════════════════════════════════════ */
+const Container = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  left: 0rem;
-  bottom: 0.5rem;
-  width: 98%;
-  z-index: 2;
-  padding: 0.5rem 1rem;
-  transition: 0.25s all ease-in;
-  background-color: #fefefedd;
-  border-radius: 0 0 2px 2px;
-`;
-
-const Case = styled.div`
-  position: relative;
-  width: 200px;
-  height: 270px;
-  perspective: 800px;
-  margin: 1rem;
-  position: relative;
-  &:hover {
-    cursor: pointer;
-    transform: scale(1.025);
-  }
-`;
-
-const Template = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-`;
-
-const Run = styled.div`
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  padding: 1rem;
-  color: ${COLOR_GREY};
-  opacity: 0.75;
-
-  &:hover {
-    opacity: 1;
-    color: ${COLOR_GREEN};
-  }
-`;
-
-const Cover = styled.img`
-  position: absolute;
-  top: 42px;
-  left: 0px;
-  width: calc(100% - 4px);
-  height: calc(100% - 52px);
-  object-fit: cover;
-  border-radius: 2px;
-`;
-
-const Unlocked = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  width: 100px;
-  color: #579428;
-`;
-
-const UnlockedT1 = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-`;
-
-const UnlockedT2 = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.7rem;
-  padding-top: 0.25rem;
-`;
-
-const GameSubLeftImageSmall = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 200px;
-  height: 100px;
-  background: ${(props) => `url(${props.image})`};
-  background-size: cover;
-  position: relative;
-`;
-
-const GameSubLeft = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 0 1rem;
-`;
-
-const GameSubRight = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  margin-left: 1rem;
-`;
-
-const GameSubLine = styled.div`
-  display: flex;
-  align-items: center;
-  color: #333;
-  padding: 0.75rem 0.5rem;
-  justify-content: center;
-  width: 100%;
-`;
-
-const AchTitle = styled.div`
-  display: flex;
-  align-items: center;
-  padding-left: 0.5rem;
-  color: #4486c6;
-  justify-content: flex-start;
-  flex: 2;
-  font-size: 1rem;
-  width: 100%;
-`;
-
-const AchDesc = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding-left: 0.5rem;
-  flex: 2;
-  width: 100%;
-  opacity: 0.75;
-  font-size: 0.8rem;
-`;
-
-const AchUnlocked = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding-left: 0.5rem;
-  flex: 1;
-  width: 100%;
-  opacity: 0.75;
-  font-size: 0.8rem;
-`;
-
-const AchIconOuter = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 65px;
-  height: 65px;
-  background: ${(props) =>
-    props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
-`;
-
-const AchIconOuterPlatinum = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 65px;
-  height: 65px;
-  background: ${(props) =>
-    props.achieved ? COLOR_UNLOCKED_DARK : "#00000000"};
-`;
-
-const AchIcon = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-  background: ${(props) => `url(${props?.icon})`};
-  background-size: contain;
-  background-repeat: no-repeat;
-`;
-
-const AchData = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  flex-direction: column;
-  flex: 1;
-  min-width: 300px;
-  height: 60px;
-`;
-
-const DataContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  min-width: ${(props) => (props.active ? "600px" : "0px")};
-  max-width: ${(props) => (props.active ? "600px" : "0px")};
-  transition: all 0.5s ease-in;
-  overflow: hidden;
-`;
-
-const AchRarity = styled.div`
-  display: flex;
-  align-items: center;
-  width: 100px;
-  justify-content: flex-start;
-  flex-direction: column;
-`;
-
-const AchTrophy = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  min-width: 50px;
-  transform: scale(2) translate(0.25rem, 0.25rem);
-`;
-
-const AchTrophy2 = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  min-width: 50px;
-  transform: scale(1) translate(0.25rem, 0.25rem);
-`;
-
-const Game2Line = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 0.25rem 0.25rem;
-`;
-
-const Game2Left = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  overflow: scroll;
-  flex: 1;
-  padding: 0.25rem 0.25rem;
-`;
-
-const Game2Right = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  overflow: scroll;
-  flex: 1;
-  width: 100%;
-  padding: 0.25rem 0.25rem;
-`;
-
-const Game2LineLH = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  overflow: scroll;
-  width: 100%;
-  padding: 0.25rem 1rem;
-`;
-
-const Game1Line = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #336291;
-  color: #fefefe;
-  padding: 0.75rem 0.5rem;
-  justify-content: center;
-  width: 100%;
-`;
-
-const Game = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
   width: 100%;
-  color: #fefefe;
-  font-size: 0.9rem;
-  border: 1px solid #ddd;
+  background: ${D_BG};
+  color: ${D_TEXT};
+  font-family: "Nunito", sans-serif;
+  font-size: 0.875rem;
 `;
 
-const RItem = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  flex-direction: column;
-  cursor: pointer;
-  opacity: ${(props) => (props.active ? 1 : 0.5)};
-`;
-
-const RareSelection = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #4486c6;
+/* ── Tab bar ── */
+const TabBar = styled.div`
   width: 100%;
-  padding: 1rem;
-  background-color: #f5f5f7;
+  background: #336291;
+  border-bottom: 1px solid #2a5278;
 `;
-
-const Rarest2Line = styled.div`
+const TabBarInner = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  display: flex;
+  align-items: stretch;
+`;
+const ProfileLabel = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  overflow: scroll;
-  padding: 0.5rem 0.5rem;
-  width: 100%;
-  min-height: 600px;
-  max-height: 600px;
-  color: #333;
-`;
-
-const Rarest3Line = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  overflow: scroll;
-  padding: 0.5rem 0.5rem;
-  width: 100%;
-  color: #333;
-`;
-
-const Rarest1Line = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #336291;
-  padding: 0.75rem 0.5rem;
-  justify-content: center;
-  width: 100%;
-`;
-
-const Rarest = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  width: 100%;
-  color: #fefefe;
-  font-size: 0.9rem;
-  border: 1px solid #ddd;
-`;
-
-const Milestones = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-direction: column;
-  width: 100%;
-  color: #fefefe;
-  font-size: 0.9rem;
-  border: 1px solid #ddd;
-  margin-bottom: 1rem;
-`;
-
-const Platinum = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding-right: 1rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
   margin-right: 0.5rem;
-  color: #7a96d1;
-  min-width: 50px;
 `;
-
-const Text = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 12px;
-  top: 53%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  position: absolute;
-  font-size: 0.7rem;
-  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3), -1px -1px 1px rgba(0, 0, 0, 0.3),
-    1px -1px 1px rgba(0, 0, 0, 0.3), -1px 1px 1px rgba(0, 0, 0, 0.3);
-  color: #f9f9f9;
-  text-align: center;
-  font-weight: 600;
-  line-height: 15px;
-`;
-
-const Outer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 120px;
-  height: 18px;
-  background-color: #bababa;
-  position: relative;
-`;
-
-const Inner = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 18px;
-  background-color: #336291;
-  width: ${(props) => `${props.percentage}%`};
-`;
-
-const TSingle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const TTop = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transform: translate(0.25rem, 0rem);
-`;
-
-const TBottom = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const Trophies = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-`;
-
-const Rank = styled.div`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  min-width: 50px;
-`;
-
-const Seperator = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  content: "";
-  height: 40px;
-  background: #000000;
-  opacity: 0.25;
-  width: 1px;
-  margin: ${(props) => (props.padding ? `0rem ${props.padding}` : `0rem 1rem`)};
-  top: calc(50% - 20px);
-`;
-
-const Ps5 = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
+const ProfileBadge = styled.span`
+  background: #e8810a;
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 6px;
   border-radius: 2px;
-  padding: 2px;
+`;
+const TabLinks = styled.div`
+  display: flex;
+  align-items: stretch;
+`;
+const TabLink = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   cursor: pointer;
-  width: 40px;
-  box-shadow: 0 0 0 1px #939393 inset;
+  color: ${(p) => (p.active ? "#ffffff" : "rgba(255,255,255,0.6)")};
+  border-bottom: 3px solid ${(p) => (p.active ? "#ffffff" : "transparent")};
+  transition:
+    color 0.15s,
+    border-color 0.15s;
+  &:hover {
+    color: #ffffff;
+  }
 `;
 
-const GameTitle = styled.div`
+/* ── Recent achievements strip ── */
+const RecentAchs = styled.div`
+  width: 100%;
+  background: ${D_PANEL};
+  border-bottom: 1px solid ${D_BORDER};
   display: flex;
   align-items: center;
-  width: 100%6;
+  padding: 0.5rem 1.25rem;
+  gap: 0.25rem;
+  overflow-x: auto;
+`;
+const RecentAchIcon = styled.div`
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  border: 2px solid ${(p) => (p.achieved ? COLOR_UNLOCKED_DARK : D_BORDER)};
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+  &:hover {
+    border-color: ${D_LINK};
+  }
+`;
+const RecentAchPopover = styled.div`
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  max-width: 300px;
+`;
+
+/* ── Dark profile layout ── */
+const MainColumns = styled.div`
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+`;
+const ContentArea = styled.div`
+  flex: 1;
+  min-width: 0;
+`;
+const DLoadingCenter = styled.div`
+  display: flex;
+  align-items: center;
   justify-content: center;
-  color: #057fcc;
-  padding: 0.25rem 0;
-  font-size: 1rem;
-  font-weight: bold;
+  padding: 3rem;
 `;
 
-const Warning = styled.div`
+const FilterBar = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem 0.5rem 0;
-  color: red;
-  animation: blinkSmooth 1.5s ease-in-out infinite;
+  margin-bottom: 0.5rem;
+`;
+const SearchInput = styled.input`
+  flex: 1;
+  background: ${D_PANEL};
+  border: 1px solid ${D_BORDER};
+  border-radius: 3px;
+  color: ${D_TEXT};
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  outline: none;
+  &::placeholder {
+    color: #aaa;
+  }
+  &:focus {
+    border-color: ${D_LINK};
+  }
+`;
 
-  @keyframes blinkSmooth {
+const GameList = styled.div`
+  display: flex;
+  flex-direction: column;
+  border: 1px solid ${D_BORDER};
+  border-radius: 3px;
+  overflow: hidden;
+  max-height: 75vh;
+  overflow-y: auto;
+`;
+const GameRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.55rem 0.75rem;
+  background: ${(p) => (p.alt ? D_ROW_ALT : D_PANEL)};
+  border-bottom: 1px solid ${D_BORDER};
+  cursor: pointer;
+  transition: background 0.15s ease;
+  &:hover {
+    background: #d6e9f8;
+  }
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+const GameCover = styled.div`
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  background: ${(p) => (p.bg ? `url(${p.bg}) center / cover` : "#d8dce0")}
+    no-repeat;
+  border-radius: 2px;
+  border: 1px solid ${D_BORDER};
+`;
+const GameMeta = styled.div`
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+`;
+const GameName = styled.div`
+  color: ${D_LINK};
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+const GameDate = styled.div`
+  color: ${D_MUTED};
+  font-size: 0.7rem;
+`;
+const GameDateSep = styled.span`
+  margin: 0 0.25rem;
+  color: #bbb;
+`;
+const WarningText = styled.div`
+  color: #e74c3c;
+  font-size: 0.65rem;
+  font-weight: 600;
+  animation: blink 1.5s ease-in-out infinite;
+  @keyframes blink {
     0%,
     100% {
       opacity: 1;
@@ -1721,363 +1349,762 @@ const Warning = styled.div`
     }
   }
 `;
-
-const GameLastPlayed = styled.div`
+const GameRowRight = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  padding: 0.125rem 0.5rem 0.125rem 0;
-  color: #666666;
+  gap: 0.75rem;
+  flex-shrink: 0;
 `;
-
-const GameHours = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.75rem;
-  padding: 0.25rem 0.5rem 0.125rem 0;
-  color: #666666;
+const PlatformBadge = styled.div`
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 3px 6px;
+  border: 1px solid #bcc6d0;
+  border-radius: 3px;
+  color: #999;
+  white-space: nowrap;
 `;
-
-const GameCompletion = styled.div`
+const RankBadge = styled.div`
+  width: 30px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.9rem;
-  font-weight: 400;
-  padding: 0.25rem 0.5rem 0.25rem 0;
-  color: #666666;
+  font-weight: 800;
+  border-radius: 4px;
+  background: ${(p) => p.rankColor ?? "#888"};
+  color: #fff;
 `;
-
-const Started = styled.div`
+const TrophyCounts = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+`;
+const TCItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 3px;
+`;
+const TCIconWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 23px;
+  height: 23px;
+  flex-shrink: 0;
+  transform: translate(0.5rem, 0.25rem);
+  line-height: 0;
 `;
-const GameData = styled.div`
+const TCNum = styled.span`
+  font-size: 0.82rem;
+  font-weight: 700;
+`;
+const CompletionCol = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin-top: 0.25rem;
+  gap: 0.4rem;
+  flex-shrink: 0;
+`;
+const DBarTrack = styled.div`
+  width: 110px;
+  height: 6px;
+  background: ${D_TRACK};
+  border-radius: 3px;
+  overflow: hidden;
+`;
+const DBarFill = styled.div`
+  height: 100%;
+  width: ${(p) => p.pct ?? 0}%;
+  background: ${D_FILL};
+  border-radius: 3px;
+`;
+const DCompPct = styled.div`
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: ${D_MUTED};
+  min-width: 42px;
+  text-align: right;
 `;
 
-const GameDataInner1 = styled.div`
+/* dark lists */
+const DFullList = styled.div`
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 0.25rem 0rem 0.25rem 0.5rem;
-  flex-direction: column;
-  flex: 1;
-`;
-
-const GameDataInner2 = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.25rem 0rem;
-  flex: 1;
-`;
-
-const GameInfo = styled.div`
-  display: flex;
-  flex: 2;
-  align-items: center;
-  justify-content: flex-end;
-  padding: 1rem 0;
-`;
-
-const GameContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 1rem;
-  width: 50%;
-  background-color: ${(props) => (props.isSelected ? "#F1F5FD" : "#F9F9F9")};
-  color: #333;rgba(227, 232, 241, 1);
-  border: 1px solid #ddd;
-  cursor: pointer;
-  flex-direction: column;
-`;
-
-const Games2Line = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex: 2;
-  flex-wrap: wrap;
-  max-height: 74vh;
-  overflow: scroll;
-`;
-
-const Games3Line = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  flex-direction: column;
-  max-height: 74vh;
-  overflow: scroll;
-  flex: 2;
-`;
-
-const Games3Line1 = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  width: 100%;
-`;
-
-const Games3Line2 = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  flex-direction: column;
-  flex: 1;
-  width: 100%;
-  padding: 0.25rem;
-`;
-
-const Games1Line = styled.div`
-  display: flex;
-  align-items: center;
-  background-color: #336291;
-  padding: 0.75rem 0.5rem;
-  justify-content: center;
-`;
-
-const GamesCD = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
   width: 100%;
-  color: #fefefe;
-  font-size: 0.9rem;
-  border: 1px solid #ddd;
-  margin-bottom: 1rem;
+  gap: 1px;
+  background: ${D_BORDER};
+  border: 1px solid ${D_BORDER};
+  border-radius: 3px;
+  overflow: hidden;
 `;
-
-const Games = styled.div`
+const DRow = styled.div`
   display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  width: 98%;
-  color: #fefefe;
-  font-size: 0.9rem;
-  border: 1px solid #ddd;
+  align-items: center;
+  background: ${(p) => p.color ?? D_PANEL};
+  padding: 0.35rem 0.75rem;
+  gap: 0.5rem;
+  min-height: 70px;
 `;
-
-const GamesR = styled.div`
+const DGameThumb = styled.div`
+  width: 100px;
+  height: 60px;
+  flex-shrink: 0;
+  background: ${(p) => (p.image ? `url(${p.image}) center/cover` : D_BG)};
+`;
+const DAchIconOuter = styled.div`
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  background: ${(p) => (p.achieved ? "rgba(97,191,25,0.15)" : "transparent")};
+  border: 1px solid ${(p) => (p.achieved ? COLOR_UNLOCKED_DARK : D_BORDER)};
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 98%;
-  color: #fefefe;
-  font-size: 0.9rem;
 `;
-
-const GameLineTime = styled.div`
+const DAchIcon = styled.div`
+  width: 46px;
+  height: 46px;
+  background: ${(p) =>
+    p.icon ? `url(${p.icon}) center/contain no-repeat` : "none"};
+  cursor: ${(p) => (p.onClick ? "pointer" : "default")};
+`;
+const DAchInfo = styled.div`
+  flex: 1;
+  min-width: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fefefe;
   flex-direction: column;
-  font-size: 0.9rem;
-  border: 1px solid #ddd;
-  flex: 1;
-  margin-right: 1rem;
-  margin-bottom: 1rem;
+  gap: 3px;
+  padding: 0 0.75rem;
 `;
-
-const GameLineHours = styled.div`
+const DAchName = styled.div`
+  color: ${D_LINK};
+  font-size: 0.84rem;
+`;
+const DAchDesc = styled.div`
+  color: ${D_MUTED};
+  font-size: 0.74rem;
+  opacity: 0.85;
+`;
+const DVSep = styled.div`
+  width: 1px;
+  height: 34px;
+  background: ${D_BORDER};
+  flex-shrink: 0;
+  margin: 0 0.5rem;
+`;
+const DUnlockDate = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
-  color: #fefefe;
-  font-size: 0.9rem;
-  width: 100%;
-  border: 1px solid #ddd;
-  margin-bottom: 1rem;
-`;
-
-const GamesLeft = styled.div`
-  display: flex;
   align-items: center;
-  justify-content: flex-start;
-  flex: 1;
+  gap: 2px;
+  min-width: 90px;
+  color: #579428;
+  font-size: 0.74rem;
 `;
-
-const GameLeft = styled.div`
+const DRarityBadge = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex: 1;
-`;
-
-const GamesRight = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  flex: 1;
-`;
-
-const SRRight = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
   flex-direction: column;
-  flex: 1.1;
-  padding: 0.5rem;
+  align-items: center;
+  min-width: 80px;
+  color: ${D_TEXT};
 `;
-
-const SRLeft = styled.div`
+const DTrophyTypeIcon = styled.div`
+  min-width: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transform: scale(1.5);
+`;
+const DLevelReached = styled.div`
+  padding: 0 1rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: ${COLOR_GOLD2};
+`;
+
+/* dark stats sections */
+const DStatsArea = styled.div`
+  display: flex;
   flex-direction: column;
-  flex: 2;
+  gap: 1rem;
   width: 100%;
-  padding: 0.5rem;
 `;
-
-const SecondRow = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  background-color: #f7f7f7;
+const DSectionPanel = styled.div`
+  background: ${D_PANEL};
+  border: 1px solid ${D_BORDER};
+  border-radius: 3px;
+  overflow: hidden;
   width: 100%;
-  padding: 1rem;
-  color: #44484b;
+`;
+const DSectionHeader = styled.div`
+  background: ${D_HDR};
+  padding: 0.6rem 1rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 `;
 
-const FRItem = styled.div`
+/* dark sidebar */
+const DSidebar = styled.div`
+  width: 290px;
+  flex-shrink: 0;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${COLOR_BRONZE};
-  padding: 0.75rem;
-  margin-right: 0.5rem;
-  width: 20px;
-  height: 20px;
-  color: ${generateDarkTextColorForLightBg(COLOR_BRONZE, 50)};
+  flex-direction: column;
+  gap: 0.75rem;
 `;
-
-const TabLink = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  position: relative;
-  font-size: 0.8rem;
-  margin-right: 1rem;
-  padding-bottom: 0.25rem;
-  font-weight: ${(props) => (props.active ? "bold" : "300")};
-  border-bottom: ${(props) =>
-    props.active ? `2px solid ${COLOR_ACCENT}` : `2px solid #00000000`};
+const DSidePanel = styled.div`
+  background: ${D_PANEL};
+  border: 1px solid ${D_BORDER};
+  border-radius: 3px;
+  overflow: hidden;
 `;
-
-const FRLeft = styled.div`
+const DSidePanelHeader = styled.div`
+  background: ${D_HDR};
+  padding: 0.55rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: #fff;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  flex: 1;
+  justify-content: space-between;
 `;
-
-const FRRight = styled.div`
+const DRarestRow = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-`;
-
-const GameSearch = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-
-  & input {
-    width: 100%;
-    outline: none;
-    border: none;
-    padding: 0.5rem 1rem;
+  gap: 0.5rem;
+  padding: 0.45rem 0.75rem;
+  border-bottom: 1px solid ${D_BORDER};
+  &:last-of-type {
+    border-bottom: none;
   }
 `;
-
-const CollectionRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #e7e7e7;
-  padding: 1rem;
-  width: 100%;
-  color: #44484b;
+const DRarestIcon = styled.div`
+  flex-shrink: 0;
+  transform: scale(1.3);
+  margin: 0 0.2rem;
 `;
-
-const RecentAchs = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  background-color: #e7e7e7;
-  padding: 1rem;
-  width: 100%;
-  overflow: scroll;
-  color: #44484b;
+const DRarestInfo = styled.div`
+  flex: 1;
+  min-width: 0;
 `;
-
-const FirstRow = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #e7e7e7;
-  padding: 0.5rem 1rem;
-  width: 100%;
-  color: #44484b;
+const DRarestName = styled.div`
+  color: ${D_LINK};
+  font-size: 0.76rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
-
-const OuterAchContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
+const DRarestGame = styled.div`
+  color: ${D_MUTED};
+  font-size: 0.66rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
-
-const Container = styled.div`
+const DRarestPct = styled.div`
   display: flex;
-  align-items: center;
   flex-direction: column;
-  justify-content: flex-start;
-  width: 2350px;
+  align-items: flex-end;
+  font-size: 0.76rem;
+  color: ${D_TEXT};
+  gap: 1px;
+  flex-shrink: 0;
+`;
+const DRarLabel = styled.div`
+  font-size: 0.58rem;
+  color: ${(p) =>
+    p.rl === "Ultra Rare"
+      ? "#c0392b"
+      : p.rl === "Very Rare"
+        ? "#e67e22"
+        : p.rl === "Rare"
+          ? "#f39c12"
+          : p.rl === "Uncommon"
+            ? "#27ae60"
+            : D_MUTED};
+`;
+const DRarityStrip = styled.div`
+  display: flex;
+  border-top: 1px solid ${D_BORDER};
+`;
+const DRarityStripItem = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.45rem 0.2rem;
+  border-right: 1px solid ${D_BORDER};
+  &:last-child {
+    border-right: none;
+  }
+`;
+const DMilestoneRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid ${D_BORDER};
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+const DMilestoneThumb = styled.div`
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  background: ${(p) => (p.bg ? `url(${p.bg}) center/cover` : D_BG)} no-repeat;
+  border-radius: 2px;
+  border: 1px solid ${D_BORDER};
+`;
+const DMilestoneInfo = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+const DEmptyState = styled.div`
+  padding: 1rem 0.75rem;
+  color: ${D_MUTED};
+  font-size: 0.76rem;
+  text-align: center;
+`;
+
+/* ════════════════════════════════════
+   GAME DETAIL PAGE (light theme)
+   ════════════════════════════════════ */
+const GameDetailPage = styled.div`
+  width: 100%;
+  background: ${L_BG};
+  min-height: calc(100vh - 120px);
+`;
+
+const GameBanner = styled.div`
+  width: 100%;
+  height: 220px;
+  background: ${(p) => `url(${p.bg}) center / cover`} no-repeat;
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+`;
+const BannerDim = styled.div`
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 18, 28, 0.2) 0%,
+    rgba(10, 18, 28, 0.85) 100%
+  );
+`;
+const BannerStatsBar = styled.div`
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.25rem;
+  gap: 0;
+  background: rgba(0, 0, 0, 0.55);
+`;
+const BannerStat = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.3rem 2.5rem;
+`;
+const BSNum = styled.div`
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #fff;
+`;
+const BSLabel = styled.div`
+  font-size: 0.6rem;
+  color: #aab;
+  letter-spacing: 0.08em;
+  margin-top: 1px;
+`;
+const BannerStatDiv = styled.div`
+  width: 1px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.2);
+`;
+
+const GameBreadcrumbBar = styled.div`
+  background: #3a3f4b;
+  border-bottom: 1px solid #2a2f3b;
+`;
+const GameBreadcrumbInner = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+`;
+const Breadcrumb = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.6rem 0;
+`;
+const BreadLink = styled.span`
+  color: ${D_LINK};
+  font-size: 0.78rem;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+`;
+const BreadSep = styled.span`
+  color: #888;
+  font-size: 0.78rem;
+`;
+const BreadCurrent = styled.span`
+  color: #ddd;
+  font-size: 0.78rem;
+  font-weight: 600;
+`;
+const BreadTabs = styled.div`
+  display: flex;
+`;
+const BreadTab = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 0 0.85rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  color: ${(p) => (p.active ? "#fff" : "#aaa")};
+  border-bottom: 3px solid ${(p) => (p.active ? D_LINK : "transparent")};
+`;
+
+const GamePageLayout = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+`;
+const GamePageLeft = styled.div`
+  flex: 1;
+  min-width: 0;
+`;
+const GamePageRight = styled.div`
+  width: 260px;
+  flex-shrink: 0;
+`;
+
+/* player card */
+const PlayerCard = styled.div`
+  display: flex;
+  align-items: center;
+  background: ${L_PANEL};
+  border: 1px solid ${L_BORDER};
   border-radius: 4px;
-  transform: translateY(-2rem);
-  background-color: #292b2d;
+  margin-bottom: 0.75rem;
+  overflow: hidden;
 `;
-
-const RecentAch = styled.div`
-  color: #333;
+const PCLeft = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  margin-right: 0.5rem;
-  background-color: #f5f5f7;
-  border: 2px solid #e3e3e6;
-  transition: 0.5s all ease;
+  gap: 0.65rem;
+  padding: 0.75rem 1rem;
+  flex-shrink: 0;
 `;
-
-const StatWrapper = styled.div`
+const PCDivider = styled.div`
+  width: 1px;
+  align-self: stretch;
+  background: ${L_BORDER};
+  flex-shrink: 0;
+`;
+const PCAvatar = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: url("https://avatars.fastly.steamstatic.com/2d570b928b0e4b353c1a92ef43e534ee623e92ed_full.jpg")
+    center/cover;
+  border: 2px solid ${L_BORDER};
+`;
+const PCInfo = styled.div`
   display: flex;
-  align-items: center;
   flex-direction: column;
-  justify-content: flex-start;
-  width: 100%;
+  gap: 2px;
 `;
-
-const StatWrapper2 = styled.div`
+const PCName = styled.div`
+  color: ${L_LINK};
+  font-size: 0.9rem;
+  font-weight: 800;
+`;
+const PCDate = styled.div`
+  color: ${L_MUTED};
+  font-size: 0.72rem;
+`;
+const PCRank = styled.div`
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 800;
+  border-radius: 4px;
+  background: ${(p) => p.color ?? "#888"};
+  color: #fff;
+  margin: 0 1rem;
+`;
+const PCRight = styled.div`
+  flex: 1;
+  display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  gap: 0.4rem;
+  padding: 0.65rem 1rem;
+`;
+const PCTrophies = styled.div`
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+`;
+const PCT = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`;
+const PCIconWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 23px;
+  height: 23px;
+  flex-shrink: 0;
+  line-height: 0;
+`;
+const PCTNum = styled.span`
+  font-size: 0.95rem;
+  font-weight: 700;
+`;
+const PCBarRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+`;
+const PCBarTrack = styled.div`
+  flex: 1;
+  height: 7px;
+  background: ${L_TRACK};
+  border-radius: 4px;
+  overflow: hidden;
+`;
+const PCBarFill = styled.div`
+  height: 100%;
+  width: ${(p) => p.pct}%;
+  background: ${L_FILL};
+  border-radius: 4px;
+`;
+const PCBarLabel = styled.div`
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: ${L_MUTED};
+  white-space: nowrap;
+  min-width: 44px;
+  text-align: right;
+`;
+
+/* trophy list */
+const TrophyListHeader = styled.div`
+  background: ${L_HDR_BG};
+  color: ${L_HDR_TEXT};
+  padding: 0.65rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+`;
+const TrophyFilterBar = styled.div`
+  display: flex;
+  align-items: center;
+  background: ${L_FILTER};
+  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+`;
+const TFilterBtn = styled.div`
+  padding: 0.5rem 1rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  color: ${(p) => (p.active ? "#fff" : "rgba(255,255,255,0.65)")};
+  border-bottom: 3px solid ${(p) => (p.active ? "#fff" : "transparent")};
+  &:hover {
+    color: #fff;
+  }
+`;
+const LightLoadingCenter = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background: ${L_PANEL};
+`;
+const TrophyList = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const TrophyRow = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.5rem 0.75rem;
+  background: ${(p) => (p.earned ? L_EARNED : p.alt ? L_ROW_ALT : L_PANEL)};
+  border-bottom: 1px solid ${L_BORDER};
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+const TrophyRowIcon = styled.div`
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+  border: 2px solid ${(p) => (p.earned ? "#5cb85c" : L_BORDER)};
+  border-radius: 3px;
+  overflow: hidden;
+`;
+const TrophyAchIcon = styled.div`
+  width: 56px;
+  height: 56px;
+  background: ${(p) =>
+    p.icon ? `url(${p.icon}) center/contain no-repeat` : "none"};
+`;
+const TrophyRowInfo = styled.div`
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+`;
+const TrophyRowName = styled.div`
+  color: ${L_LINK};
+  font-size: 0.84rem;
+  font-weight: 600;
+`;
+const TrophyRowDesc = styled.div`
+  color: ${L_MUTED};
+  font-size: 0.74rem;
+`;
+const TrophyRowRight = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+  min-width: 110px;
+  flex-shrink: 0;
+`;
+const EarnedDate = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  color: #3a843a;
+  font-size: 0.74rem;
+`;
+const RarPct = styled.div`
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: ${L_TEXT};
+`;
+const RarLabel = styled.div`
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  color: ${(p) =>
+    p.rarLabel === "Ultra Rare"
+      ? "#c0392b"
+      : p.rarLabel === "Very Rare"
+        ? "#e67e22"
+        : p.rarLabel === "Rare"
+          ? "#e88e00"
+          : p.rarLabel === "Uncommon"
+            ? "#4a9a4a"
+            : L_MUTED};
+`;
+const TrophyTypeCell = styled.div`
+  width: 40px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+/* right sidebar (game detail — light) */
+const GameCoverCard = styled.div`
+  background: ${L_PANEL};
+  border: 1px solid ${L_BORDER};
+  border-radius: 3px;
+  overflow: hidden;
+`;
+const GameCoverImg = styled.div`
   width: 100%;
-  padding: 1rem 0rem;
+  height: 130px;
+  background: ${(p) => (p.bg ? `url(${p.bg}) center/cover` : "#ccc")} no-repeat;
+`;
+const GameCoverBody = styled.div`
+  padding: 0.6rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+const GCRow = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.76rem;
+`;
+const GCLabel = styled.div`
+  color: ${L_MUTED};
+  font-weight: 600;
+  font-size: 0.72rem;
+`;
+const GCVal = styled.div`
+  color: ${L_TEXT};
+  font-size: 0.76rem;
+`;
+const GCDivider = styled.div`
+  height: 1px;
+  background: ${L_BORDER};
+`;
+const GCTrophyRow = styled.div`
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+`;
+const GCT = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: ${(p) => p.color};
+`;
+const GCTBadge = styled.span`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
+  background: ${(p) => p.c};
+  color: #fff;
+  font-size: 0.6rem;
+  font-weight: 800;
+  flex-shrink: 0;
+`;
+const GCDateVal = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 1px;
 `;

@@ -1,12 +1,11 @@
-const withTM = require("next-transpile-modules")([
-  "rc-util",
-  "rc-pagination",
-  "rc-picker",
-  "@ant-design/icons-svg",
-  "rc-input",
-]);
-
 const nextConfig = {
+  transpilePackages: [
+    "rc-util",
+    "rc-pagination",
+    "rc-picker",
+    "@ant-design/icons-svg",
+    "rc-input",
+  ],
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
@@ -17,4 +16,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withTM(nextConfig);
+module.exports = nextConfig;

@@ -211,16 +211,21 @@ const RefreshButton = styled.div`
   align-items: center;
   justify-content: flex-start;
   position: fixed;
-  right: 2rem;
-  bottom: 1rem;
-  background-color: ${COLOR_ACCENT};
-  padding: 0.25rem 0.5rem;
+  right: 1.5rem;
+  bottom: 1.5rem;
+  background: #336291;
+  border: 1px solid #2a5278;
+  color: #fff;
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
   cursor: pointer;
   z-index: 100;
+  font-size: 0.8rem;
+  gap: 0.35rem;
+  font-family: 'Nunito', sans-serif;
 
-  &:active {
-    transform: translateY(0.25rem);
-  }
+  &:hover { background: #3d74ab; }
+  &:active { transform: translateY(1px); }
 `;
 
 const Container = styled.div`
@@ -229,7 +234,8 @@ const Container = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   width: 100%;
-  background-color: #292b2d;
-  color: #fefefe;
+  min-height: 100vh;
+  background-color: #ebebeb;
+  color: #333;
   position: relative;
 `;

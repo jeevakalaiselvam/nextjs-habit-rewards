@@ -23,6 +23,6 @@ if (firstGroup) {
   console.log(JSON.stringify(achievements));
 } else {
   console.log(
-    "No .steamdb_achievements_group found inside the first matching div."
+    "No .steamdb_achievements_group found inside the first matching div.",
   );
 }

@@ -1,4 +1,4 @@
-import clientPromise from "../../../lib/db";
+import { supabase } from "../../../lib/supabase";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
@@ -9,32 +9,33 @@ export default async function handler(req, res) {
     }
 
     try {
-      const client = await clientPromise;
-      const db = client.db("habittracker");
+      // Upsert the single row (id=1 is the singleton)
+      const { error } = await supabase
+        .from("included_games")
+        .upsert({ id: 1, games }, { onConflict: "id" });
 
-      await db.collection("includedGames").updateOne(
-        {}, // no filter → update the single doc
-        { $set: { games } }, // replace array with new list
-        { upsert: true } // create if not exist
-      );
+      if (error) throw error;
 
       res.status(201).json({ message: "Games updated successfully" });
     } catch (error) {
-      console.log(error);
+      console.error("include POST error:", error.message);
       res.status(500).json({ error: "Failed to update games" });
     }
   } else if (req.method === "GET") {
     try {
-      const client = await clientPromise;
-      const db = client.db("habittracker");
+      const { data, error } = await supabase
+        .from("included_games")
+        .select("*");
 
-      const jeevagame = await db.collection("includedGames").find({}).toArray();
-      res.status(200).json(jeevagame);
+      if (error) throw error;
+
+      res.status(200).json(data);
     } catch (error) {
-      res.status(500).json({ error: "Failed to fetch Jeeva Achievements" });
+      console.error("include GET error:", error.message);
+      res.status(500).json({ error: "Failed to fetch included games" });
     }
   } else {
-    res.setHeader("Allow", ["POST"]);
+    res.setHeader("Allow", ["GET", "POST"]);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

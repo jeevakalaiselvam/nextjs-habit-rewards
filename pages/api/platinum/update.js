@@ -1,38 +1,18 @@
-import clientPromise from "../../../lib/db";
-import { ObjectId } from "mongodb";
+import { supabase } from "../../../lib/supabase";
 
 export default async function handler(req, res) {
-  const { id } = req.query;
-
   if (req.method === "PUT") {
     const {
-      id,
-      cover,
-      platinum,
-      dlc1Name,
-      dlc1Trophies,
-      dlc2Name,
-      dlc2Trophies,
-      dlc3Name,
-      dlc3Trophies,
-      dlc4Name,
-      dlc4Trophies,
-      dlc5Name,
-      dlc5Trophies,
-      dlc1Image,
-      dlc2Image,
-      dlc3Image,
-      dlc4Image,
-      dlc5Image,
+      id, cover, platinum,
+      dlc1Name, dlc1Trophies, dlc2Name, dlc2Trophies,
+      dlc3Name, dlc3Trophies, dlc4Name, dlc4Trophies,
+      dlc5Name, dlc5Trophies,
+      dlc1Image, dlc2Image, dlc3Image, dlc4Image, dlc5Image,
       price,
     } = req.body;
 
-    let parsedPlatinum;
-    let parseddlc1Trophies;
-    let parseddlc2Trophies;
-    let parseddlc3Trophies;
-    let parseddlc4Trophies;
-    let parseddlc5Trophies;
+    let parsedPlatinum, parseddlc1Trophies, parseddlc2Trophies,
+      parseddlc3Trophies, parseddlc4Trophies, parseddlc5Trophies;
     try {
       parsedPlatinum = JSON.parse(platinum);
       parseddlc1Trophies = JSON.parse(dlc1Trophies);
@@ -46,51 +26,36 @@ export default async function handler(req, res) {
     }
 
     try {
-      const client = await clientPromise;
-      const db = client.db("habittracker");
+      const { data, error } = await supabase
+        .from("platinum")
+        .upsert({
+          id,
+          cover,
+          platinum: parsedPlatinum,
+          dlc1_name: dlc1Name, dlc1_trophies: parseddlc1Trophies,
+          dlc2_name: dlc2Name, dlc2_trophies: parseddlc2Trophies,
+          dlc3_name: dlc3Name, dlc3_trophies: parseddlc3Trophies,
+          dlc4_name: dlc4Name, dlc4_trophies: parseddlc4Trophies,
+          dlc5_name: dlc5Name, dlc5_trophies: parseddlc5Trophies,
+          dlc1_image: dlc1Image, dlc2_image: dlc2Image,
+          dlc3_image: dlc3Image, dlc4_image: dlc4Image,
+          dlc5_image: dlc5Image,
+          price,
+        }, { onConflict: "id" })
+        .select();
 
-      const result = await db.collection("platinum").updateOne(
-        { id: id }, // match document where id equals provided id
-        {
-          $set: {
-            cover: cover,
-            platinum: parsedPlatinum,
-            dlc1Name,
-            dlc1Trophies: parseddlc1Trophies,
-            dlc2Name,
-            dlc2Trophies: parseddlc2Trophies,
-            dlc3Name,
-            dlc3Trophies: parseddlc3Trophies,
-            dlc4Name,
-            dlc4Trophies: parseddlc4Trophies,
-            dlc5Name,
-            dlc5Trophies: parseddlc5Trophies,
-            dlc1Image,
-            dlc2Image,
-            dlc3Image,
-            dlc4Image,
-            dlc5Image,
-            price,
-          },
-        },
-        { upsert: true }
-      );
+      if (error) throw error;
 
-      if (result.upsertedCount > 0) {
-        return res
-          .status(201)
-          .json({ message: "Document created successfully" });
-      } else {
-        return res
-          .status(200)
-          .json({ message: "Document updated successfully" });
-      }
+      const wasInserted = data?.[0] && !data[0].updated_at;
+      res
+        .status(wasInserted ? 201 : 200)
+        .json({ message: wasInserted ? "Document created successfully" : "Document updated successfully" });
     } catch (error) {
-      console.error(error);
+      console.error("platinum update error:", error.message);
       res.status(500).json({ error: "Failed to update or create document" });
     }
   } else {
-    res.setHeader("Allow", ["PUT", "DELETE"]);
+    res.setHeader("Allow", ["PUT"]);
     res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

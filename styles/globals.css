@@ -1,12 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
-Bebas + Neue body {
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+
+body {
   margin: 0;
   padding: 0;
   font-family: 'Nunito', sans-serif;
-  user-select: none; /* Prevents selection */
-  -webkit-user-select: none; /* For WebKit browsers like Chrome, Safari */
-  -moz-user-select: none; /* For Firefox */
-  -ms-user-select: none; /* For Internet Explorer/Edge (older versions) */
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  background-color: #ebebeb;
+  color: #333;
 }
 
 a {
@@ -21,117 +24,64 @@ option {
   font-family: 'Nunito', sans-serif !important;
 }
 
+html {
+  zoom: 1.1;
+}
+
 html,
 body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
   overscroll-behavior: none;
-  background-color: #141414;
+  background-color: #ebebeb;
 }
 
-body {
-  height: 100%;
-}
-
-/* Disable zoom effect for Ant Design Input */
+/* Ant Design resets */
 .ant-input {
-  transition: none; /* Remove the zoom transition */
-}
-
-.ant-input:focus {
-  box-shadow: none; /* Remove focus shadow */
-  border-color: inherit; /* Keep the default border color */
-}
-
-/* Remove border for Ant Design Input on hover and focus */
-.ant-input {
-  border: none; /* Remove the border */
-  box-shadow: none; /* Remove the box shadow */
-  font-size: 1rem;
-  height: 45px;
-}
-
-.ant-select-focused .ant-select-selector,
-.ant-select-selector:focus,
-.ant-select-selector:active,
-.ant-select-open .ant-select-selector {
-  border-color: #fefe0000 !important;
-  box-shadow: none !important;
+  transition: none;
+  background: #ffffff !important;
+  color: #333 !important;
+  border: 1px solid #dde0e5 !important;
+  border-radius: 3px !important;
 }
 
 .ant-input:focus,
 .ant-input:hover {
-  border: none !important; /* Remove border when focused or hovered */
-  box-shadow: none !important; /* Remove box shadow */
-}
-
-.ant-card-body {
-  padding: 16px !important;
-}
-
-.ant-otp-input {
-  width: 40px;
-}
-
-.glow-icon {
-  color: #52b8da;
-  filter: drop-shadow(0 0 10px #52b8da) drop-shadow(0 0 10px #52b8da);
-}
-
-.glow-icon-none {
-  color: #717f8d;
-  filter: drop-shadow(0 0 10px #52b8da00) drop-shadow(0 0 10px #52b8da00);
-}
-
-.full-width-dropdown .ant-dropdown-menu {
-  min-width: 100% !important;
-}
-
-.full-width-dropdown .ant-dropdown-menu-item {
-  width: 100%;
-}
-
-.ant-picker:focus,
-.ant-picker-focused {
-  box-shadow: none !important;
-  outline: none !important;
-}
-
-.ant-select-focused .ant-select-selector,
-.ant-select-selector:focus,
-.ant-select-selector:active,
-.ant-select-open .ant-select-selector {
+  border-color: #4486c6 !important;
   box-shadow: none !important;
 }
 
-.ant-input-outlined {
-  outline: none;
-  box-shadow: none;
+.ant-input::placeholder {
+  color: #aaa !important;
 }
 
-.ant-picker-time-panel-cell-selected .ant-picker-time-panel-cell-inner {
-  background-color: #126cd6 !important;
-}
-.custom-notification .ant-notification-notice-content {
-  padding: 0;
-  background: none;
-  box-shadow: none;
+.ant-spin .anticon {
+  color: #4487c5 !important;
 }
 
 * {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: thin;
+  scrollbar-color: #c0c4cc #ebebeb;
 }
 
 *::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, and Opera */
+  width: 6px;
+  height: 6px;
 }
 
+*::-webkit-scrollbar-track {
+  background: #ebebeb;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #c0c4cc;
+  border-radius: 3px;
+}
 
 body {
-  -webkit-user-select: none; /* Chrome, Safari */
-     -moz-user-select: none; /* Firefox */
-      -ms-user-select: none; /* IE10+ */
-          user-select: none; /* Standard */
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
