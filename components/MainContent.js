@@ -803,7 +803,7 @@ export default function MainContent({
                         <DAchIcon
                           icon={ach?.icon}
                           onClick={() => {
-                            const q = `${ach?.displayName} achievement ${encodeURIComponent(ach?.gameName ?? "")}`;
+                            const q = encodeURIComponent(`${ach?.displayName} achievement ${ach?.gameName ?? ""}`);
                             window.open(`https://www.google.com/search?q=${q}`);
                           }}
                         />
@@ -864,7 +864,7 @@ export default function MainContent({
                         <DAchIcon
                           icon={ach?.icon}
                           onClick={() => {
-                            const q = `${ach?.displayName} achievement ${encodeURIComponent(ach?.gameName ?? "")}`;
+                            const q = encodeURIComponent(`${ach?.displayName} achievement ${ach?.gameName ?? ""}`);
                             window.open(`https://www.google.com/search?q=${q}`);
                           }}
                         />
