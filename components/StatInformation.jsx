@@ -25,7 +25,7 @@ import {
   COLOR_UNCOMMON,
   COLOR_VERY_RARE,
 } from "../helpers/colorHelper";
-import { getAchsBasedOnRarity } from "../helpers/trophyHelper";
+import { getAchsBasedOnRarity, scaleCompletion } from "../helpers/trophyHelper";
 
 export default function StatInformation({ games }) {
   const {
@@ -107,7 +107,7 @@ export default function StatInformation({ games }) {
     let completed = exceptPlatinum?.filter(
       (item) => item?.achieved == 1
     )?.length;
-    let completion = (completed == 0 ? 0 : (completed / total) * 100)?.toFixed(
+    let completion = (completed == 0 ? 0 : scaleCompletion(completed, total))?.toFixed(
       2
     );
     allCompletion = allCompletion + completion;

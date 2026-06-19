@@ -14,6 +14,7 @@ import {
   calculateLevelForAchs,
   calculateRankForCompletion,
   getAchsBasedOnRarity,
+  scaleCompletion,
 } from "../helpers/trophyHelper";
 import GoldIconS from "./GoldIconS";
 import SilverIconS from "./SilverIconS";
@@ -180,7 +181,7 @@ export default function MainContent({
       }
     });
     const completion =
-      total === 0 ? 0 : +((completed / total) * 100).toFixed(2);
+      total === 0 ? 0 : +scaleCompletion(completed, total).toFixed(2);
     const { color, rank } = calculateRankForCompletion(completion);
     const sortedByPct = [...(game?.achievements ?? [])].sort(
       (a, b) => +b.percentage - +a.percentage,
@@ -1390,6 +1391,8 @@ const TrophyCounts = styled.div`
   display: flex;
   align-items: center;
   gap: 0.6rem;
+  width: 152px;
+  flex-shrink: 0;
 `;
 const TCItem = styled.div`
   display: flex;
@@ -1409,6 +1412,8 @@ const TCIconWrap = styled.div`
 const TCNum = styled.span`
   font-size: 0.82rem;
   font-weight: 700;
+  min-width: 18px;
+  text-align: left;
 `;
 const CompletionCol = styled.div`
   display: flex;
@@ -1433,7 +1438,8 @@ const DCompPct = styled.div`
   font-size: 0.78rem;
   font-weight: 700;
   color: ${D_MUTED};
-  min-width: 42px;
+  width: 50px;
+  flex-shrink: 0;
   text-align: right;
 `;
 

@@ -9,6 +9,7 @@ import {
   getColorBasedOnRarity,
   getRarityBasedOnRarity,
 } from "../helpers/achHelper";
+import { COMPLETION_TARGET_PERCENT } from "../helpers/trophyHelper";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 
@@ -109,28 +110,31 @@ export default function Atom() {
       let completed = sortedPlatinumTrophies?.filter(
         (ach) => ach?.achieved == "1"
       )?.length;
-      let isCompleted = total == completed;
+      let isCompleted =
+        total > 0 && completed / total >= COMPLETION_TARGET_PERCENT / 100;
 
       formedGame = {
         ...game,
         ...platinumGameData,
-        achievements: [
-          ...sortedPlatinumTrophies?.filter(
-            (ach) => ach?.displayName != lastAch?.displayName
-          ),
-          { ...lastAch, color: "Gold" },
-          {
-            displayName: `Platinum`,
-            description: `Achieved all Trophies in game`,
-            hiddenDesc: `${game?.name}`,
-            percentage: lastAch?.percentage,
-            label: getRarityBasedOnRarity(lastAch?.percentage),
-            color: "Platinum",
-            achieved: isCompleted ? 1 : 0,
-            unlocktime: lastAch?.unlocktime,
-            icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
-          },
-        ],
+        achievements: lastAch
+          ? [
+              ...sortedPlatinumTrophies?.filter(
+                (ach) => ach?.displayName != lastAch?.displayName
+              ),
+              { ...lastAch, color: "Gold" },
+              {
+                displayName: `Platinum`,
+                description: `Achieved all Trophies in game`,
+                hiddenDesc: `${game?.name}`,
+                percentage: lastAch?.percentage,
+                label: getRarityBasedOnRarity(lastAch?.percentage),
+                color: "Platinum",
+                achieved: isCompleted ? 1 : 0,
+                unlocktime: lastAch?.unlocktime,
+                icon: "https://pbs.twimg.com/media/GF8EZJZWQAAwDR7.jpg",
+              },
+            ]
+          : [],
       };
 
       return formedGame;

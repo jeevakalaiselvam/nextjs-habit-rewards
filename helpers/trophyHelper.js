@@ -17,6 +17,16 @@ const trophyPoints = {
   platinum: 300,
 };
 
+// Earning this share of a game's trophies counts as "fully complete" -
+// 100% is unrealistic for most games, so we treat 50% as the real target.
+export const COMPLETION_TARGET_PERCENT = 50;
+
+export const scaleCompletion = (completed, total) => {
+  if (!total) return 0;
+  const raw = (completed / total) * 100;
+  return Math.min(100, (raw / COMPLETION_TARGET_PERCENT) * 100);
+};
+
 export const calculatePSLevelAndProgress = (platinum, gold, silver, bronze) => {
   // Trophy points
   const platinumPoints = 300;
@@ -324,7 +334,7 @@ export const getAchsBasedOnRarity = (games) => {
     if (completed == 0) {
       completion = 0;
     } else {
-      completion = ((completed / total) * 100)?.toFixed(2);
+      completion = scaleCompletion(completed, total)?.toFixed(2);
     }
 
     if (completion == 100) {
