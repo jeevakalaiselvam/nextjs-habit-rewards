@@ -18,8 +18,8 @@ const trophyPoints = {
 };
 
 // Earning this share of a game's trophies counts as "fully complete" -
-// 100% is unrealistic for most games, so we treat 50% as the real target.
-export const COMPLETION_TARGET_PERCENT = 50;
+// 100% is unrealistic for most games, so we treat 30% as the real target.
+export const COMPLETION_TARGET_PERCENT = 30;
 
 export const scaleCompletion = (completed, total) => {
   if (!total) return 0;

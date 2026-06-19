@@ -74,7 +74,6 @@ export default function MainContent({
   refreshData,
   setGamesLoading,
   gamesLoading,
-  platinumDataLoading,
   tabActive,
   setTabActive,
   setGamesToInclude,
@@ -715,8 +714,6 @@ export default function MainContent({
                         const lastUnlocked = [...(game?.achievements ?? [])]
                           .filter((a) => a?.achieved == 1)
                           .sort((a, b) => b.unlocktime - a.unlocktime)[0];
-                        const isPlatinumMissing =
-                          game?.achievements?.length === 1;
 
                         return (
                           <GameRow
@@ -728,7 +725,7 @@ export default function MainContent({
                               setTabActive("GAME");
                             }}
                           >
-                            <GameCover bg={game?.cover} />
+                            <GameCover bg={HEADER_IMAGE(game?.id)} />
                             <GameMeta>
                               <GameName>{game?.name}</GameName>
                               <GameDate>
@@ -740,12 +737,6 @@ export default function MainContent({
                                 <GameDateSep> · </GameDateSep>
                                 {completed} of {total} Trophies
                               </GameDate>
-                              {isPlatinumMissing &&
-                                !(gamesLoading || platinumDataLoading) && (
-                                  <WarningText>
-                                    PLATINUM DATA MISSING
-                                  </WarningText>
-                                )}
                             </GameMeta>
                             <GameRowRight>
                               <PlatformBadge>PC</PlatformBadge>
@@ -1092,7 +1083,9 @@ export default function MainContent({
                         <span
                           style={{
                             color: D_MUTED,
-                            fontSize: "0.58rem",
+                            fontSize: "0.56rem",
+                            letterSpacing: "-0.2px",
+                            whiteSpace: "nowrap",
                             textAlign: "center",
                             width: "100%",
                           }}
@@ -1564,7 +1557,7 @@ const DSectionHeader = styled.div`
 
 /* dark sidebar */
 const DSidebar = styled.div`
-  width: 290px;
+  width: 350px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -1656,10 +1649,12 @@ const DRarityStrip = styled.div`
 `;
 const DRarityStripItem = styled.div`
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.45rem 0.2rem;
+  padding: 0.45rem 0.1rem;
   border-right: 1px solid ${D_BORDER};
   &:last-child {
     border-right: none;

@@ -17,9 +17,7 @@ const GAMES_INCLUDED = [];
 
 export default function Atom() {
   const [gamesLoading, setGamesLoading] = useState(false);
-  const [platinumDataLoading, setPlatinumDataLoading] = useState(false);
   const [games, setGames] = useState([]);
-  const [platinumData, setPlatinumData] = useState([]);
   const [finalGames, setFinalGames] = useState([]);
   const [refeshing, setRefreshing] = useState(false);
   const [tabActive, setTabActive] = useState("GAMES");
@@ -39,21 +37,8 @@ export default function Atom() {
     }
   };
 
-  const refreshPlatinumData = () => {
-    setPlatinumDataLoading(true);
-    try {
-      axios.get("/api/platinum").then((response) => {
-        setPlatinumData(response?.data);
-        setPlatinumDataLoading(false);
-      });
-    } catch (e) {
-      setPlatinumDataLoading(false);
-    }
-  };
-
   const refreshData = () => {
     refreshSteamGames();
-    refreshPlatinumData();
     setRefreshing(false);
   };
 
@@ -64,68 +49,41 @@ export default function Atom() {
   }, []);
 
   useEffect(() => {
-    let finalGames = [];
-
-    console.log("JEEVA", { platinumData });
-
-    finalGames = games?.map((game) => {
-      let platinumGameData = platinumData?.find(
-        (item) => +item?.id == +game?.id
-      );
-      let formedGame = {};
-      let platinumMapper = {};
-      let dlcMapper = {};
-
-      platinumGameData?.platinum?.forEach((ach) => {
-        platinumMapper[ach?.title] = ach;
-      });
-
-      console.log("JEEVA", { platinumMapper });
-
+    const finalGames = games?.map((game) => {
       let gameName = game?.achievements?.[0]?.gameName;
 
-      let sortedPlatinumTrophies = game?.achievements
+      let sortedTrophies = [...(game?.achievements ?? [])]
         ?.map((ach) => {
           return {
             ...ach,
             label: getRarityBasedOnRarity(ach?.percentage),
             color: getColorBasedOnRarity(ach?.percentage),
             title: ach?.displayName,
-            hiddenDesc: platinumMapper[ach?.displayName]?.description,
           };
-        })
-        ?.filter((ach) => {
-          if (platinumMapper[ach?.displayName]) {
-            return true;
-          } else {
-            return false;
-          }
         })
         ?.sort((ach1, ach2) => +ach2.percentage - +ach1?.percentage);
 
-      let lastAch =
-        sortedPlatinumTrophies?.[sortedPlatinumTrophies?.length - 1];
+      let lastAch = sortedTrophies?.[sortedTrophies?.length - 1];
 
-      let total = sortedPlatinumTrophies?.length;
-      let completed = sortedPlatinumTrophies?.filter(
+      let total = sortedTrophies?.length;
+      let completed = sortedTrophies?.filter(
         (ach) => ach?.achieved == "1"
       )?.length;
       let isCompleted =
         total > 0 && completed / total >= COMPLETION_TARGET_PERCENT / 100;
 
-      formedGame = {
+      return {
         ...game,
-        ...platinumGameData,
+        name: gameName,
         achievements: lastAch
           ? [
-              ...sortedPlatinumTrophies?.filter(
+              ...sortedTrophies?.filter(
                 (ach) => ach?.displayName != lastAch?.displayName
               ),
               { ...lastAch, color: "Gold" },
               {
                 displayName: `Platinum`,
                 description: `Achieved all Trophies in game`,
-                hiddenDesc: `${game?.name}`,
                 percentage: lastAch?.percentage,
                 label: getRarityBasedOnRarity(lastAch?.percentage),
                 color: "Platinum",
@@ -136,11 +94,9 @@ export default function Atom() {
             ]
           : [],
       };
-
-      return formedGame;
     });
     setFinalGames(finalGames);
-  }, [games, platinumData]);
+  }, [games]);
 
   const refreshIncludedGames = async () => {
     try {
@@ -188,7 +144,6 @@ export default function Atom() {
           refreshData={refreshData}
           setGamesLoading={setGamesLoading}
           gamesLoading={gamesLoading}
-          platinumDataLoading={platinumDataLoading}
           gamesToInclude={gamesToInclude}
           setGamesToInclude={setGamesToInclude}
         />
